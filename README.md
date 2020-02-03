@@ -1,4 +1,5 @@
-# findgRNA
+# miNoR
+**mi**nimum **no**n-**r**eference gRNA finder
 Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 
 ## Main steps
