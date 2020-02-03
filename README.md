@@ -18,8 +18,9 @@ Finds the minimum gRNA set required to target multiple alignable genes in multip
 3. Screen candidate gRNA
    1. Eliminate candidate gRNA with off-target hits
       1. Mask non-reference targets in non-reference genome(s) (.fasta)
-         - Only regions the length of targets ith 100% identity will be masked
+         - Only regions the length of targets with 100% identity to targets will be masked
          - All non-reference genomes provided will be screened simultaneously so all candidate gRNA that pass this screening test should not have off-targets in any of the non-reference genomes provided
+         - WIP: screening against reference genome
       2. BLASTn candidate gRNA against masked non-reference genome(s)
       3. Eliminate candidate gRNA that align with masked non-reference genome(s) and fail maximum match/gaps criteria
    2. Eliminate candidate gRNA that do not align within the CDS of reference genes
