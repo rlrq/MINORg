@@ -2,6 +2,12 @@
 **Mi**nimum **No**n-**R**eference gRNA finder
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 
+## Requirements
+- BLAST+ suite
+- Python 3
+   - Biopython
+- Bash
+
 ## Main steps
 1. Identify candidate targets in non-reference genome
    1. Extract user-specified reference gene(s) from a reference genome (.fasta) using GFF3 annotation (.gff)
@@ -21,6 +27,7 @@
       1. Mask non-reference targets in non-reference genome(s) (.fasta)
          - Only regions the length of targets with 100% identity to targets will be masked
          - All non-reference genomes provided will be screened simultaneously so all candidate gRNA that pass this screening test should not have off-targets in any of the non-reference genomes provided
+         - User may also provide sequences to check against
          - WIP: screening against reference genome
       2. BLASTn candidate gRNA against masked non-reference genome(s)
       3. Eliminate candidate gRNA that align with masked non-reference genome(s) and fail maximum match/gaps criteria
@@ -30,3 +37,31 @@
       2. Align non-reference target sequences (output of step 1.5) with reference sequences from steps 1.1 (or 1.1.3 if domain is specified) and 2.1
       3. For all candidate gRNA, check their position in the alignment (based on where in each non-reference target they originate) and eliminate any gRNA without **AT LEAST ONE** alignment within the reference CDS regions
 4. Find minimum gRNA set that covers all target sequences
+
+## Inputs
+- Step 1
+   - Data:
+      - Reference genome (--ref xxx.fasta)
+      - Reference GFF3 annotation (--gff xxx.gff)
+      - Non-reference sequences/genome (--nonref xxx.fasta)
+   - Parameters:
+      - Gene IDs (--gene)
+   - Optional parameters:
+      - Minimum hit % identity (--minid 85 (%))
+      - Minimum candidate target length (--minlen 0 (bp))
+      - Maximum merge buffer (--buffer 100 (bp))
+   - Optional for domain restriction:
+      - PSSM-ID and rpsblast+ database
+- Step 2
+   - Parameters:
+      - PAM (--pam)
+      - gRNA length (--length)
+- Step 3
+   - Optional parameters:
+      - Minimum off-target gaps (--gaps 0)
+      - Minimum off-target mismatch (--mismatch 1 (bp))
+   - Optional data:
+      - Background sequences (--background xxx.fasta)
+- Step 4
+   - Optional paramters:
+      - Minimum set algorithm (--algo LAR)
