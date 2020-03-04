@@ -1,5 +1,5 @@
-# MiNoR
-**Mi**nimum **No**n-**R**eference gRNA finder
+# MINORg
+**Mi**nimum **No**n-**R**eference **g**RNA finder
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 
 ## Requirements
