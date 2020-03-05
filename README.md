@@ -7,6 +7,8 @@
 - Python 3
    - Biopython
 - Bash
+- bedtools
+- mafft
 
 ## Main steps
 1. Identify candidate targets in non-reference genome
