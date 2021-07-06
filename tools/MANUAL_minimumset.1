@@ -1,0 +1,108 @@
+.TH "findgRNA minimumset" 1 "24 November 2020"
+.SH NAME
+findgRNA minimumset \- identifies/refines minimum set of gRNAs required to target desired sequences
+
+
+.SH SYNOPSIS
+.B findgRNA minimumset
+\fB-m\fI mapping \fB--grna\fI file
+{\fB-d\fI path \fB--prefix\fI string\fR|\fB--out-fasta\fI file \fB--out-mapping\fI file\fR}
+[\fIOPTION\fP]\&.\|.\|.\&
+
+
+.SH DESCRIPTION
+.B findgRNA minimumset
+takes a target mapping file output by findgRNA (MINORg) and a FASTA file of gRNA sequences and generates a set (or multiple mutually exclusive sets) of gRNA in the FASTA file that covers all targets in the target mapping file. This programme outputs another target mapping file and FASTA file for the final gRNA sequences.
+.TP
+gRNA sequences that are not present in both the target mapping file and gRNA FASTA file will be excluded from consideration.
+.SS Exit status:
+.TP
+.B 0
+if OK,
+.TP
+.B 1
+if arguments are invalid.
+
+
+.SH OPTIONS
+
+.SS Generic Programme Information
+.TP
+.B \-h "," \-\-help
+Print this manual and exit.
+.TP
+.B \-v "," \-\-version
+Print programme version and exit.
+
+.SS Execution Control
+.TP
+.B \-s "," \-\-sets \fI integer
+Specifies number of mutually exclusive sets of gRNA to output.
+Default is 1.
+.TP
+.B \-\-sc\-algorithm \fI string
+Specifies set cover algorithm used to identify final set of gRNA candidates that cover all target sequences.
+No performance differences are expected between algorithms for small datasets.
+Options include: LAR, greedy.
+Default is LAR.
+.TP
+.B \-\-auto
+Skips manual checking of gRNA sequences.
+.TP
+.B \-\-ignore\-invalid
+Treat unknown filtering checks (except within CDS check) as 'passed'.
+.TP
+.B \-\-accept\-cds\-unknown
+Treat unknown within CDS checks as 'passed'.
+
+.SS Input Control
+.TP
+.B \-m "," \-\-mapping \fI file
+Required.
+Specifies target mapping file output by findgRNA (MINORg).
+This file contains filtering and target information.
+.TP
+.B \-\-grna \fI file
+Required.
+Specifies FASTA file containing gRNA sequences from which to generate sets.
+.TP
+.B \-e "," \-\-exclude \fI file
+Specifies FASTA file containing gRNA sequences to exclude from consideration.
+.TP
+.B \-\-input\-ver \fI number
+Specifies input target mapping file version.
+Version 1 combines start-inclusive and end-exclusive coordinates (0-indexed) into a single column in the format [start, end).
+Version 2 separates start-inclusive and end-inclusive coordinates (1-indexed) into 2 columns.
+If not provided, the programme will infer the version.
+
+.SS Output Control
+.TP
+.B \-\-out\-fasta \fI file
+Specifies (FASTA) file into which final gRNA sequences will be written.
+Used with --out-mapping. Overrides -d/--dir and --prefix.
+.TP
+.B \-\-out\-mapping \fI file
+Specifies (tab-separated) file into which final gRNA sequences and their mappings to targets will be written.
+Used with --out-fasta. Overrides -d/--dir and --prefix.
+.TP
+.B \-d "," \-\-dir \fI path
+Specifies directory to write output files to.
+Used with --prefix. Will be ignored if --out-fasta and --out-mapping are used.
+.TP
+.B \-\-prefix \fI string
+Specifies prefix to prepend to output files.
+Used with -d/--dir. Will be ignored if --out-fasta and --out-mapping are used.
+.TP
+.B \-\-output\-ver \fI number
+Specifies output tartget mapping file version.
+Version 1 combines start-inclusive and end-exclusive coordinates (0-indexed) into a single column in the format [start, end).
+Version 2 separates start-inclusive and end-inclusive coordinates (1-indexed) into 2 columns.
+Default is 2.
+
+
+.SH AUTHOR
+Written by Rachelle Lee and conceptualised by Rachelle Lee and Cher Wei Yuan
+
+
+.SH REPORTING BUGS
+Report bugs to e0336214@u.nus.edu
