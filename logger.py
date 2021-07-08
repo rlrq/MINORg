@@ -87,14 +87,15 @@ class MultiChild():
                                   f" Please rename the {self._child_obj} object.") )
                 else:
                     self._add_child(child, child_name)
+                    return
             except AttributeError:
                 raise Exception( (f"{self._child_adj}_name is required if {self._child_obj} object"
                                   " does not have attribute 'name'.") )
         ## if only child_name is provided, create Child object and return it
         elif child is None and child_name is not None:
-            child = self._child_class(child_name)
+            child = self._make_child(child_name)
             self._add_child(child, child_name)
-            return chld
+            return child
         ## if both Child object and child_name are provided, use child_name to index regardless of Child.name
         else: self._add_child(child, child_name)
         return
@@ -116,19 +117,6 @@ class MultiChild():
             else: raise Exception( (f"Cannot remove {self._child_obj}: The {self._child_obj} object"
                                     f" provided is not known to this {class_name}") )
         return
-        
-
-class MultiLogger(MultiChild):
-    
-    def __init__(self):
-        super().__init__(child_adj = "logger", child_obj = "Logger", child_class = logging.Logger,
-                         make_child = lambda name: logging.getLogger(name)):
-    
-    def add_logger(self, logger: logging.Logger = None, logger_name: str = None):
-        super().add_child(child = logger, child_name = logger_name)
-    
-    def remove_logger(logger):
-        super().remove_child(logger)
 
 
 class MultiLogger(MultiChild):
@@ -143,7 +131,7 @@ class MultiLogger(MultiChild):
     def remove_logger(logger):
         return super().remove_child(logger, class_name = self.__class__.__name__)
 
-
+## something like multilogger? idk if we need to handle the, uh, handlers separately if we're already handling the loggers separately. we can just keep making new loggers
 class CustomLogger(logging.Logger):
     
     def __init__(self, name):
