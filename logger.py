@@ -13,7 +13,7 @@ class CustomFileHandler(logging.FileHandler):
     
     ## if file already exists, append unix time (seconds) to new logfile name
     def _check_path(self):
-        if os.path.exists():
+        if os.path.exists(self.baseFilename):
             ## close existing file
             self.close()
             ## update new logfile name
@@ -31,6 +31,7 @@ class CustomFileHandler(logging.FileHandler):
         ## update logfile location and check availability
         self.baseFilename = os.path.abspath(filename)
         self._check_path()
+        self.close() ## close to avoid potential problems when moving logfile to this location in next step
         ## move written logfile
         os.rename(p_old, self.baseFilename)
         ## reopen moved logfile for further logging
