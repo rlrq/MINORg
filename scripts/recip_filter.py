@@ -21,7 +21,7 @@ def remove_non_max_bitscore(fasta, bed_f, genes, relax = False,
     with open(bed_f, 'r') as f:
         data = {}
         for entry in (x[:-1].split('\t') for x in f.readlines()
-                      if get(x[:-1].split('\t'), "feature") in ("gene", "pseudogene")):
+                      if get(x[:-1].split('\t'), "feature") in ("gene", "pseudogene", '.')):
             data[get(entry, "candidate")] = data.get(get(entry, "candidate"), []) + [entry]
     ## get largest bitscore for each candidate target
     max_bitscore = {candidate: max(get(data[candidate], "bitscore")) for candidate in data}

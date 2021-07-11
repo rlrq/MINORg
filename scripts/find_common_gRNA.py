@@ -90,7 +90,7 @@ def find_cluster_gRNA_generic(target_fname, out_dir, num_sets = 1, manual_check 
                           **{k: v for k, v in kwargs.items()
                              if k in ["max_mismatch", "max_gap", "report_bg", "pam",
                                       "reference_fasta", "screen_reference", "mask_reference",
-                                      "nonref_mask_fname"]})
+                                      "nonref_mask_fname", "pamless_bg_check"]})
         print("Background filter:", len(all_gRNA.filter_seqs("background", ignore_invalid = False)))
     
     ## filter GC content
@@ -101,7 +101,8 @@ def find_cluster_gRNA_generic(target_fname, out_dir, num_sets = 1, manual_check 
     if alignment_fname:
         filter_in_cds(all_gRNA, alignment_fname, cds_fasta, complete_fasta,
                       **{k: v for k, v in kwargs.items()
-                         if k in ["relax", "min_within_n", "min_within_percentage", "alignment_rvs_pattern"]})
+                         if k in ["min_within_n", "min_within_percentage", "alignment_rvs_pattern",
+                                  "relax", "relax_cds_within", "max_cds_insertion"]})
         print("Within CDS filter:", len(all_gRNA.filter_hits("CDS", ignore_invalid = False)))
     
     ## filter against user-specified sequences to exclude
