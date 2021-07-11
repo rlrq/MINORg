@@ -7,8 +7,7 @@ from basics import *
 annaLenaContigs = "/mnt/chaelab/shared/anna_lena/anna_lena70.contigs.fasta"
 
 def main(blast6_fname, accIDs, fout, fasta = annaLenaContigs,
-         colnames = ("sseqid", "sstart", "send", "pident", "length"),
-         blast6cds_fname = None, min_cds_len = 0, **for_merge_hits):
+         colnames = ("sseqid", "sstart", "send", "pident", "length"), **for_merge_hits):
     ## get domain pos
     print("Merging hits")
     header, dat = get_dat(blast6_fname)
@@ -19,9 +18,6 @@ def main(blast6_fname, accIDs, fout, fasta = annaLenaContigs,
         f.close()
     else:
         merged = merge_hits(dat, accIDs, header, colnames = colnames, **for_merge_hits)
-        if blast6cds_fname is not None:
-            merged = filter_min_cds_len(blast6cds_fname = blast6cds_fname, merged = merged,
-                                        min_cds_len = min_cds_len, colnames = colnames)
         write_table(merged, fout, header = list(colnames))
         ## get domain seqs
         print("Writing sequences to file")
@@ -84,7 +80,7 @@ def merge_hits(data, accIDs, header = [], merge_within_range = 100, min_id = 90,
         curr = {x: get(entry, x) for x in colnames}
         s, e = curr["sstart"], curr["send"]
         curr["sstart"], curr["send"] = min(s,e), max(s,e)
-        ## check if current entry overlaps with stored merged entries (same sseqid + overlapping range)
+        ## check if current entry overlaps with stored merged entries (same contig + overlapping range)
         if curr["sseqid"] != last["sseqid"] or curr["sstart"] > (last["send"] + merge_within_range):
             ## if no overlap, check if last merged entries meet minimum len and id requirement
             if last["pident"] >= min_id and last["length"] >= min_len:
@@ -100,49 +96,6 @@ def merge_hits(data, accIDs, header = [], merge_within_range = 100, min_id = 90,
         if i == len(dat)-1 and last["pident"] >= min_id and last["length"] >= min_len:
             output.append([last[x] for x in colnames])
     return output
-
-def filter_min_cds_len(blast6cds_fname, merged, min_cds_len = 0,
-                       colnames = ("sseqid", "sstart", "send", "pident", "length")):
-    if min_cds_len <= 0:
-        return merged
-    else:
-        header, dat_cds = get_dat(blast6_fname)
-        get = make_custom_get(header)
-        dat_cds = [get(x, *colnames) for x in dat_cds]
-        get = make_custom_get(colnames)
-        if len(dat_cds) == 0:
-            print("No CDS detected. Returning empty data.")
-            return []
-        dat_cds.sort(key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
-        cds_output = sorted(merge(dat_cds, 0),
-                            key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
-        output = []
-        def overlap_size(a, b):
-            return max(0, min(max(a), max(b)) - max(min(a), min(b)) + 1)
-        ## get CDS-complete overlap for each merged complete range
-        cds_i_start = 0
-        merged.sort(key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
-        for entry in merged:
-            overlap, sseqid, start, end = 0, *get(entry, "sseqid", "sstart", "send")
-            start, end = min(start, end), max(start, end)
-            cds_i = cds_i_start
-            ## find first overlapping cds entry
-            while cds_i < len(cds_output) - 1 and (get(cds_output[cds_i], "sseqid") != sseqid or \
-                  (get(cds_output[cds_i], "sseqid") == sseqid and \
-                   max(get(cds_output[cds_i], "send", "sstart")) < start)):
-                cds_i += 1
-            ## update cds_last_start so we don't keep searching earlier cds entries
-            cds_i_start = cds_i_start if cds_i >= len(cds_output) - 1 else cds_i
-            ## while cds entries, overlap, get total overlap size
-            while cds_i < len(cds_output) and \
-                  get(cds_output[cds_i], "sseqid") == sseqid and \
-                  min(get(cds_output[cds_i], "sstart", "send")) <= end:
-                overlap += overlap_size(get(cds_output[cds_i], "sstart", "send"), (start, end))
-                cds_i += 1
-            if overlap >= min_cds_len:
-                output.append(entry + [overlap])
-        return output
-
 
 def write_table(data, fout, header = [], sep = '\t'):
     if header:
