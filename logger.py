@@ -66,7 +66,7 @@ class MultiChild():
         delattr(self, child_name)
         return
     
-    def add_child(self, child: = None, child_name: str = None):
+    def add_child(self, child = None, child_name: str = None):
         """
         accepts Child obj or child_name (str)
         """
