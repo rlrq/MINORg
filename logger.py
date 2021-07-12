@@ -31,7 +31,7 @@ class CustomFileHandler(logging.FileHandler):
         return
     
     ## moves log file that has been written to new location
-    def update_filname(self, filename):
+    def update_filename(self, filename):
         p_old = self.baseFilename
         ## close current logfile
         self.close()
