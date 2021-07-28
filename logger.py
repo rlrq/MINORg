@@ -242,6 +242,8 @@ class DynamicFileLogger(MultiLogger):
        but the FileHandler may wish to do so for thoroughness. There may be different formatting.)
     User may also change log file location whenever desired
     (E.g. DynamicFileLogger.update_filename('/mnt/chaelab/rachelle/logs/loggertest.log'))
+    
+    Groups are effectively Logger objects
     """
     
     def __init__(self, filename, **config_defaults):
@@ -381,6 +383,42 @@ class DynamicFileLogger(MultiLogger):
             file_handler.update_filename(self._base_handler.baseFilename, check_path = False)
         return
 
+class DynamicMultiFileLogger(DynamicFileLogger):
+    """
+    Allows writing to multiple files simultaneously, while sharing group names and Formatters
+    Possibly only really useful for reusing headers such as "--Initiating <subcmd>--"
+    
+    dmflogger = DynamicMultiFileLogger() ## instantiate w/ dummy log location, close immediately & remove file
+    dmflogger.add_file("log1", "/mnt/chaelab/rachelle/tmp/log1.log") ## check & store filename in dict
+    dmflogger.add_file("log2", "/mnt/chaelab/rachelle/tmp/log2.log") ## check & store filename in dict
+    dmflogger.add_format("cmd", "command: %(message)s")
+    dmflogger.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
+    dmflogger.add_stream_handler("cheader", level = logging.INFO, format = "cmd")
+    dmflogger.add_file_handler("fheader", level = logging.INFO, format = "cmd") ## mk template DynamicFileHandler
+    dmflogger.add_stream_handler("cfull", level = logging.INFO, format = "full")
+    dmflogger.add_file_handler("ffull", level = logging.INFO, format = "full") ## mk template DynamicFileHandler
+    dmflogger.add_group("header", "cheader", "fheader")
+    dmflogger.add_group("full", "cfull", "ffull")
+    dmflogger.add_group("all", *dmflogger.handlers) ## perhaps have a built-in 'all' group?
+    dmflogger.log1.add_handler("header") ## duplicate fheader's DynamicFileHandler 
+    dmflogger.log2.add_handler("header", "full") ## duplicate ffull AND fheader's DynamicFileHandlers
+    dmflogger.header.info("executing minimumset")
+    dmflogger.full.debug("we're doing something")
+    dmflogger.log2.update_filename("/mnt/chaelab/rachelle/log3.log")
+    
+    IMPT: ensure no duplicate calls of StreamHandlers for groups w/ StreamHandler that are
+      associated with multiple files
+    - each 'file' is represented by a DynamicFileLogger (allows file-specific logging)
+      - ensure all changes to DynamicMultiFileLogger groups are propagated to each file's DynamicFileLogger
+    - if logging directly from DynamicMultiFileLogger, DON"T call each file's DynamicFileLogger.error...
+    - file handlers (DynamicFileHandlers) to be handled distinctly from StreamHandlers
+      - when new file handlers are added, create template file handler w/ dummy log location, close, then rm
+      - when file handlers are assigned to a file, duplicate handler template, update log location w/ filename, then add duplicated handler to group's MultiLogger and file's DynamicFileLogger
+      - ensure that groups are also propagated to each file's DynamicFileLogger
+    - when removing handlers from groups, ensure that this is propagated to group's MultiLogger AND file's DynamicFileLogger
+    """
+    pass
+    
 ## test
 fmt_cmd = "command: %(message)s"
 fmt_timed = "%(asctime)s %(message)s"
@@ -408,13 +446,21 @@ logger.add_stream_handler("random", level = logging.DEBUG,
 
 logger.add_group("header", "fheader")
 logger.update_group("header", add = ["sheader"])
-# ## raise error here
+# ## raise error here (unknown Handler)
 # logger.update_group("header", add = ["ohno"])
 
 logger.add_group("info", logger.handler.sinfo, "finfo")
 logger.add_group("all", *logger.handler.children)
 # ## raise error here (reserved name)
 # logger.add_group("get_child", "sinfo")
+
+## abstraction breaking. (Maybe find a way to stop this? Or ensure that even if this happens
+##   we can propagate it up to DynamicFileLogger so it's accessibly to other groups as well AND
+##   shows up when logger.handlers/handler_names/handler_map is called (alt, add new function so user
+##   can retrieve handlers that were added in this abstraction-breaking way)?)
+logger.all.addHandler(logging.StreamHandler(), "breakabstraction")
+logger.all.breakabstraction.setLevel(logging.ERROR)
+logger.all.breakabstraction.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(message)s"))
 
 logger.header.info("executing 'minimumset'")
 logger.info.info("hello we're executing something")
