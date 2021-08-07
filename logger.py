@@ -1144,15 +1144,15 @@ logger.group_names
 logger.header.handler_names
 logger.header.stream_handler_names
 [g.name for g in logger.groups(name = False).keys()]
-## moved from previous location to new location
+
+## move from previous location to new location (for DynamicFileLogger)
 logger.update_filename("/mnt/chaelab/rachelle/tmp/testlog2.log")
 logger.filename
-
 logger2 = DynamicFileLogger("/mnt/chaelab/rachelle/tmp/testlog2.log")
 assert(logger2.filename != "/mnt/chaelab/rachelle/tmp/testlog2.log", "Successfully moved to avoid conflict.")
 
-x = DynamicMultiFileLogger()
-y = DynamicFileParasiticSingleLogger("test", "/mnt/chaelab/rachelle/tmp/testlog1.log", x)
-x.add_file_handler("finfo", format = "%(asctime)s %(message)s")
-y._parent is x
-y.add_handler("finfo")
+# x = DynamicMultiFileLogger()
+# y = DynamicFileParasiticSingleLogger("test", "/mnt/chaelab/rachelle/tmp/testlog1.log", x)
+# x.add_file_handler("finfo", format = "%(asctime)s %(message)s")
+# y._parent is x
+# y.add_handler("finfo")
