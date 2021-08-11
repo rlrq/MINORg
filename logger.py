@@ -1,5 +1,6 @@
 import os
 import copy
+import shutil
 import logging
 import tempfile
 import warnings
@@ -139,7 +140,7 @@ class DynamicFileHandler(logging.FileHandler):
         self.baseFilename = os.path.abspath(filename)
         if check_path and p_old != filename: self._check_path()
         ## move written logfile
-        if os.path.exists(p_old): os.rename(p_old, self.baseFilename)
+        if os.path.exists(p_old): shutil.move(p_old, self.baseFilename)
         ## reopen moved logfile for further logging
         self._open()
         return
@@ -221,7 +222,7 @@ class DynamicMultiFileHandler(logging.FileHandler):
             p_old = self._filenames[index]
             self._filenames_original[index] = new if original_new is None else original_new
             self._filenames[index] = checked_new
-            if os.path.exists(p_old): os.rename(p_old, checked_new)
+            if os.path.exists(p_old): shutil.move(p_old, checked_new)
         return
     
     def emit(self, record):
@@ -456,11 +457,12 @@ class PublicLogger(logging.Logger, MultiHandlerBase):
     Logger object, but it adds Handler objects as attributes for easy access
     """
     
-    def __init__(self, name, unique = True):
+    def __init__(self, name, unique = True, default_log_level = logging.INFO):
         slogger.debug(f"PublicLogger MultiHandlerBase.__init__")
         MultiHandlerBase.__init__(self, unique = unique)
         slogger.debug(f"PublicLogger logging.Logger.__init__")
         logging.Logger.__init__(self, name)
+        self._default_log_level = default_log_level
     
     def addHandler(self, handler, handler_name, replace = False, ignore_duplicate = False, quiet = False):
         super().add_handler(handler, handler_name, replace = replace, ignore_duplicate = ignore_duplicate,
@@ -472,13 +474,19 @@ class PublicLogger(logging.Logger, MultiHandlerBase):
         super().remove_handler(handler)
         super().removeHandler(handler)
         return
+    
+    def __call__(self, msg, *args, **kwargs):
+        if self.isEnabledFor(self._default_log_level):
+            self._log(self._default_log_level, msg, args, **kwargs)
 
 class MultiLogger(MultiChild):
     
-    def __init__(self, logger_class = PublicLogger, make_logger = lambda name: PublicLogger(name)):
+    def __init__(self, logger_class = PublicLogger, make_logger = lambda name: PublicLogger(name),
+                 default_log_level = logging.INFO):
         slogger.debug(f"MultiLogger super().__init__")
         MultiChild.__init__(self, child_adj = "logger", child_obj = "Logger", child_class = logger_class,
                             make_child = make_logger)
+        self._default_log_level = default_log_level
     
     @property
     def loggers(self): return self.children
@@ -490,16 +498,20 @@ class MultiLogger(MultiChild):
     def is_logger(self, other):
         return self.is_child_class(other)
     
-    def add_logger(self, logger, name: str = None, replace = False, quiet = False):
+    def add_logger(self, logger, name: str = None, replace = False, quiet = False, level = lvl,
+                   default_log_level = None):
         if self.is_logger(logger):
-            return super().add_child(child = logger, child_name = name, replace = replace, quiet = quiet)
+            logger = super().add_child(child = logger, child_name = name, replace = replace, quiet = quiet)
         elif isinstance(logger, str) and name is None:
-            return super().add_child(child_name = logger, replace = replace, quiet = quiet)
+            logger = super().add_child(child_name = logger, replace = replace, quiet = quiet)
         elif isinstance(logger, str) and name is not None:
             warnings.warn("Both arguments are strings. Ignoring 2nd argument.")
-            return super().add_child(child_name = logger, replace = replace, quiet = quiet)
+            logger = super().add_child(child_name = logger, replace = replace, quiet = quiet)
         else:
             raise InvalidArgs("Unexpected 1st argument type. Must be Logger object or str.")
+        logger.setLevel(level)
+        logger._default_log_level = self._default_log_level if default_log_level is None else default_log_level
+        return logger
         
     def remove_logger(self, logger):
         return super().remove_child(logger, class_name = self.__class__.__name__)
@@ -633,13 +645,13 @@ class GroupLogger(MultiLogger):
     def get_handler(self, handler):
         return self.handler.get_child(handler)
         
-    def add_group(self, name, *handlers):
+    def add_group(self, name, *handlers, level = lvl, default_log_level = None):
         """
         Positional 'handlers' for Handlers already added to DynamicFileLogger object.
         """
         try: self.name_available(name, raise_exception = True)
         except DuplicateName: raise DuplicateName(f"'{name}' is an existing group.")
-        new_logger = self.add_logger(name)
+        new_logger = self.add_logger(name, level = level, default_log_level = default_log_level)
         ## parse existing handlers
         for i, handler in enumerate(handlers):
             self._add_handler_to_group(name, handler)
@@ -673,6 +685,63 @@ class GroupLogger(MultiLogger):
             logger.setLevel(level)
         return    
 
+
+class PublicAwareLogger(PublicLogger):
+    """
+    Handles crosstalk and logging level
+    """
+    
+    def __init__(self, name, parent, crosstalk = True):
+        self._parent = parent
+        self._crosstalk = crosstalk
+        super().__init__(name)
+    
+    @property
+    def crosstalk(self): return self._crosstalk
+    @crosstalk.setter
+    def crosstalk(self, v: bool): self._crosstalk = v
+    
+    def _log(self, level, *args, **kwargs):
+        """
+        Modify logging.Logger._log so that files not linked to self's group won't be written to if
+         self.crosstalk is False
+        """
+        if isinstance(self._parent, DynamicFileLogger):
+            if self._parent.is_enabled_for(level):
+                super()._log(level, *args, **kwargs)
+        elif isinstance(self._parent, DynamicMultiFileLogger):
+            if self.crosstalk:
+                linked_files = {self._parent._files.get_child_name(f)[0]: f.filename
+                                for f in self._parent._files.children
+                                if f.is_enabled_for(level)}
+            else:
+                linked_files = {self._parent._files.get_child_name(f)[0]: f.filename
+                                for f in self._parent._files.children
+                                if f.is_enabled_for(level) and self in f._active_groups}
+            store = {}
+            ## settle each handler individually
+            for handler in self.handlers:
+                if isinstance(handler, DynamicMultiFileHandler):
+                    store[handler] = handler._filenames
+                    filename_intersection = (set(handler._filenames.keys()) & set(linked_files.keys()))
+                    handler._filenames = {fname: linked_files[fname] for fname in filename_intersection}
+                elif isinstance(handler, logging.FileHandler): ## FileHandler or DynamicFileHandler
+                    store[handler] = handler
+                    ## remove handler so it doesn't get called if wrong level or file not linked to group
+                    if handler.baseFilename not in linked_files.values():
+                        self.removeHandler(handler)
+                else: continue ## don't do anything if is StreamHandler
+            ## call logging.Logger._log
+            super()._log(level, *args, **kwargs)
+            ## restore previous filename(s) for all handlers and add handlers back to self
+            for handler, stored in store.items():
+                if isinstance(handler, DynamicMultiFileHandler):
+                    handler._filenames = store[handler]
+                elif isinstance(handler, logging.FileHandler):
+                    self.addHandler(handler)
+        return
+
+
 class DynamicFileLoggerBase(GroupLogger):
     """
     User specifies a group when passing message
@@ -686,9 +755,12 @@ class DynamicFileLoggerBase(GroupLogger):
     Groups are effectively Logger objects
     """
     
-    def __init__(self, filename, level = lvl, **config_defaults): ## config_defaults currently not used
+    def __init__(self, filename, level = lvl, default_log_level = logging.INFO,
+                 **config_defaults): ## config_defaults currently not used
         slogger.debug(f"DynamicFileLoggerBase super().__init__")
-        GroupLogger.__init__(self)
+        GroupLogger.__init__(self, logger_class = PublicAwareLogger,
+                             make_logger = lambda name: PublicAwareLogger(name, self),
+                             default_log_level = default_log_level)
         slogger.debug(f"DynamicFileLoggerBase._base_handler DynamicFileHandler.__init__")
         self._base_handler = DynamicFileHandler(filename, check_path = True)
         self._level = level
@@ -702,15 +774,17 @@ class DynamicFileLoggerBase(GroupLogger):
     def level(self, level): self._level = level
     
     def set_level(self, level): self.level = level
+    def is_enabled_for(self, level): return level >= self._level
     
-    def update_filename(self, filename):
+    def update_filename(self, filename, check_path = True):
         """
         Closes connections from DynamicFileHandler to current logfile,
         replaces DynamicFileHandler.baseFilename, copies closed logfile to new location,
         and opens connection between all DynamicFileHandler objects to new location
         """
+        # checked_filename = check_path_and_return(filename) if check_path else filename
         ## update path for DynamicFileHandler, from which we will retrieve the new path for other Handlers
-        self._base_handler.update_filename(filename, check_path = True)
+        self._base_handler.update_filename(filename, check_path = check_path)
         file_handlers = [h for h in self.handler.children if isinstance(h, DynamicFileHandler)]
         ## get new log file location (raise check_path only for first Handler processed)
         for file_handler in file_handlers:
@@ -731,9 +805,9 @@ class DynamicFileLogger(DynamicFileLoggerBase):
     Groups are effectively Logger objects
     """
     
-    def __init__(self, filename, **config_defaults):
+    def __init__(self, filename, level = lvl, **config_defaults):
         slogger.debug(f"DynamicFileLogger super().__init__")
-        DynamicFileLoggerBase.__init__(self, filename, **config_defaults)
+        DynamicFileLoggerBase.__init__(self, filename, level = level, **config_defaults)
     
     @property
     def handlers(self): return self.handler_children
@@ -745,7 +819,7 @@ class DynamicFileParasiticSingleLogger(DynamicFileLoggerBase):
         self.name = name
         self._parent = parent
         self._base_logger = PublicLogger(name, unique = True)
-        self._base_logger.setLevel(lvl)
+        self._base_logger.setLevel(level)
         slogger.debug("DynamicFileSingleLogger DynamicFileLoggerBase.__init__")
         DynamicFileLoggerBase.__init__(self, filename, **config_defaults)
         ## replace self._format and self._handler objs w/ parent DynamicMultiFileLogger's
@@ -785,6 +859,8 @@ class DynamicFileParasiticSingleLogger(DynamicFileLoggerBase):
     def level(self): return self._base_logger.level
     @level.setter
     def level(self, level): self._base_logger.setLevel(level)
+    def set_level(self, level): self.level = level
+    def is_enabled_for(self, level): return self._base_logger.isEnabledFor(level)
     
     ## hide group-related properties/methods
     @property
@@ -892,7 +968,7 @@ class DynamicFileParasiticSingleLogger(DynamicFileLoggerBase):
         ## get new log file location
         checked_filename = filename if not check_path else check_path_and_return(filename)
         ## move file
-        os.rename(self.filename, checked_filename)
+        shutil.move(self.filename, checked_filename)
         ## separately update each handler's stored filename(s)
         file_handlers = [h for h in self.handler.children if isinstance(h, logging.FileHandler)]
         for file_handler in file_handlers:
@@ -933,54 +1009,6 @@ class DynamicFileParasiticSingleLogger(DynamicFileLoggerBase):
             self.remove_group(*remove_g) ## remove groups + all (file) handlers associated w/ the groups
             self.remove_handler(*remove_h)
         return
-
-class PublicGroupAwareLogger(PublicLogger):
-    
-    def __init__(self, name, parent, crosstalk = True):
-        self._parent = parent
-        self._crosstalk = crosstalk
-        super().__init__(name)
-        
-    def _log(self, level, *args, **kwargs):
-        """
-        Modify logging.Logger._log so that files not linked to self's group won't be written to if
-         self._crosstalk is False
-        """
-        if isinstance(self._parent, DynamicFileLogger):
-            if level >= self._parent.level:
-                super()._log(level, *args, **kwargs)
-        elif isinstance(self._parent, DynamicMultiFileLogger):
-            if self._crosstalk:
-                linked_files = {self._parent._files.get_child_name(f)[0]: f.filename
-                                for f in self._parent._files.children
-                                if level >= f.level}
-            else:
-                linked_files = {self._parent._files.get_child_name(f)[0]: f.filename
-                                for f in self._parent._files.children
-                                if level >= f.level and self in f._active_groups}
-            store = {}
-            ## settle each handler individually
-            for handler in self.handlers:
-                if isinstance(handler, DynamicMultiFileHandler):
-                    store[handler] = handler._filenames
-                    filename_intersection = (set(handler._filenames.keys()) & set(linked_files.keys()))
-                    handler._filenames = {fname: linked_files[fname] for fname in filename_intersection}
-                elif isinstance(handler, logging.FileHandler): ## FileHandler or DynamicFileHandler
-                    store[handler] = handler
-                    ## remove handler so it doesn't get called if wrong level or file not linked to group
-                    if handler.baseFilename not in linked_files.values():
-                        self.removeHandler(handler)
-                else: continue ## don't do anything if is StreamHandler
-            ## call logging.Logger._log
-            super()._log(level, *args, **kwargs)
-            ## restore previous filename(s) for all handlers and add handlers back to self
-            for handler, stored in store.items():
-                if isinstance(handler, DynamicMultiFileHandler):
-                    handler._filenames = store[handler]
-                elif isinstance(handler, logging.FileHandler):
-                    self.addHandler(handler)
-        return
-            
 
 ## this needs to be reorganised to use DynamicMultiFileHandler
 class DynamicMultiFileLogger(GroupLogger):
@@ -1035,9 +1063,9 @@ class DynamicMultiFileLogger(GroupLogger):
         self._crosstalk = crosstalk
         slogger.debug(f"DynamicMultiFileLogger GroupLogger.__init__")
         GroupLogger.__init__(self,
-                             logger_class = PublicGroupAwareLogger,
+                             logger_class = PublicAwareLogger,
                              make_logger = (lambda name:
-                                            PublicGroupAwareLogger(name, self, crosstalk = crosstalk)))
+                                            PublicAwareLogger(name, self, crosstalk = crosstalk)))
         ## Logger obj will be created by self <DynamicMultiFileLogger> then added to self._files.
         self._files = MultiChild(child_adj = "file", child_obj = "DynamicFileParasiticSingleLogger",
                                  child_class = DynamicFileParasiticSingleLogger,
@@ -1113,13 +1141,17 @@ def test_logger(test: str = "dmfl", dir = None, test_getters: bool = True, logge
         with open(fname, 'r') as f:
             print(f"\n{msg} ({fname}):\n\t" + str(f.read()).replace('\n', "\n\t"))
     
+    test = ("dmfl" if isinstance(logger, DynamicMultiFileLogger) \
+            else "dfl" if isinstance(logger, DynamicFileLogger) \
+            else test)
+    
     with tempfile.TemporaryDirectory() as tmpdir:
         if dir is not None: mkfname = lambda f: os.path.join(dir, f)
         else: mkfname = lambda f: os.path.join(tmpdir, f)
         
         ## instantiate formats
         fmt_cmd = "command: %(message)s"
-        fmt_timed = "%(asctime)s %(message)s"
+        fmt_timed = "%(asctime)s - %(levelname)s - %(message)s"
         fmt_full = "%(asctime)s - %(name)s - %(levelname)s:%(message)s"
         fmt_rand = "SPECIAL %(asctime)s - %(name)s - %(levelname)s:%(message)s"
         
@@ -1145,8 +1177,8 @@ def test_logger(test: str = "dmfl", dir = None, test_getters: bool = True, logge
         logger.add_file_handler("finfo", level = logging.INFO, format = logger.format.full)
         logger.add_stream_handler("sheader", level = logging.DEBUG)
         logger.add_file_handler("fheader", level = logging.DEBUG, format = "cmd")
-        logger.add_stream_handler("soops", level = logging.ERROR, format = "cmd")
-        logger.add_file_handler("foops", level = logging.ERROR, format = "cmd")
+        logger.add_stream_handler("soops", level = logging.ERROR, format = "timed")
+        logger.add_file_handler("foops", level = logging.ERROR, format = "timed")
         logger.add_stream_handler("random", level = logging.DEBUG, format = fmt_rand)
         
         ## raise error here
@@ -1252,11 +1284,26 @@ def test_logger(test: str = "dmfl", dir = None, test_getters: bool = True, logge
         
         if test == "dfl":
             ## move from previous location to new location (for DynamicFileLogger)
-            ftestlog2 = os.path.join(tmpdir, "dfl_testlog2.log")
+            ftestlog2 = mkfname("dfl_testlog2.log")
             logger.update_filename(ftestlog2)
             logger.filename
             logger2 = DynamicFileLogger(ftestlog2)
             assert logger2.filename!=ftestlog2, "Move unsuccessful. Name conflict between logger1 and logger2."
+            
+            ## test logging level restriction
+            logger.level = logging.INFO
+            logger.header.debug("log level lower than logger level")
+            with open(logger.filename, 'r') as f:
+                assert f.read().count("log level lower") == 0, "Logger level restriction fail"
+            
+            logger.header.error("log level higher than logger level")
+            with open(logger.filename, 'r') as f:
+                assert f.read().count("log level higher") == 1, "Logger level enable fail"
+            
+            logger.level = logging.DEBUG
+            logger.header.debug("log level equal to logger level")
+            with open(logger.filename, 'r') as f:
+                assert f.read().count("log level equal to") == 1, "Logger equivalent level enable fail"
         
         if test_getters:
             print("Testing getters")
@@ -1281,26 +1328,71 @@ def test_logger(test: str = "dmfl", dir = None, test_getters: bool = True, logge
     
     return
 
-logger = logger = DynamicMultiFileLogger(crosstalk = False)
-test_logger(dir = "/mnt/chaelab/rachelle/tmp", test_getters = False, logger = logger)
+# tmp_dir = "/mnt/chaelab/rachelle/tmp"
+# tmp_f = tempfile.mkstemp(dir = "/mnt/chaelab/rachelle/tmp")[1]
 
-# def minorg_logger(fname = None, level = logging.INFO):
-#     if fname is None: fname = tempfile.mkstemp()
-#     logger = DynamicFileLogger(fname)
-#     ## formats
-#     logger.add_format("header", "-- %(message)s --")
-#     logger.add_format("plain", "%(message)s")
-#     logger.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
-#     ## generic handlers
-#     logger.add_stream_handler("splain", format = "plain")
-#     logger.add_file_handler("fplain", format = "plain")
-#     logger.add_stream_handler("sfull", format = "full")
-#     logger.add_file_handler("ffull", format = "full")
-#     ## args
-#     logger.add_file_handler("fargs", format = "plain", level = logging.INFO)
-#     logger.add_group("args", "fargs")
-#     ## header
-#     logger.add_stream_handler("sheader", format = fmt_header, level = logging.INFO)
-#     logger.add_file_handler("fheader", format = fmt_header, level = logging.INFO)
-#     logger.add_group("header", "sheader", "fheader")
-#     return logger
+# logger = DynamicMultiFileLogger(crosstalk = False)
+# test_logger(dir = tmp_dir, test_getters = False, logger = logger)
+
+# logger = DynamicFileLogger(tmp_f[1])
+# test_logger(dir = tmp_dir, test_getters = False, logger = logger)
+
+def minorg_logger(fname = None, level = logging.INFO, default_log_level = logging.INFO):
+    if fname is None: fname = tempfile.mkstemp()[1]
+    logger = DynamicFileLogger(fname, level = level, default_log_level = default_log_level)
+    ## formats
+    logger.add_format("header", "-- %(message)s --")
+    logger.add_format("plain", "%(message)s")
+    logger.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
+    ## generic handlers
+    logger.add_stream_handler("splain", format = "plain", level = logging.DEBUG)
+    logger.add_file_handler("fplain", format = "plain", level = logging.DEBUG)
+    logger.add_stream_handler("sfull", format = "full", level = logging.DEBUG)
+    logger.add_file_handler("ffull", format = "full", level = logging.DEBUG)
+    ## generic groups
+    logger.add_group("plain", "splain", "fplain")
+    logger.add_group("splain", "splain")
+    logger.add_group("fplain", "fplain")
+    logger.add_group("full", "sfull", "ffull")
+    logger.add_group("sfull", "sfull")
+    logger.add_group("ffull", "ffull")
+    ## wrap preset log calls (except exception, which seems to require special handling)
+    logger.add_group("critical", "sfull", "ffull", default_log_level = logging.CRITICAL)
+    logger.add_group("error", "sfull", "ffull", level = logging.ERROR, default_log_level = logging.ERROR)
+    logger.add_group("warning", "sfull", "ffull", default_log_level = logging.WARNING)
+    logger.add_group("info", "sfull", "ffull", default_log_level = logging.INFO)
+    ## args
+    logger.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
+    logger.add_group("args", "fargs")
+    ## header
+    logger.add_stream_handler("sheader", format = "header", level = logging.DEBUG)
+    logger.add_file_handler("fheader", format = "header", level = logging.DEBUG)
+    logger.add_group("header", "sheader", "fheader")
+    ## debugging
+    logger.add_stream_handler("sdebug", format = "full", level = logging.DEBUG)
+    logger.add_file_handler("fdebug", format = "full", level = logging.DEBUG)
+    logger.add_group("debug", "sdebug", "fdebug", level = logging.DEBUG, default_log_level = logging.DEBUG)
+    logger.add_group("sdebug", "sdebug", level = logging.DEBUG, default_log_level = logging.DEBUG)
+    logger.add_group("fdebug", "fdebug", level = logging.DEBUG, default_log_level = logging.DEBUG)
+    return logger
+
+# logger = minorg_logger(level = logging.DEBUG)
+# logger.filename
+# logger.header.info("full") ## writes to both file and console
+# logger.args.info("--gene AT1G01010 --acc ref") ## writes only to file
+# logger.update_filename("/mnt/chaelab/rachelle/tmp/testminorglogger.log")
+# logger.debug.debug("testing debug level")
+# logger.args("testing default logging in args")
+# logger.error("test error default log (ERROR)")
+# logger.warning("test warning default log (WARNING)")
+# logger.error.info("test error with info call") ## does nothing cuz we set error's level to ERROR
+# logger.warning.info("test warning with info call") ## does something cuz warning's level is defualt (INFO)
+# logger.error.info("test error with higher call level (INFO) than error group level (ERROR)") ## prints nothing
+
+# logger2 = minorg_logger(level = logging.INFO)
+# logger2.filename
+# logger2.header.info("full") ## writes to both file and console
+# logger2.args.info("--gene AT1G01010 --acc ref") ## writes only to file
+# logger2.update_filename("/mnt/chaelab/rachelle/tmp/testminorglogger.log")
+# logger2.debug("test debug with default log (DEBUG)")
+# logger2.debug.info("test debug with info call") ## prints something
