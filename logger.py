@@ -1344,7 +1344,7 @@ def minorg_logger(fname = None, level = logging.INFO, default_log_level = loggin
     logger.add_format("header", "-- %(message)s --")
     logger.add_format("plain", "%(message)s")
     logger.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
-    ## generic handlers
+    ## generic handlers (set level to most permissive)
     logger.add_stream_handler("splain", format = "plain", level = logging.DEBUG)
     logger.add_file_handler("fplain", format = "plain", level = logging.DEBUG)
     logger.add_stream_handler("sfull", format = "full", level = logging.DEBUG)
@@ -1358,9 +1358,12 @@ def minorg_logger(fname = None, level = logging.INFO, default_log_level = loggin
     logger.add_group("ffull", "ffull")
     ## wrap preset log calls (except exception, which seems to require special handling)
     logger.add_group("critical", "sfull", "ffull", default_log_level = logging.CRITICAL)
-    logger.add_group("error", "sfull", "ffull", level = logging.ERROR, default_log_level = logging.ERROR)
+    logger.add_group("error", "sfull", "ffull", default_log_level = logging.ERROR, level = logging.ERROR)
     logger.add_group("warning", "sfull", "ffull", default_log_level = logging.WARNING)
     logger.add_group("info", "sfull", "ffull", default_log_level = logging.INFO)
+    logger.add_group("debug", "sfull", "ffull", default_log_level = logging.DEBUG, level = logging.DEBUG)
+    logger.add_group("sdebug", "sfull", level = logging.DEBUG, default_log_level = logging.DEBUG) # console
+    logger.add_group("fdebug", "ffull", level = logging.DEBUG, default_log_level = logging.DEBUG) # file
     ## args
     logger.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
     logger.add_group("args", "fargs")
@@ -1368,12 +1371,6 @@ def minorg_logger(fname = None, level = logging.INFO, default_log_level = loggin
     logger.add_stream_handler("sheader", format = "header", level = logging.DEBUG)
     logger.add_file_handler("fheader", format = "header", level = logging.DEBUG)
     logger.add_group("header", "sheader", "fheader")
-    ## debugging
-    logger.add_stream_handler("sdebug", format = "full", level = logging.DEBUG)
-    logger.add_file_handler("fdebug", format = "full", level = logging.DEBUG)
-    logger.add_group("debug", "sdebug", "fdebug", level = logging.DEBUG, default_log_level = logging.DEBUG)
-    logger.add_group("sdebug", "sdebug", level = logging.DEBUG, default_log_level = logging.DEBUG)
-    logger.add_group("fdebug", "fdebug", level = logging.DEBUG, default_log_level = logging.DEBUG)
     return logger
 
 # logger = minorg_logger(level = logging.DEBUG)
