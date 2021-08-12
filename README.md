@@ -6,7 +6,6 @@
 - BLAST+ suite
 - Python 3
    - Biopython
-- Bash
 - bedtools
 - mafft
 
