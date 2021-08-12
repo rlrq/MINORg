@@ -27,12 +27,13 @@
    1. Restricted by user-specified PAM and gRNA length
 3. Screen candidate gRNA
    1. Eliminate candidate gRNA with off-target hits
-      1. Mask targets in non-reference genome(s) (.fasta) and reference genome
+      1. Mask targets in non-reference genome(s) (.fasta)
          - Only regions the length of targets with 100% identity to targets will be masked
          - All non-reference genomes provided will be screened simultaneously so all candidate gRNA that pass this screening test should not have off-targets in any of the non-reference genomes provided
          - User may also provide sequences to check against
       2. BLASTn candidate gRNA against masked non-reference and reference genome(s)
-      3. Eliminate candidate gRNA that align with masked non-reference genome(s) and fail maximum match/gaps criteria
+         - Optional: Screen reference genome also
+      4. Eliminate candidate gRNA that align with masked non-reference genome(s) and fail maximum match/gaps criteria
    2. Eliminate candidate gRNA that do not align within the CDS of reference genes
       1. Extract CDS-only regions of user-specified reference gene(s) from a reference genome (.fasta) using GFF3 annotation (.gff)
          - If the user specified a domain, the range will be restricted accordingly
