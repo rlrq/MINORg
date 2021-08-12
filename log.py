@@ -1365,8 +1365,8 @@ def minorg_logger(fname = None, level = logging.INFO, default_log_level = loggin
     logger.add_group("sdebug", "sfull", level = logging.DEBUG, default_log_level = logging.DEBUG) # console
     logger.add_group("fdebug", "ffull", level = logging.DEBUG, default_log_level = logging.DEBUG) # file
     ## args
-    logger.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
-    logger.add_group("args", "fargs")
+    # logger.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
+    logger.add_group("args", "fplain")
     ## header
     logger.add_stream_handler("sheader", format = "header", level = logging.DEBUG)
     logger.add_file_handler("fheader", format = "header", level = logging.DEBUG)
