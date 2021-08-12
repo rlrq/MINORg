@@ -20,17 +20,18 @@
    2. BLASTn reference gene(s) against non-reference genome(s) (.fasta)
    3. Filter hits by minimum % identity (optional)
    4. Merge overlapping hits within specified distance of each other (to accommodate introns/insertions)
-   5. Filter merged hits for minimum length and % identity
+   5. Filter merged hits for minimum length and % identity into target sequences
+   6. Filter target sequences for those with best alignment to target genes(s) (optional)
+      - Ensures that genes that are similar but not part of the set of user-specified target gene(s) will not be targeted
 2. Identify candidate gRNA in non-reference targets
    1. Restricted by user-specified PAM and gRNA length
 3. Screen candidate gRNA
    1. Eliminate candidate gRNA with off-target hits
-      1. Mask non-reference targets in non-reference genome(s) (.fasta)
+      1. Mask targets in non-reference genome(s) (.fasta) and reference genome
          - Only regions the length of targets with 100% identity to targets will be masked
          - All non-reference genomes provided will be screened simultaneously so all candidate gRNA that pass this screening test should not have off-targets in any of the non-reference genomes provided
          - User may also provide sequences to check against
-         - WIP: screening against reference genome
-      2. BLASTn candidate gRNA against masked non-reference genome(s)
+      2. BLASTn candidate gRNA against masked non-reference and reference genome(s)
       3. Eliminate candidate gRNA that align with masked non-reference genome(s) and fail maximum match/gaps criteria
    2. Eliminate candidate gRNA that do not align within the CDS of reference genes
       1. Extract CDS-only regions of user-specified reference gene(s) from a reference genome (.fasta) using GFF3 annotation (.gff)
