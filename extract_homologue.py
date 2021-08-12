@@ -100,7 +100,11 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
            fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
     ## check for hits
     if not parse_get_data(tsv_blast_ref)[1]:
-        raise MessageError("No blast hits during homologue search, exiting programme.")
+        # raise MessageError("No blast hits during homologue search, exiting programme.")
+        ## write empty file
+        with open(fout, "w+") as f:
+            pass
+        return
     ## extract homologue
     ## hidden args: accIDs = ('.',), pattern = lambda accID: accID, min_cds_len = 1,
     #                min_len = 1, min_id = 0, merge_within_range = 100,

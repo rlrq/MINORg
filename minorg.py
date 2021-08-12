@@ -9,7 +9,7 @@ import sys
 import click
 import typer
 import inspect
-# import logging
+import logging
 import itertools
 
 from typing import List, Optional
@@ -19,6 +19,7 @@ from argparse import Namespace
 
 from scripts.get_ref import get_ref_by_genes_resolve
 from functions import extract_features_and_subfeatures, get_count_dict
+from log import MINORgLogger
 
 ## import subcommand functions
 from subcmd_homologue import execute_homologue
@@ -63,6 +64,8 @@ __version_minimumset__ = "1.1"
 default_sub_cmd = "full"
 app_main = typer.Typer()
 app_sub = typer.Typer()
+
+logging_level = logging.DEBUG
 
 # ## import some namespace things
 # params = Params(os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.ini")) ## parse params
@@ -199,7 +202,7 @@ def non_negative_callback(val):
         raise typer.BadParameter( f"Invalid value: {val}. Non-negative value required." )
 
 def cluster_set_callback(val: str):
-    val = parse_lookup(val, params.cluster_mapping, return_first = True)
+    val = parse_lookup(val, params.cluster_sets, return_first = True)
     if val is None:
         config.cluster_aliases = {}
     elif os.path.exists(os.path.abspath(val)):
@@ -220,7 +223,7 @@ def cluster_set_callback(val: str):
     return val
 
 def genome_set_callback(val: str):
-    val = parse_lookup(val, params.genome_mapping, return_first = True)
+    val = parse_lookup(val, params.genome_sets, return_first = True)
     if val is None:
         config.genome_aliases = params.indv_genomes
     elif os.path.exists(os.path.abspath(val)):
@@ -433,12 +436,17 @@ def check_homologue_args(args, homologue_discovery_only = True):
     if args.query:
         query_map += [[i, query] for i, query in enumerate(args.query)]
     if indv_provided:
-        if IndvGenomesAll.all in args.indv:
-            indvs_special = {IndvGenomesAll.all, IndvGenomesAll.none}
-            indvs_all = set(indv for indv in IndvGenomesAll if \
-                            (indv not in indvs_special.union({IndvGenomesAll.ref})))
-            indvs = (set(args.indv) - indvs_special).union(indvs_all) ## union in case user also specified 'ref'
+        if "all" in args.indv or '.' in args.indv:
+            indvs_special = {"all", "none", "ref", '.'}
+            indvs_all = set(indv for indv in config.genome_aliases if indv not in indvs_special)
+            indvs = (set(args.indv) - indvs_special).union(indvs_all)
             args.indv = type(args.indv)(indvs)
+        # if IndvGenomesAll.all in args.indv:
+        #     indvs_special = {IndvGenomesAll.all, IndvGenomesAll.none}
+        #     indvs_all = set(indv for indv in IndvGenomesAll if \
+        #                     (indv not in indvs_special.union({IndvGenomesAll.ref})))
+        #     indvs = (set(args.indv) - indvs_special).union(indvs_all) ## union in case user also specified 'ref'
+        #     args.indv = type(args.indv)(indvs)
         print("chkpt1:", len(config.genome_aliases))
         query_map += [[indv, config.genome_aliases[indv]] for indv in args.indv]
     ## check that file names are unique
@@ -531,8 +539,10 @@ def homologue(
     check_homologue_args(args, homologue_discovery_only = True)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
-    ## create LogFile obj
-    config.log_file = LogFile(config, args, params)
+    ## move logfile
+    config.logfile.move(config, args)
+    # ## create LogFile obj
+    # config.log_file = LogFile(config, args, params)
     
     ## set config values
     if prefix: config.prefix = prefix
@@ -666,10 +676,10 @@ def full(
                                                  callback = split_callback_list),
         cluster: Optional[List[str]] = typer.Option(*params.cluster(), **params.cluster.options,
                                                     callback = split_callback_list),
-        # indv: Optional[List[str]] = typer.Option(*params.indv(), **params.indv.options,
-        #                                          callback = split_callback_list),
-        indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
-                                                            callback = split_callback_list),
+        indv: Optional[List[str]] = typer.Option(*params.indv(), **params.indv.options,
+                                                 callback = split_callback_list),
+        # indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
+        #                                                     callback = split_callback_list),
         target: Path = typer.Option(*params.target(), **params.target.options),
         query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options),
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
@@ -682,12 +692,6 @@ def full(
         merge_within: int = typer.Option(*params.merge_within(), **params.merge_within.options,
                                          callback = non_negative_callback),
         check_id_premerge: bool = typer.Option(*params.check_id_premerge(), **params.check_id_premerge.options),
-        cluster_set: str = typer.Option(*params.cluster_set(), **params.cluster_set.options,
-                                        **oparams.file_valid, is_eager = True,
-                                        callback = cluster_set_callback),
-        genome_set: str = typer.Option(*params.genome_set(), **params.genome_set.options,
-                                       **oparams.file_valid, is_eager = True,
-                                       callback = genome_set_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
                                       # callback = make_alias_or_file_callback(params.reference_aliases,
@@ -734,10 +738,17 @@ def full(
         members: str = typer.Option(*params.members(), **params.members.options,
                                     callback = members_callback),
         ## more user lookups, this time for the lookups themselves haha
-        genome_sets: bool = typer.Option(*params.genome_sets(), **params.genome_sets.options,
-                                         callback = genome_sets_callback),
-        cluster_sets: bool = typer.Option(*params.cluster_sets(), **params.cluster_sets.options,
-                                          callback = cluster_sets_callback):
+        cluster_set: str = typer.Option(*params.cluster_set(), **params.cluster_set.options,
+                                        **oparams.file_valid, is_eager = True,
+                                        callback = cluster_set_callback),
+        genome_set: str = typer.Option(*params.genome_set(), **params.genome_set.options,
+                                       **oparams.file_valid, is_eager = True,
+                                       callback = genome_set_callback)):
+    
+        # genome_set: bool = typer.Option(*params.genome_set(), **params.genome_set.options,
+        #                                 callback = genome_sets_callback),
+        # cluster_set: bool = typer.Option(*params.cluster_set(), **params.cluster_set.options,
+        #                                  callback = cluster_sets_callback)):
     '''
     Executes commands homologue, grna, filter, and minimumset in sequence to
     generate minimum set(s) of gRNA required to cover all targets.
@@ -751,8 +762,8 @@ def full(
     check_homologue_args(args, homologue_discovery_only = False)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
-    ## TODO: write LOG file
-    config.log_file = LogFile(config, args, params)
+    ## move log file
+    config.logfile.move(config, args)
     
     print("post check:", vars(args))
     
@@ -919,6 +930,15 @@ def main(ctx: typer.Context,
 # print("callback:", dir(app_main.registered_callback))
     
 if __name__ == "__main__":
+    
+    try:
+        config.logfile = MINORgLogger(level = logging_level)
+        print(config.logfile.filename)
+        config.logfile.args(f"Raw arguments: {' '.join(sys.argv)}")
+    except Exception as e:
+        print("Unable to instantiate logger.")
+        config.cleanup()
+        raise e
     
     ## try-except to handle cleanup of tmpdir upon crash etc.
     try:

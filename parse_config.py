@@ -11,7 +11,7 @@ try:
     config_fname = os.environ["MINORG_CONFIG"]
 except KeyError:
     ## TODO: set env variable so we can remove this KeyError exception handling thing
-    config_fname = "/mnt/chaelab/rachelle/scripts/minorg/config.ini"
+    config_fname = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
 
 def get_val_none(val, d: dict, none = None):
     '''
@@ -171,8 +171,8 @@ class Params():
         self.genomes = Param(None, "--genomes")
         self.clusters = Param(None, "--clusters")
         self.members = Param(None, "--members")
-        self.genome_sets = Param(None, "--genome-sets")
-        self.cluster_sets = Params(None, "--cluster-sets")
+        self.genome_set = Param(None, "--genome-set")
+        self.cluster_set = Param(None, "--cluster-set")
         
         ## executables
         section_binary = "binary"
@@ -393,10 +393,10 @@ class OptionParams():
         self.dir_new = {"resolve_path": True, "exists": False}
         return
 
-## TODO: make domains compatible w/ genomes and clusters input methods
-class LookupSets():
-    def __init__(self, name = None, ):
-    
+# ## TODO: make domains compatible w/ genomes and clusters input methods
+# class LookupSets():
+#     def __init__(self, name = None):
+
 ## parses file/string that contains info about aliases
 ## ...this is too confusing. Either scrap it or streamline it.
 class Lookup:
@@ -417,8 +417,8 @@ class Lookup:
         self._config_fname = config_fname ## global config_fname
         self._config_sets = parse_multiline_multikey_sdict(config_sets) ## dictionary of <set alias>:<set>
         self._config_aliases = config_aliases ## ?? do I wanna keep this or dynamically retrieve <alias>:<value>?
-        self._config_lookup = config_string if not isinstance(config_string, str)\ ## probably remove all these?
-                              else self.parse_from_string(config_string)
+        self._config_lookup = (config_string if not isinstance(config_string, str) ## probably remove all these?
+                               else self.parse_from_string(config_string))
         self._config_lookup_inv = {k: sorted(v) for k, v in inverse_dict(self._config_lookup)}
         self._fname = fname
         self._aliases = {}
@@ -443,9 +443,9 @@ class Lookup:
     def fname(self):
         return self._fname if self._fname is not None else self._config_fname
     def lookup(self, k, none = None):
-        return self._lookup.get(k, self._config_lookup.get(self._none if none is None))
+        return self._lookup.get(k, self._config_lookup.get(self._none if none is None else none))
     def lookup_inv(self, k, none = None):
-        return self._lookup_inv.get(k, self._config_lookup_inv.get(self._none if none is None))
+        return self._lookup_inv.get(k, self._config_lookup_inv.get(self._none if none is None else none))
     def print(self, header = None, inv = False, prepend = None):
         if not self.fname():
             print( (f"\nNo {self._name} set lookup file has been specified."
@@ -489,7 +489,7 @@ class Config:
             exit
         
         ## handle log file
-        self.log_file = None
+        self.logfile = None
         
         ## parameter things
         ## programme params
@@ -557,7 +557,7 @@ class Config:
     def resolve(self):
         # ## rename log file
         # shutil.move(self.log_file.path, self.reserve_fname(f"{self.prefix}_minorg.log"))
-        self.log_file.write(f"{self.prefix}_minorg.log")
+        # self.log_file.write(f"{self.prefix}_minorg.log")
         ## move files to final destination (lol)
         if self.tmp_on:
             ## create final output directory if doesn't exist
@@ -601,7 +601,7 @@ class LogFile:
 # params = Params(os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.ini")) ## parse params
 params = Params(config_fname)
 oparams = OptionParams() ## namespace for some pre-defined sets of parameter options
-config = Config(params)
+config = Config(params, keep_on_crash = True)
 
 ## Enum choices
 class SetCoverAlgo(str, Enum):

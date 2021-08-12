@@ -1337,43 +1337,89 @@ def test_logger(test: str = "dmfl", dir = None, test_getters: bool = True, logge
 # logger = DynamicFileLogger(tmp_f[1])
 # test_logger(dir = tmp_dir, test_getters = False, logger = logger)
 
-def minorg_logger(fname = None, level = logging.INFO, default_log_level = logging.INFO):
-    if fname is None: fname = tempfile.mkstemp()[1]
-    logger = DynamicFileLogger(fname, level = level, default_log_level = default_log_level)
-    ## formats
-    logger.add_format("header", "-- %(message)s --")
-    logger.add_format("plain", "%(message)s")
-    logger.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
-    ## generic handlers (set level to most permissive)
-    logger.add_stream_handler("splain", format = "plain", level = logging.DEBUG)
-    logger.add_file_handler("fplain", format = "plain", level = logging.DEBUG)
-    logger.add_stream_handler("sfull", format = "full", level = logging.DEBUG)
-    logger.add_file_handler("ffull", format = "full", level = logging.DEBUG)
-    ## generic groups
-    logger.add_group("plain", "splain", "fplain")
-    logger.add_group("splain", "splain")
-    logger.add_group("fplain", "fplain")
-    logger.add_group("full", "sfull", "ffull")
-    logger.add_group("sfull", "sfull")
-    logger.add_group("ffull", "ffull")
-    ## wrap preset log calls (except exception, which seems to require special handling)
-    logger.add_group("critical", "sfull", "ffull", default_log_level = logging.CRITICAL)
-    logger.add_group("error", "sfull", "ffull", default_log_level = logging.ERROR, level = logging.ERROR)
-    logger.add_group("warning", "sfull", "ffull", default_log_level = logging.WARNING)
-    logger.add_group("info", "sfull", "ffull", default_log_level = logging.INFO)
-    logger.add_group("debug", "sfull", "ffull", default_log_level = logging.DEBUG, level = logging.DEBUG)
-    logger.add_group("sdebug", "sfull", level = logging.DEBUG, default_log_level = logging.DEBUG) # console
-    logger.add_group("fdebug", "ffull", level = logging.DEBUG, default_log_level = logging.DEBUG) # file
-    ## args
-    # logger.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
-    logger.add_group("args", "fplain")
-    ## header
-    logger.add_stream_handler("sheader", format = "header", level = logging.DEBUG)
-    logger.add_file_handler("fheader", format = "header", level = logging.DEBUG)
-    logger.add_group("header", "sheader", "fheader")
-    return logger
 
-# logger = minorg_logger(level = logging.DEBUG)
+# def minorg_logger(fname = None, level = logging.INFO, default_log_level = logging.INFO):
+#     if fname is None: fname = tempfile.mkstemp()[1]
+#     logger = DynamicFileLogger(fname, level = level, default_log_level = default_log_level)
+#     ## formats
+#     logger.add_format("header", "-- %(message)s --")
+#     logger.add_format("plain", "%(message)s")
+#     logger.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
+#     ## generic handlers (set level to most permissive)
+#     logger.add_stream_handler("splain", format = "plain", level = logging.DEBUG)
+#     logger.add_file_handler("fplain", format = "plain", level = logging.DEBUG)
+#     logger.add_stream_handler("sfull", format = "full", level = logging.DEBUG)
+#     logger.add_file_handler("ffull", format = "full", level = logging.DEBUG)
+#     ## generic groups
+#     logger.add_group("plain", "splain", "fplain")
+#     logger.add_group("splain", "splain")
+#     logger.add_group("fplain", "fplain")
+#     logger.add_group("full", "sfull", "ffull")
+#     logger.add_group("sfull", "sfull")
+#     logger.add_group("ffull", "ffull")
+#     ## wrap preset log calls (except exception, which seems to require special handling)
+#     logger.add_group("critical", "sfull", "ffull", default_log_level = logging.CRITICAL)
+#     logger.add_group("error", "sfull", "ffull", default_log_level = logging.ERROR, level = logging.ERROR)
+#     logger.add_group("warning", "sfull", "ffull", default_log_level = logging.WARNING)
+#     logger.add_group("info", "sfull", "ffull", default_log_level = logging.INFO)
+#     logger.add_group("debug", "sfull", "ffull", default_log_level = logging.DEBUG, level = logging.DEBUG)
+#     logger.add_group("sdebug", "sfull", level = logging.DEBUG, default_log_level = logging.DEBUG) # console
+#     logger.add_group("fdebug", "ffull", level = logging.DEBUG, default_log_level = logging.DEBUG) # file
+#     ## args
+#     # logger.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
+#     logger.add_group("args", "fplain")
+#     ## header
+#     logger.add_stream_handler("sheader", format = "header", level = logging.DEBUG)
+#     logger.add_file_handler("fheader", format = "header", level = logging.DEBUG)
+#     logger.add_group("header", "sheader", "fheader")
+#     return logger
+
+
+class MINORgLogger(DynamicFileLogger):
+    
+    def __init__(self, filename = None, level = logging.INFO, default_log_level = logging.INFO):
+        
+        if filename is None: filename = tempfile.mkstemp()[1]
+        DynamicFileLogger.__init__(self, filename, level = level, default_log_level = default_log_level)
+        
+        ## formats
+        self.add_format("header", "-- %(message)s --")
+        self.add_format("plain", "%(message)s")
+        self.add_format("full", "%(asctime)s - %(name)s - %(levelname)s:%(message)s")
+        ## generic handlers (set level to most permissive)
+        self.add_stream_handler("splain", format = "plain", level = logging.DEBUG)
+        self.add_file_handler("fplain", format = "plain", level = logging.DEBUG)
+        self.add_stream_handler("sfull", format = "full", level = logging.DEBUG)
+        self.add_file_handler("ffull", format = "full", level = logging.DEBUG)
+        ## generic groups
+        self.add_group("plain", "splain", "fplain")
+        self.add_group("splain", "splain")
+        self.add_group("fplain", "fplain")
+        self.add_group("full", "sfull", "ffull")
+        self.add_group("sfull", "sfull")
+        self.add_group("ffull", "ffull")
+        ## wrap preset log calls (except exception, which seems to require special handling)
+        self.add_group("critical", "sfull", "ffull", default_log_level = logging.CRITICAL)
+        self.add_group("error", "sfull", "ffull", default_log_level = logging.ERROR, level = logging.ERROR)
+        self.add_group("warning", "sfull", "ffull", default_log_level = logging.WARNING)
+        self.add_group("info", "sfull", "ffull", default_log_level = logging.INFO)
+        self.add_group("debug", "sfull", "ffull", default_log_level = logging.DEBUG, level = logging.DEBUG)
+        self.add_group("sdebug", "sfull", level = logging.DEBUG, default_log_level = logging.DEBUG) # console
+        self.add_group("fdebug", "ffull", level = logging.DEBUG, default_log_level = logging.DEBUG) # file
+        ## args
+        # self.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
+        self.add_group("args", "fplain")
+        ## header
+        self.add_stream_handler("sheader", format = "header", level = logging.DEBUG)
+        self.add_file_handler("fheader", format = "header", level = logging.DEBUG)
+        self.add_group("header", "sheader", "fheader")
+    
+    def move(self, config, args):
+        fout = os.path.join(config.directory, f"{args.prefix}.log")
+        self.update_filename(fout)
+        
+
+# logger = MINORgLogger(level = logging.DEBUG)
 # logger.filename
 # logger.header.info("full") ## writes to both file and console
 # logger.args.info("--gene AT1G01010 --acc ref") ## writes only to file
@@ -1386,7 +1432,7 @@ def minorg_logger(fname = None, level = logging.INFO, default_log_level = loggin
 # logger.warning.info("test warning with info call") ## does something cuz warning's level is defualt (INFO)
 # logger.error.info("test error with higher call level (INFO) than error group level (ERROR)") ## prints nothing
 
-# logger2 = minorg_logger(level = logging.INFO)
+# logger2 = MINORgLogger(level = logging.INFO)
 # logger2.filename
 # logger2.header.info("full") ## writes to both file and console
 # logger2.args.info("--gene AT1G01010 --acc ref") ## writes only to file
