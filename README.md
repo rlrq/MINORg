@@ -9,7 +9,11 @@
 - bedtools
 - mafft
 
-## Main steps
+## Links
+Detailed overview of steps in the programme: https://tinyurl.com/sr84ae9e (Google slides)
+Flowchart to select & use appropriate input parameters: https://tinyurl.com/crcfbk6t (PDF)
+
+## Overview of steps
 1. Identify candidate targets in non-reference genome
    1. Extract user-specified reference gene(s) from a reference genome (.fasta) using GFF3 annotation (.gff)
       - Sequence(s) include introns
