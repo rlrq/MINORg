@@ -11,7 +11,7 @@
 
 ## Links
 - Detailed overview of steps in the programme: https://tinyurl.com/sr84ae9e (Google slides)
-- Flowchart to select & use appropriate input parameters: https://tinyurl.com/crcfbk6t (PDF)
+- Flowchart to select & use appropriate input parameters: https://tinyurl.com/4sffekkc (PDF)
 
 ## Overview of steps
 1. Identify candidate targets in non-reference genome
