@@ -420,7 +420,16 @@ def check_homologue_args(args, homologue_discovery_only = True):
                                              " using '--cluster-set <path to file>'."))
     ## not a callback to standardise valid alias checking w/ args.cluster
     if indv_provided:
-        valid_aliases(aliases = args.indv, lookup = params.indv_genomes,
+        # genome_aliases = params.indv_genomes
+        # if args.genome_set is not None:
+        #     if args.genome_set in params.genome_sets:
+        #         ## TODO: warn user if alias in genome_set_aliases is already in params.indv_genomes and handle it so that the alias in genome_set_aliases is given priority
+        #         genome_set_aliases = {}
+        #         with open(args.genome_set, 'r') as f:
+        #             genome_set_aliases = {alias: fname for alias, fname in
+        #                                   [x.split('\t') for x in f.read().split('\n')]}
+        #         genome_aliases = {**genome_aliases, **genome_set_aliases}
+        valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
                       none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
                       param = params.indv, display_cmd = "--genomes",
                       additional_message = ( "Alternatively, provide a FASTA file of the genome in"
@@ -447,8 +456,7 @@ def check_homologue_args(args, homologue_discovery_only = True):
         #                     (indv not in indvs_special.union({IndvGenomesAll.ref})))
         #     indvs = (set(args.indv) - indvs_special).union(indvs_all) ## union in case user also specified 'ref'
         #     args.indv = type(args.indv)(indvs)
-        print("chkpt1:", len(config.genome_aliases))
-        query_map += [[indv, config.genome_aliases[indv]] for indv in args.indv]
+        query_map += [[indv, config.genome_aliases[str(indv)]] for indv in args.indv]
     ## check that file names are unique
     ## - if multiple queries map to the same file, sort by query id and retain first entry
     ## - if same file provided to args.query and args.indv, priorities args.indv regardless of sort order
@@ -485,8 +493,10 @@ def homologue(
                                                  callback = split_callback_list),
         cluster: Optional[List[str]] = typer.Option(*params.cluster(), **params.cluster.options,
                                                     callback = split_callback_list),
-        indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
-                                                            callback = split_callback_list),
+        indv: Optional[List[str]] = typer.Option(*params.indv(), **params.indv.options,
+                                                 callback = split_callback_list),
+        # indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
+        #                                                     callback = split_callback_list),
         target: Path = typer.Option(*params.target(), **params.target.options),
         query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options),
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),

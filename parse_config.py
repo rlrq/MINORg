@@ -209,13 +209,13 @@ class Params():
                                              "<comma-separated gene IDs>"
                                              "\nOne cluster per line." ))
         self.genome_set = Param(get_val_none(get_data("genome set"), self.genome_sets),
-                                    "--genome-set",
-                                    help = ( "File containing genome alias-filename mapping or"
-                                             " alias of file containing genome alias-filename mapping as"
-                                             " described by 'genome sets' in the config file."
-                                             "\nFormat: <semicolon-separated genome aliases><tab>"
-                                             "<absolute path to FASTA file>"
-                                             "\nOne FASTA file per line." ))
+                                "--genome-set",
+                                help = ( "File containing genome alias-filename mapping or"
+                                         " alias of file containing genome alias-filename mapping as"
+                                         " described by 'genome sets' in the config file."
+                                         "\nFormat: <semicolon-separated genome aliases><tab>"
+                                         "<absolute path to FASTA file>"
+                                         "\nOne FASTA file per line." ))
         self.attr_mod = Param(get_val_none(get_data("gff attribute modification"),
                                            self.attr_mod_presets, none = {}),
                               "--attr-mod",

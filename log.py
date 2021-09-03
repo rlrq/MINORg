@@ -107,23 +107,23 @@ class MINORgLogger(DynamicFileLogger):
 # logger2.debug("test debug with default log (DEBUG)")
 # logger2.debug.info("test debug with info call") ## prints something
 
-import sys, importlib
-sys.path.append("/mnt/chaelab/rachelle/scripts/minorgpy")
-import dynamic_logger
+# import sys, importlib
+# sys.path.append("/mnt/chaelab/rachelle/scripts/minorgpy")
+# import dynamic_logger
 
-importlib.reload(dynamic_logger)
+# importlib.reload(dynamic_logger)
 
-x = dynamic_logger.DynamicFileLogger("/mnt/chaelab/rachelle/tmp/testcustomformatter.log")
-x.add_format("plain", "%(message)s")
-x.add_format("format_args", "%(message)s", format_msg = lambda type_args: f"(({type_args[0]}))\n{' '.join(type_args[1])}", replace = True)
-x.add_stream_handler("splain", "plain")
-x.add_stream_handler("fmt_args", format = "format_args")
-x.add_group("args", "splain", format_msg = lambda type_args: f"(({type_args[0]}))\n{' '.join(type_args[1])}")
-x.add_group("fmtargs", "fmt_args")
-args = ["raw", ['--gene', 'AT1G12210']]
-## for some reason all of the below defaulted to %(asctime)s %(message)s?
-x.args(args) ## incorrect formatting
-x.args.info(args) ## correct formatting
-x.fmtargs(args)
-x.fmtargs.info(args) ## same as above
-## TODO: figure out which function is being called in Formatter
+# x = dynamic_logger.DynamicFileLogger("/mnt/chaelab/rachelle/tmp/testcustomformatter.log")
+# x.add_format("plain", "%(message)s")
+# x.add_format("format_args", "%(message)s", format_msg = lambda type_args: f"(({type_args[0]}))\n{' '.join(type_args[1])}", replace = True)
+# x.add_stream_handler("splain", "plain")
+# x.add_stream_handler("fmt_args", format = "format_args")
+# x.add_group("args", "splain", format_msg = lambda type_args: f"(({type_args[0]}))\n{' '.join(type_args[1])}")
+# x.add_group("fmtargs", "fmt_args")
+# args = ["raw", ['--gene', 'AT1G12210']]
+# ## for some reason all of the below defaulted to %(asctime)s %(message)s?
+# x.args(args) ## incorrect formatting
+# x.args.info(args) ## correct formatting
+# x.fmtargs(args)
+# x.fmtargs.info(args) ## same as above
+# ## TODO: figure out which function is being called in Formatter
