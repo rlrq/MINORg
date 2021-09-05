@@ -1,0 +1,4 @@
+9654	/path/to/subset_9654.fasta
+9655	/path/to/subset_9655.fasta
+9944	/path/to/subset_9944.fasta
+9947	/path/to/subset_9947.fasta

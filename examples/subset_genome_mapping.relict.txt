@@ -1,0 +1,2 @@
+9944	/path/to/subset_9944.fasta
+9947	/path/to/subset_9947.fasta
