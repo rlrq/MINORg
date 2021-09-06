@@ -177,14 +177,12 @@ class Params():
         ## executables
         section_binary = "binary"
         get_binary = lambda x: conf.get(section_binary, x)
-        self.rpsblast = Param(get_binary("rpsblast"), "--rpsblast",
-                              help = ("absolute path to rpsblast or rpsblast+ executable/binary,"
-                                      " OR command name if the executable/binary is accessible"
-                                      " via the command line") )
-        self.blastn = Param(get_binary("blastn"), "--blastn",
-                            help = ("absolute path to blastn executable/binary,"
-                                    " OR command name if the executable/binary is accessible"
-                                    " via the command line") )
+        help_msg = lambda name: (f"absolute path to {name} executable/binary,"
+                                 " OR command name if the executable/binary is accessible"
+                                 " via the command line")
+        self.rpsblast = Param(get_binary("rpsblast"), "--rpsblast", help = help_msg("rpsblast or rpsblast+") )
+        self.blastn = Param(get_binary("blastn"), "--blastn", help = help_msg("blastn") )
+        self.mafft = Param(get_binary("mafft"), "--mafft", help = help_msg("mafft") )
         
         ## data
         section_data = "data"
@@ -244,6 +242,7 @@ class Params():
         self.prefix = Param(conf.get(section_shared, "prefix"), "--prefix",
                             help = "output files/directory prefix")
         self.fasta = Param(None, "-f", "--fasta")
+        self.thread = Param(1, "--thread")
         
         ## homolog/homologue
         section_homologue = "homologue"

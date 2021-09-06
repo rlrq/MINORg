@@ -5,6 +5,7 @@ import tempfile
 import itertools
 import subprocess
 
+
 from functions import (
     # make_make_fname,
     blast6, extract_features_and_subfeatures,
@@ -43,6 +44,24 @@ from display import (
 #         for name, fname in fasta_queries:
 #             f.write(f"\n{name}\t{fname}")
 #     return fasta_queries
+
+## remove '_seed_' prefix after using --seed for mafft
+def remove_pref(fasta, pref):
+    import re
+    pref_len = len(pref)
+    seqs = {(k if not re.search(f"^{pref}", k) else k[pref_len:]): v for k, v in fasta_to_dict(fasta).items()}
+    dict_to_fasta(seqs, fasta)
+    return
+
+remove_seed = lambda fasta: remove_pref(fasta, "_seed_")
+
+## remove duplicate sequences added so mafft's --seed doesn't throw error
+def remove_duplicate(fasta, duplicated = False):
+    if duplicated:
+        import re
+        seqs = {k: v for k, v in fasta_to_dict(fasta).items() if not re.search("^Duplicate\|", k)}
+        dict_to_fasta(seqs, fasta)
+    return
 
 def execute_homologue(prefix, genes, args, config, params, for_masking = False):
 
@@ -103,17 +122,39 @@ def execute_homologue(prefix, genes, args, config, params, for_masking = False):
         ## align
         ## TODO: make sure not using -g/-c (i.e. no fasta_cds/complete) won't crash this part (2021/05/07)
         ## - tentatively okayed (2021/05/12)
+        from Bio.Align.Applications import MafftCommandline
         fasta_aln = make_fname(f"{prefix}_{config.raw_domain}_mafft.fasta")
         tmp_f = make_fname(f"tmp_mafft.fasta", tmp = True)
+        duplicated = False
         with open(fasta_aln, "w+") as f:
-            subprocess.run(["mafft", "--quiet", fasta_cds], stdout = f)
+            stdout, stderr = MafftCommandline(args.mafft, input = fasta_cds, # quiet = True,
+                                              thread = args.thread)()
+            f.write(stdout)
+            ## if fewer than 2 seqs, duplicate so that --seed doesn't throw error
+            if stdout.count('>') == 1:
+                if '\n' not in stdout[:-3]:
+                    f.write('\n')
+                f.write(">Duplicate|" + '|'.join(stdout.split('\n')[0].split('|')[1:]) + '\n')
+                f.write('\n'.join(stdout.split('\n')[1:]))
+                duplicated = True
         with open(tmp_f, "w+") as f:
-            subprocess.run(["mafft", "--quiet", "--add", fasta_complete, fasta_aln], stdout = f)
+            stdout, stderr = MafftCommandline(args.mafft, input = fasta_complete, # quiet = True,
+                                              thread = args.thread, seed = fasta_aln)()
+            f.write(stdout)
+        ## remove '_seed_' prefix
+        remove_seed(tmp_f)
+        ## remove duplicated seq
+        remove_duplicate(tmp_f, duplicated = duplicated)
         if set(args.indv) == {"ref"}:
             shutil.copyfile(tmp_f, fasta_aln)
         else:
             with open(fasta_aln, "w+") as f:
-                subprocess.run(["mafft", "--quiet", "--add", fasta_target, tmp_f], stdout = f)
+                stdout, stderr = MafftCommandline(args.mafft, input = fasta_target, # quiet = True,
+                                                  thread = args.thread, seed = tmp_f)()
+                f.write(stdout)
+                # subprocess.run(["mafft", "--quiet", "--add", fasta_target, tmp_f], stdout = f)
+            ## remove '_seed_' prefix
+            remove_seed(fasta_aln)
         config.rm_tmpfiles(tmp_f)
         return (config.mkfname(prefix), fout_pref, fasta_target, fasta_aln, fasta_complete, fasta_cds)
 
@@ -221,3 +262,4 @@ def expand_rpsblast_to_redundant_peptides(blast_fname, collapsed_fname):
               if line[0] == seqids[0]]
     write_tsv(blast_fname, [get(get_cols = True)] + output)
     return
+

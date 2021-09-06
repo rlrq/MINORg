@@ -3,6 +3,7 @@
 ## TODO: allow users to provide GFF instead of GFF -> BED
 ## TODO: 2021/06/10: implement --valid-indv/--valid-genome/--valid-acc, --valid-cluster to allow user to check alias validity (print location of FASTA file for --valid-genome, do member_callback for --valid-cluster) before running
 ## TODO: 2021/06/10: disable Enum for --indv. Since users are now allowed to submit custom genome lookup files using --genome-lookup, autofill shouldn't be used for --indv unless it can dynamically update to accommodate user's --genome-lookup input even before command submission (which is impossible lol). Basically, restructure the whole --indv thing to use the same kind of code as --cluster
+## TODO: enable --extend-genome and --extend-cds
 
 import os
 import sys
@@ -26,6 +27,8 @@ from subcmd_homologue import execute_homologue
 from subcmd_grna import execute_grna
 from subcmd_filter import execute_filter
 from subcmd_minimumset import execute_minimumset
+
+from extend_genome import extend_genome
 
 from parse_config import (
     config, params, oparams,
@@ -367,7 +370,7 @@ def make_reduced_bed(args, gene_sets):
 def check_homologue_args(args, homologue_discovery_only = True):
     
     ## check if user has provided indv
-    indv_provided = not (len(args.indv) == 1 and args.indv[0] is IndvGenomesAll.none)
+    indv_provided = not (len(args.indv) == 1 and args.indv[0] == IndvGenomesAll.none)
     
     ## MUTUALLY EXCLUSIVE ARGS
     ## -q and -t are mutually exclusive
@@ -429,6 +432,8 @@ def check_homologue_args(args, homologue_discovery_only = True):
         #             genome_set_aliases = {alias: fname for alias, fname in
         #                                   [x.split('\t') for x in f.read().split('\n')]}
         #         genome_aliases = {**genome_aliases, **genome_set_aliases}
+        if "ref" not in config.genome_aliases:
+            config.genome_aliases["ref"] = args.reference
         valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
                       none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
                       param = params.indv, display_cmd = "--genomes",
@@ -443,7 +448,7 @@ def check_homologue_args(args, homologue_discovery_only = True):
     ## generate query mapping
     query_map = []
     if args.query:
-        query_map += [[i, query] for i, query in enumerate(args.query)]
+        query_map += [[i+1, str(query)] for i, query in enumerate(args.query)]
     if indv_provided:
         if "all" in args.indv or '.' in args.indv:
             indvs_special = {"all", "none", "ref", '.'}
@@ -487,6 +492,7 @@ def homologue(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
+        thread: int = typer.Option(*params.thread(), **params.thread.options),
         
         ## target definition options
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -680,6 +686,8 @@ def full(
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
         blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        thread: int = typer.Option(*params.thread(), **params.thread.options),
         
         ## target definition options
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -779,6 +787,9 @@ def full(
     
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
+    
+    ## extend genome if ext_genome and ext_cds are provided
+    extend_genome(args, config)
     
     ## filter BED/GFF for relevant entries (reduces get_seq search time)
     make_reduced_bed(args, gene_sets)

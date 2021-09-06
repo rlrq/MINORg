@@ -475,7 +475,8 @@ def grep_bedmerge(gene, bed, feature, out_dir, merge = False, encoding = "utf-8"
                                          if get_gffbed(x, "type") == "mRNA"
                                          and (gene in get_attribute(x, "ID") or
                                               gene in get_attribute(x, "Parent"))]))
-        bed_raw = [x for x in data if get_gffbed(x, "type") == "CDS" and has_cat_overlap(get_attribute(x, "Parent"), tmp_mrna)]
+        bed_raw = [x for x in data if (get_gffbed(x, "type") == "CDS" and
+                                       has_cat_overlap(get_attribute(x, "Parent"), tmp_mrna))]
     else:
         bed_raw = [x for x in data if gene in get_gffbed(x, "attributes")]
     ## coerce into final columns (and merge overlapping entries if so required)
@@ -622,11 +623,11 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                     for logged_ranges in overlap_ranges:
                         del(seq_ranges[logged_ranges])
                     ranges = merge_ranges(*overlap_ranges, ranges)
-                ranges = [(x[0] - start, x[1] - start) for x in ranges]
+                # ranges = [(x[0] - start, x[1] - start) for x in ranges]
                 seq_ranges[tuple(sorted(ranges))] = seq_ranges.get(tuple(sorted(ranges)), []) + [seq_name] + \
                                                     overlap_seq_names
             else:
-                ranges = [(x[0] - start, x[1] - start) for x in ranges]
+                # ranges = [(x[0] - start, x[1] - start) for x in ranges]
                 seq_ranges[tuple(sorted(ranges))] = seq_ranges.get(tuple(sorted(ranges)), []) + [seq_name]
         if seqs_to_write:
             dict_to_fasta(seqs_to_write, fasta_out)
