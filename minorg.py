@@ -3,7 +3,7 @@
 ## TODO: allow users to provide GFF instead of GFF -> BED
 ## TODO: 2021/06/10: implement --valid-indv/--valid-genome/--valid-acc, --valid-cluster to allow user to check alias validity (print location of FASTA file for --valid-genome, do member_callback for --valid-cluster) before running
 ## TODO: 2021/06/10: disable Enum for --indv. Since users are now allowed to submit custom genome lookup files using --genome-lookup, autofill shouldn't be used for --indv unless it can dynamically update to accommodate user's --genome-lookup input even before command submission (which is impossible lol). Basically, restructure the whole --indv thing to use the same kind of code as --cluster
-## TODO: enable --extend-genome and --extend-cds
+## TODO: 2021/09/07: don't merge ext_genome files w/ reference (or ext_bed files w/ bed). Find some way to allow both to be processed whenever blastn or whatever needs to be done to reference
 
 import os
 import sys
@@ -421,24 +421,24 @@ def check_homologue_args(args, homologue_discovery_only = True):
                       additional_message = ( "Alternatively, manually input the desired genes using"
                                              " '-g <gene(s)>' or provide a different cluster set lookup file"
                                              " using '--cluster-set <path to file>'."))
-    ## not a callback to standardise valid alias checking w/ args.cluster
-    if indv_provided:
-        # genome_aliases = params.indv_genomes
-        # if args.genome_set is not None:
-        #     if args.genome_set in params.genome_sets:
-        #         ## TODO: warn user if alias in genome_set_aliases is already in params.indv_genomes and handle it so that the alias in genome_set_aliases is given priority
-        #         genome_set_aliases = {}
-        #         with open(args.genome_set, 'r') as f:
-        #             genome_set_aliases = {alias: fname for alias, fname in
-        #                                   [x.split('\t') for x in f.read().split('\n')]}
-        #         genome_aliases = {**genome_aliases, **genome_set_aliases}
-        if "ref" not in config.genome_aliases:
-            config.genome_aliases["ref"] = args.reference
-        valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
-                      none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
-                      param = params.indv, display_cmd = "--genomes",
-                      additional_message = ( "Alternatively, provide a FASTA file of the genome in"
-                                             " which to query using '-q <path to FASTA file>'."))
+    # ## not a callback to standardise valid alias checking w/ args.cluster
+    # if indv_provided:
+    #     # genome_aliases = params.indv_genomes
+    #     # if args.genome_set is not None:
+    #     #     if args.genome_set in params.genome_sets:
+    #     #         ## TODO: warn user if alias in genome_set_aliases is already in params.indv_genomes and handle it so that the alias in genome_set_aliases is given priority
+    #     #         genome_set_aliases = {}
+    #     #         with open(args.genome_set, 'r') as f:
+    #     #             genome_set_aliases = {alias: fname for alias, fname in
+    #     #                                   [x.split('\t') for x in f.read().split('\n')]}
+    #     #         genome_aliases = {**genome_aliases, **genome_set_aliases}
+    #     if "ref" not in config.genome_aliases:
+    #         config.genome_aliases["ref"] = args.reference
+    #     valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
+    #                   none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
+    #                   param = params.indv, display_cmd = "--genomes",
+    #                   additional_message = ( "Alternatively, provide a FASTA file of the genome in"
+    #                                          " which to query using '-q <path to FASTA file>'."))
     
     ## ARGS DEPENDENT ON VALUE OF OTHER ARGS
     ## raise check_recip if relax_recip is raised
@@ -455,6 +455,12 @@ def check_homologue_args(args, homologue_discovery_only = True):
             indvs_all = set(indv for indv in config.genome_aliases if indv not in indvs_special)
             indvs = (set(args.indv) - indvs_special).union(indvs_all)
             args.indv = type(args.indv)(indvs)
+        else:
+            valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
+                      none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
+                      param = params.indv, display_cmd = "--genomes",
+                      additional_message = ( "Alternatively, provide a FASTA file of the genome in"
+                                             " which to query using '-q <path to FASTA file>'."))
         # if IndvGenomesAll.all in args.indv:
         #     indvs_special = {IndvGenomesAll.all, IndvGenomesAll.none}
         #     indvs_all = set(indv for indv in IndvGenomesAll if \
@@ -492,6 +498,8 @@ def homologue(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
+        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
         
         ## target definition options
@@ -532,7 +540,6 @@ def homologue(
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
-        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
         
         ## user lookups (this is right at the end because we might need the other args)
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
@@ -563,6 +570,10 @@ def homologue(
     ## set config values
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
+    
+    ## extend genome if ext_genome and ext_cds are provided
+    extend_genome(args, config)
+    
     ## make reduced bed
     make_reduced_bed(args, gene_sets)
     
@@ -890,7 +901,10 @@ def main(ctx: typer.Context,
          # prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
          version: bool = typer.Option(*params.version(None)),
          keep_on_crash: bool = typer.Option(default = False), ## remove this option once done?
+         keep_all: bool = typer.Option(default = False),
          _help: bool = typer.Option(*params.help(None))): ## catch help
+    
+    config.keep_tmp = keep_all
     
     ## regenerate/reformat args for sub_main
     def regenerate_main_args(local_args):
@@ -955,7 +969,7 @@ if __name__ == "__main__":
     try:
         config.logfile = MINORgLogger(level = logging_level)
         print(config.logfile.filename)
-        config.logfile.args(f"Raw arguments: {' '.join(sys.argv)}")
+        config.logfile.args(["raw", sys.argv])
     except Exception as e:
         print("Unable to instantiate logger.")
         config.cleanup()

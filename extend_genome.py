@@ -57,7 +57,7 @@ def extract_annotation(fa_aln, sep = '.', attr_mod = {}):
     seqid_ref = min(seqs.keys(), key = lambda s: s.count(sep))
     seqid_cds = [seqid for seqid in seqs if seqid != seqid_ref]
     ## make gene annotation
-    gene_annotation = Annotation(seqid_ref, seqid_ref, "gene", attr_mod = attr_mod)
+    gene_annotation = UserAnnotation(seqid_ref, seqid_ref, "gene", attr_mod = attr_mod)
     gene_annotation.set_range(1, len([c for c in seqs[seqid_ref] if c != '-']))
     features = [gene_annotation]
     ## make mRNA and CDS annotations
@@ -71,8 +71,8 @@ def extract_annotation(fa_aln, sep = '.', attr_mod = {}):
             if start == None and base != '-':
                 start = pos
             elif start != None and (pos == (len(seq) - 1) or seq[pos+1] == '-'):
-                new_annotation = Annotation(f"{seqid}.cds{str(feature_count).zfill(6)}",
-                                            seqid_ref, "CDS", parent = seqid)
+                new_annotation = UserAnnotation(f"{seqid}.cds{str(feature_count).zfill(6)}",
+                                                seqid_ref, "CDS", parent = seqid)
                 new_annotation.set_range(start + 1, pos + 1)
                 new_annotation.set_phase(seq[:start])
                 cds_annotations.append(new_annotation)
@@ -80,13 +80,13 @@ def extract_annotation(fa_aln, sep = '.', attr_mod = {}):
             else:
                 continue
         ## make mRNA annotation
-        mRNA_annotation = Annotation(seqid, seqid_ref, "mRNA", parent = seqid_ref, attr_mod = attr_mod)
+        mRNA_annotation = UserAnnotation(seqid, seqid_ref, "mRNA", parent = seqid_ref, attr_mod = attr_mod)
         mRNA_annotation.set_range(min(ann._start for ann in cds_annotations),
                                   max(ann._end for ann in cds_annotations))
         features.extend([mRNA_annotation] + cds_annotations)
     return features
 
-class Annotation:
+class UserAnnotation:
     def __init__(self, ID, molecule, feature, parent = None, attr_mod = {}):
         self._attr_mod = attr_mod
         self._ID = ID
@@ -143,8 +143,8 @@ def extend_genome(args, config):
     seqs_cds = dict(itertools.chain(*[fasta_to_dict(fa).items() for fa in ext_cds]))
     dict_to_fasta(seqs_cds, ext_cds_fa)
     ## separate sequences by gene
-    aln_dir = config.mkfname("tmp_extend_aln")
-    config.mkdir(aln_dir)
+    aln_dir = config.mkdir("tmp_extend_aln")
+    # config.mkdir(aln_dir)
     group_by_gene(ext_cds_fa, ext_genome_fa, aln_dir, sep = '.', verbose = True, logger = config.logfile)
     ## align
     for fasta in [f for f in os.listdir(aln_dir) if re.search("\.fasta$", f)]:
@@ -155,8 +155,8 @@ def extend_genome(args, config):
             f.write(stdout)
         os.remove(os.path.join(aln_dir, fasta))
     ## convert alignment to gff
-    ann_dir = config.mkfname("tmp_extend_ann")
-    config.mkdir(ann_dir)
+    ann_dir = config.mkdir("tmp_extend_ann")
+    # config.mkdir(ann_dir)
     aln_bed = os.path.join(ann_dir, "aln2gff_tmp.bed")
     aln_to_annotation(aln_dir, fout = aln_bed, sep = '.', outfmt = "bed", attr_mod = args.attr_mod)
     ## write

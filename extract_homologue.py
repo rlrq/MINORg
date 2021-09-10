@@ -656,6 +656,7 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
             get_ref_raw(chrom, start, end, fasta_out, encoding = encoding, ref_fasta_files = ref_fasta_files)
             fasta_out_l.append(fasta_out)
             for ranges, seq_names in sorted(seq_ranges.items()):
+                ranges = [(s - start, e - start) for s, e in ranges]
                 seq_name_l = seq_names[0].split('|')
                 seq_name_l[3] = ','.join(f'{r[0]}-{r[1]}' for r in ranges)
                 if domain_f:

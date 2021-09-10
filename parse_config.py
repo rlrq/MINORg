@@ -517,11 +517,15 @@ class Config:
         
     ## make directory (or directories)
     def mkdir(self, *directories):
+        output = []
         for directory in directories:
+            if not os.path.isabs(directory):
+                directory = os.path.join(self.directory, directory)
+            output.append(directory)
             if not os.path.exists(directory) and not directory in self.new_dirs:
                 os.mkdir(directory)
                 self.new_dirs.append(directory)
-        return
+        return output[0] if len(directories) == 1 else output
     ## generate fname (usage: self.mkfname('ref', 'tmp.txt'))
     def mkfname(self, *path, tmp = False):
         if os.path.isabs(os.path.join(*path)): path = os.path.join(*path)
@@ -559,14 +563,15 @@ class Config:
         # self.log_file.write(f"{self.prefix}_minorg.log")
         ## move files to final destination (lol)
         if self.tmp_on:
-            ## create final output directory if doesn't exist
-            if not os.path.exists(self.out_dir):
-                os.makedirs(self.out_dir, exist_ok = True)
-            ## remove tmp files
-            self.rm_tmpfiles()
-            ## copy items
-            mv_dir_overwrite(self.tmpdir, self.out_dir)
-            typer.echo(f"Output files have been generated in {self.out_dir}")
+            if self.out_dir:
+                ## create final output directory if doesn't exist
+                if not os.path.exists(self.out_dir):
+                    os.makedirs(self.out_dir, exist_ok = True)
+                ## remove tmp files
+                self.rm_tmpfiles()
+                ## copy items
+                mv_dir_overwrite(self.tmpdir, self.out_dir)
+                typer.echo(f"Output files have been generated in {self.out_dir}")
             ## remove tmpdir
             os.rmdir(self.tmpdir)
 
