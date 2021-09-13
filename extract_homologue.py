@@ -227,8 +227,9 @@ def filter_min_cds_len(blast6cds_fname, merged, min_cds_len = 0,
 ## read table in and get sequences
 def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     ## get domain ranges
-    with open(merged_f, 'r') as f:
-        dat = [x[:-1].split('\t') for x in f.readlines()]
+    dat = [x.split('\t') for x in splitlines(merged_f)]
+    # with open(merged_f, 'r') as f:
+    #     dat = [x.replace('\n', '').split('\t') for x in f.readlines()]
     get = make_custom_get(dat[0])
     dat = dat[1:]
     ## parse fasta file
@@ -461,7 +462,7 @@ def grep_bedmerge(gene, bed, feature, out_dir, merge = False, encoding = "utf-8"
                   attribute_fields = fields["gff3"], field_sep_inter = ';', field_sep_intra = ',',
                   attribute_mod = {}, store_bed = None):
     ## get chrom, start, end of gene's features
-    data = [x[:-1].split('\t') for x in open(bed, 'r').readlines() if len(x) > 1]
+    data = [x.split('\t') for x in splitlines(bed) if len(x) > 1]
     ## make local get_attribute function based on gff/gtf format provided
     get_attribute = make_get_attribute(attribute_fields, attribute_mod = attribute_mod)
     ## get relevant feature entries

@@ -358,7 +358,7 @@ class GFF:
         Writes entries to file
         '''
         with open(fout, "w+") as f:
-            f.write('\n'.join([entry.generate_str(**kwargs) for entry in entries]))
+            f.write('\n'.join([entry.generate_str(**kwargs) for entry in entries]) + '\n')
     
     def write_i(self, fout, indices, **kwargs):
         '''
