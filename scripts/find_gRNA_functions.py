@@ -244,8 +244,9 @@ def filter_in_cds_gen(gRNA_hits, alignment_fname, cds_fasta, complete_fasta, max
                     if re.match(alignment_rvs_pattern, seq_id)]) < len(ref_seq_ids)/2
     get_target_CDS_ranges = make_target_CDS_ranges_function(cds_only_ranges, cds_gaps_ranges,
                                                             max_cds_insertion = max_cds_insertion)
-    targets_cds_ranges = {seqid: get_target_CDS_ranges(alignment[seqid]) for seqid in alignment
-                          if seqid not in ref_seq_ids}
+    targets_cds_ranges = {seqid: get_target_CDS_ranges(alignment[seqid]) for seqid in alignment}
+    # targets_cds_ranges = {seqid: get_target_CDS_ranges(alignment[seqid]) for seqid in alignment
+    #                       if seqid not in ref_seq_ids}
     ## iterate through all gRNAs
     for gRNA_seq, coverage in gRNA_hits.hits().items():
         new_coverage = []
