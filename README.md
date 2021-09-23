@@ -2,6 +2,9 @@
 **Mi**nimum **No**n-**R**eference **g**RNA finder
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 
+## IMPT
+The code in this repository is not complete. Only sections of it are viable.
+
 ## Requirements
 - BLAST+ suite
 - Python 3
