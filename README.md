@@ -14,7 +14,7 @@ The code in this repository is not complete. Only sections of it are viable. Thi
 
 ## Links
 - Detailed overview of steps in the programme: https://tinyurl.com/sr84ae9e (Google slides)
-- Flowchart to select & use appropriate input parameters: https://tinyurl.com/ty2jhjf (PDF)
+- Flowchart to select & use appropriate input parameters: https://tinyurl.com/jyke76b8 (PDF)
 
 ## Overview of steps
 1. Identify candidate targets in non-reference genome
