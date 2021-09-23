@@ -3,7 +3,7 @@
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 
 ## IMPT
-The code in this repository is not complete. Only sections of it are viable.
+The code in this repository is not complete. Only sections of it are viable. This README file is also not up-to-date. Please refer to slides/PDF in the 'Links' section for execution details for the version on the workstation (accessible only to lab members and guests with accounts).
 
 ## Requirements
 - BLAST+ suite
@@ -56,6 +56,10 @@ The code in this repository is not complete. Only sections of it are viable.
       - Non-reference sequences/genome (--nonref xxx.fasta)
    - Parameters:
       - Gene IDs (--gene)
+         - Used with:
+            - Accession/individual (-a) OR
+            - Query fasta file (-q xxx.fasta)
+      - Target sequences (--target xxx.fasta)
    - Optional parameters:
       - Minimum hit % identity (--minid 85 (%))
       - Minimum candidate target length (--minlen 0 (bp))
@@ -74,4 +78,5 @@ The code in this repository is not complete. Only sections of it are viable.
       - Background sequences (--background xxx.fasta)
 - Step 4
    - Optional paramters:
+      - Number of sets to output (--set 1)
       - Minimum set algorithm (--algo LAR)
