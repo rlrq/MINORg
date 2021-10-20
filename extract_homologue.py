@@ -35,6 +35,8 @@ from parse_config import (
     IndvGenomesAll, IndvGenomesAllClear,
 )
 
+## TODO: 2021/10/20: for recip_blast, match bed with reference when doing blast then intersect (i.e. blast results where subject is reference should only be intersected with reference gff/bed, and blast results where subject is extended reference should only be intersected with extended reference gff/bed)
+
 
 ##############################
 ##      FIND HOMOLOGUE      ##
@@ -591,6 +593,7 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                                        ".fasta").replace('|', '_'))
     get_ref_raw(chrom, start, end, fasta_raw, encoding = encoding, ref_fasta_files = ref_fasta_files)
     ref_seq_original = list(fasta_to_dict(fasta_raw).values())[0]
+    source_id = list(fasta_to_dict(fasta_raw).keys())[0].split('|')[0]
     ## iterate through isoforms
     for isoform, isoform_dat in isoforms.items():
         ref_seq = ref_seq_original
@@ -640,7 +643,7 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                     ref_seq = ref_seq.translate(to_stop = True)
                 else:
                     printi("Translation is only possible when the selected feature is 'CDS' and the flag 'complete' is not raised.")
-            seq_name = "{}|{}|{}|{}".format("Reference", gene, feature, isoform) + \
+            seq_name = "{}|{}|{}|{}".format(source_id, gene, feature, isoform) + \
                        (('|' + ("domain" if not domain else domain) + f"|{i+1}") if domain_f else '') + \
                        ("|complete" if complete else '') + \
                        ("|revcomp" if adj_dir and strand == '-' else '')
