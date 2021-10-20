@@ -4,6 +4,7 @@
 ## TODO: 2021/06/10: implement --valid-indv/--valid-genome/--valid-acc, --valid-cluster to allow user to check alias validity (print location of FASTA file for --valid-genome, do member_callback for --valid-cluster) before running
 ## TODO: 2021/06/10: disable Enum for --indv. Since users are now allowed to submit custom genome lookup files using --genome-lookup, autofill shouldn't be used for --indv unless it can dynamically update to accommodate user's --genome-lookup input even before command submission (which is impossible lol). Basically, restructure the whole --indv thing to use the same kind of code as --cluster
 ## TODO: 2021/09/07: don't merge ext_genome files w/ reference (or ext_bed files w/ bed). Find some way to allow both to be processed whenever blastn or whatever needs to be done to reference
+## TODO: 2021/10/19: update all functions to use config.reference_ext and config.bed_ext (dictionary of {source_id: path_to_fasta/bed}) instead of args.reference in order to accommodate multiple reference files (since we don't want to merge ext_genome with the reference). I've modified some stuff but haven't tested it out yet. Try minorg homologue.
 
 import os
 import sys
@@ -19,7 +20,7 @@ from argparse import Namespace
 # from datetime import datetime
 
 from scripts.get_ref import get_ref_by_genes_resolve
-from functions import extract_features_and_subfeatures, get_count_dict
+from functions import extract_features_and_subfeatures, get_count_dict, cat_files, reduce_bed
 from log import MINORgLogger
 
 ## import subcommand functions
@@ -190,6 +191,13 @@ def reference_callback(val):
     mapped_val = alias_or_file_callback(val)
     if mapped_val is not None:
         params.indv_genomes["ref"] = mapped_val
+    config.set_reference(mapped_val, None)
+    return mapped_val
+
+def gff_bed_callback(val):
+    alias_or_file_callback = make_alias_or_file_callback(params.gff_bed_aliases, params.bed)
+    mapped_val = alias_or_file_callback(val)
+    config.set_reference(None, mapped_val)
     return mapped_val
 
 def positive_callback(val):
@@ -358,14 +366,24 @@ def valid_aliases(aliases, lookup, raise_error = True, message = None, param = N
         else: return None
     else: return None
 
-def make_reduced_bed(args, gene_sets):
-    bed_red = None
+def make_reduced_bed(args, config, gene_sets):
     if args.gene or args.cluster:
-        bed_red = config.mkfname("tmp_reduced.bed", tmp = True)
+        bed_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
         config.bed_red = bed_red
-        extract_features_and_subfeatures(args.bed, tuple(itertools.chain(*tuple(gene_sets.values()))),
-                                         bed_red, quiet = True, fin_fmt = "BED", fout_fmt = "BED")
-    return bed_red
+        reduce_bed(beds = config.bed_ext.values(),
+                   ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
+                   fout = bed_red,
+                   mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
+        # bed_reds = []
+        # for src, bed in config.bed_ext.items():
+        #     bed_red = config.mkfname(f"tmp_reduced.{src}.bed", tmp = True)
+        #     bed_reds.append(bed_red)
+        #     extract_features_and_subfeatures(bed, tuple(itertools.chain(*tuple(gene_sets.values()))),
+        #                                      bed_red, quiet = True, fin_fmt = "BED", fout_fmt = "BED")
+        # bed_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
+        # cat_files(bed_reds, bed_red, remove = True)
+        # config.bed_red = bed_red
+    return
     
 def check_homologue_args(args, homologue_discovery_only = True):
     
@@ -532,7 +550,7 @@ def homologue(
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
         bed: str = typer.Option(*params.bed(), **params.bed.options,
-                                callback = make_alias_or_file_callback(params.gff_bed_aliases, params.bed)),
+                                callback = gff_bed_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = attr_mod_callback),
@@ -575,7 +593,7 @@ def homologue(
     extend_genome(args, config)
     
     ## make reduced bed
-    make_reduced_bed(args, gene_sets)
+    make_reduced_bed(args, config, gene_sets)
     
     ## call execute_homologue.
     for prefix, genes in gene_sets.items():
@@ -611,7 +629,7 @@ def generate_grna(
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
         bed: str = typer.Option(*params.bed(), **params.bed.options,
-                                callback = make_alias_or_file_callback(params.gff_bed_aliases, params.bed)),
+                                callback = gff_bed_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = attr_mod_callback),
@@ -726,7 +744,7 @@ def full(
                                       # callback = make_alias_or_file_callback(params.reference_aliases,
                                       #                                        params.reference)),
         bed: str = typer.Option(*params.bed(), **params.bed.options,
-                                callback = make_alias_or_file_callback(params.gff_bed_aliases, params.bed)),
+                                callback = gff_bed_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = attr_mod_callback),
@@ -803,7 +821,7 @@ def full(
     extend_genome(args, config)
     
     ## filter BED/GFF for relevant entries (reduces get_seq search time)
-    make_reduced_bed(args, gene_sets)
+    make_reduced_bed(args, config, gene_sets)
     # if args.gene or args.cluster:
     #     bed_red = config.mkfname("tmp_reduced.bed")
     #     config.bed_red = bed_red

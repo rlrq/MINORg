@@ -44,20 +44,103 @@ def imap_progress(f, args, threads = 1, overwrite = True, overwrite_last = True,
 ##  BLAST FORMATTING  ##
 ########################
 
-## executes blast w/ outfmt 6 and prepends colnames to file
-## header should either be an ordered iterable of fields or str where fields are comma-separated
-def blast6(blastf, header, fout, **kwargs):
+def blast6multi(blastf, header, fout, subjects,
+                threshold = None, n = None, metric = None, dir = None, **kwargs):
+    ## execute blast6 for first subject only
+    blast6(blastf, header, fout, subject = subjects[0], **kwargs)
+    ## execute blast for subsequent subjects and append to output file of first blast(6)
+    for subject in subjects[1:]:
+        blast(blastf, header, fout, append = True, dir = dir, subject = subject, **kwargs)
+    ## execute filters, with in-place modification of fout
+    if threshold and metric:
+        filter_blast6_threshold(fout, fout, threshold = threshold, metric = metric)
+    if n and metric:
+        filter_blast6_topn(fout, fout, n = n, metric = metric)
+    return
+
+def blast(blastf, header, fout, append = False, dir = None, **kwargs):
+    import os
     ## parse header
     if isinstance(header, str):
         header = header.split(',')
     ## execute blast
-    blast_cline = blastf(out = fout, outfmt = f"'6 {' '.join(header)}'", **kwargs)
-    blast_cline()
+    if append and os.path.exists(fout):
+        import tempfile
+        tmpf = tempfile.mkstemp(dir = dir)[1]
+        blast_cline = blastf(out = tmpf, outfmt = f"'6 {' '.join(header)}'", **kwargs)
+        blast_cline()
+        with open(fout, 'a+') as f:
+            ## add newline if file to append to doesn't already end with newline
+            if not file_ends_with_newline(fout):
+                f.write('\n')
+            ## append tmpf
+            with open(tmpf, 'r') as f2:
+                for line in f2:
+                    f.write(line)
+        os.remove(tmpf)
+    else:
+        blast_cline = blastf(out = fout, outfmt = f"'6 {' '.join(header)}'", **kwargs)
+        blast_cline()
+    return
+
+## executes blast w/ outfmt 6 and prepends colnames to file
+## header should either be an ordered iterable of fields or str where fields are comma-separated
+def blast6(blastf, header, fout, **kwargs):
+    blast(blastf, header, fout, **kwargs)
     ## reformat output file
-    with open(fout, 'r') as f:
-        dat = f.read()
-    with open(fout, "w+") as f: ## prepend header
-        f.write('\t'.join(header) + '\n' + dat)
+    prepend_line(fout, ('\t'.join(header) if not isinstance(header, str) else header.replace(',', '\t')))
+    return
+
+## retains only top n hits by specified metric for each query sequence
+## - hits with same value as one of the top n will also be retained
+## reads file twice
+def blast6topn(blastf, header, fout, n = 1, metric = "bitscore", **kwargs):
+    blast6(blastf, header, fout, **kwargs)
+    filter_blast6_topn(fout, fout, n = n, metric = metric)
+    return
+
+## reads file just once
+def blast6threshold(blastf, header, fout, threshold = 0, metric = "bitscore", **kwargs):
+    blast6(blastf, header, fout, **kwargs)
+    filter_blast6_threshold(fout, fout, threshold = threshold, metric = metric)
+    return
+
+## filter blast6 output by top n
+def filter_blast6_topn(fname, fout, n = 1, metric = "bitscore"):
+    with open(fname, 'r') as f:
+        ## parse header
+        header = f.readline().replace('\n', '').split('\t')
+        i_metric, i_qseqid = header.index(metric), header.index("qseqid")
+        ## filter
+        values = {}
+        for i, entry in enumerate(f):
+            dat = entry.replace('\n', '').split('\t')
+            qseqid, value = dat[i_qseqid], float(dat[i_metric])
+            values[qseqid] = values.get(qseqid, []) + [(value, i)]
+        thresholds = {qseqid: sorted(vals)[-n][0] for qseqid, vals in values.items()}
+        ## note: i+1 because the first line (header) has already been read
+        ##   so line 1 is indexed 0 during enumerate(f)
+        lines_to_retain = set(i+1 for qseqid, threshold in thresholds.items()
+                              for val, i in values[qseqid] if val >= threshold)
+    with open(fname, 'r') as f:
+        output = [line for i, line in enumerate(f) if i in lines_to_retain]
+    with open(fout, 'w+') as f:
+        ## we're not joining the entries w/ '\n' since we didn't strip them to begin with
+        f.write(''.join(['\t'.join(header) + '\n'] + output))
+    return
+
+## filter blast6 output by threshold
+def filter_blast6_threshold(fname, fout, threshold = 0, metric = "bitscore"):
+    with open(fname, 'r') as f:
+        ## parse header
+        header = f.readline().replace('\n', '').split('\t')
+        i_metric = header.index(metric)
+        ## filter
+        output = [entry for entry in f
+                  if float(entry.replace('\n', '').split('\t')[i_metric]) >= threshold]
+    with open(fout, 'w+') as f:
+        ## we're not joining the entries w/ '\n' since we didn't strip them to begin with
+        f.write(''.join(['\t'.join(header) + '\n'] + output))
     return
 
 ##################
@@ -158,6 +241,53 @@ def cat_files(fnames, fout, remove = False):
                 os.remove(fname)
     return fout
 
+def prepend(fname, string, insert_newline = False):
+    with open(fname, 'r') as f:
+        dat = f.read()
+    with open(fname, "w+") as f: ## prepend header
+        f.write(string + ('\n' if insert_newline else '') + dat)
+    return
+
+def prepend_line(fname, string):
+    prepend(fname, string, insert_newline = True)
+    return
+
+def last_line(fname):
+    import os
+    with open(fname, 'rb') as f:
+        ## catch OSError in case of one line file
+        try:
+            f.seek(-2, os.SEEK_END)
+            while f.read(1) != b'\n':
+                f.seek(-2, os.SEEK_CUR)
+        except OSError:
+            f.seek(0)
+        return f.readline().decode()
+
+def file_ends_with_newline(fname):
+    import re
+    return bool(re.search("\n$", last_line(fname)))
+
+def N_trailing_newlines(fname):
+    import re
+    return len(re.search("\n*$", last_line(fname)))
+
+def append(fname, string, insert_newline_if_absent = True, insert_trailing_newline = True):
+    import re
+    if insert_newline_if_absent and file_ends_with_newline(fname):
+        string = '\n' + string
+    if insert_trailing_newline and not re.search("\n$", string):
+        string = string + '\n'
+    with open(fname, "a+") as f:
+        f.write(string)
+    return
+
+def num_lines(fname):
+    i = -1 ## in case of empty files
+    with open(fname) as f:
+        for i, l in enumerate(f):
+            pass
+    return i+1
 
 ###################
 ##  FASTA_MANIP  ##
@@ -187,7 +317,6 @@ def dict_to_SeqRecordList(d, description = '', seq_id_func = lambda x:x, iupac_l
                                           IUPAC.ambiguous_protein if seq_type == "protein" else \
                                           IUPAC.ambiguous_rna, gap_char)) if gapped else \
                                Seq(str(seq)),
-
                                id = seq_id_func(seq_id), description = description))
     return out_l
 
@@ -487,3 +616,20 @@ def extract_features_and_subfeatures(gff_fname, feature_ids, fout, quiet = False
     printi("Writing features")
     gff.write_i(fout, output_features, fmt = fout_fmt)
     return
+
+#################
+##  BED MANIP  ##
+#################
+
+def reduce_bed(beds, ids, fout, mk_tmpf_name = None):
+    if mk_tmpf_name is None:
+        import tempfile
+        mk_tmpf_name = lambda x: tempfile.mkstemp()[1]
+    bed_reds = []
+    for i, bed in enumerate(beds):
+        bed_red = mk_tmpf_name(i)
+        bed_reds.append(bed_red)
+        extract_features_and_subfeatures(bed, ids, bed_red, quiet = True, fin_fmt = "BED", fout_fmt = "BED")
+    cat_files(bed_reds, fout, remove = True)
+    return
+

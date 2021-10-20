@@ -22,7 +22,9 @@ from functions import (
     extract_ranges,
     imap_progress,
     blast6,
-    make_local_print
+    blast6multi,
+    make_local_print,
+    num_lines
 )
 
 from exceptions import (
@@ -66,6 +68,7 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
     Note that fasta_queries is an iterable like such [[<indv_alias/index>, <path to indv's FASTA file>]...]
     '''
     def mkfout(indv_i):
+        import os
         return os.path.join(directory, f"{indv_i}_targets.fasta")
     ## generate arguments
     args = [[i, mkfout(i), fasta_query, directory, for_find_homologue_indv]
@@ -75,14 +78,12 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
     tmp_fouts = imap_progress(find_homologue_imap, args, threads = threads)
     ## merge files
     cat_files(tmp_fouts, fout, remove = True)
-    # ## remove temporary file
-    # for tmp_fout in tmp_fouts:
-    #     os.remove(tmp_fout)
     return
 
 def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query, genes = None,
                         check_reciprocal = False, quiet = True, lvl = 0, blastn = "blastn",
-                        bed = None, fasta_ref = None, relax = False, **for_merge_hits_and_filter):
+                        bed = None, fasta_ref = None, relax = False, keep_tmp = False,
+                        **for_merge_hits_and_filter):
     '''
     Finds homologue in single individual (technically, single fasta file).
     Lots of unnamed args to be passed to other functions.
@@ -114,10 +115,12 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     ## check reciprocal
     if check_reciprocal and genes:
         recip_blast(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
-                    lvl = lvl, quiet = quiet, bed = bed, fasta_ref = fasta_ref, relax = relax)
+                    lvl = lvl, quiet = quiet, beds = bed, fasta_ref = fasta_ref, relax = relax,
+                    keep_tmp = keep_tmp)
     ## remove tmp files
-    os.remove(tsv_blast_ref)
-    os.remove(tsv_blast_cds)
+    if not keep_tmp:
+        os.remove(tsv_blast_ref)
+        os.remove(tsv_blast_cds)
     return
 
 def merge_hits_and_filter(blast6_fname, fout, fasta, quiet = True, min_cds_len = 0, indv_i = 1,
@@ -246,42 +249,55 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     dict_to_fasta(output, fout)
     return
 
-def recip_blast(fasta_target, directory, bed, fasta_ref, blastn = "blastn", **kwargs):
+def recip_blast(fasta_target, directory, beds, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
     '''
     ## blast
     tsv_blast = os.path.join(directory, "tmp_recipblast.tsv")
     from Bio.Blast.Applications import NcbiblastnCommandline
-    blast6(blastf = NcbiblastnCommandline, cmd = blastn,
-           header = "sseqid,sstart,send,qseqid,qstart,qend,bitscore",
-           fout = tsv_blast, query = fasta_target, subject = fasta_ref)
+    blast_metrics = ["pident", "bitscore"]
+    blast6multi(blastf = NcbiblastnCommandline, cmd = blastn,
+                header = "sseqid,sstart,send,qseqid,qstart,qend," + ','.join(blast_metrics),
+                fout = tsv_blast, query = fasta_target, subjects = fasta_ref, dir = directory)
     ## convert hits to BED file for bedtools intersect
     from pybedtools import BedTool
     get, data = parse_get_data(tsv_blast)
+    ## rearrange coords in cols 2 and 3 so that smaller value is in col 2 and larger in col 3
     data_bed = [x[:1] + (x[1:3] if int(x[1]) < int(x[2]) else x[2:0:-1]) + x[3:] for x in data]
     str_bed = '\n'.join(['\t'.join(x) for x in data_bed])
     ## bedtools intersect
     blast_bed = BedTool(str_bed, from_string = True)
-    ref_bed = BedTool(bed)
-    intersect_bed = blast_bed.intersect(ref_bed, wao = True)
-    remove_non_max_bitscore(fasta_target, intersect_bed, **kwargs) ## kwargs: genes, lvl, quiet
+    intersect_bed = []
+    for bed in beds:
+        intersect_bed.append(blast_bed.intersect(BedTool(bed), wao = True))
+    remove_non_max_bitscore(fasta_target, intersect_bed, blast_metrics = blast_metrics,
+                            **kwargs) ## kwargs: genes, lvl, quiet
     ## remove temporary files
-    from os import remove
-    remove(tsv_blast)
+    if not keep_tmp:
+        from os import remove
+        remove(tsv_blast)
+    else:
+        intersect_fout = os.path.join(directory, "tmp_recipblast.intersect.tsv")
+        with open(intersect_fout, "w+") as f:
+            f.write('\n'.join([str(bedtool_obj) for bedtool_obj in intersect_bed]))
     return
 
 ## if relax == True, candidate targets with equal bitscore to a target gene and a non-target gene are retained
 ## elif relax == False, candidate targets are only retained if all max bitscore genes are subset of target genes
 def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet = True,
-                            colnames = ["chrom", "start", "end", "candidate", "cstart", "cend", "bitscore",
-                                        "bed_chrom", "bed_start", "bed_end", "id", "score", "strand", "source",
-                                        "feature", "phase", "attributes", "overlap"]):
+                            colnames_blast=["chrom", "start", "end", "candidate", "cstart", "cend"],
+                            blast_metrics = ["bitscore"],
+                            colnames_bed=["bed_chrom", "bed_start", "bed_end", "id", "score", "strand", "source",
+                                          "feature", "phase", "attributes", "overlap"]):
+    import itertools
     printi = make_local_print(quiet = quiet, printf = make_print_preindent(initial_lvl = lvl))
-    genes = set(genes)
+    genes = set(genes).union({'.'})
+    colnames = colnames_blast + blast_metrics + colnames_bed
     get = make_custom_get(colnames)
     data = {}
-    for entry in (x.split('\t') for x in str(bedtool).split('\n')
+    for entry in (x.split('\t') for x in
+                  tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool]))
                   if ( x.count('\t') == len(colnames) - 1 \
                        and get(x.split('\t'), "feature") in ("gene", "pseudogene", '.') )):
         data[get(entry, "candidate")] = data.get(get(entry, "candidate"), []) + [entry]
@@ -506,13 +522,35 @@ def grep_bedmerge(gene, bed, feature, out_dir, merge = False, encoding = "utf-8"
 ###################
 
 def get_ref_raw(chrom, start, end, fasta_out, encoding="utf-8", ref_fasta_files=ref_fasta,
-                store_fasta = None, **kwargs):
-    if isinstance(ref_fasta_files, dict):
-        ref_seq = list(fasta_to_dict(ref_fasta_files[chrom]).values())[0][start:end] ## 0-indexed
-        dict_to_fasta({"Reference|{}:{}..{}".format(chrom, start + 1, end): ref_seq}, fasta_out)
-    else:
-        dict_to_fasta({"Reference|{}:{}..{}".format(chrom, start + 1, end): fasta_to_dict(ref_fasta_files)[chrom][start:end]}, fasta_out)
+                store_fasta = None, src = None, **kwargs):
+    import fileinput
+    from Bio import SeqIO
+    ## convert fasta input to dictionary ({source_id: path_to_file}) if not already a dictionary
+    if not isinstance(ref_fasta_files, dict):
+        import collections
+        import six
+        ## if some kind of (non-generator) iterable
+        if (isinstance(ref_fasta_files, collections.Iterable)
+            and not isinstance(ref_fasta_files, six.string_types)):
+            ref_fasta_files = {i: fname for fname in ref_fasta_files}
+        ## else if string (or even Path)
+        else:
+            ref_fasta_files = {"Reference": ref_fasta_files}
+            src = "Reference"
+    ## get relevant files and create inverse mapping ({path_to_file: source_id})
+    file_map = {fname: src_id for src_id, fname in ref_fasta_files.items() if src is None or src_id == src}
+    ## stream all files
+    output = {}
+    with fileinput.input(list(file_map.keys())) as f:
+        for record in SeqIO.parse(f, "fasta"):
+            if record.id == chrom:
+                ## extract sequence. Prepend seqid with source_id
+                output[f"{file_map[f.filename()]}|{chrom}:{start+1}..{end}"] = record.seq[start:end]
+                ## exit loop and stream immediately after finding first match?
+                break
+    dict_to_fasta(output, fasta_out)
     store_fname(store_fasta, fasta_out)
+    return
 
 ## note: setting by_gene to True will collapse identical entries from all isoforms
 def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
@@ -656,6 +694,7 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                                                ".fasta").replace('|', '_'))
             get_ref_raw(chrom, start, end, fasta_out, encoding = encoding, ref_fasta_files = ref_fasta_files)
             fasta_out_l.append(fasta_out)
+            ## format seqid
             for ranges, seq_names in sorted(seq_ranges.items()):
                 ranges = [(s - start, e - start) for s, e in ranges]
                 seq_name_l = seq_names[0].split('|')

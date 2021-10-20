@@ -8,6 +8,7 @@ import subprocess
 
 from functions import (
     # make_make_fname,
+    reduce_bed,
     blast6, extract_features_and_subfeatures,
     fasta_to_dict, dict_to_fasta,
     parse_get_data, write_tsv, splitlines
@@ -64,16 +65,19 @@ def remove_duplicate(fasta, duplicated = False):
     return
 
 def execute_homologue(prefix, genes, args, config, params, for_masking = False):
-
-   ## if no genes provided (i.e. args.target is defined + no need to mask genes)
+    
+    ## if no genes provided (i.e. args.target is defined + no need to mask genes)
     if genes is None:
         return (config.mkfname(prefix), prefix, args.target, None, None, None)
     
     ## reduce bed file if none provided
     if config.bed_red is None:
         bed_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
-        extract_features_and_subfeatures(args.bed, tuple(genes), bed_red,
-                                         quiet = True, fin_fmt = "BED", fout_fmt = "BED")
+        reduce_bed(beds = config.bed_ext.values(), ids = tuple(genes), fout = bed_red,
+                   mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
+    #     bed_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
+    #     extract_features_and_subfeatures(args.bed, tuple(genes), bed_red,
+    #                                      quiet = True, fin_fmt = "BED", fout_fmt = "BED")
     else:
         bed_red = config.bed_red
     
@@ -82,7 +86,7 @@ def execute_homologue(prefix, genes, args, config, params, for_masking = False):
     def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
         return get_ref_by_genes_resolve(genes = genes, feature = feature, adj_dir = True,
                                         out_dir = out_dir, fout = fasta_out, ## output options
-                                        ref_fasta_files = args.reference, ## reference
+                                        ref_fasta_files = config.reference_ext, ## reference
                                         bed = bed_red, attribute_mod = args.attr_mod, ## reference annotation
                                         minlen = args.minlen, quiet = True, **kwargs)
     
@@ -112,8 +116,10 @@ def execute_homologue(prefix, genes, args, config, params, for_masking = False):
                                  min_len = args.minlen, min_id = args.minid, min_cds_len = args.mincdslen,
                                  check_reciprocal = args.check_recip, relax = args.relax_recip,
                                  check_id_before_merge = args.check_id_premerge, blastn = args.blastn,
-                                 bed = bed_red, fasta_ref = args.reference,
-                                 merge_within_range = args.merge_within)
+                                 bed = tuple(config.bed_ext.values()),
+                                 fasta_ref = tuple(config.reference_ext.values()),
+                                 merge_within_range = args.merge_within,
+                                 keep_tmp = config.keep_tmp)
     
     if for_masking:
         ## skip alignment step, only return potential homologues (don't return reference seqs)

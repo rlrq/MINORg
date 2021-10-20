@@ -16,8 +16,8 @@ def get_recursively(d, default, *keys):
     return helper(d, keys)
 
 def group_by_gene(fa_cds, fa_genomic, directory, sep = '.', verbose = True, logger = None):
-    seqs_cds = fasta_to_dict(fa_cds)
-    seqs_genomic = fasta_to_dict(fa_genomic)
+    seqs_cds = {seqid: seq for fname in fa_cds for seqid, seq in fasta_to_dict(fname).items()}
+    seqs_genomic = {seqid: seq for fname in fa_genomic for seqid, seq in fasta_to_dict(fname).items()}
     genes = {seqid: [] for seqid in seqs_genomic}
     orphan_cds = []
     ## map CDS to GENOMIC
@@ -76,6 +76,7 @@ def extract_annotation(fa_aln, sep = '.', attr_mod = {}):
                 new_annotation.set_range(start + 1, pos + 1)
                 new_annotation.set_phase(seq[:start])
                 cds_annotations.append(new_annotation)
+                feature_count += 1
                 start = None
             else:
                 continue
@@ -135,17 +136,10 @@ def extend_genome(args, config):
     nonexistent = nonexistent_genome + nonexistent_cds
     if nonexistent:
         InvalidPath(','.join(nonexistent))
-    ## combine files
-    ext_genome_fa = config.mkfname("tmp_extend_genome.fasta", tmp = True)
-    ext_cds_fa = config.mkfname("tmp_extend_cds.fasta", tmp = True)
-    seqs_genome = dict(itertools.chain(*[fasta_to_dict(fa).items() for fa in ext_genome]))
-    dict_to_fasta(seqs_genome, ext_genome_fa)
-    seqs_cds = dict(itertools.chain(*[fasta_to_dict(fa).items() for fa in ext_cds]))
-    dict_to_fasta(seqs_cds, ext_cds_fa)
     ## separate sequences by gene
     aln_dir = config.mkdir("tmp_extend_aln")
     # config.mkdir(aln_dir)
-    group_by_gene(ext_cds_fa, ext_genome_fa, aln_dir, sep = '.', verbose = True, logger = config.logfile)
+    group_by_gene(ext_cds, ext_genome, aln_dir, sep = '.', verbose = True, logger = config.logfile)
     ## align
     for fasta in [f for f in os.listdir(aln_dir) if re.search("\.fasta$", f)]:
         gene = re.search("^.+(?=\.fasta$)", os.path.basename(fasta)).group(0)
@@ -155,36 +149,18 @@ def extend_genome(args, config):
             f.write(stdout)
         os.remove(os.path.join(aln_dir, fasta))
     ## convert alignment to gff
-    ann_dir = config.mkdir("tmp_extend_ann")
-    # config.mkdir(ann_dir)
-    aln_bed = os.path.join(ann_dir, "aln2gff_tmp.bed")
+    aln_bed = config.mkfname("ext.bed", tmp = True)
     aln_to_annotation(aln_dir, fout = aln_bed, sep = '.', outfmt = "bed", attr_mod = args.attr_mod)
-    ## write
-    new_bed = config.mkfname("ext.bed", tmp = True)
-    new_ref = config.mkfname("ext.fasta", tmp = True)
-    with open(new_bed, "w+") as f:
-        last_line = ''
-        for line in open(args.bed, 'r'):
-            f.write(line)
-            last_line = line
-        if '\n' not in last_line:
-            f.write('\n')
-        for line in open(aln_bed, 'r'):
-            f.write(line)
-    with open(new_ref, "w+") as f:
-        last_line = ''
-        for line in open(args.reference, 'r'):
-            f.write(line)
-            last_line = line
-        if '\n' not in last_line:
-            f.write('\n')
-        for line in open(ext_genome_fa, 'r'):
-            f.write(line)
-    args.bed = new_bed
-    args.reference = new_ref
+    ## combine genomic files
+    ext_genome_fa = config.mkfname("ext.fasta", tmp = True)
+    seqs_genome = dict(itertools.chain(*[fasta_to_dict(fa).items() for fa in ext_genome]))
+    dict_to_fasta(seqs_genome, ext_genome_fa)
+    ## update config
+    config.extend_reference("Extended", ext_genome_fa, aln_bed)
+    # args.bed = new_bed
+    # args.reference = new_ref
     ## remove temporary directories
     import shutil
     shutil.rmtree(aln_dir)
-    shutil.rmtree(ann_dir)
     return
         

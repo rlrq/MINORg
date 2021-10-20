@@ -7,6 +7,8 @@ import configparser
 from enum import Enum
 from argparse import Namespace
 
+## ensure that 'config = Config(params, keep_on_crash = True)' is updated to 'config = Config(params, keep_on_crash = False)' when released (keep_on_crash set to False)
+
 try:
     config_fname = os.environ["MINORG_CONFIG"]
 except KeyError:
@@ -496,7 +498,7 @@ class Config:
         self.subcmd = None
         self.params = params
         ## shared params
-        self.bed_red = None
+        self.bed_red = None ## all bed entries to be collapsed into single file regardless of source
         self.attr_mod = None
         ## homologue params
         self.raw_domain = None
@@ -505,6 +507,9 @@ class Config:
         self.genome_set = None
         self.cluster_aliases = None
         self.genome_aliases = None
+        self.reference_ext = ({} if self.params.reference.default is None
+                              else {"Reference": self.params.reference.default})
+        self.bed_ext = {} if self.params.bed is None else {"Reference": self.params.bed}
         # ## transition to using Lookup object instead of a bunch of dictionaries
         # self.mapping_domain = Lookup(name = "domain mapping", config_string = params.domain_mapping)
         # self.mapping_cluster = Lookup(name = "cluster mapping", config_string = params.cluster_mapping)
@@ -574,6 +579,16 @@ class Config:
                 typer.echo(f"Output files have been generated in {self.out_dir}")
             ## remove tmpdir
             os.rmdir(self.tmpdir)
+    def set_reference(self, fasta, gff_bed):
+        self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
+        self.bed_ext = self.bed_ext if gff_bed is None else {"Reference": gff_bed}
+        return
+    def extend_reference(self, ref_id, fasta, gff_bed):
+        if ref_id in self.reference_ext:
+            raise Exception("ID '{ref_id}' already in use as source id for config.reference_ext.")
+        self.reference_ext[ref_id] = fasta
+        self.bed_ext[ref_id] = gff_bed
+        return
 
 ## make log file (TODO)
 class LogFile:
