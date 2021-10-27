@@ -35,7 +35,6 @@ from parse_config import (
     IndvGenomesAll, IndvGenomesAllClear,
 )
 
-## TODO: 2021/10/20: for recip_blast, match bed with reference when doing blast then intersect (i.e. blast results where subject is reference should only be intersected with reference gff/bed, and blast results where subject is extended reference should only be intersected with extended reference gff/bed)
 
 
 ##############################
@@ -66,7 +65,7 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
     '''
     Additional args: 
     fasta_complete (path), fasta_cds (path), genes (tuple), check_reciprocal (bool), quiet (bool), lvl (int), 
-    relax (bool), fasta_ref (path), bed (path)
+    relax (bool), fasta_ref (list of path), gff_beds (list of path)
     Note that fasta_queries is an iterable like such [[<indv_alias/index>, <path to indv's FASTA file>]...]
     '''
     def mkfout(indv_i):
@@ -84,7 +83,7 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
 
 def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query, genes = None,
                         check_reciprocal = False, quiet = True, lvl = 0, blastn = "blastn",
-                        bed = None, fasta_ref = None, relax = False, keep_tmp = False,
+                        gff_beds = None, fasta_ref = None, relax = False, keep_tmp = False,
                         **for_merge_hits_and_filter):
     '''
     Finds homologue in single individual (technically, single fasta file).
@@ -117,7 +116,7 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     ## check reciprocal
     if check_reciprocal and genes:
         recip_blast(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
-                    lvl = lvl, quiet = quiet, beds = bed, fasta_ref = fasta_ref, relax = relax,
+                    lvl = lvl, quiet = quiet, gff_beds = gff_beds, fasta_ref = fasta_ref, relax = relax,
                     keep_tmp = keep_tmp)
     ## remove tmp files
     if not keep_tmp:
@@ -251,7 +250,7 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     dict_to_fasta(output, fout)
     return
 
-def recip_blast(fasta_target, directory, beds, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
+def recip_blast(fasta_target, directory, gff_beds, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
     '''
@@ -270,9 +269,35 @@ def recip_blast(fasta_target, directory, beds, fasta_ref, blastn = "blastn", kee
     str_bed = '\n'.join(['\t'.join(x) for x in data_bed])
     ## bedtools intersect
     blast_bed = BedTool(str_bed, from_string = True)
-    intersect_bed = []
-    for bed in beds:
-        intersect_bed.append(blast_bed.intersect(BedTool(bed), wao = True))
+    # intersect_bed = []
+    # for gff_bed in gff_beds:
+    #     bed = BedTool(gff_bed)
+    #     ## get chromosomes in the gff_bed file
+    #     chrom = set(x.split('\t')[0] for x in open(bed.groupby(o = "first", c = 1, g = 1).fn, 'r').readlines())
+    #     ## filter for blast entries with chromosomes from the gff_bed file
+    #     dat_filt = [x for x in data_bed if x[0] in chrom]
+    #     ## skip gff_bed if no blast entries after filtering
+    #     if not dat_filt: continue
+    #     ## intersect
+    #     dat_intersect = BedTool('\n'.join(['\t'.join(x) for x in dat_filt])).intersect(bed, wao = True)
+    #     ## if gff_bed is a gff file, reorder columns
+    #     if len(str(dat_intersect).split('\n')[0].split('\t')) == (6 + len(blast_metrics) + 9):
+    #         str_intersect = ''
+    #         tmp_gff = GFF(fmt = "GFF")
+    #         for entry in dat_intersect.split('\n'):
+    #             entry = entry.split('\t')
+    #             if entry[6+len(blast_metrics)+4] == '.':
+    #                 str_intersect += '\t'.join(entry) + '\n'
+    #             else:
+    #                 pass ## convert
+    #         dat_intersect = BedTool(str_intersect, from_string = True)
+    #     intersect_bed.append(dat_intersect)
+    ## this doesn't work if the -b databases are different formats (e.g. gff and bed :( )
+    ##  but yknow what no i'm not doing this i'm either converting gff reference annotations to bed or
+    ##  writing the extended annotations as gff. we're gonna standardise.
+    ##  of course if we choose gff (which i'm super inclined to actually) we're gonna have to adjust
+    ##  the colnames_bed of remove_non_max_bitscore.
+    intersect_bed = blast_bed.intersect([BedTool(gff_bed) for gff_bed in gff_beds], wao = True)
     remove_non_max_bitscore(fasta_target, intersect_bed, blast_metrics = blast_metrics,
                             **kwargs) ## kwargs: genes, lvl, quiet
     ## remove temporary files
@@ -294,18 +319,20 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
                                           "feature", "phase", "attributes", "overlap"]):
     import itertools
     printi = make_local_print(quiet = quiet, printf = make_print_preindent(initial_lvl = lvl))
-    genes = set(genes).union({'.'})
+    genes = set(genes)
     colnames = colnames_blast + blast_metrics + colnames_bed
     get = make_custom_get(colnames)
     data = {}
     for entry in (x.split('\t') for x in
-                  tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool]))
+                  # tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool]))
+                  str(bedtool).split('\n')
                   if ( x.count('\t') == len(colnames) - 1 \
                        and get(x.split('\t'), "feature") in ("gene", "pseudogene", '.') )):
         data[get(entry, "candidate")] = data.get(get(entry, "candidate"), []) + [entry]
     ## get largest bitscore for each candidate target
     max_bitscore = {candidate: max(get(data[candidate], "bitscore")) for candidate in data}
     ## identify sequences to discard and print warnings if candidate has max bitscore with target and non-target
+    ## note that due to the algorithm, candidates that don't overlap with ANY features will also be kept
     throw = []
     for candidate in data:
         max_bitscore_genes = set(get(entry, "id") for entry in data[candidate]
@@ -559,7 +586,9 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                     ref_fasta_files=ref_fasta, complete=False, domain="", domain_f="",
                     start_inc=True, end_inc=True, merge=False, translate=False, adj_dir=False,
                     attribute_fields = fields["gff3"], by_gene=False, attribute_mod={},
-                    store_fasta = None, store_bed = None, quiet = True, lvl = 0, **kwargs):
+                    store_fasta = None, store_bed = None, quiet = True, lvl = 0,
+                    seqid_template = "$source_id|$gene|$feature|$isoform|$domain|$n|$complete|$revcomp",
+                    **kwargs):
     
     ## display function
     printi = (make_print_preindent(initial_lvl = lvl) if not quiet else lambda *x, **kwargs: None)
@@ -594,6 +623,14 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
     get_ref_raw(chrom, start, end, fasta_raw, encoding = encoding, ref_fasta_files = ref_fasta_files)
     ref_seq_original = list(fasta_to_dict(fasta_raw).values())[0]
     source_id = list(fasta_to_dict(fasta_raw).keys())[0].split('|')[0]
+    ## create function to make seqid
+    from string import Template
+    def mk_seqid(**kwargs):
+        return Template(seqid_template).substitute(source = source_id, gene = gene, feature = feature,
+                                                   complete = ("complete" if complete else "stitched"),
+                                                   domain = ("domain" if not domain else domain),
+                                                   revcomp = ("revcomp" if adj_dir and strand == '-'
+                                                              else "sense"), **kwargs)
     ## iterate through isoforms
     for isoform, isoform_dat in isoforms.items():
         ref_seq = ref_seq_original
@@ -643,10 +680,7 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                     ref_seq = ref_seq.translate(to_stop = True)
                 else:
                     printi("Translation is only possible when the selected feature is 'CDS' and the flag 'complete' is not raised.")
-            seq_name = "{}|{}|{}|{}".format(source_id, gene, feature, isoform) + \
-                       (('|' + ("domain" if not domain else domain) + f"|{i+1}") if domain_f else '') + \
-                       ("|complete" if complete else '') + \
-                       ("|revcomp" if adj_dir and strand == '-' else '')
+            seq_name = mk_seqid(isoform = isoform, n = i+1)
             seqs_to_write[seq_name] = ref_seq
             ## for by_gene
             if by_gene:
@@ -700,11 +734,9 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
             ## format seqid
             for ranges, seq_names in sorted(seq_ranges.items()):
                 ranges = [(s - start, e - start) for s, e in ranges]
-                seq_name_l = seq_names[0].split('|')
-                seq_name_l[3] = ','.join(f'{r[0]}-{r[1]}' for r in ranges)
-                if domain_f:
-                    seq_name_l[5] = str(i + 1)
-                seq_name = '|'.join(seq_name_l)
+                ## $isoform field is replaced with ranges
+                seq_name = mk_seqid(isoform = ','.join(f'{r[0]}-{r[1]}' for r in ranges),
+                                    n = (i+1 if domain_f else "NA"))
                 # final_seqs[seq_name] = isoform_seqs[seq_names[0]]
                 seq_out = ''.join([str(ref_seq_original[r[0]:r[1]]) for r in sorted(ranges)])
                 if (adj_dir or translate) and strand == '-':

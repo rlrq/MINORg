@@ -4,7 +4,13 @@
 ## TODO: 2021/06/10: implement --valid-indv/--valid-genome/--valid-acc, --valid-cluster to allow user to check alias validity (print location of FASTA file for --valid-genome, do member_callback for --valid-cluster) before running
 ## TODO: 2021/06/10: disable Enum for --indv. Since users are now allowed to submit custom genome lookup files using --genome-lookup, autofill shouldn't be used for --indv unless it can dynamically update to accommodate user's --genome-lookup input even before command submission (which is impossible lol). Basically, restructure the whole --indv thing to use the same kind of code as --cluster
 ## TODO: 2021/09/07: don't merge ext_genome files w/ reference (or ext_bed files w/ bed). Find some way to allow both to be processed whenever blastn or whatever needs to be done to reference
-## TODO: 2021/10/19: update all functions to use config.reference_ext and config.bed_ext (dictionary of {source_id: path_to_fasta/bed}) instead of args.reference in order to accommodate multiple reference files (since we don't want to merge ext_genome with the reference). I've modified some stuff but haven't tested it out yet. Try minorg homologue.
+## TODO: 2021/10/21: update all functions to use config.reference_ext and config.bed_ext (dictionary of {source_id: path_to_fasta/bed}) instead of args.reference in order to accommodate multiple reference files (since we don't want to merge ext_genome with the reference). I've modified some stuff and test with homologue but not the other subcommands.
+## TODO: 2021/10/21: log user-provided indvs that cannot be mapped. Actually, log user ANY ALIAS that cannot be mapped.
+## TODO: 2021/10/21: update everything to use gff3 instead of bed
+## TODO: 2021/10/21: enable remote rpsblast (not that i've been able to get it to find the remote database but hey we should at least let people have the option)
+## TODO: 2021/10/22: DONE. for the generate_grna subcommand, either integrate within_cds (rename that to within_feature) with execute_grna or update execute_filter so it can filter by within feature and not everything else then use execute_filter after execute_grna.
+## TODO: 2021/10/26: enable other gRNA filters. Also, implement within feature filter for generate_gRNA.
+## TODO: 2021/10/26: clean up execute_grna so it pipes into a more generic function that doesn't require config/args
 
 import os
 import sys
@@ -20,7 +26,7 @@ from argparse import Namespace
 # from datetime import datetime
 
 from scripts.get_ref import get_ref_by_genes_resolve
-from functions import extract_features_and_subfeatures, get_count_dict, cat_files, reduce_bed
+from functions import get_count_dict, cat_files, reduce_bed
 from log import MINORgLogger
 
 ## import subcommand functions
@@ -370,7 +376,7 @@ def make_reduced_bed(args, config, gene_sets):
     if args.gene or args.cluster:
         bed_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
         config.bed_red = bed_red
-        reduce_bed(beds = config.bed_ext.values(),
+        reduce_bed(gff_beds = config.bed_ext.values(),
                    ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
                    fout = bed_red,
                    mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
@@ -385,7 +391,7 @@ def make_reduced_bed(args, config, gene_sets):
         # config.bed_red = bed_red
     return
     
-def check_homologue_args(args, homologue_discovery_only = True):
+def check_homologue_args(args, standalone = True):
     
     ## check if user has provided indv
     indv_provided = not (len(args.indv) == 1 and args.indv[0] == IndvGenomesAll.none)
@@ -399,7 +405,7 @@ def check_homologue_args(args, homologue_discovery_only = True):
     if args.gene is not None and args.cluster is not None:
         raise click.UsageError("'-g <gene(s)>' and '-c <cluster(s)>' are mutually exclusive.")
     ## if checking args for function 'homologue' and not 'full', then -q/-t are not compatible with -g/-c/-i
-    if ( homologue_discovery_only and
+    if ( standalone and
          ( ( args.query or args.target is not None) and
            ( args.gene is not None or args.cluster is not None or indv_provided ) ) ):
         raise click.UsageError( ( "'-q <FASTA file>', '-t <FASTA file>', and"
@@ -430,6 +436,22 @@ def check_homologue_args(args, homologue_discovery_only = True):
     if sum(map(lambda x: x is None, [args.ext_cds, args.ext_genome])) == 1:
         raise click.UsageError( ("'--extend-cds <FASTA file>' and '--extend-genome <FASTA file>'"
                                  " should either be used together or not used at all.") )
+    ## check that --mafft is provided
+    if not standalone and args.mafft is None:
+        raise click.UsageError( "Path to mafft executable is required: --mafft <path>" )
+    ## check that --blastn is provided if using -q or '-i <not ref only>'
+    if ( (not standalone or args.query or (indv_provided and set(args.indv) != {"ref"}))
+         and args.blastn is None):
+        raise click.UsageError( "Path to blastn executable is required: --blastn <path>" )
+    ## check that --rpsblast is provided if using --domain
+    if args.domain is not None:
+        if args.rpsblast is None:
+            raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
+                                     " is required if using '--domain <domain alias or PSSM-Id>'") )
+        if args.db is None:
+            raise click.UsageError( ("'--db <alias of or path to local RPS-BLAST database"
+                                     " OR name of remote RPS-BLAST database>'"
+                                     " is required if using '--domain <domain alias or PSSM-Id>'") )
     
     ## VALID ALIASES (check -r, --bed, --rps-db, --indv & -c & --attr-mod)
     ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
@@ -508,6 +530,70 @@ def check_homologue_args(args, homologue_discovery_only = True):
     return
     # return all(checks)
 
+def check_grna_args(args, standalone = True):
+    
+    ## MUTUALLY EXCLUSIVE ARGS
+    ## -g, -c, and -t are mutually exclusive
+    if sum(map(lambda x: x is not None, [args.gene, args.cluster, args.target])) > 1:
+        raise click.UsageError( ("'-g <gene(s)>', '-c <cluster(s)>', and '-t <path to FASTA file>'"
+                                 " are mutually exclusive.") )
+    # if args.target is not None and args.feature is not None:
+    #     config.logfile.warning("-t <FASTA> is incompatible with -f <feature>. -f will be ignored.")
+    
+    ## REQUIRED ARGS
+    ## check that --pam is provided
+    if args.pam is None:
+        raise click.UsageError( "'-p <PAM pattern>' is required." )
+    ## check that --length is provided
+    if args.length is None:
+        raise click.UsageError( "'-l <gRNA length (bp)>' is required." )
+    ## if -g/-c is provided, check that --ref and --bed are also provided
+    if (args.gene is not None or args.cluster is not None):
+        ## set dummy arguments so execute_homologue doesn't break
+        if standalone:
+            ## set indv to reference
+            args.indv = ["ref"]
+            ## set arguments to None or False
+            args.minlen = args.minid = args.mincdslen = args.merge_within = 0
+            args.check_recip = args.relax_recip = args.check_id_premerge = False
+            args.blastn = None
+        if args.reference is None:
+            raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
+                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        if args.bed is None:
+            raise click.UsageError( ("'--bed <BED file converted from GFF3 annotations using gff2bed>'"
+                                     " is required if using '-g <gene(s)>' or '-c <cluster(s)>'.") )
+    ## check that --rpsblast is provided if using --domain
+    if args.domain is not None:
+        if args.rpsblast is None:
+            raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
+                                     " is required if using '--domain <domain alias or PSSM-Id>'") )
+        if args.db is None:
+            raise click.UsageError( ("'--db <alias of or path to local RPS-BLAST database"
+                                     " OR name of remote RPS-BLAST database>'"
+                                     " is required if using '--domain <domain alias or PSSM-Id>'") )
+    ## if --extend-genome or --extend-cds is provided, check that the other is also provided
+    if sum(map(lambda x: x is None, [args.ext_cds, args.ext_genome])) == 1:
+        raise click.UsageError( ("'--extend-cds <FASTA file>' and '--extend-genome <FASTA file>'"
+                                 " should either be used together or not used at all.") )
+    
+    ## VALID ALIASES (check -r, --bed, --db, -c)
+    ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
+    if args.cluster is not None:
+        valid_aliases(aliases = args.cluster, lookup = config.cluster_aliases,
+                      param = params.cluster, display_cmd = "--clusters",
+                      additional_message = ( "Alternatively, manually input the desired genes using"
+                                             " '-g <gene(s)>' or provide a different cluster set lookup file"
+                                             " using '--cluster-set <path to file>'."))
+    
+    ## some parsing
+    if args.target is not None:
+        ## set args.indv to empty list so it doesn't break execute_homologue
+        ##  note: execute_homologue is used to retrieve reference genes if requested by user
+        args.indv = []
+    
+    
+
 ## TODO: make sure all tmp files are removed if not using --keep-on-crash (2021/05/12)
 @app_sub.command("homologue")
 @app_sub.command("homolog")
@@ -517,8 +603,10 @@ def homologue(
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
         blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
         mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
         
         ## target definition options
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -557,7 +645,6 @@ def homologue(
         ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
-        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
         
         ## user lookups (this is right at the end because we might need the other args)
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
@@ -577,7 +664,7 @@ def homologue(
     ## this one can't be parsed using alias_or_file_callback cuz the path isn't actually to a file but a prefix
     args.db = os.path.abspath(parse_lookup(args.db, params.rps_db_aliases, return_first = True))
     ## check arguments are in order
-    check_homologue_args(args, homologue_discovery_only = True)
+    check_homologue_args(args, standalone = True)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
     ## move logfile
@@ -597,7 +684,8 @@ def homologue(
     
     ## call execute_homologue.
     for prefix, genes in gene_sets.items():
-        execute_homologue(prefix, genes, args, config, params)
+        ## catch output
+        output = execute_homologue(args, config, params, prefix, genes)
     
     config.resolve()
     return
@@ -608,7 +696,11 @@ def generate_grna(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
-        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        thread: int = typer.Option(*params.thread(), **params.thread.options),
+        # blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
         
         ## gRNA options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
@@ -626,6 +718,7 @@ def generate_grna(
         cluster_set: str = typer.Option(*params.cluster_set(), **params.cluster_set.options,
                                         **oparams.file_valid, is_eager = True,
                                         callback = cluster_set_callback),
+        domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
         bed: str = typer.Option(*params.bed(), **params.bed.options,
@@ -636,12 +729,67 @@ def generate_grna(
         ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
-        rpsblast: Path = typer.Option(*params.rpsblast(), **params.rpsblast.options, **oparams.file_valid),
+        
+        ## basic filtering
+        gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
+                                     callback = non_negative_callback),
+        gc_max: float = typer.Option(*params.gc_max(), **params.gc_max.options,
+                                     callback = non_negative_callback),
+        feature: Optional[List[str]] = typer.Option(*params.feature(), **params.feature.options,
+                                                    callback = split_callback_list),
         
         ## ??
         placeholder: str = None):
     
+    '''
+    Generate gRNA from either user-provided FASTA file or reference genes
+    '''
+    
     typer.echo("generating grna")
+    
+    ## check validity of args
+    args = Namespace(**locals())
+    ## this one can't be parsed using alias_or_file_callback cuz the path isn't actually to a file but a prefix
+    args.db = os.path.abspath(parse_lookup(args.db, params.rps_db_aliases, return_first = True))
+    ## check arguments are in order
+    check_grna_args(args, standalone = True)
+    ## parse cluster --> gene
+    gene_sets = parse_genes_from_args(args)
+    ## move log file
+    config.logfile.move(config, args)
+    
+    print("post check:", vars(args))
+    
+    if prefix: config.prefix = prefix
+    if directory: config.out_dir = directory
+    
+    ## extend genome if ext_genome and ext_cds are provided
+    extend_genome(args, config)
+    
+    ## filter BED/GFF for relevant entries (reduces get_seq search time)
+    make_reduced_bed(args, config, gene_sets)
+    
+    ## generate gRNA
+    for prefix, genes in gene_sets.items():
+        ## call execute_homologue.
+        if args.target is not None:
+            set_dir = config.mkfname(prefix)
+            set_pref = prefix
+            set_target = args.target
+            set_aln = set_complete = set_cds = set_ann = None
+            config.mkdir(set_dir)
+        else:
+            output_homologue = execute_homologue(args, config, params, prefix, genes)
+            ## split into multiple lines because there are just too many variables lol
+            set_dir, set_pref = output_homologue[:2]
+            set_target, set_aln, set_complete, set_cds, set_ann = output_homologue[2:]
+        ## call execute_grna.
+        set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
+        ## call execute_filter.
+        set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
+                                                     set_map_all, set_aln, set_target, set_complete,
+                                                     set_ann, checks = (["GC"] if target is not None
+                                                                        else ["GC", "feature"]))
     config.resolve()
     pass ## execute grna generation function
 
@@ -715,8 +863,11 @@ def full(
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
         blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
+        # rpsblast: Path = typer.Option(*params.rpsblast(), **params.rpsblast.options, **oparams.file_valid),
         mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
         
         ## target definition options
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -751,13 +902,18 @@ def full(
         ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
-        rpsblast: Path = typer.Option(*params.rpsblast(), **params.rpsblast.options, **oparams.file_valid),
         
         ## gRNA generation options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
         length: str = typer.Option(*params.length(), **params.length.options),
         
         ## filter gRNA options
+        gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
+                                     callback = non_negative_callback),
+        gc_max: float = typer.Option(*params.gc_max(), **params.gc_max.options,
+                                     callback = non_negative_callback),
+        feature: Optional[List[str]] = typer.Option(*params.feature(), **params.feature.options,
+                                                    callback = split_callback_list),
         mismatch: int = typer.Option(*params.mismatch(), **params.mismatch.options,
                                      callback = non_negative_callback),
         gap: int = typer.Option(*params.gap(), **params.gap.options, callback = non_negative_callback),
@@ -806,7 +962,8 @@ def full(
     ## this one can't be parsed using alias_or_file_callback cuz the path isn't actually to a file but a prefix
     args.db = os.path.abspath(parse_lookup(args.db, params.rps_db_aliases, return_first = True))
     ## check arguments are in order
-    check_homologue_args(args, homologue_discovery_only = False)
+    check_homologue_args(args, standalone = False)
+    check_grna_args(args, standalone = False)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
     ## move log file
@@ -822,12 +979,6 @@ def full(
     
     ## filter BED/GFF for relevant entries (reduces get_seq search time)
     make_reduced_bed(args, config, gene_sets)
-    # if args.gene or args.cluster:
-    #     bed_red = config.mkfname("tmp_reduced.bed")
-    #     config.bed_red = bed_red
-    #     extract_features_and_subfeatures(args.bed, tuple(itertools.chain(*tuple(gene_sets.values()))),
-    #                                      bed_red, quiet = True, fin_fmt = "BED", fout_fmt = "BED")
-    #     config.tmp_files.append(bed_red)
     
     ## generate wrapper for get_seq for common args
     def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
@@ -838,7 +989,6 @@ def full(
     
     ## iterate through all gene sets
     ## TODO: handle situations when args.target is defined
-    print(gene_sets)
     for prefix, genes in gene_sets.items():
         ## do the thing where we find gRNA.
         ## call execute_homologue.
@@ -846,18 +996,22 @@ def full(
             set_dir = config.mkfname(prefix)
             set_pref = prefix
             set_target = args.target
-            set_aln = set_complete = set_cds = None
+            set_aln = set_complete = set_cds = set_ann = None
+            config.mkdir(set_dir)
         else:
             ## TODO: i'm not sure what "cds = False" was for. To update execute_homologue if I figure it out
-            set_dir, set_pref, set_target, set_aln, set_complete, set_cds = execute_homologue(prefix, genes,
-                                                                                              args, config,
-                                                                                              params)
-                                                                                              # cds = False)
+            output_homologue = execute_homologue(args, config, params, prefix, genes)
+                                                 # cds = False)
+            ## split into multiple lines because there are just too many variables lol
+            set_dir, set_pref = output_homologue[:2]
+            set_target, set_aln, set_complete, set_cds, set_ann = output_homologue[2:]
         ## call execute_grna.
-        set_grna_all, set_grna_all = execute_grna(set_dir, set_pref, set_target, args, config)
-        # ## call execute_filter.
-        # set_gRNA, set_grna_pass, set_map_pass = execute_filter(set_dir, set_pref, set_grna_all, set_map_all,
-        #                                                        set_aln, set_complete, set_cds, args, config)
+        set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
+        ## call execute_filter.
+        set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
+                                                     set_map_all, set_aln, set_target, set_complete,
+                                                     set_ann, checks = (["GC"] if target is not None
+                                                                        else ["GC", "feature"]))
         # ## call execute_minimumset.
         # execute_minimumset(set_grna_pass, set_map_pass, args, config)
         pass
@@ -1013,3 +1167,5 @@ if __name__ == "__main__":
 
 ## testing: ../minorg.py -d . test --quiet
 ## testing: ../minorg.py --dir ./tx/ty test --suff 2
+
+

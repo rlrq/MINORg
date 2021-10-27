@@ -199,7 +199,9 @@ class Params():
                                   "converted from GFF3 format using bedtools' gff2bed" ))
         self.db = Param(get_val_none(get_data("rps database"), self.rps_db_aliases, none = None),
                         "--rps-db",
-                        help = "local RPS-BLAST database")
+                        help = "local or remote RPS-BLAST database")
+        self.remote_rps = Param(get_data("remote rps"), "--remote-rps",
+                            help = "Raise --remote flag when executing RPS-BLAST")
         self.cluster_set = Param(get_val_none(get_data("cluster set"), self.cluster_sets),
                                     "--cluster-set",
                                     help = ( "File containing cluster alias-members mapping or"
@@ -261,6 +263,8 @@ class Params():
                           description = "comma-separated genome alias(es)",
                           alias_value_description = "the location of their FASTA files")
         self.target = Param(None, "-t", "--target")
+        self.feature = Param(["CDS"], "--feature",
+                             help = "comma-separated GFF feature(s) to find gRNA in")
         # self.query = Param([conf.get(section_homologue, "query")], "-q", "--query")
         self.query = Param([], "-q", "--query")
         self.domain = Param(get_val_none(conf.get(section_homologue, "domain"),
@@ -301,6 +305,12 @@ class Params():
         self.mismatch = Param(conf.getint(section_filter, "mismatch"), "--mismatch")
         self.gap = Param(conf.getint(section_filter, "gap"), "--gap")
         self.exclude = Param(None, "-e", "--exclude") ## fname
+        self.gc_min = Param(conf.getfloat(section_filter, "GC minimum"), "--gc-min",
+                            help = ( "minimum GC content (inclusive),"
+                                     " where value should be between 0 (0% GC) and 1 (100% GC)"))
+        self.gc_max = Param(conf.getfloat(section_filter, "GC maximum"), "--gc-max",
+                            help = ( "maximum GC content (inclusive),"
+                                     " where value should be between 0 (0% GC) and 1 (100% GC)"))
         self.accept_invalid = Param(conf.getboolean(section_filter, "accept invalid"),
                                     "--accept-invalid/--reject-invalid",
                                     false_true = ("reject", "accept"), show_default = False)
