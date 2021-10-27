@@ -776,18 +776,18 @@ def generate_grna(
             set_dir = config.mkfname(prefix)
             set_pref = prefix
             set_target = args.target
-            set_aln = set_complete = set_cds = set_ann = None
+            set_aln = set_gene = set_cds = set_ann = None
             config.mkdir(set_dir)
         else:
             output_homologue = execute_homologue(args, config, params, prefix, genes)
             ## split into multiple lines because there are just too many variables lol
             set_dir, set_pref = output_homologue[:2]
-            set_target, set_aln, set_complete, set_cds, set_ann = output_homologue[2:]
+            set_target, set_aln, set_gene, set_cds, set_ann = output_homologue[2:]
         ## call execute_grna.
         set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
         ## call execute_filter.
         set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_aln, set_target, set_complete,
+                                                     set_map_all, set_aln, set_target, set_gene,
                                                      set_ann, checks = (["GC"] if target is not None
                                                                         else ["GC", "feature"]))
     config.resolve()
@@ -996,7 +996,7 @@ def full(
             set_dir = config.mkfname(prefix)
             set_pref = prefix
             set_target = args.target
-            set_aln = set_complete = set_cds = set_ann = None
+            set_aln = set_gene = set_cds = set_ann = None
             config.mkdir(set_dir)
         else:
             ## TODO: i'm not sure what "cds = False" was for. To update execute_homologue if I figure it out
@@ -1004,12 +1004,12 @@ def full(
                                                  # cds = False)
             ## split into multiple lines because there are just too many variables lol
             set_dir, set_pref = output_homologue[:2]
-            set_target, set_aln, set_complete, set_cds, set_ann = output_homologue[2:]
+            set_target, set_aln, set_gene, set_cds, set_ann = output_homologue[2:]
         ## call execute_grna.
         set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
         ## call execute_filter.
         set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_aln, set_target, set_complete,
+                                                     set_map_all, set_aln, set_target, set_gene,
                                                      set_ann, checks = (["GC"] if target is not None
                                                                         else ["GC", "feature"]))
         # ## call execute_minimumset.

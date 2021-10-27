@@ -446,7 +446,7 @@ def adjusted_feature_ranges(seq, seq_range, feature_ranges, strand = '+', sort =
         start_adj_ranges = [tuple([x - seq_start for x in r]) for r in feature_ranges]
     else:
         seq_start = seq_range[1]
-        start_adj_ranges = [tuple(sorted([x - seq_start for x in r])) for r in feature_ranges]
+        start_adj_ranges = [tuple(sorted([abs(x - seq_start) for x in r])) for r in feature_ranges]
     adj_ranges = adjusted_ranges(seq, *start_adj_ranges, **kwargs)
     return list(sorted(adj_ranges)) if sort else adj_ranges
 

@@ -99,7 +99,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     ## generate fnames
     fout_dir = os.path.join(config.directory, prefix)
     ref_pref = f"{prefix}_ref_{config.raw_domain}"
-    fasta_complete = make_fname("ref", f"{ref_pref}_complete.fasta")
+    fasta_gene = make_fname("ref", f"{ref_pref}_gene.fasta")
     fasta_cds = make_fname("ref", f"{ref_pref}_CDS.fasta")
     # ## bed_complete and bed_cds are identical if complete is just well CDS but complete.
     # ##  TODO: figure out a way to have _complete report the complete range (i.e. min-max for each gene)
@@ -108,7 +108,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     ## get reference sequences
     get_reference_fa(params = params, config = config, get_ref = get_seq_ref_genes,
                      make_fname = make_fname, genes = genes, out_dir = fout_dir, out_pref = prefix,
-                     fout = fasta_complete, fout_cds = fasta_cds, domain = args.domain,
+                     fout = fasta_gene, fout_cds = fasta_cds, domain = args.domain,
                      # bedout = bed_complete, bedout_cds = bed_cds,
                      db = args.db, rpsblast = str(args.rpsblast))
     
@@ -117,13 +117,13 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     fasta_target = make_fname(f"{fout_pref}_targets.fasta" if not for_masking else \
                               f"{fout_pref}_toMask.fasta")
     if set(args.indv) == {"ref"}:
-        shutil.copyfile(fasta_complete, fasta_target)
+        shutil.copyfile(fasta_gene, fasta_target)
     else:
         print("Finding homologues in non-reference genomes")
         fasta_queries = config.query_map
         ## blast reference sequences to non-ref sequences
         find_homologue_multiindv(fasta_queries = fasta_queries, fout = fasta_target, directory = fout_dir,
-                                 fasta_complete = fasta_complete, fasta_cds = fasta_cds, genes = genes,
+                                 fasta_gene = fasta_gene, fasta_cds = fasta_cds, genes = genes,
                                  min_len = args.minlen, min_id = args.minid, min_cds_len = args.mincdslen,
                                  check_reciprocal = args.check_recip, relax = args.relax_recip,
                                  check_id_before_merge = args.check_id_premerge, blastn = args.blastn,
@@ -156,7 +156,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
             #     # f.write('\n'.join(stdout.split('\n')[1:]))
             #     duplicated = True
         with open(tmp_f, "w+") as f:
-            stdout, stderr = MafftCommandline(args.mafft, add = fasta_complete, # quiet = True,
+            stdout, stderr = MafftCommandline(args.mafft, add = fasta_gene, # quiet = True,
                                               thread = args.thread, input = fasta_aln)()
             f.write(stdout)
         ## remove '_seed_' prefix
@@ -175,7 +175,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
             ## remove '_seed_' prefix
             remove_seed(fasta_aln)
         config.rm_tmpfiles(tmp_f)
-        return (config.mkfname(prefix), fout_pref, fasta_target, fasta_aln, fasta_complete, fasta_cds, bed_red)
+        return (config.mkfname(prefix), fout_pref, fasta_target, fasta_aln, fasta_gene, fasta_cds, bed_red)
 
 ## collapses identical sequences (arbitrarily selects a seqid to represent each set)
 ## writes collapsed fasta file and a tsv file mapping identical sequences
@@ -239,13 +239,13 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
         
         ## get domain nucleotide sequences
         printi("Extracting reference domain nucleotide sequence(s)", overwrite = True)
-        def get_ref_domain(fasta_out, complete, **kwargs):
-            return get_ref(genes = genes, feature = "CDS", domain_f = tsv_domains, out_dir = out_dir,
+        def get_ref_domain(fasta_out, complete, feature = "CDS", **kwargs):
+            return get_ref(genes = genes, feature = feature, domain_f = tsv_domains, out_dir = out_dir,
                            qname_dname = ("qseqid", "domain"), qstart_qend = ("qstart", "qend"),
                            domain = domain, verbose = False, fasta_out = fasta_out, complete = complete,
                            by_gene = True, **kwargs)
         ## complete domain sequence
-        get_ref_domain(fasta_out = fout, complete = True, bed_out = bedout)
+        get_ref_domain(fasta_out = fout, complete = True, bed_out = bedout, feature = "gene")
         ## CDS-only domain sequence
         get_ref_domain(fasta_out = fout_cds, complete = False, bed_out = bedout_cds)
         # ## remove tmp files (tmp files to be removed w/ other tmp files on cleanup)
@@ -255,11 +255,11 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
         
     ## else if no domain provided
     else:
-        def get_ref_gene(fasta_out, complete, **kwargs):
-            return get_ref(genes = genes, feature = "CDS", out_dir = out_dir, verbose = False,
+        def get_ref_gene(fasta_out, complete, feature = "CDS", **kwargs):
+            return get_ref(genes = genes, feature = feature, out_dir = out_dir, verbose = False,
                            fasta_out = fout, complete = complete, by_gene = True, **kwargs)
         ## get complete gene sequence
-        get_ref(genes, "CDS", fout, out_dir, complete = True, by_gene = True, bed_out = bedout)
+        get_ref(genes, "gene", fout, out_dir, complete = True, by_gene = True, bed_out = bedout)
         ## get CDS-only of gene sequence
         get_ref(genes, "CDS", fout_cds, out_dir, complete = False, by_gene = True, bed_out = bedout_cds)
     return
