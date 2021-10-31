@@ -9,7 +9,7 @@ import subprocess
 
 from functions import (
     # make_make_fname,
-    reduce_bed,
+    reduce_bed, GFF,
     blast6, extract_features_and_subfeatures,
     fasta_to_dict, dict_to_fasta,
     parse_get_data, write_tsv, splitlines
@@ -91,9 +91,10 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
         return get_ref_by_genes_resolve(genes = genes, feature = feature, adj_dir = True,
                                         out_dir = out_dir, fout = fasta_out, ## output options
                                         ref_fasta_files = config.reference_ext, ## reference
-                                        bed = bed_red, attribute_mod = args.attr_mod, ## reference annotation
+                                        gff_bed = bed_red, attribute_mod = args.attr_mod, ## reference annotation
                                         minlen = args.minlen, quiet = True,
-                                        seqid_template = "$source|$domain|$feature|$complete|$gene",
+                                        # seqid_template = "Reference|$source|$domain|$feature|$complete|$gene",
+                                        seqid_template = "Reference|$source|$domain|$feature|$complete|$gene|$isoform",
                                         no_bed = (not keep_bed), **kwargs)
     
     ## generate fnames
@@ -101,6 +102,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     ref_pref = f"{prefix}_ref_{config.raw_domain}"
     fasta_gene = make_fname("ref", f"{ref_pref}_gene.fasta")
     fasta_cds = make_fname("ref", f"{ref_pref}_CDS.fasta")
+    fout_domain_gff_bed = None if not args.domain else make_fname("ref", f"{ref_pref}_domain.gff")
     # ## bed_complete and bed_cds are identical if complete is just well CDS but complete.
     # ##  TODO: figure out a way to have _complete report the complete range (i.e. min-max for each gene)
     # bed_complete = make_fname("ref", f"{ref_pref}_complete.bed") if keep_bed else None
@@ -109,6 +111,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     get_reference_fa(params = params, config = config, get_ref = get_seq_ref_genes,
                      make_fname = make_fname, genes = genes, out_dir = fout_dir, out_pref = prefix,
                      fout = fasta_gene, fout_cds = fasta_cds, domain = args.domain,
+                     fout_domain_gff_bed = fout_domain_gff_bed,
                      # bedout = bed_complete, bedout_cds = bed_cds,
                      db = args.db, rpsblast = str(args.rpsblast))
     
@@ -175,7 +178,8 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
             ## remove '_seed_' prefix
             remove_seed(fasta_aln)
         config.rm_tmpfiles(tmp_f)
-        return (config.mkfname(prefix), fout_pref, fasta_target, fasta_aln, fasta_gene, fasta_cds, bed_red)
+        return (config.mkfname(prefix), fout_pref, fasta_target, fasta_aln, fasta_gene, fasta_cds,
+                bed_red, fout_domain_gff_bed)
 
 ## collapses identical sequences (arbitrarily selects a seqid to represent each set)
 ## writes collapsed fasta file and a tsv file mapping identical sequences
@@ -189,7 +193,8 @@ def collapse_identical_seqs(fasta, fout_fa, fout_seqid):
     return
 
 ## bed should be a reduced BED file filtered for relevant entries
-def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pref, fout, fout_cds, db,
+def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pref,
+                     fout, fout_cds, db, gff_bed = None, fout_domain_gff_bed = None,
                      bedout = None, bedout_cds = None, rpsblast = "rpsblast",
                      domain = None, domain_aliases = {}, lvl = 0):
     
@@ -232,6 +237,11 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
         blast6(blastf = NcbirpsblastCommandline, cmd = rpsblast,
                header = "qseqid,sseqid,pident,length,qstart,qend",
                fout = tsv_domains, query = fasta_aa_collapsed, db = db)
+        ## copy tsv_domains somewhere else to keep for posterity
+        with open(tsv_domains + ".txt", "w+") as f1:
+            with open(tsv_domains, 'r') as f2:
+                for line in f2:
+                    f1.write(line)
         ## filter blast6 output for relevant entries
         filter_rpsblast_for_domain(fname = tsv_domains, pssmid = pssmid)
         ## expand filtered output of rpsblast+ to sequences w/ identical protein
@@ -243,11 +253,11 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
             return get_ref(genes = genes, feature = feature, domain_f = tsv_domains, out_dir = out_dir,
                            qname_dname = ("qseqid", "domain"), qstart_qend = ("qstart", "qend"),
                            domain = domain, verbose = False, fasta_out = fasta_out, complete = complete,
-                           by_gene = True, **kwargs)
+                           by_gene = True, fout_domain_gff_bed = fout_domain_gff_bed, **kwargs)
         ## complete domain sequence
-        get_ref_domain(fasta_out = fout, complete = True, bed_out = bedout, feature = "gene")
+        get_ref_domain(fasta_out = fout, complete = True, bed_out = bedout, feature = "CDS")
         ## CDS-only domain sequence
-        get_ref_domain(fasta_out = fout_cds, complete = False, bed_out = bedout_cds)
+        get_ref_domain(fasta_out = fout_cds, complete = False, bed_out = bedout_cds, feature = "CDS")
         # ## remove tmp files (tmp files to be removed w/ other tmp files on cleanup)
         # os.remove(tsv_domains)
         # os.remove(fasta_aa_collapsed)

@@ -237,7 +237,7 @@ def cat_files(fnames, fout, remove = False):
     if remove:
         import os
         for fname in fnames:
-            if os.path.exists(fname):
+            if os.path.exists(fname) and fname != fout:
                 os.remove(fname)
     return fout
 
@@ -378,6 +378,13 @@ def ranges_union(ranges):
     pos_set = ranges_to_pos(itertools.chain(*ranges))
     return pos_to_ranges(pos_set)
 
+## e.g. [(1, 3), (4, 20)], [(2, 10)] --> {2, 4, 5, 6, 7, 8, 9} --> [(2, 3), (4, 10)]
+def ranges_intersect(r1, r2):
+    pos_set_1 = set(ranges_to_pos(r1))
+    pos_set_2 = set(ranges_to_pos(r2))
+    pos_intersection = pos_set_1.intersection(pos_set_2)
+    return pos_to_ranges(pos_intersection)
+
 ## convert ranges of [start, end) into set of positions
 ## e.g. [(1, 3), (6, 10)] --> {1, 2, 6, 7, 8, 9}
 def ranges_to_pos(ranges):
@@ -517,13 +524,20 @@ class GFF:
         self._attr_fields_inv = {}
         self._quiet = quiet
         self._kwargs = kwargs
+        self._molecules = {}
         self.update_attr_fields()
         self.parse()
     
+    def __iter__(self):
+        for entry in self._data:
+            yield entry
+    
+    def __len__(self):
+        return len(self._data)
+    
     def parse(self):
         if self._fname is None: return
-        self._data = []
-        raw_data = [x.split('\t') for x in splitlines(self._fname) if x[:1] != '#']
+        ## create add_entry function
         if self._fmt.upper() == "BED":
             def add_entry(entry):
                 gff_fmt = [entry[0], entry[6], entry[7], str(int(entry[1]) + 1), entry[2],
@@ -532,12 +546,34 @@ class GFF:
         else: ## GFF3
             def add_entry(entry):
                 self.add_entry(Annotation(entry, self, **self._kwargs))
-        for entry in raw_data:
-            add_entry(entry)
+        ## start parsing
+        self._data = []
+        with open(self._fname, 'r') as f:
+            for entry in f:
+                if entry[:1] == '#' or entry == '\n': continue
+                entry = entry.replace('\n', '').split('\t')
+                add_entry(entry)
+        self.index_molecules()
     
     def read_file(self, fname):
         self._fname = fname
         self.parse()
+    
+    def index_molecules(self, reset = True):
+        if reset:
+            self._molecules = {}
+        index = 0
+        curr = None
+        for entry in self._data:
+            if entry.molecule != curr and entry.molecule not in self._molecules:
+                curr = entry.molecule
+                index += 1
+                self._molecules[entry.molecule] = index
+        return
+    
+    def sort(self):
+        self._data.sort(key = lambda entry: (self._molecules[entry.molecule], entry.start, -entry.end,
+                                             entry.source, entry.feature, entry.attributes))
     
     def add_entry(self, gff_entry):
         self._data.append(gff_entry)
@@ -607,7 +643,7 @@ class GFF:
         Gets features w/ feature_ids AND subfeatures of those features.
         If full = True, executes get_subfeatures_full for subfeature discovery, else get_subfeatures
         '''
-        features = self.get_id(feature_ids, index = True)
+        features = self.get_id(feature_ids, index = True, output_list = True)
         if full: subfeatures = self.get_subfeatures_full(feature_ids, index = True)
         else: subfeatures = self.get_subfeatures(feature_ids, index = True)
         ## prepare output
@@ -622,7 +658,9 @@ class GFF:
         if type(indices) is int: return self._data[indices]
         else: return [self._data[i] for i in indices]
     
-    def get_id(self, feature_ids, index = False):
+    def get_id(self, feature_ids, index = False, output_list = False):
+        ## if even if output_list is only used when len(indices) == 1 or == 0 AND type(feature_ids) is str.
+        ##  Always returns list otherwise.
         '''
         Get GFF entry by feature ID
         '''
@@ -630,8 +668,10 @@ class GFF:
             indices = [i for i, entry in enumerate(self._data) if entry.has_attr("ID", [feature_ids])]
         else:
             indices = [i for i, entry in enumerate(self._data) if entry.has_attr("ID", feature_ids)]
-        if not indices and type(feature_ids) is str: return None
-        elif type(feature_ids) is str: return self.get_i(indices[0])
+        if type(feature_ids) and not output_list and len(indices) <= 1:
+            if not indices: return None
+            elif index: return indices[0]
+            else: return self.get_i(indices[0])
         elif index: return indices
         else: return [self.get_i(i) for i in indices]
     
@@ -696,9 +736,9 @@ class Annotation:
         return [self.f_dict[field] for field in fields]
     
     ## wrappers for Attribute methods
-    def get_attr(self, a): return self.attributes.get(a)
-    def is_attr(self, a, val): return self.attributes.is_attr(a, val)
-    def has_attr(self, a, vals): return self.attributes.has_attr(a, vals)
+    def get_attr(self, a, **kwargs): return self.attributes.get(a, **kwargs)
+    def is_attr(self, a, val, **kwargs): return self.attributes.is_attr(a, val, **kwargs)
+    def has_attr(self, a, vals, **kwargs): return self.attributes.has_attr(a, vals, **kwargs)
 
 class Attributes:
     def __init__(self, val, gff, entry, field_sep_inter = ';', field_sep_intra = ','):

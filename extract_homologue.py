@@ -24,7 +24,8 @@ from functions import (
     blast6,
     blast6multi,
     make_local_print,
-    num_lines
+    num_lines,
+    GFF
 )
 
 from exceptions import (
@@ -385,6 +386,7 @@ def get_ref_by_genes_resolve(genes, fout = None, bed_out = None, no_bed = True, 
         
         store_fa = os.path.join(tmpdir, "fa_fnames.txt")
         store_bed = os.path.join(tmpdir, "bed_fnames.txt")
+        store_domain_gff_bed = os.path.join(tmpdir, "domain_gff_bed_fnames.txt")
         
         ## get seqs
         if show_progress_bar:
@@ -392,11 +394,13 @@ def get_ref_by_genes_resolve(genes, fout = None, bed_out = None, no_bed = True, 
             with progressbar(genes) as progress:
                 for gene in progress:
                     get_ref_by_gene(gene, **kwargs, acc = "ref", directory = tmpdir,
-                                    store_fasta = store_fa, store_bed = store_bed)
+                                    store_fasta = store_fa, store_bed = store_bed,
+                                    store_domain_gff_bed = store_domain_gff_bed)
         else:
             for gene in genes:
                 get_ref_by_gene(gene, **kwargs, acc = "ref", directory = tmpdir,
-                                store_fasta = store_fa, store_bed = store_bed)
+                                store_fasta = store_fa, store_bed = store_bed,
+                                store_domain_gff_bed = store_domain_gff_bed)
         
         ## merge fasta files if requested
         if fout is not None and os.path.exists(store_fa):
@@ -474,83 +478,11 @@ def store_fname(fout, fname):
             f.write(fname + '\n')
     return
 
-def make_get_attribute(attribute_fields, attribute_mod = {}, **kwargs):
-    def parse_gff_attributes(s, field_sep_inter = ';', field_sep_intra = ','):
-        ## if multiple separate entries for same field (e.g. 'Parent=abc.1;Parent=abc.2'), parse properly
-        attributes_l = [x.split('=') for x in re.findall(f"[^{field_sep_intra}{field_sep_inter}=]+=.+?(?=[^{field_sep_intra}{field_sep_inter}=]+=.+?|$)", s)]
-        attributes = {}
-        for attribute in attributes_l:
-            attributes[attribute[0]] = attributes.get(attribute[0], []) + \
-                                       re.search(f'^.+?(?=[{field_sep_intra}{field_sep_inter}]?$)',
-                                                 attribute[1]).group(0).split(field_sep_intra)
-        return attributes
-    def get_attribute(entry, a, feature = ''):
-        ## map the field name to what's used in the file
-        if not isinstance(entry, str):
-            attributes = parse_gff_attributes(get_gffbed(entry, "attributes"), **kwargs)
-            feature = get_gffbed(entry, "type")
-        else:
-            attributes = parse_gff_attributes(entry, **kwargs)
-        ## get attributes
-        if feature in attribute_mod and a in attribute_mod[feature]:
-            mapped_field = attribute_mod[feature][a]
-        elif feature in attribute_fields and a in attribute_fields[feature]:
-            mapped_field = attribute_fields[feature][a]
-        elif a in attribute_fields["all"]:
-            mapped_field = attribute_fields["all"][a]
-        else:
-            mapped_field = a
-        return attributes.get(mapped_field, [])
-    return get_attribute
-
-def grep_bedmerge(gene, bed, feature, out_dir, merge = False, encoding = "utf-8",
-                  attribute_fields = fields["gff3"], field_sep_inter = ';', field_sep_intra = ',',
-                  attribute_mod = {}, store_bed = None):
-    ## get chrom, start, end of gene's features
-    data = [x.split('\t') for x in splitlines(bed) if len(x) > 1]
-    ## make local get_attribute function based on gff/gtf format provided
-    get_attribute = make_get_attribute(attribute_fields, attribute_mod = attribute_mod)
-    ## get relevant feature entries
-    if feature == "gene":
-        bed_raw = [x for x in data if get_gffbed(x, "type") == "gene" and gene in get_attribute(x, "ID")]
-    elif feature == "mRNA":
-        bed_raw = [x for x in data if get_gffbed(x, "type") == "mRNA" and (gene in get_attribute(x, "ID") or
-                                                                           gene in get_attribute(x, "Parent"))]
-    elif feature == "CDS":
-        tmp_mrna = set(itertools.chain(*[get_attribute(x, "ID") for x in data
-                                         if get_gffbed(x, "type") == "mRNA"
-                                         and (gene in get_attribute(x, "ID") or
-                                              gene in get_attribute(x, "Parent"))]))
-        bed_raw = [x for x in data if (get_gffbed(x, "type") == "CDS" and
-                                       has_cat_overlap(get_attribute(x, "Parent"), tmp_mrna))]
-    else:
-        bed_raw = [x for x in data if gene in get_gffbed(x, "attributes")]
-    ## coerce into final columns (and merge overlapping entries if so required)
-    if merge:
-        from pybedtools import BedTool
-        bedtoolobj = BedTool('\n'.join(['\t'.join(x) for x in bed_raw]), from_string = True)
-        output = [entry.split('\t') for entry in \
-                  str(bedtoolobj.merge(c = "6,8,10", o = "collapse,collapse,collapse")).split('\n') if entry]
-        # tmp_f = os.path.join(out_dir, "bed", gene + '_' + feature + ".bed.tmp")
-        # with open(tmp_f, "w+") as f:
-        #     f.write('\n'.join(['\t'.join(x) for x in bed_raw]))
-        #     output = [entry.split('\t') for entry in subprocess.check_output(("bedtools","merge","-c","6,8,10","-o","collapse,collapse,collapse"), stdin=f).decode(encoding).split('\n') if entry]
-        # os.remove(tmp_f)
-    else:
-        output = [[x[i] for i in (0,1,2,5,7,9)] for x in bed_raw]
-    ## write bed file of regions used (0-indexed)
-    fout = os.path.join(out_dir, "bed", gene + '_' + feature + ".bed")
-    os.makedirs(os.path.dirname(fout), exist_ok=True)
-    with open(fout, "w+") as f:
-        f.write('\n'.join(['\t'.join(x) for x in output]) + '\n')
-    store_fname(store_bed, fout)
-    return {"fout": fout, "data": output}
-
 ###################
 ## get reference ##
 ###################
 
-def get_ref_raw(chrom, start, end, fasta_out, encoding="utf-8", ref_fasta_files=ref_fasta,
+def get_ref_raw(chrom, start, end, fasta_out = None, encoding="utf-8", ref_fasta_files=ref_fasta,
                 store_fasta = None, src = None, **kwargs):
     import fileinput
     from Bio import SeqIO
@@ -573,19 +505,25 @@ def get_ref_raw(chrom, start, end, fasta_out, encoding="utf-8", ref_fasta_files=
     with fileinput.input(list(file_map.keys())) as f:
         for record in SeqIO.parse(f, "fasta"):
             if record.id == chrom:
-                ## extract sequence. Prepend seqid with source_id
-                output[f"{file_map[f.filename()]}|{chrom}:{start+1}..{end}"] = record.seq[start:end]
-                ## exit loop and stream immediately after finding first match?
-                break
+                ## get seq and exit loop + stream immediately after finding first match?
+                if not fasta_out:
+                    output = record.seq[start:end]
+                    output.source = file_map[f.filename()]
+                    return output
+                else:
+                    ## extract sequence. Prepend seqid with source_id
+                    output[f"{file_map[f.filename()]}|{chrom}:{start+1}..{end}"] = record.seq[start:end]
+                    break
     dict_to_fasta(output, fasta_out)
     store_fname(store_fasta, fasta_out)
-    return
+    return 
 
 ## note: setting by_gene to True will collapse identical entries from all isoforms
-def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
+def get_ref_by_gene(gene, feature, out_dir, gff_bed=bed_path, encoding="utf-8",
                     ref_fasta_files=ref_fasta, complete=False, domain="", domain_f="",
-                    start_inc=True, end_inc=True, merge=False, translate=False, adj_dir=False,
-                    attribute_fields = fields["gff3"], by_gene=False, attribute_mod={},
+                    start_inc=True, end_inc=True, translate=False, adj_dir=False,
+                    # attribute_fields = fields["gff3"], merge=False,
+                    by_gene=False, attribute_mod={}, fout_domain_gff_bed = None,
                     store_fasta = None, store_bed = None, quiet = True, lvl = 0,
                     seqid_template = "$source_id|$gene|$feature|$isoform|$domain|$n|$complete|$revcomp",
                     **kwargs):
@@ -594,35 +532,30 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
     printi = (make_print_preindent(initial_lvl = lvl) if not quiet else lambda *x, **kwargs: None)
     
     ## get relevant gffbed entries
-    if domain_f:
-        feature = "CDS"
-    data = grep_bedmerge(gene, bed, feature, out_dir, encoding = encoding, merge = merge, attribute_fields = attribute_fields, attribute_mod = attribute_mod, store_bed = store_bed)["data"]
-    if not data:
-        return
+    # if domain_f: feature = "CDS"
+    ann = GFF(data = GFF(fname = gff_bed, fmt = ("BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF3"),
+                         quiet = True, attr_mod = attribute_mod).get_features_and_subfeatures(gene))
+    domain_ann = GFF(fname = fout_domain_gff_bed, attr_mod = attribute_mod,
+                     quiet = True, fmt = ("BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF3"))
+    if not ann: return
     ## get chrom, strand, and max boundaries
-    chrom = data[0][0]
-    start = min([int(x[1]) for x in data])
-    end = max([int(x[2]) for x in data])
-    strand = data[0][3]
+    gene_ann = ann.get_id(gene, output_list = False)
+    chrom = gene_ann.molecule
+    start = gene_ann.start - 1
+    end = gene_ann.end
+    strand = gene_ann.strand
     ## extract sequences from fasta file
-    get_attribute = make_get_attribute(attribute_fields)
-    if merge or feature == "gene":
-        isoforms = {gene: data}
+    if feature == "gene":
+        isoforms = {gene: [gene_ann]}
     else:
-        isoforms = {isoform: [x for x in data if isoform in get_attribute(x[-1], "Parent")]
-                    for isoform in set(itertools.chain(*[get_attribute(x[-1], "Parent") for x in data]))}
-    isoforms = {k: sorted(v, key = lambda x: get_gffbed(x, "start"))
-                for k, v in isoforms.items()}
-    fasta_out_l = []
+        isoforms = {entry.get_attr("ID", fmt = str):
+                    sorted(ann.get_subfeatures(entry.get_attr("ID", fmt = list), feature),
+                           key = lambda x: x.start)
+                    for entry in ann if entry.is_attr("Parent", gene)}
     seq_ranges = {}
-    ## get fasta file of sequence data
-    fasta_raw = os.path.join(out_dir, (gene + "_ref_" + feature + ("_complete" if complete else '') + \
-                                       (('_' + ("domain" if not domain else domain)) if domain_f else '') + \
-                                       ("_protein" if (translate and (feature=="CDS")) else '') + \
-                                       ".fasta").replace('|', '_'))
-    get_ref_raw(chrom, start, end, fasta_raw, encoding = encoding, ref_fasta_files = ref_fasta_files)
-    ref_seq_original = list(fasta_to_dict(fasta_raw).values())[0]
-    source_id = list(fasta_to_dict(fasta_raw).keys())[0].split('|')[0]
+    ## get gene sequence
+    ref_seq_original = get_ref_raw(chrom, start, end, encoding = encoding, ref_fasta_files = ref_fasta_files)
+    source_id = ref_seq_original.source
     ## create function to make seqid
     from string import Template
     def mk_seqid(**kwargs):
@@ -632,26 +565,31 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                                                    revcomp = ("revcomp" if adj_dir and strand == '-'
                                                               else "sense"), **kwargs)
     ## iterate through isoforms
+    isoform_seqs = {}
     for isoform, isoform_dat in isoforms.items():
         ref_seq = ref_seq_original
-        ## get fasta file of sequence data
-        fasta_out = os.path.join(out_dir, (isoform + "_ref_" + feature + ("_complete" if complete else '') + \
-                                           (('_' + ("domain" if not domain else domain)) if domain_f else '') + \
-                                           ("_protein" if (translate and (feature=="CDS")) else '') + \
-                                           ".fasta").replace('|', '_'))
         ## if extracting only domain-specific range
         if domain_f:
             domain_data = get_domain_in_genome_coords(gene, domain, domain_f, out_dir,
-                                                      bed=bed, encoding=encoding,
-                                                      isoform = isoform, attribute_fields = attribute_fields,
+                                                      gff_bed=gff_bed, isoform = isoform,
                                                       attribute_mod = attribute_mod,
                                                       start_inc = start_inc, end_inc = end_inc,
-                                                      store_bed = store_bed,
                                                       **{k: v for k, v
                                                          in kwargs.items()
                                                          if k in ["qname_dname", "qstart_qend"]})
             if (not domain_data):
                 continue
+            else:
+                import copy
+                ## record domain range in genome
+                for domain_dat in domain_data:
+                    gene_domain_ann = copy.deepcopy(gene_ann)
+                    ## convert 0-index to 1-index (where the 1-index ranges are start & end inclusive)
+                    gene_domain_ann.start = domain_dat[0] + (1 if start_inc else 2)
+                    gene_domain_ann.end = domain_dat[1] + (1 if end_inc else 0)
+                    gene_domain_ann.feature = "domain"
+                    gene_domain_ann.source = "minorg"
+                    domain_ann.add_entry(gene_domain_ann)
         else:
             domain_data = [(start, end)]
         seqs_to_write = {}
@@ -661,16 +599,12 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
             ## trim sequence if complete flag not raised or if domain required
             if (not complete) or domain_f:
                 if complete and domain_f and d_start and d_end:
-                    # ranges = [(max(start, d_start) - start, min(end, d_end) - start)]
                     ranges = [(max(start, d_start), min(end, d_end))]
                 elif domain_f and d_start and d_end:
-                    # ranges = [(max(int(x[1]), d_start) - start, min(int(x[2]), d_end) - start) \
-                    #           for x in isoform_dat if has_overlap((int(x[1]), int(x[2])), (d_start, d_end))]
-                    ranges = [(max(int(x[1]), d_start), min(int(x[2]), d_end)) \
-                              for x in isoform_dat if has_overlap((int(x[1]), int(x[2])), (d_start, d_end))]
+                    ranges = [(max(x.start - 1, d_start), min(x.end, d_end)) \
+                              for x in isoform_dat if has_overlap((x.start - 1, x.end), (d_start, d_end))]
                 else:
-                    # ranges = [(int(x[1])-start, int(x[2])-start) for x in isoform_dat]
-                    ranges = [(int(x[1]), int(x[2])) for x in isoform_dat]
+                    ranges = [(x.start - 1, x.end) for x in isoform_dat]
                 ref_seq = extract_ranges(ref_seq_original, [(x[0] - start, x[1] - start) for x in ranges])
             if (adj_dir or translate) and strand == '-':
                 ref_seq = ref_seq.reverse_complement()
@@ -699,15 +633,12 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                     for logged_ranges in overlap_ranges:
                         del(seq_ranges[logged_ranges])
                     ranges = merge_ranges(*overlap_ranges, ranges)
-                # ranges = [(x[0] - start, x[1] - start) for x in ranges]
                 seq_ranges[tuple(sorted(ranges))] = seq_ranges.get(tuple(sorted(ranges)), []) + [seq_name] + \
                                                     overlap_seq_names
             else:
-                # ranges = [(x[0] - start, x[1] - start) for x in ranges]
                 seq_ranges[tuple(sorted(ranges))] = seq_ranges.get(tuple(sorted(ranges)), []) + [seq_name]
         if seqs_to_write:
-            dict_to_fasta(seqs_to_write, fasta_out)
-            fasta_out_l.append(fasta_out)
+            isoform_seqs = {**isoform_seqs, **seqs_to_write}
     fasta_out_final = os.path.join(out_dir, (gene + "_ref_" + feature + \
                                              ("_complete" if complete else '') + \
                                              (('_' + ("domain" if not domain else domain))
@@ -715,22 +646,12 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                                              ("_protein" if (translate and (feature=="CDS") and
                                                              not complete) else '')+\
                                              ".fasta").replace('|', '_'))
-    if fasta_out_l:
-        if (not by_gene) and (fasta_out_l[0] != fasta_out_final):
-            cat_files(sorted(fasta_out_l), fasta_out_final)
-        if by_gene:
-            isoform_seqs = fasta_to_dict(fasta_out_final)
+    if isoform_seqs:
+        if not by_gene:
+            dict_to_fasta(isoform_seqs, fasta_out_final)
+        else:
             final_seqs = {}
             i = 0
-            ## get fasta file of sequence data
-            fasta_out = os.path.join(out_dir, (isoform + "_ref_" + feature +
-                                               ("_complete" if complete else '') + \
-                                               (('_' + ("domain" if not domain else domain))
-                                                if domain_f else '') + \
-                                               ("_protein" if (translate and (feature=="CDS")) else '') + \
-                                               ".fasta").replace('|', '_'))
-            get_ref_raw(chrom, start, end, fasta_out, encoding = encoding, ref_fasta_files = ref_fasta_files)
-            fasta_out_l.append(fasta_out)
             ## format seqid
             for ranges, seq_names in sorted(seq_ranges.items()):
                 ranges = [(s - start, e - start) for s, e in ranges]
@@ -745,20 +666,17 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
                 final_seqs[seq_name] = seq_out
                 i += 1
             dict_to_fasta(final_seqs, fasta_out_final)
-        ## remove intermediate files
-        for fasta_out in fasta_out_l:
-            if fasta_out != fasta_out_final:
-                if os.path.exists(fasta_out):
-                    os.remove(fasta_out)
         printi("{}\tSequences were successfully written to: {}".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S"), fasta_out_final))
-    elif not fasta_out_l:
+    else:
         f = open(fasta_out_final, "w+")
         f.write('')
         f.close()
         printi("{}\t{} is an empty file".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S"), fasta_out_final))
-    ## remove fasta_raw file
-    if fasta_raw != fasta_out_final and os.path.exists(fasta_raw):
-        os.remove(fasta_raw)
+    if len(domain_ann) != 0:
+        domain_ann.write(domain_ann._fname, domain_ann._data, fmt = domain_ann._fmt)
+    # ## remove fasta_raw file
+    # if fasta_raw != fasta_out_final and os.path.exists(fasta_raw):
+    #     os.remove(fasta_raw)
     store_fname(store_fasta, fasta_out_final)
 
 # def get_ref_by_range(chrom, start, end, out_dir, encoding="utf-8", ref_fasta_files=ref_fasta,
@@ -771,18 +689,28 @@ def get_ref_by_gene(gene, feature, out_dir, bed=bed_path, encoding="utf-8",
 
 ## output is...0-indexed, I think...it seems like it follows .bed conventions...
 def get_domain_in_genome_coords(gene, domain, domain_f, out_dir, pos_type="aa", isoform='',
-                                bed=bed_path, encoding="utf-8", start_inc = True, end_inc = True,
-                                attribute_fields = fields["gff3"], attribute_mod = {}, store_bed = None,
+                                gff_bed=bed_path, encoding="utf-8", start_inc = True, end_inc = True,
+                                attribute_fields = fields["gff3"], attribute_mod = {},
                                 qname_dname=("name", "domain name"), qstart_qend=("start", "end")):
-    
+    import re
     qname, dname = qname_dname
     qstart, qend = qstart_qend
     domain_raw = [x.split('\t') for x in splitlines(domain_f)]
     domain_header = domain_raw[0]
     domain_data = [x for x in domain_raw[1:] if len(domain_raw) > 1 and len(x) == len(domain_header) and \
                    (((not domain) or domain == x[domain_header.index(dname)]) and \
-                    (gene if not isoform else isoform) in x[domain_header.index(qname)].split('|'))]
+                    re.search(f"(\||^){re.escape(gene if not isoform else isoform)}(\||$)",
+                              x[domain_header.index(qname)]))]
     output = []
+    ## parse GFF/BED file to get CDS to define boundaries of translated nucleotides
+    cds_ann = GFF(gff_bed, quiet = True, fmt = ("BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF3"),
+                  attr_mod = attribute_mod).get_subfeatures((gene if not isoform else isoform), "CDS")
+    if not cds_ann: return output
+    ## extract boundaries
+    chrom = cds_ann[0].molecule
+    plus_strand = cds_ann[0].strand == '+'
+    bounds = sorted([(entry.start - 1, entry.end) for entry in cds_ann],
+                    key = lambda x: x[0], reverse = (not plus_strand))
     for domain_dat in domain_data:
         ## convert to 0-index, start inclusive, stop exclusive + adjust for unit (e.g. aa or nt)
         def adj_pos(start, end):
@@ -791,17 +719,6 @@ def get_domain_in_genome_coords(gene, domain, domain_f, out_dir, pos_type="aa", 
                     account_unit(int(end) - (0 if end_inc else 1)))
         domain_start, domain_end = adj_pos(int(domain_dat[domain_header.index(qstart)]),
                                            int(domain_dat[domain_header.index(qend)]))
-        ## get CDS to define boundaries of translated nucleotides
-        cds_dat = grep_bedmerge((gene if not isoform else isoform), bed, "CDS", out_dir, encoding = encoding,
-                                attribute_fields = attribute_fields, attribute_mod = attribute_mod,
-                                store_bed = store_bed)["data"]
-        if len(cds_dat) == 0:
-            continue
-        ## extract boundaries
-        chrom = cds_dat[0][0]
-        plus_strand = (cds_dat[0][3] == '+')
-        bounds = sorted([(int(x[1]), int(x[2])) for x in cds_dat],
-                        key = lambda x: x[0], reverse = (not plus_strand))
         last_end = 0
         genome_start, genome_end = None, None
         for i, v in enumerate(bounds):

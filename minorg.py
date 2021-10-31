@@ -12,6 +12,7 @@
 ## TODO: 2021/10/26: enable other gRNA filters. Also, implement within feature filter for generate_gRNA.
 ## TODO: 2021/10/26: clean up execute_grna so it pipes into a more generic function that doesn't require config/args
 
+
 import os
 import sys
 import click
@@ -25,7 +26,6 @@ from pathlib import Path
 from argparse import Namespace
 # from datetime import datetime
 
-from scripts.get_ref import get_ref_by_genes_resolve
 from functions import get_count_dict, cat_files, reduce_bed
 from log import MINORgLogger
 
@@ -36,6 +36,7 @@ from subcmd_filter import execute_filter
 from subcmd_minimumset import execute_minimumset
 
 from extend_genome import extend_genome
+from extract_homologue import get_ref_by_genes_resolve
 
 from parse_config import (
     config, params, oparams,
@@ -373,6 +374,7 @@ def valid_aliases(aliases, lookup, raise_error = True, message = None, param = N
     else: return None
 
 def make_reduced_bed(args, config, gene_sets):
+    config.logfile.splain("Filtering annotation file")
     if args.gene or args.cluster:
         bed_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
         config.bed_red = bed_red
@@ -556,7 +558,7 @@ def check_grna_args(args, standalone = True):
             ## set arguments to None or False
             args.minlen = args.minid = args.mincdslen = args.merge_within = 0
             args.check_recip = args.relax_recip = args.check_id_premerge = False
-            args.blastn = None
+            args.blastn = args.background = None
         if args.reference is None:
             raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
                                      " '-g <gene(s)>' or '-c <cluster(s)>'.") )
@@ -776,20 +778,22 @@ def generate_grna(
             set_dir = config.mkfname(prefix)
             set_pref = prefix
             set_target = args.target
-            set_aln = set_gene = set_cds = set_ann = None
+            set_ann = config.bed_red
+            set_aln = set_gene = set_cds = set_domain_gff_bed = None
             config.mkdir(set_dir)
         else:
             output_homologue = execute_homologue(args, config, params, prefix, genes)
             ## split into multiple lines because there are just too many variables lol
             set_dir, set_pref = output_homologue[:2]
-            set_target, set_aln, set_gene, set_cds, set_ann = output_homologue[2:]
+            set_target, set_aln, set_gene, set_cds, set_ann, set_domain_gff_bed = output_homologue[2:]
         ## call execute_grna.
         set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
         ## call execute_filter.
         set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_aln, set_target, set_gene,
-                                                     set_ann, checks = (["GC"] if target is not None
-                                                                        else ["GC", "feature"]))
+                                                     set_map_all, set_aln, set_target, set_ann,
+                                                     domain_gff_bed = set_domain_gff_bed,
+                                                     checks = (["GC"] if target is not None else
+                                                               ["GC", "feature"]))
     config.resolve()
     pass ## execute grna generation function
 
@@ -996,7 +1000,7 @@ def full(
             set_dir = config.mkfname(prefix)
             set_pref = prefix
             set_target = args.target
-            set_aln = set_gene = set_cds = set_ann = None
+            set_aln = set_gene = set_cds = set_ann = set_domain_gff_bed = None
             config.mkdir(set_dir)
         else:
             ## TODO: i'm not sure what "cds = False" was for. To update execute_homologue if I figure it out
@@ -1004,14 +1008,15 @@ def full(
                                                  # cds = False)
             ## split into multiple lines because there are just too many variables lol
             set_dir, set_pref = output_homologue[:2]
-            set_target, set_aln, set_gene, set_cds, set_ann = output_homologue[2:]
+            set_target, set_aln, set_gene, set_cds, set_ann, set_domain_gff_bed = output_homologue[2:]
         ## call execute_grna.
         set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
         ## call execute_filter.
         set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_aln, set_target, set_gene,
-                                                     set_ann, checks = (["GC"] if target is not None
-                                                                        else ["GC", "feature"]))
+                                                     set_map_all, set_aln, set_target, set_ann,
+                                                     domain_gff_bed = set_domain_gff_bed,
+                                                     checks = (["GC"] if target is not None
+                                                               else ["GC", "feature"]))
         # ## call execute_minimumset.
         # execute_minimumset(set_grna_pass, set_map_pass, args, config)
         pass

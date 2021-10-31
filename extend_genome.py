@@ -3,7 +3,7 @@ import re
 import itertools
 from exceptions import InvalidPath
 from functions import fasta_to_dict, dict_to_fasta
-from Bio.Align.Applications import MafftCommandline
+from mafftcommandline_add import MafftCommandline
 
 def get_recursively(d, default, *keys):
     def helper(d, keys):
