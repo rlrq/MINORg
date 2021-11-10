@@ -22,7 +22,7 @@ def execute_grna(args, config, directory, prefix, target):
     all_gRNA = find_multi_gRNA(target, pam = args.pam, gRNA_len = args.length)
     all_gRNA.assign_seqid(prefix = "gRNA_")
     all_gRNA.write_fasta(all_gRNA_fname, write_all = True)
-    return all_gRNA, all_gRNA_fname
+    return all_gRNA, all_gRNA_fname, all_gRNA_fname
 
 #################
 ##  FIND gRNA  ##

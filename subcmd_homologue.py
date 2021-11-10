@@ -9,7 +9,7 @@ import subprocess
 
 from functions import (
     # make_make_fname,
-    reduce_bed, GFF,
+    reduce_ann, GFF,
     blast6, extract_features_and_subfeatures,
     fasta_to_dict, dict_to_fasta,
     parse_get_data, write_tsv, splitlines
@@ -67,23 +67,26 @@ def remove_duplicate(fasta, duplicated = False):
         dict_to_fasta(seqs, fasta)
     return
 
-def execute_homologue(args, config, params, prefix, genes, for_masking = False, keep_bed = False):
+def execute_homologue(args, config, params, prefix, genes,
+                      for_masking = False, keep_bed = False, indv = None):
+    
+    if indv is None: indv = args.indv
     
     ## if no genes provided (i.e. args.target is defined + no need to mask genes)
     if genes is None:
         directory = config.mkdir(config.mkfname(prefix))
         return (directory, prefix, args.target, None, None, None)
     
-    ## reduce bed file if none provided
-    if config.bed_red is None:
-        bed_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
-        reduce_bed(beds = config.bed_ext.values(), ids = tuple(genes), fout = bed_red,
+    ## reduce BED/GFF file if none provided
+    if config.annotation_red is None:
+        ann_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
+        reduce_ann(beds = config.annotation_ext.values(), ids = tuple(genes), fout = ann_red,
                    mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
     #     bed_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
     #     extract_features_and_subfeatures(args.bed, tuple(genes), bed_red,
     #                                      quiet = True, fin_fmt = "BED", fout_fmt = "BED")
     else:
-        bed_red = config.bed_red
+        ann_red = config.annotation_red
     
     ## generate common functions
     make_fname = lambda *path, **kwargs: config.reserve_fname(prefix, *path, **kwargs)
@@ -91,7 +94,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
         return get_ref_by_genes_resolve(genes = genes, feature = feature, adj_dir = True,
                                         out_dir = out_dir, fout = fasta_out, ## output options
                                         ref_fasta_files = config.reference_ext, ## reference
-                                        gff_bed = bed_red, attribute_mod = args.attr_mod, ## reference annotation
+                                        gff_bed = ann_red, attribute_mod = args.attr_mod, ## reference annotation
                                         minlen = args.minlen, quiet = True,
                                         # seqid_template = "Reference|$source|$domain|$feature|$complete|$gene",
                                         seqid_template = "Reference|$source|$domain|$feature|$complete|$gene|$isoform",
@@ -102,7 +105,8 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     ref_pref = f"{prefix}_ref_{config.raw_domain}"
     fasta_gene = make_fname("ref", f"{ref_pref}_gene.fasta")
     fasta_cds = make_fname("ref", f"{ref_pref}_CDS.fasta")
-    fout_domain_gff_bed = None if not args.domain else make_fname("ref", f"{ref_pref}_domain.gff")
+    fout_domain_gff_bed = (None if (args.domain == "gene" or not args.domain)
+                           else make_fname("ref", f"{ref_pref}_domain.gff"))
     # ## bed_complete and bed_cds are identical if complete is just well CDS but complete.
     # ##  TODO: figure out a way to have _complete report the complete range (i.e. min-max for each gene)
     # bed_complete = make_fname("ref", f"{ref_pref}_complete.bed") if keep_bed else None
@@ -119,18 +123,18 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
     fout_pref = f"{prefix}_{config.raw_domain}"
     fasta_target = make_fname(f"{fout_pref}_targets.fasta" if not for_masking else \
                               f"{fout_pref}_toMask.fasta")
-    if set(args.indv) == {"ref"}:
+    if set(indv) == {"ref"}:
         shutil.copyfile(fasta_gene, fasta_target)
     else:
         print("Finding homologues in non-reference genomes")
         fasta_queries = config.query_map
         ## blast reference sequences to non-ref sequences
         find_homologue_multiindv(fasta_queries = fasta_queries, fout = fasta_target, directory = fout_dir,
-                                 fasta_gene = fasta_gene, fasta_cds = fasta_cds, genes = genes,
+                                 fasta_complete = fasta_gene, fasta_cds = fasta_cds, genes = genes,
                                  min_len = args.minlen, min_id = args.minid, min_cds_len = args.mincdslen,
                                  check_reciprocal = args.check_recip, relax = args.relax_recip,
                                  check_id_before_merge = args.check_id_premerge, blastn = args.blastn,
-                                 gff_beds = tuple(config.bed_ext.values()),
+                                 gff_beds = tuple(config.annotation_ext.values()),
                                  fasta_ref = tuple(config.reference_ext.values()),
                                  merge_within_range = args.merge_within,
                                  keep_tmp = config.keep_tmp)
@@ -166,7 +170,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
         remove_seed(tmp_f)
         ## remove duplicated seq
         remove_duplicate(tmp_f, duplicated = duplicated)
-        if set(args.indv) == {"ref"}:
+        if set(indv) == {"ref"}:
             shutil.copyfile(tmp_f, fasta_aln)
         else:
             with open(fasta_aln, "w+") as f:
@@ -179,7 +183,7 @@ def execute_homologue(args, config, params, prefix, genes, for_masking = False, 
             remove_seed(fasta_aln)
         config.rm_tmpfiles(tmp_f)
         return (config.mkfname(prefix), fout_pref, fasta_target, fasta_aln, fasta_gene, fasta_cds,
-                bed_red, fout_domain_gff_bed)
+                ann_red, fout_domain_gff_bed)
 
 ## collapses identical sequences (arbitrarily selects a seqid to represent each set)
 ## writes collapsed fasta file and a tsv file mapping identical sequences

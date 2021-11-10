@@ -126,41 +126,52 @@ class UserAnnotation:
                 self._strand, self._source, self._feature, self._phase, self.generate_attr()]
 
 def extend_genome(args, config):
-    if not (args.ext_genome and args.ext_cds):
+    if not ((args.ext_genome and args.ext_cds) or (args.ext_reference and args.ext_annotation)):
         return
     ext_genome = [x for x in args.ext_genome if os.path.exists(x)]
     ext_cds = [x for x in args.ext_cds if os.path.exists(x)]
+    ext_reference = [x for x in args.ext_reference if os.path.exists(x)]
+    ext_annotation = [x for x in args.ext_annotation if os.path.exists(x)]
     ## raise Error for inaccessible files
     nonexistent_genome = [x for x in args.ext_genome if x not in ext_genome]
     nonexistent_cds = [x for x in args.ext_cds if x not in ext_cds]
-    nonexistent = nonexistent_genome + nonexistent_cds
+    nonexistent_reference = [x for x in args.ext_reference if x not in ext_reference]
+    nonexistent_annotation = [x for x in args.ext_annotation if x not in ext_annotation]
+    nonexistent = nonexistent_genome + nonexistent_cds + nonexistent_reference + nonexistent_annotation
     if nonexistent:
         InvalidPath(','.join(nonexistent))
-    ## separate sequences by gene
-    aln_dir = config.mkdir("tmp_extend_aln")
-    # config.mkdir(aln_dir)
-    group_by_gene(ext_cds, ext_genome, aln_dir, sep = '.', verbose = True, logger = config.logfile)
-    ## align
-    for fasta in [f for f in os.listdir(aln_dir) if re.search("\.fasta$", f)]:
-        gene = re.search("^.+(?=\.fasta$)", os.path.basename(fasta)).group(0)
-        with open(os.path.join(aln_dir, f"{gene}_mafft.fa"), "w+") as f:
-            stdout, stderr = MafftCommandline(args.mafft, input = os.path.join(aln_dir, fasta),
-                                              quiet = True, thread = args.thread)()
-            f.write(stdout)
-        os.remove(os.path.join(aln_dir, fasta))
-    ## convert alignment to gff
-    aln_bed = config.mkfname("ext.bed", tmp = True)
-    aln_to_annotation(aln_dir, fout = aln_bed, sep = '.', outfmt = "bed", attr_mod = args.attr_mod)
-    ## combine genomic files
-    ext_genome_fa = config.mkfname("ext.fasta", tmp = True)
-    seqs_genome = dict(itertools.chain(*[fasta_to_dict(fa).items() for fa in ext_genome]))
-    dict_to_fasta(seqs_genome, ext_genome_fa)
-    ## update config
-    config.extend_reference("Extended", ext_genome_fa, aln_bed)
-    # args.bed = new_bed
-    # args.reference = new_ref
-    ## remove temporary directories
-    import shutil
-    shutil.rmtree(aln_dir)
+    if ext_cds and ext_genome:
+        ## separate sequences by gene
+        aln_dir = config.mkdir("tmp_extend_aln")
+        # config.mkdir(aln_dir)
+        group_by_gene(ext_cds, ext_genome, aln_dir, sep = '.', verbose = True, logger = config.logfile)
+        ## align
+        for fasta in [f for f in os.listdir(aln_dir) if re.search("\.fasta$", f)]:
+            gene = re.search("^.+(?=\.fasta$)", os.path.basename(fasta)).group(0)
+            with open(os.path.join(aln_dir, f"{gene}_mafft.fa"), "w+") as f:
+                stdout, stderr = MafftCommandline(args.mafft, input = os.path.join(aln_dir, fasta),
+                                                  quiet = True, thread = args.thread)()
+                f.write(stdout)
+            os.remove(os.path.join(aln_dir, fasta))
+        ## convert alignment to gff
+        aln_bed = config.mkfname("ext.bed", tmp = True)
+        aln_to_annotation(aln_dir, fout = aln_bed, sep = '.', outfmt = "bed", attr_mod = args.attr_mod)
+        ## combine genomic files
+        ext_genome_fa = config.mkfname("ext.fasta", tmp = True)
+        seqs_genome = dict(itertools.chain(*[fasta_to_dict(fa).items() for fa in ext_genome]))
+        dict_to_fasta(seqs_genome, ext_genome_fa)
+        ## update config
+        config.extend_reference("Extended", ext_genome_fa, aln_bed)
+        # args.bed = new_bed
+        # args.reference = new_ref
+        ## remove temporary directories
+        import shutil
+        shutil.rmtree(aln_dir)
+    if ext_annotation:
+        for i, ann in enumerate(ext_annotation):
+            config.add_annotation(f"Supplement_{str(i).zfill(2)}", ann)
+    if ext_reference:
+        for i, ref in enumerate(ext_reference):
+            config.add_reference(f"Supplement_{str(i).zfill(2)}", ref)
     return
         

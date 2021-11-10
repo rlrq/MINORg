@@ -4,14 +4,16 @@
 ## TODO: 2021/06/10: implement --valid-indv/--valid-genome/--valid-acc, --valid-cluster to allow user to check alias validity (print location of FASTA file for --valid-genome, do member_callback for --valid-cluster) before running
 ## TODO: 2021/06/10: disable Enum for --indv. Since users are now allowed to submit custom genome lookup files using --genome-lookup, autofill shouldn't be used for --indv unless it can dynamically update to accommodate user's --genome-lookup input even before command submission (which is impossible lol). Basically, restructure the whole --indv thing to use the same kind of code as --cluster
 ## TODO: 2021/09/07: don't merge ext_genome files w/ reference (or ext_bed files w/ bed). Find some way to allow both to be processed whenever blastn or whatever needs to be done to reference
-## TODO: 2021/10/21: update all functions to use config.reference_ext and config.bed_ext (dictionary of {source_id: path_to_fasta/bed}) instead of args.reference in order to accommodate multiple reference files (since we don't want to merge ext_genome with the reference). I've modified some stuff and test with homologue but not the other subcommands.
+## TODO: 2021/10/21: update all functions to use config.reference_ext and config.annotation_ext (dictionary of {source_id: path_to_fasta/bed}) instead of args.reference in order to accommodate multiple reference files (since we don't want to merge ext_genome with the reference). I've modified some stuff and test with homologue but not the other subcommands.
 ## TODO: 2021/10/21: log user-provided indvs that cannot be mapped. Actually, log user ANY ALIAS that cannot be mapped.
 ## TODO: 2021/10/21: update everything to use gff3 instead of bed
 ## TODO: 2021/10/21: enable remote rpsblast (not that i've been able to get it to find the remote database but hey we should at least let people have the option)
 ## TODO: 2021/10/22: DONE. for the generate_grna subcommand, either integrate within_cds (rename that to within_feature) with execute_grna or update execute_filter so it can filter by within feature and not everything else then use execute_filter after execute_grna.
 ## TODO: 2021/10/26: enable other gRNA filters. Also, implement within feature filter for generate_gRNA.
 ## TODO: 2021/10/26: clean up execute_grna so it pipes into a more generic function that doesn't require config/args
-
+## TODO: 2021/10/31: use external txt file to track reference sequences ("^Reference|...") so changing naming format or having '|' in seqid is less likely to break the code. Easier maintenance. (columns can be seqid, gene, isoform, source, molecule, comma-separated ranges)
+## TODO: 2021/11/08: enable all homologue discovery options for filtering in background as well
+## TODO: 2021/11/09: ensure all arguments required for --indv are also enabled for --ot-indv (extract the query mapping part of check_homologue_args into separate function reusable for --ot-indv)
 
 import os
 import sys
@@ -26,7 +28,7 @@ from pathlib import Path
 from argparse import Namespace
 # from datetime import datetime
 
-from functions import get_count_dict, cat_files, reduce_bed
+from functions import get_count_dict, cat_files, reduce_ann, assign_alias, gRNAHits
 from log import MINORgLogger
 
 ## import subcommand functions
@@ -129,6 +131,14 @@ def parse_lookup(iterable, lookup, return_first = False):
 def parse_cluster_set(val):
     return parse_lookup(val, params.cluster_mapping, return_first = True)
 
+def get_cluster_genes(val):
+    cluster_genes = config.cluster_aliases.get(val, None)
+    if cluster_genes is None:
+        raise click.UsageError( (f"'{val}' is not a valid cluster name in"
+                                 f" lookup file '{config.cluster_set}'") )
+    else:
+        return tuple(cluster_genes.split(','))
+
 def parse_genes_from_args(args):
     '''
     To be called after 'gene' or 'cluster' have passed check_homologue_args checks
@@ -142,14 +152,57 @@ def parse_genes_from_args(args):
     else:
         output = {}
         for cluster in args.cluster:
-            cluster_genes = config.cluster_aliases.get(cluster, None)
-            if cluster_genes is None:
-                raise click.UsageError( (f"'{args.cluster}' is not a valid cluster name in"
-                                         f" lookup file '{config.cluster_set}'") )
-            else:
-                output[f"{args.prefix}_{cluster}"] = tuple(cluster_genes.split(','))
+            output[f"{args.prefix}_{cluster}"] = tuple(get_cluster_genes(cluster))
         return output
     return
+
+def parse_genes_for_filter(args, priority = None):
+    '''
+    To be called after 'mask', 'unmask', 'mask_cluster', 'unmask_cluster', and 'gene' 
+        have passed check_filter_args checks
+    Returns {<mask/unmask/gene>: (gene1, gene2, gene3)}
+    '''
+    output = {}
+    genes = (set() if args.gene is None else set(args.gene))
+    mask_genes = set((tuple() if args.mask_gene is None else tuple(args.mask_gene)) + \
+                     (tuple() if args.mask_cluster is None else
+                      tuple(itertools.join(*[get_cluster_genes(cluster)
+                                             for cluster in args.mask_cluster]))))
+    unmask_genes = set((tuple() if args.unmask_gene is None else tuple(args.unmask_gene)) + \
+                       (tuple() if args.unmask_cluster is None else
+                        tuple(itertools.join(*[get_cluster_genes(cluster)
+                                               for cluster in args.unmask_cluster]))))
+    ## parse '.' for 'all genes passed to --gene'
+    def expand_genes(genes_to_expand):
+        if '.' in genes_to_expand and '-' in genes_to_expand:
+            raise MessageError("ERROR: '-' and '.' are mutually exclusive for --mask-gene and --unmask-gene")
+        if '.' in genes_to_expand:
+            genes_to_expand -= {'.'}
+            genes_to_expand |= genes
+        elif '-' in genes_to_expand:
+            genes_to_expand -= {'-'}
+            genes_to_expand -= genes
+        return genes_to_expand
+    mask_genes = expand_genes(mask_genes)
+    unmask_genes = expand_genes(unmask_genes)
+    ## check for overlaps between mask and unmask if priority is not set
+    if priority is None:
+        overlap_genes = mask_genes.intersection(unmask_genes)
+        if overlap_genes:
+            raise MessageError( ("ERROR: The following genes were provided to both"
+                                 f" --mask-gene and --unmask-gene: {','.join(sorted(overlap_genes))}") )
+    ## generate output dictionary
+    output["gene"] = tuple(genes)
+    if priority == "mask":
+        output["mask"] = tuple(mask_genes)
+        output["unmask"] = tuple(unmask_genes - mask_genes)
+    elif priority == "unmask":
+        output["mask"] = tuple(mask_genes - unmask_genes)
+        output["unmask"] = tuple(unmask_genes)
+    else:
+        output["mask"] = tuple(mask_genes)
+        output["unmask"] = tuple(unmask_genes)
+    return output
 
 def split_callback_str(val):
     return ','.join(split_none(val))
@@ -201,8 +254,8 @@ def reference_callback(val):
     config.set_reference(mapped_val, None)
     return mapped_val
 
-def gff_bed_callback(val):
-    alias_or_file_callback = make_alias_or_file_callback(params.gff_bed_aliases, params.bed)
+def annotation_callback(val):
+    alias_or_file_callback = make_alias_or_file_callback(params.gff_bed_aliases, params.annotation)
     mapped_val = alias_or_file_callback(val)
     config.set_reference(None, mapped_val)
     return mapped_val
@@ -218,6 +271,13 @@ def non_negative_callback(val):
         return val
     else:
         raise typer.BadParameter( f"Invalid value: {val}. Non-negative value required." )
+
+def zero_to_one_callback(val):
+    val = non_negative_callback(val)
+    if val <= 1:
+        return val
+    else:
+        raise typer.BadParameter( f"Invalid value: {val}. Must be between 0 and 1 (inclusive)." )
 
 def cluster_set_callback(val: str):
     val = parse_lookup(val, params.cluster_sets, return_first = True)
@@ -373,14 +433,14 @@ def valid_aliases(aliases, lookup, raise_error = True, message = None, param = N
         else: return None
     else: return None
 
-def make_reduced_bed(args, config, gene_sets):
-    config.logfile.splain("Filtering annotation file")
-    if args.gene or args.cluster:
-        bed_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
-        config.bed_red = bed_red
-        reduce_bed(gff_beds = config.bed_ext.values(),
+def make_reduced_ann(args, config, gene_sets):
+    config.logfile.splain("Filtering annotation file(s)")
+    if gene_sets:
+        ann_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
+        config.annotation_red = ann_red
+        reduce_ann(gff_beds = config.annotation_ext.values(),
                    ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
-                   fout = bed_red,
+                   fout = ann_red,
                    mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
         # bed_reds = []
         # for src, bed in config.bed_ext.items():
@@ -423,14 +483,15 @@ def check_homologue_args(args, standalone = True):
     if args.target is None:
         if args.gene is None and args.cluster is None:
             raise click.UsageError("'-g <gene(s)>' or '-c <cluster(s)>' is required if not using -t.'")
-    ## if -g/-c is provided, check that --ref and --bed are also provided
+    ## if -g/-c is provided, check that --ref and --annotation are also provided
     if args.gene is not None or args.cluster is not None:
         if args.reference is None:
             raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
                                      " '-g <gene(s)>' or '-c <cluster(s)>'.") )
-        if args.bed is None:
-            raise click.UsageError( ("'--bed <BED file converted from GFF3 annotations using gff2bed>'"
-                                     " is required if using '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        if args.annotation is None:
+            raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+                                     " annotations using gff2bed>' is required if using"
+                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
         if args.query is None and not indv_provided:
             raise click.UsageError( ("'-q <FASTA file>' or '-i <individual(s)>'"
                                      " is required if using '-g <gene(s)>' or '-c <cluster(s)>'.") )
@@ -455,7 +516,7 @@ def check_homologue_args(args, standalone = True):
                                      " OR name of remote RPS-BLAST database>'"
                                      " is required if using '--domain <domain alias or PSSM-Id>'") )
     
-    ## VALID ALIASES (check -r, --bed, --rps-db, --indv & -c & --attr-mod)
+    ## VALID ALIASES (check -r, --annotation, --rps-db, --indv & -c & --attr-mod)
     ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
     if args.cluster is not None:
         valid_aliases(aliases = args.cluster, lookup = config.cluster_aliases,
@@ -549,7 +610,7 @@ def check_grna_args(args, standalone = True):
     ## check that --length is provided
     if args.length is None:
         raise click.UsageError( "'-l <gRNA length (bp)>' is required." )
-    ## if -g/-c is provided, check that --ref and --bed are also provided
+    ## if -g/-c is provided, check that --ref and --annotation are also provided
     if (args.gene is not None or args.cluster is not None):
         ## set dummy arguments so execute_homologue doesn't break
         if standalone:
@@ -557,14 +618,17 @@ def check_grna_args(args, standalone = True):
             args.indv = ["ref"]
             ## set arguments to None or False
             args.minlen = args.minid = args.mincdslen = args.merge_within = 0
+            args.max_insertion = args.min_within_fraction = 0
+            args.min_within_n = 1
             args.check_recip = args.relax_recip = args.check_id_premerge = False
             args.blastn = args.background = None
         if args.reference is None:
             raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
                                      " '-g <gene(s)>' or '-c <cluster(s)>'.") )
-        if args.bed is None:
-            raise click.UsageError( ("'--bed <BED file converted from GFF3 annotations using gff2bed>'"
-                                     " is required if using '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        if args.annotation is None:
+            raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+                                     " annotations using gff2bed>' is required if using"
+                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
     ## check that --rpsblast is provided if using --domain
     if args.domain is not None:
         if args.rpsblast is None:
@@ -579,7 +643,7 @@ def check_grna_args(args, standalone = True):
         raise click.UsageError( ("'--extend-cds <FASTA file>' and '--extend-genome <FASTA file>'"
                                  " should either be used together or not used at all.") )
     
-    ## VALID ALIASES (check -r, --bed, --db, -c)
+    ## VALID ALIASES (check -r, --annotation, --db, -c)
     ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
     if args.cluster is not None:
         valid_aliases(aliases = args.cluster, lookup = config.cluster_aliases,
@@ -594,7 +658,137 @@ def check_grna_args(args, standalone = True):
         ##  note: execute_homologue is used to retrieve reference genes if requested by user
         args.indv = []
     
+def check_filter_args(args, standalone = True):
     
+    if standalone:
+        if args.check_all:
+            args.gc_check = args.feature_check = args.background_check = True
+        if not args.gc_check and not args.feature_check and not args.background_check:
+            raise click.UsageError( ("At least one of the following is required:"
+                                     " '--gc-check', '--feature-check', '--background-check'") )
+    else:
+        args.gc_check = args.feature_check = args.background_check = True
+        if args.target:
+            args.feature_check = args.background_check = False
+        if args.skip_bg_check:
+            args.background_check = False
+    
+    # ## MUTUALLY EXCLUSIVE ARGS
+    # ## -g, -c, and -t are mutually exclusive
+    # if sum(map(lambda x: x is not None, [args.gene, args.cluster, args.target])) > 1:
+    #     raise click.UsageError( ("'-g <gene(s)>', '-c <cluster(s)>', and '-t <path to FASTA file>'"
+    #                              " are mutually exclusive.") )
+    # # if args.target is not None and args.feature is not None:
+    # #     config.logfile.warning("-t <FASTA> is incompatible with -f <feature>. -f will be ignored.")
+    
+    ## REQUIRED ARGS
+    if standalone:
+        ## set dummy arguments so execute_homologue doesn't break
+        args.minlen = 1
+        args.gene = None
+        args.unmask_ref = False
+        if args.mapping is None:
+            raise click.UsageError("'--mapping <path to minorg .map file>' is required.")
+        if args.background_check:
+            ## if args.grna is not provided, create FASTA file from mapping file
+            if args.grna is None:
+                args.grna = config.mkfname("tmp_grna_all.fasta")
+                from functions import gRNAHits
+                grnahits = gRNAHits()
+                grnahits.parse_from_mapping(args.mapping, version = None)
+                grnahits.write_fasta(args.grna, write_all = True)
+    ## GC filter
+    if args.gc_check:
+        if args.gc_min is None: args.gc_min = 0
+        if args.gc_max is None: args.gc_max = 1
+    ## feature filter
+    if args.feature_check:
+        if not args.feature:
+            raise click.UsageError("'--feature <feature>' is required if using '--filter-feature'.")
+        if standalone and not args.alignment:
+            raise click.UsageError("'--alignment <path to FASTA> is required if using '--filter-feature'.")
+        if not args.annotation:
+            raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+                                     " annotations using gff2bed>' is required if using '--filter-feature'.") )
+        if args.min_within_n is None: args.min_within_n = 1
+        if args.min_within_fraction is None: args.min_within_fraction = 0
+    ## background filter
+    if args.background_check:
+        if args.blastn is None:
+            raise click.UsageError( "Path to blastn executable is required: --blastn <path>" )
+        if args.unmask_ref:
+            if not args.screen_ref:
+                raise click.UsageError( "'--unmask-ref' is only used with '--screen-ref'." )
+            if args.mask_gene or args.mask_cluster:
+                raise click.UsageError( ("'--unmask-ref' should not be used with"
+                                         " '--mask-gene' or '--mask-cluster'.") )
+        if args.screen_ref:
+            if not args.reference:
+                raise click.UsageError("'--reference <path to FASTA> is required if using '--screen-ref'.'")
+        if not args.annotation:
+            if args.mask_gene or args.unmask_gene or args.mask_cluster or args.unmask_cluster:
+                raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+                                         " annotations using gff2bed>' is required if using '--mask-gene',"
+                                         " '--unmask-gene', '--mask-cluster', or '--unmask-cluster'.") )
+        if args.ot_mismatch is None: args.ot_mismatch = 1
+        if args.ot_gap is None: args.ot_mismatch = 0
+        if not args.ot_pamless and args.pam is None:
+            raise click.UsageError("'--pam <PAM pattern>' is required if not using '--ot-pamless'.")
+    
+    # ## check that --pam is provided
+    # if args.pam is None:
+    #     raise click.UsageError( "'-p <PAM pattern>' is required." )
+    # ## check that --length is provided
+    # if args.length is None:
+    #     raise click.UsageError( "'-l <gRNA length (bp)>' is required." )
+    # ## if -g/-c is provided, check that --ref and --annotation are also provided
+    # if (args.gene is not None or args.cluster is not None):
+    #     ## set dummy arguments so execute_homologue doesn't break
+    #     if standalone:
+    #         ## set indv to reference
+    #         args.indv = ["ref"]
+    #         ## set arguments to None or False
+    #         args.minlen = args.minid = args.mincdslen = args.merge_within = 0
+    #         args.max_insertion = args.min_within_fraction = 0
+    #         args.min_within_n = 1
+    #         args.check_recip = args.relax_recip = args.check_id_premerge = False
+    #         args.blastn = args.background = None
+    #     if args.reference is None:
+    #         raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
+    #                                  " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+    #     if args.annotation is None:
+    #         raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+    #                                  " annotations using gff2bed>' is required if using"
+    #                                  " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+    # ## check that --rpsblast is provided if using --domain
+    # if args.domain is not None:
+    #     if args.rpsblast is None:
+    #         raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
+    #                                  " is required if using '--domain <domain alias or PSSM-Id>'") )
+    #     if args.db is None:
+    #         raise click.UsageError( ("'--db <alias of or path to local RPS-BLAST database"
+    #                                  " OR name of remote RPS-BLAST database>'"
+    #                                  " is required if using '--domain <domain alias or PSSM-Id>'") )
+    # ## if --extend-genome or --extend-cds is provided, check that the other is also provided
+    # if sum(map(lambda x: x is None, [args.ext_cds, args.ext_genome])) == 1:
+    #     raise click.UsageError( ("'--extend-cds <FASTA file>' and '--extend-genome <FASTA file>'"
+    #                              " should either be used together or not used at all.") )
+    
+    # ## VALID ALIASES (check -r, --annotation, --db, -c)
+    # ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
+    # if args.cluster is not None:
+    #     valid_aliases(aliases = args.cluster, lookup = config.cluster_aliases,
+    #                   param = params.cluster, display_cmd = "--clusters",
+    #                   additional_message = ( "Alternatively, manually input the desired genes using"
+    #                                          " '-g <gene(s)>' or provide a different cluster set lookup file"
+    #                                          " using '--cluster-set <path to file>'."))
+    
+    # ## some parsing
+    # if args.target is not None:
+    #     ## set args.indv to empty list so it doesn't break execute_homologue
+    #     ##  note: execute_homologue is used to retrieve reference genes if requested by user
+    #     args.indv = []
+
 
 ## TODO: make sure all tmp files are removed if not using --keep-on-crash (2021/05/12)
 @app_sub.command("homologue")
@@ -619,8 +813,10 @@ def homologue(
                                                  callback = split_callback_list),
         # indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
         #                                                     callback = split_callback_list),
-        target: Path = typer.Option(*params.target(), **params.target.options),
-        query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options),
+        target: Path = typer.Option(*params.target(), **params.target.options,
+                                    **oparams.file_valid),
+        query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options,
+                                                   **oparams.file_valid),
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
         minid: float = typer.Option(*params.minid(), **params.minid.options, callback = non_negative_callback),
         minlen: int = typer.Option(*params.minlen(), **params.minlen.options, callback = positive_callback),
@@ -639,13 +835,21 @@ def homologue(
                                        callback = genome_set_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
-        bed: str = typer.Option(*params.bed(), **params.bed.options,
-                                callback = gff_bed_callback),
+        annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
+                                       callback = annotation_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = attr_mod_callback),
-        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options),
-        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
+        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options,
+                                                        **oparams.file_valid),
+        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
+                                                     **oparams.file_valid),
+        ext_reference: Optional[List[Path]] = typer.Option(*params.ext_reference(),
+                                                           **params.ext_reference.options,
+                                                           **oparams.file_valid),
+        ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
+                                                            **params.ext_annotation.options,
+                                                            **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         
         ## user lookups (this is right at the end because we might need the other args)
@@ -681,8 +885,8 @@ def homologue(
     ## extend genome if ext_genome and ext_cds are provided
     extend_genome(args, config)
     
-    ## make reduced bed
-    make_reduced_bed(args, config, gene_sets)
+    ## make reduced annotation
+    make_reduced_ann(args, config, gene_sets)
     
     ## call execute_homologue.
     for prefix, genes in gene_sets.items():
@@ -710,7 +914,8 @@ def generate_grna(
         span_junction: bool = typer.Option(*params.span_junction(), **params.span_junction.options),
         
         ## target definition options
-        target: Path = typer.Option(*params.target(), **params.target.options),
+        target: Path = typer.Option(*params.target(), **params.target.options,
+                                    **oparams.file_valid),
         
         ## target definition options if finding gRNA in reference genes
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -723,20 +928,28 @@ def generate_grna(
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
-        bed: str = typer.Option(*params.bed(), **params.bed.options,
-                                callback = gff_bed_callback),
+        annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
+                                       callback = annotation_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = attr_mod_callback),
-        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options),
-        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
+        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options,
+                                                        **oparams.file_valid),
+        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
+                                                     **oparams.file_valid),
+        ext_reference: Optional[List[Path]] = typer.Option(*params.ext_reference(),
+                                                           **params.ext_reference.options,
+                                                           **oparams.file_valid),
+        ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
+                                                            **params.ext_annotation.options,
+                                                            **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         
         ## basic filtering
         gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
-                                     callback = non_negative_callback),
+                                     callback = zero_to_one_callback),
         gc_max: float = typer.Option(*params.gc_max(), **params.gc_max.options,
-                                     callback = non_negative_callback),
+                                     callback = zero_to_one_callback),
         feature: Optional[List[str]] = typer.Option(*params.feature(), **params.feature.options,
                                                     callback = split_callback_list),
         
@@ -769,7 +982,7 @@ def generate_grna(
     extend_genome(args, config)
     
     ## filter BED/GFF for relevant entries (reduces get_seq search time)
-    make_reduced_bed(args, config, gene_sets)
+    make_reduced_ann(args, config, gene_sets)
     
     ## generate gRNA
     for prefix, genes in gene_sets.items():
@@ -778,7 +991,7 @@ def generate_grna(
             set_dir = config.mkfname(prefix)
             set_pref = prefix
             set_target = args.target
-            set_ann = config.bed_red
+            set_ann = config.annotation_red
             set_aln = set_gene = set_cds = set_domain_gff_bed = None
             config.mkdir(set_dir)
         else:
@@ -787,10 +1000,12 @@ def generate_grna(
             set_dir, set_pref = output_homologue[:2]
             set_target, set_aln, set_gene, set_cds, set_ann, set_domain_gff_bed = output_homologue[2:]
         ## call execute_grna.
-        set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
+        output_grna = execute_grna(args, config, set_dir, set_pref, set_target)
+        set_grna_all, set_map_all, set_grna_fasta_all = output_grna
         ## call execute_filter.
         set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_aln, set_target, set_ann,
+                                                     set_map_all, set_grna_fasta_all, set_aln,
+                                                     set_target, set_ann,
                                                      domain_gff_bed = set_domain_gff_bed,
                                                      checks = (["GC"] if target is not None else
                                                                ["GC", "feature"]))
@@ -798,10 +1013,173 @@ def generate_grna(
     pass ## execute grna generation function
 
 @app_sub.command("filter")
-def filter_grna():
+@app_sub.command("check")
+def filter_grna(
+        ## which filters
+        check_all: bool = typer.Option(*params.check_all(), **params.check_all.options),
+        gc_check: bool = typer.Option(*params.gc_check(), **params.gc_check.options),
+        feature_check: bool = typer.Option(*params.feature_check(), **params.feature_check.options),
+        background_check: bool = typer.Option(*params.background_check(), **params.background_check.options),
+        reset_checks: bool = typer.Option(*params.reset_checks(), **params.reset_checks.options),
+        
+        ## general options
+        directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
+        prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        thread: int = typer.Option(*params.thread(), **params.thread.options),
+        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
+        db: str = typer.Option(*params.db(), **params.db.options),
+        
+        ## input files
+        mapping: Path = typer.Option(*params.mapping(), **params.mapping.options, **oparams.file_valid),
+        grna: Path = typer.Option(*params.grna(), **params.grna.options, **oparams.file_valid),
+        alignment: Path = typer.Option(*params.alignment(), **params.alignment.options, **oparams.file_valid),
+        target: Path = typer.Option(*params.target(), **params.target.options, **oparams.file_valid),
+        reference: str = typer.Option(*params.reference(), **params.reference.options,
+                                      callback = reference_callback),
+        annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
+                                       callback = annotation_callback),
+        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options,
+                                                        **oparams.file_valid),
+        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
+                                                     **oparams.file_valid),
+        ext_reference: Optional[List[Path]] = typer.Option(*params.ext_reference(),
+                                                           **params.ext_reference.options,
+                                                           **oparams.file_valid),
+        ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
+                                                            **params.ext_annotation.options,
+                                                            **oparams.file_valid),
+        background: Optional[List[Path]] = typer.Option(*params.background(), **params.background.options,
+                                                        **oparams.file_valid),
+        mask: Optional[List[Path]] = typer.Option(*params.mask(), **params.mask.options, **oparams.file_valid),
+        
+        ## format options
+        attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
+                                     callback = attr_mod_callback),
+        sep: str = typer.Option(*params.sep(), **params.sep.options),
+        
+        ## GC filter options
+        gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
+                                     callback = zero_to_one_callback),
+        gc_max: float = typer.Option(*params.gc_max(), **params.gc_max.options,
+                                     callback = zero_to_one_callback),
+        
+        ## within feature filter options
+        feature: Optional[List[str]] = typer.Option(*params.feature(), **params.feature.options,
+                                                    callback = split_callback_list),
+        max_insertion: int = typer.Option(*params.max_insertion(), **params.max_insertion.options,
+                                          callback = non_negative_callback),
+        min_within_n: int = typer.Option(*params.min_within_n(), **params.min_within_n.options,
+                                         callback = positive_callback),
+        min_within_fraction: float = typer.Option(*params.min_within_fraction(),
+                                                  **params.min_within_fraction.options,
+                                                  callback = zero_to_one_callback),
+        
+        ## background filter options
+        screen_ref: bool = typer.Option(*params.screen_ref(), **params.screen_ref.options),
+        # unmask_ref: bool = typer.Option(*params.unmask_ref(), **params.unmask_ref.options),
+        ot_indv: Optional[List[str]] = typer.Option(*params.ot_indv(), **params.ot_indv.options,
+                                                    callback = split_callback_list),
+        # by_indv: bool = typer.Option(*params.by_indv(), **params.by_indv.options),
+        ## masking options
+        mask_gene: Optional[List[str]] = typer.Option(*params.mask_gene(), **params.mask_gene.options,
+                                                      callback = split_callback_list),
+        unmask_gene: Optional[List[str]] = typer.Option(*params.unmask_gene(), **params.unmask_gene.options,
+                                                        callback = split_callback_list),
+        mask_cluster: Optional[List[str]] = typer.Option(*params.mask_cluster(),
+                                                         **params.mask_cluster.options,
+                                                         callback = split_callback_list),
+        unmask_cluster: Optional[List[str]] = typer.Option(*params.unmask_cluster(),
+                                                           **params.unmask_cluster.options,
+                                                           callback = split_callback_list),
+        domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
+        # mask_homologue: bool = typer.Option(*params.mask_homologue(), **params.mask_homologue.options),
+        # minid: float = typer.Option(*params.minid(), **params.minid.options,
+        #                             callback = non_negative_callback),
+        # minlen: int = typer.Option(*params.minlen(), **params.minlen.options, callback = positive_callback),
+        # mincdslen: int = typer.Option(*params.mincdslen(), **params.mincdslen.options,
+        #                               callback = positive_callback),
+        # check_recip: bool = typer.Option(*params.check_recip(), **params.check_recip.options),
+        # relax_recip: bool = typer.Option(*params.relax_recip(), **params.relax_recip.options),
+        # merge_within: int = typer.Option(*params.merge_within(), **params.merge_within.options,
+        #                                  callback = non_negative_callback),
+        # check_id_premerge: bool = typer.Option(*params.check_id_premerge(),
+        #                                        **params.check_id_premerge.options),
+        ## off-target threshold options
+        pam: str = typer.Option(*params.pam(), **params.pam.options),
+        ot_pamless: bool = typer.Option(*params.ot_pamless(), **params.ot_pamless.options),
+        ot_mismatch: int = typer.Option(*params.ot_mismatch(), **params.ot_mismatch.options,
+                                        callback = non_negative_callback),
+        ot_gap: int = typer.Option(*params.ot_gap(), **params.ot_gap.options, callback = non_negative_callback),
+        
+        ## exclude filter
+        exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
+        
+        ## ??
+        placeholder: str = None):
+    
+    '''
+    Filter gRNA by checks
+    '''
+    
     typer.echo("filtering")
+    
+    ## check validity of args
+    args = Namespace(**locals())
+    ## check arguments are in order
+    check_filter_args(args, standalone = True)
+    ## parse [mask|unmask]_cluster -> genes
+    gene_sets = parse_genes_for_filter(args)
+    ## move log file
+    config.logfile.move(config, args)
+    
+    print("post check:", vars(args))
+    
+    if prefix: config.prefix = prefix
+    if directory: config.out_dir = directory
+    
+    ## extend genome if ext_genome and ext_cds are provided
+    extend_genome(args, config)
+    
+    ## filter BED/GFF for relevant entries (reduces get_seq search time)
+    if tuple(itertools.chain(*gene_sets.values())):
+        make_reduced_ann(args, config, gene_sets)
+    
+    ## get sequences to be masked
+    to_mask = assign_alias(args.mask, lambda i: f"Usermask_{str(i+1).zfill(2)}")
+    for prefix, genes in gene_sets.items():
+        if not genes: continue
+        output_homologue = execute_homologue(args, config, params, prefix, genes,
+                                             indv = {"ref"}, for_masking = True)
+        to_mask[prefix] = output_homologue[2]
+        # if screen_ref and not unmask_ref:
+        #     to_mask[f"{prefix}_ref"] = output_homologue[4]
+        # if mask_homologue:
+        #     to_mask[f"{prefix}_nonref"] = output_homologue[2]
+    
+    ## parse mapping file into gRNAHits object
+    grna_hits = gRNAHits()
+    grna_hits.parse_from_mapping(args.mapping, targets = args.target, version = None)
+    ## rename gRNA according to FASTA file if provided
+    if args.grna is not None: grna_hits.assign_gRNAseq_id(args.grna)
+    ## reset checks if requested
+    if args.reset_checks: grna_hits.clear_checks()
+    
+    ## call execute_filter
+    # val_or_empty = lambda b, v: [v] if b else []
+    # checks = list(itertools.chain(*[val_or_empty(b, v)
+    #                                 for b, v in [(args.gc_check, "GC"),
+    #                                              (args.feature_check, "feature"),
+    #                                              (args.background_check, "background")]]))
+    grna_pass, map_pass = execute_filter(args, config, directory, prefix, grna_hits,
+                                         args.mapping, args.grna, args.alignment, args.target,
+                                         config.annotation_red, fasta_exclude = args.exclude,
+                                         # checks = checks,
+                                         domain_gff_bed = None, to_mask = to_mask)
     config.resolve()
-    pass ## exceute filtering function
+    return
 
 @app_sub.command("minimumset")
 def minimumset(
@@ -826,32 +1204,32 @@ def minimumset(
         ## flags
         auto: bool = typer.Option(*params.auto(), **params.auto.options),
         accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options),
-        accept_cds_unknown: bool = typer.Option(*params.accept_cds_unknown(),
-                                                **params.accept_cds_unknown.options) ):
+        accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
+                                                    **params.accept_feature_unknown.options) ):
     
     '''
     Generate minimum set(s) of gRNA required to cover all targets from mapping file and FASTA file of gRNA.
     Requires mapping file (generated by minorg's 'full' subcommand) and a FASTA file of gRNA sequences.
     gRNA sequences not present in the mapping file will be ignored.
     '''
-    
+    args = locals()
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
     
-    if ( out_mapping is None or out_fasta is None ):
+    if ( args.out_mapping is None or args.out_fasta is None ):
         typer.echo(f"Output files will be generated in '{config.out_dir}' with the prefix '{config.prefix}'.")
     
     ## TODO: write log file
     
-    from scripts.get_minimum_set import get_minimum_sets_from_files_and_write
+    from minimum_set import get_minimum_sets_from_files_and_write
     ## note that the directory passed to this function is the tmp directory
-    get_minimum_sets_from_files_and_write(mapping = mapping, fasta = grna, exclude = exclude,
+    get_minimum_sets_from_files_and_write(mapping = args.mapping, fasta = args.grna, exclude = args.exclude,
                                           directory = config.directory, prefix = config.prefix,
-                                          fout_mapping = out_mapping, fout_fasta = out_fasta,
-                                          num_sets = sets, sc_algorithm = sc_algorithm,
-                                          output_map_ver = 2, manual_check = (not auto),
-                                          ignore_invalid = accept_invalid,
-                                          accept_unknown_within_cds_status = accept_cds_unknown)
+                                          fout_mapping = args.out_mapping, fout_fasta = args.out_fasta,
+                                          num_sets = args.sets, sc_algorithm = args.sc_algorithm,
+                                          output_map_ver = 2, manual_check = (not args.auto),
+                                          ignore_invalid = args.accept_invalid,
+                                          accept_unknown_within_feature_status = args.accept_feature_unknown)
     
     # typer.echo(f"boo {sets}")
     # typer.echo(f"verbose: {config.verbose}")
@@ -883,7 +1261,8 @@ def full(
         # indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
         #                                                     callback = split_callback_list),
         target: Path = typer.Option(*params.target(), **params.target.options),
-        query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options),
+        query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options,
+                                                   **oparams.file_valid),
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
         minid: float = typer.Option(*params.minid(), **params.minid.options, callback = non_negative_callback),
         minlen: int = typer.Option(*params.minlen(), **params.minlen.options, callback = positive_callback),
@@ -898,38 +1277,75 @@ def full(
                                       callback = reference_callback),
                                       # callback = make_alias_or_file_callback(params.reference_aliases,
                                       #                                        params.reference)),
-        bed: str = typer.Option(*params.bed(), **params.bed.options,
-                                callback = gff_bed_callback),
+        annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
+                                       callback = annotation_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = attr_mod_callback),
-        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options),
-        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options),
+        ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options,
+                                                        **oparams.file_valid),
+        ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
+                                                     **oparams.file_valid),
+        ext_reference: Optional[List[Path]] = typer.Option(*params.ext_reference(),
+                                                           **params.ext_reference.options,
+                                                           **oparams.file_valid),
+        ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
+                                                            **params.ext_annotation.options,
+                                                            **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         
         ## gRNA generation options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
         length: str = typer.Option(*params.length(), **params.length.options),
         
-        ## filter gRNA options
+        ## filter gRNA options (GC)
         gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
                                      callback = non_negative_callback),
         gc_max: float = typer.Option(*params.gc_max(), **params.gc_max.options,
                                      callback = non_negative_callback),
+        
+        ## filter gRNA options (feature)
         feature: Optional[List[str]] = typer.Option(*params.feature(), **params.feature.options,
                                                     callback = split_callback_list),
-        mismatch: int = typer.Option(*params.mismatch(), **params.mismatch.options,
-                                     callback = non_negative_callback),
-        gap: int = typer.Option(*params.gap(), **params.gap.options, callback = non_negative_callback),
-        exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
-        accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options),
-        accept_cds_unknown: bool = typer.Option(*params.accept_cds_unknown(),
-                                                **params.accept_cds_unknown.options),
-        skip_bg_check: bool = typer.Option(*params.skip_bg_check(), **params.skip_bg_check.options),
+        max_insertion: int = typer.Option(*params.max_insertion(), **params.max_insertion.options,
+                                          callback = non_negative_callback),
+        min_within_n: int = typer.Option(*params.min_within_n(), **params.min_within_n.options,
+                                         callback = positive_callback),
+        min_within_fraction: float = typer.Option(*params.min_within_fraction(),
+                                                  **params.min_within_fraction.options,
+                                                  callback = zero_to_one_callback),
+        
+        ## filter gRNA options (off-target)
+        background: Optional[List[Path]] = typer.Option(*params.background(), **params.background.options,
+                                                        **oparams.file_valid),
         screen_ref: bool = typer.Option(*params.screen_ref(), **params.screen_ref.options),
         unmask_ref: bool = typer.Option(*params.unmask_ref(), **params.unmask_ref.options),
+        mask_gene: Optional[List[str]] = typer.Option(*params.mask_gene(), **params.mask_gene.options,
+                                                      callback = split_callback_list),
+        unmask_gene: Optional[List[str]] = typer.Option(*params.unmask_gene(), **params.unmask_gene.options,
+                                                        callback = split_callback_list),
+        mask_cluster: Optional[List[str]] = typer.Option(*params.mask_cluster(),
+                                                         **params.mask_cluster.options,
+                                                         callback = split_callback_list),
+        unmask_cluster: Optional[List[str]] = typer.Option(*params.unmask_cluster(),
+                                                           **params.unmask_cluster.options,
+                                                           callback = split_callback_list),
+        # mask_homologue: bool = typer.Option(*params.mask_homologue(), **params.mask_homologue.options),
+        ot_pamless: bool = typer.Option(*params.ot_pamless(), **params.ot_pamless.options),
+        ot_mismatch: int = typer.Option(*params.ot_mismatch(), **params.ot_mismatch.options,
+                                        callback = non_negative_callback),
+        ot_gap: int = typer.Option(*params.ot_gap(), **params.ot_gap.options, callback = non_negative_callback),
+        ot_indv: Optional[List[str]] = typer.Option(*params.ot_indv(), **params.ot_indv.options,
+                                                    callback = split_callback_list),
+        skip_bg_check: bool = typer.Option(*params.skip_bg_check(), **params.skip_bg_check.options),
+
+        ## filter gRNA (other)
+        exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
         
         ## gRNA minimum set options
+        accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options),
+        accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
+                                                    **params.accept_feature_unknown.options),
         sets: int = typer.Option(*params.sets(), **params.sets.options, callback = positive_callback),
         sc_algorithm: SetCoverAlgo = typer.Option(*params.sc_algorithm(), **params.sc_algorithm.options),
         auto: bool = typer.Option(*params.auto(), **params.auto.options),
@@ -968,8 +1384,10 @@ def full(
     ## check arguments are in order
     check_homologue_args(args, standalone = False)
     check_grna_args(args, standalone = False)
+    check_filter_args(args, standalone = False)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
+    gene_sets_for_filter = parse_genes_for_filter(args, priority = "mask")
     ## move log file
     config.logfile.move(config, args)
     
@@ -982,14 +1400,15 @@ def full(
     extend_genome(args, config)
     
     ## filter BED/GFF for relevant entries (reduces get_seq search time)
-    make_reduced_bed(args, config, gene_sets)
+    make_reduced_ann(args, config, gene_sets)
     
-    ## generate wrapper for get_seq for common args
-    def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
-        get_ref_by_genes_resolve(genes = genes, feature = feature,
-                                 out_dir = out_dir, fout = fasta_out, no_bed = True, ## output options
-                                 ref_fasta_files = reference, bed = bed_red, ## reference + annotation
-                                 attribute_mod = attr_mod, by_gene = True, **kwargs)
+    # ## generate wrapper for get_seq for common args
+    # def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
+    #     get_ref_by_genes_resolve(genes = genes, feature = feature,
+    #                              out_dir = out_dir, fout = fasta_out, no_bed = True, ## output options
+    #                              ref_fasta_files = config.reference_ext,
+    #                              bed = config.annotation_red, ## reference
+    #                              attribute_mod = args.attr_mod, by_gene = True, **kwargs)
     
     ## iterate through all gene sets
     ## TODO: handle situations when args.target is defined
@@ -1010,13 +1429,15 @@ def full(
             set_dir, set_pref = output_homologue[:2]
             set_target, set_aln, set_gene, set_cds, set_ann, set_domain_gff_bed = output_homologue[2:]
         ## call execute_grna.
-        set_grna_all, set_map_all = execute_grna(args, config, set_dir, set_pref, set_target)
+        output_grna = execute_grna(args, config, set_dir, set_pref, set_target)
+        set_grna_all, set_map_all, set_grna_fasta_all = output_grna
         ## call execute_filter.
         set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_aln, set_target, set_ann,
-                                                     domain_gff_bed = set_domain_gff_bed,
-                                                     checks = (["GC"] if target is not None
-                                                               else ["GC", "feature"]))
+                                                     set_map_all, set_grna_fasta_all, set_aln,
+                                                     set_target, set_ann,
+                                                     # checks = (["GC"] if target is not None else
+                                                     #           ["GC", "feature"]),
+                                                     domain_gff_bed = set_domain_gff_bed)
         # ## call execute_minimumset.
         # execute_minimumset(set_grna_pass, set_map_pass, args, config)
         pass

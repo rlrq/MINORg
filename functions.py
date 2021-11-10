@@ -1,8 +1,20 @@
+import itertools
+
 def set_overlap(a, b):
     for x in a:
         if x in b:
             return True
     return False
+
+def assign_alias(val, mk_name = lambda i: i, start_index = 1):
+    if not val:
+        return {}
+    elif isinstance(val, str):
+        return {mk_name(start_index): val}
+    elif isinstance(val, dict):
+        return val
+    else:
+        return {mk_name(i+start_index): v for v in val}
 
 ###############
 ##  DISPLAY  ##
@@ -289,6 +301,17 @@ def num_lines(fname):
             pass
     return i+1
 
+## header should be some kind of reusable iterable (e.g. list or tuple) of field names
+def tsv_entries_as_dict(fname, header, f_filter = lambda x: True, fields = None):
+    if not fields: fields = set(header)
+    output = []
+    with open(fname, 'r') as f:
+        for line in f:
+            entry = line.replace('\n', '').split('\t')
+            if f_filter(entry):
+                output.append({col_name: entry[i] for i, col_name in enumerate(header) if col_name in fields})
+    return output
+
 ###################
 ##  FASTA_MANIP  ##
 ###################
@@ -322,7 +345,6 @@ def dict_to_SeqRecordList(d, description = '', seq_id_func = lambda x:x, iupac_l
 
 def dict_to_fasta(d, fout, seq_type = "detect", gap_char = '-', gapped = False):
     def detect_iupac_letters(iupac_alphabet):
-        import itertools
         char_set = set(itertools.chain(*[set(str(seq)) for seq in d.values()]))
         iupac_set = set(str(iupac_alphabet) + str(iupac_alphabet).lower() + gap_char)
         return char_set - iupac_set == set()
@@ -374,7 +396,6 @@ def ranges_subtract(r1, r2):
 
 ## e.g. [[(1, 3), (6, 9)], [(2, 3), (6, 10)]] --> {1, 2, 6, 7, 8, 9} --> [(1, 3), (6, 10)]
 def ranges_union(ranges):
-    import itertools
     pos_set = ranges_to_pos(itertools.chain(*ranges))
     return pos_to_ranges(pos_set)
 
@@ -388,7 +409,6 @@ def ranges_intersect(r1, r2):
 ## convert ranges of [start, end) into set of positions
 ## e.g. [(1, 3), (6, 10)] --> {1, 2, 6, 7, 8, 9}
 def ranges_to_pos(ranges):
-    import itertools
     return set(itertools.chain(*[set(range(x[0], x[1])) for x in ranges]))
 
 ## convert set of positions into list of ranges of [start, end)
@@ -618,7 +638,6 @@ class GFF:
         Get all features that are subfeatures of user-provided feature_ids
         AND subfeatures of those subfeatures, until there are no sub-sub...sub-features left.
         '''
-        import itertools
         printi = make_local_print(quiet = self._quiet)
         features = set(features)
         output_indices = []
@@ -820,10 +839,10 @@ def gc_content(seq):
     return gc_count/len(seq)
 
 #################
-##  BED MANIP  ##
+##  ANN MANIP  ##
 #################
 
-def reduce_bed(gff_beds, ids, fout, mk_tmpf_name = None):
+def reduce_ann(gff_beds, ids, fout, mk_tmpf_name = None):
     if mk_tmpf_name is None:
         import tempfile
         mk_tmpf_name = lambda x: tempfile.mkstemp()[1]
@@ -833,9 +852,7 @@ def reduce_bed(gff_beds, ids, fout, mk_tmpf_name = None):
         bed_reds.append(bed_red)
         fmt = "BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF"
         extract_features_and_subfeatures(gff_bed, ids, bed_red, quiet = True,
-                                         fin_fmt = fmt,
-                                         # fin_fmt = "BED",
-                                         fout_fmt = "BED")
+                                         fin_fmt = fmt, fout_fmt = "BED")
     cat_files(bed_reds, fout, remove = True)
     return
 
@@ -847,6 +864,9 @@ def reduce_bed(gff_beds, ids, fout, mk_tmpf_name = None):
 class CheckObj:
     def __init__(self, *check_names):
         self._checks = {check_name: None for check_name in check_names}
+    def clear_checks(self):
+        for check_name in self._checks.keys():
+            self._checks[check_name] = None
     def set_check(self, check_name, status):
         self._checks[check_name] = (True if status in ("pass", True) else
                                     False if status in ("fail", False) else
@@ -1028,6 +1048,12 @@ class gRNAHits:
     ###############
     ##  SETTERS  ##
     ###############
+    def clear_checks(self):
+        for gRNA_seq in self.flatten_gRNAseqs():
+            gRNA_seq.clear_checks()
+        for hit in self.flatten_hits():
+            hit.clear_checks()
+        return
     def set_seqs_check(self, check_name, status, seqs):
         if type(seqs) not in (tuple, list, set):
             seqs = (seqs,)
