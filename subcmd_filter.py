@@ -31,6 +31,7 @@ def execute_filter(args, config, directory, prefix, gRNA_hits, grna_map, fasta_g
     # target_names = None if args.target is None else list(fasta_to_dict(args.target).keys())
     ## output file names
     fout_map_pass = config.reserve_fname(directory, f"{prefix}_gRNA_pass.map")
+    fout_fasta_pass = config.reserve_fname(directory, f"{prefix}_gRNA_pass.fasta")
     fout_map_all = config.reserve_fname(directory, f"{prefix}_gRNA_all.map")
     ## filter
     checks = set(check.upper() for check in checks)
@@ -46,12 +47,14 @@ def execute_filter(args, config, directory, prefix, gRNA_hits, grna_map, fasta_g
         ## parse fasta_background and fasta_reference into {<alias>: <path>} dicts
         fasta_background = assign_alias(args.background, mk_name = lambda i: "bg_{str(i).zfill(3)}")
         fasta_reference = assign_alias(config.reference_ext, mk_name = lambda i: "ref_{str(i).zfill(3)}")
+        fasta_query = dict(config.query_map)
         fout_mask = config.mkfname("masked_report.tsv")
-        filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background, gff_bed = gff_bed,
-                              fasta_mask = to_mask, fasta_reference = fasta_reference,
+        filter_background_gen(gRNA_hits, fasta_grna, fasta_target, {**fasta_background, **fasta_query},
+                              gff_bed = gff_bed, fasta_mask = to_mask, fasta_reference = fasta_reference,
                               max_mismatch = max(1, args.ot_mismatch)-1, max_gap = max(1, args.ot_gap)-1,
                               pam = args.pam, pamless_check = args.ot_pamless, blastn = args.blastn,
-                              screen_reference = args.screen_ref, mask_reference = (not args.unmask_ref), 
+                              screen_reference = args.screen_ref,
+                              mask_reference = (args.screen_ref and not args.unmask_ref), 
                               report_bg = True,
                               fout_mask = fout_mask, mk_fname = mk_fname)
     if "EXCLUDE" in checks and fasta_exclude is not None:
@@ -60,29 +63,6 @@ def execute_filter(args, config, directory, prefix, gRNA_hits, grna_map, fasta_g
     #     filter_unique_flank(gRNA_hits, flank_length, background_fname, out_dir)
     gRNA_screened = gRNA_hits.filter_seqs_all_checks_passed(ignore_invalid = True).filter_hits_all_checks_passed(ignore_invalid = True)
     gRNA_screened.write_mapping(fout_map_pass, version = 2, write_all = True, write_checks = False)
+    gRNA_screened.write_fasta(fout_fasta_pass, write_all = True)
     gRNA_hits.write_mapping(fout_map_all, version = 2, write_all = True, write_checks = True)
-    return gRNA_screened, fout_map_pass
-
-    # gRNA_screened = filter_grna(gRNA_hits,
-    #                             mk_fname = lambda *args, **kwargs: config.mkfname(*args, **kwargs, tmp = True),
-    #                             checks = checks,
-    #                             ## filter_gc args
-    #                             gc_min = args.gc_min, gc_max = args.gc_max,
-    #                             ## filter_in_feature arges
-    #                             fasta_alignment = fasta_alignment, features = args.feature, gff_bed = gff_bed,
-    #                             max_insertion = args.max_insertion, min_within_n = args.min_within_n,
-    #                             min_within_fraction = args.min_within_fraction,
-    #                             ref = (set(args.indv) == {"ref"}), domain_gff_bed = domain_gff_bed,
-    #                             ## filter_background args
-    #                             fasta_grna = fasta_grna, fasta_target = fasta_target,
-    #                             fasta_reference = config.reference_ext,
-    #                             fasta_background = args.background,
-    #                             fasta_mask = args.
-    #                             fasta_exclude = fasta_exclude,
-    #                             target_names = target_names,
-                                
-                                
-    #                             fasta_background = args.background,
-    #                             checks = checks, ref = (set(args.indv) == {"ref"}),
-    #                             domain_gff_bed = domain_gff_bed)
-    # return gRNA_screened, fout_map_pass
+    return gRNA_screened, fout_map_all

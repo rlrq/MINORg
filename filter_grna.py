@@ -403,9 +403,9 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
     reference_fnames = assign_alias(reference_fnames, mk_name = lambda i: f"ref_{str(i).zfill(3)}")
     if background_fnames:
         print("Masking targets (in query or user-provided background)")
-        masked = {bg_fname: tuple(itertools.join(*[blast_mask(mask_fname, bg_fname, to_mask_hits,
-                                                              blastn = blastn)
-                                                   for mask_fname in mask_fnames.values()]))
+        masked = {bg_fname: tuple(itertools.chain(*[blast_mask(mask_fname, bg_fname, to_mask_hits,
+                                                               blastn = blastn)
+                                                    for mask_fname in mask_fnames.values()]))
                   for bg_fname in background_fnames.values()}
     if mask_reference and reference_fnames: ## mask in reference genome
         print("Masking gene(s) in reference")

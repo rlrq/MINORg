@@ -560,10 +560,10 @@ def check_homologue_args(args, standalone = True):
             args.indv = type(args.indv)(indvs)
         else:
             valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
-                      none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
-                      param = params.indv, display_cmd = "--genomes",
-                      additional_message = ( "Alternatively, provide a FASTA file of the genome in"
-                                             " which to query using '-q <path to FASTA file>'."))
+                          none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
+                          param = params.indv, display_cmd = "--genomes",
+                          additional_message = ( "Alternatively, provide a FASTA file of the genome in"
+                                                 " which to query using '-q <path to FASTA file>'."))
         # if IndvGenomesAll.all in args.indv:
         #     indvs_special = {IndvGenomesAll.all, IndvGenomesAll.none}
         #     indvs_all = set(indv for indv in IndvGenomesAll if \
@@ -1220,16 +1220,17 @@ def minimumset(
         typer.echo(f"Output files will be generated in '{config.out_dir}' with the prefix '{config.prefix}'.")
     
     ## TODO: write log file
+    execute_minimum_set(args, config)
     
-    from minimum_set import get_minimum_sets_from_files_and_write
-    ## note that the directory passed to this function is the tmp directory
-    get_minimum_sets_from_files_and_write(mapping = args.mapping, fasta = args.grna, exclude = args.exclude,
-                                          directory = config.directory, prefix = config.prefix,
-                                          fout_mapping = args.out_mapping, fout_fasta = args.out_fasta,
-                                          num_sets = args.sets, sc_algorithm = args.sc_algorithm,
-                                          output_map_ver = 2, manual_check = (not args.auto),
-                                          ignore_invalid = args.accept_invalid,
-                                          accept_unknown_within_feature_status = args.accept_feature_unknown)
+    # from minimum_set import get_minimum_sets_from_files_and_write
+    # ## note that the directory passed to this function is the tmp directory
+    # get_minimum_sets_from_files_and_write(mapping = args.mapping, fasta = args.grna, exclude = args.exclude,
+    #                                       directory = config.directory, prefix = config.prefix,
+    #                                       fout_mapping = args.out_mapping, fout_fasta = args.out_fasta,
+    #                                       num_sets = args.sets, sc_algorithm = args.sc_algorithm,
+    #                                       output_map_ver = 2, manual_check = (not args.auto),
+    #                                       ignore_invalid = args.accept_invalid,
+    #                                       accept_unknown_within_feature_status = args.accept_feature_unknown)
     
     # typer.echo(f"boo {sets}")
     # typer.echo(f"verbose: {config.verbose}")
@@ -1380,7 +1381,8 @@ def full(
     ## check validity of args
     args = Namespace(**locals())
     ## this one can't be parsed using alias_or_file_callback cuz the path isn't actually to a file but a prefix
-    args.db = os.path.abspath(parse_lookup(args.db, params.rps_db_aliases, return_first = True))
+    args.db = parse_lookup(args.db, params.rps_db_aliases, return_first = True)
+    if args.db is not None: args.db = os.path.abspath(args.db)
     ## check arguments are in order
     check_homologue_args(args, standalone = False)
     check_grna_args(args, standalone = False)
@@ -1432,15 +1434,23 @@ def full(
         output_grna = execute_grna(args, config, set_dir, set_pref, set_target)
         set_grna_all, set_map_all, set_grna_fasta_all = output_grna
         ## call execute_filter.
-        set_grna_pass, set_map_pass = execute_filter(args, config, set_dir, set_pref, set_grna_all,
-                                                     set_map_all, set_grna_fasta_all, set_aln,
-                                                     set_target, set_ann,
-                                                     # checks = (["GC"] if target is not None else
-                                                     #           ["GC", "feature"]),
-                                                     domain_gff_bed = set_domain_gff_bed)
-        # ## call execute_minimumset.
-        # execute_minimumset(set_grna_pass, set_map_pass, args, config)
-        pass
+        if args.screen_ref and not args.unmask_ref:
+            to_mask = {"targets": set_target, "reference": set_gene}
+        else:
+            to_mask = {"targets": set_target}
+        set_grna_pass, set_map_all = execute_filter(args, config, set_dir, set_pref, set_grna_all,
+                                                    set_map_all, set_grna_fasta_all, set_aln,
+                                                    to_mask, set_ann,
+                                                    # checks = (["GC"] if target is not None else
+                                                    #           ["GC", "feature"]),
+                                                    domain_gff_bed = set_domain_gff_bed)
+        ## call execute_minimumset.
+        set_map_final = '_'.join(set_map_all.split('_')[:-1]) + "_final.map"
+        set_grna_fasta_final = '_'.join(set_grna_fasta_all.split('_')[:-1]) + "_final.fasta"
+        execute_minimumset(args, config, prefix = prefix, directory = set_dir,
+                           mapping = set_map_all, grna = set_grna_fasta_all,
+                           fout_mapping = set_map_final, fout_fasta = set_grna_fasta_final)
+        # pass
     
     typer.echo("heh")
     config.resolve()
