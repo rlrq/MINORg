@@ -11,6 +11,7 @@ from datetime import datetime
 from display import make_print_preindent
 
 from functions import (
+    assign_alias,
     parse_get_data,
     get_dat,
     make_custom_get,
@@ -116,9 +117,9 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
                           blast6cds_fname = tsv_blast_cds, quiet = quiet, **for_merge_hits_and_filter)
     ## check reciprocal
     if check_reciprocal and genes:
-        recip_blast(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
-                    lvl = lvl, quiet = quiet, gff_beds = gff_beds, fasta_ref = fasta_ref, relax = relax,
-                    keep_tmp = keep_tmp)
+        recip_blast_multiref(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
+                             lvl = lvl, quiet = quiet, gff_beds = gff_beds, fasta_ref = fasta_ref, relax = relax,
+                             keep_tmp = keep_tmp)
     ## remove tmp files
     if not keep_tmp:
         os.remove(tsv_blast_ref)
@@ -251,6 +252,53 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     dict_to_fasta(output, fout)
     return
 
+def recip_blast_multiref(fasta_target, directory, gff_beds, fasta_ref,
+                         blastn = "blastn", keep_tmp = False, **kwargs):
+    '''
+    Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
+    gff_beds and fasta_ref must be dictionaries of {<alias>: <path to file>}
+    '''
+    from pybedtools import BedTool
+    from Bio.Blast.Applications import NcbiblastnCommandline
+    blast_metrics = ["pident", "bitscore"]
+    tsv_blasts = []
+    intersect_beds = []
+    i = 0
+    for alias in gff_beds:
+        if not alias in fasta_ref: continue
+        tsv_blast = os.path.join(directory, f"tmp_recipblast_{alias}.tsv")
+        tsv_blasts.append(tsv_blast)
+        ## blast
+        blast6(blastf = NcbiblastnCommandline, cmd = blastn,
+               header = "sseqid,sstart,send,qseqid,qstart,qend," + ','.join(blast_metrics),
+               fout = tsv_blast, query = fasta_target, subject = fasta_ref[alias], dir = directory)
+        ## convert hits to BED file for bedtools intersect
+        get, data = parse_get_data(tsv_blast)
+        ## rearrange coords in cols 2 and 3 so that smaller value is in col 2 and larger in col 3
+        data_bed = [x[:1] + (x[1:3] if int(x[1]) < int(x[2]) else x[2:0:-1]) + x[3:] for x in data]
+        str_bed = '\n'.join(['\t'.join(x) for x in data_bed])
+        ## bedtools intersect
+        blast_bed = BedTool(str_bed, from_string = True)
+        ## this doesn't work if the -b databases are different formats (e.g. gff and bed :( )
+        ##  but yknow what no i'm not doing this i'm either converting gff reference annotations to bed or
+        ##  writing the extended annotations as gff. we're gonna standardise.
+        ##  of course if we choose gff (which i'm super inclined to actually) we're gonna have to adjust
+        ##  the colnames_bed of remove_non_max_bitscore.
+        intersect_beds.append(blast_bed.intersect(BedTool(gff_beds[alias]), wao = True))
+    remove_non_max_bitscore(fasta_target, intersect_beds, blast_metrics = blast_metrics,
+                            **kwargs) ## kwargs: genes, lvl, quiet
+    ## remove temporary files
+    if keep_tmp:
+        intersect_fout = os.path.join(directory, "tmp_recipblast.intersect.tsv")
+        with open(intersect_fout, "w+") as f:
+            f.write('\n'.join([str(bedtool_obj) for bedtool_obj in intersect_beds]))
+    else:
+        from os import remove
+        for tsv_blast in tsv_blasts:
+            remove(tsv_blast)
+    return
+
+
 def recip_blast(fasta_target, directory, gff_beds, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
@@ -319,6 +367,7 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
                             colnames_bed=["bed_chrom", "bed_start", "bed_end", "id", "score", "strand", "source",
                                           "feature", "phase", "attributes", "overlap"]):
     import itertools
+    from pybedtools import BedTool
     printi = make_local_print(quiet = quiet, printf = make_print_preindent(initial_lvl = lvl))
     genes = set(genes)
     colnames = colnames_blast + blast_metrics + colnames_bed
@@ -326,7 +375,8 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
     data = {}
     for entry in (x.split('\t') for x in
                   # tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool]))
-                  str(bedtool).split('\n')
+                  (str(bedtool).split('\n') if isinstance(bedtool, BedTool)
+                   else tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool])))
                   if ( x.count('\t') == len(colnames) - 1 \
                        and get(x.split('\t'), "feature") in ("gene", "pseudogene", '.') )):
         data[get(entry, "candidate")] = data.get(get(entry, "candidate"), []) + [entry]
@@ -393,14 +443,14 @@ def get_ref_by_genes_resolve(genes, fout = None, bed_out = None, no_bed = True, 
             from typer import progressbar
             with progressbar(genes) as progress:
                 for gene in progress:
-                    get_ref_by_gene(gene, **kwargs, acc = "ref", directory = tmpdir,
-                                    store_fasta = store_fa, store_bed = store_bed,
-                                    store_domain_gff_bed = store_domain_gff_bed)
+                    get_ref_by_gene_multiref(gene, **kwargs, acc = "ref", directory = tmpdir,
+                                             store_fasta = store_fa, store_bed = store_bed,
+                                             store_domain_gff_bed = store_domain_gff_bed)
         else:
             for gene in genes:
-                get_ref_by_gene(gene, **kwargs, acc = "ref", directory = tmpdir,
-                                store_fasta = store_fa, store_bed = store_bed,
-                                store_domain_gff_bed = store_domain_gff_bed)
+                get_ref_by_gene_multiref(gene, **kwargs, acc = "ref", directory = tmpdir,
+                                         store_fasta = store_fa, store_bed = store_bed,
+                                         store_domain_gff_bed = store_domain_gff_bed)
         
         ## merge fasta files if requested
         if fout is not None and os.path.exists(store_fa):
@@ -491,9 +541,10 @@ def get_ref_raw(chrom, start, end, fasta_out = None, encoding="utf-8", ref_fasta
         import collections
         import six
         ## if some kind of (non-generator) iterable
-        if (isinstance(ref_fasta_files, collections.Iterable)
+        if (not isinstance(ref_fasta_files, dict) and
+            isinstance(ref_fasta_files, collections.Iterable)
             and not isinstance(ref_fasta_files, six.string_types)):
-            ref_fasta_files = {i: fname for fname in ref_fasta_files}
+            ref_fasta_files = {i: fname for fname in enumerate(ref_fasta_files)}
         ## else if string (or even Path)
         else:
             ref_fasta_files = {"Reference": ref_fasta_files}
@@ -518,14 +569,33 @@ def get_ref_raw(chrom, start, end, fasta_out = None, encoding="utf-8", ref_fasta
     store_fname(store_fasta, fasta_out)
     return 
 
+def get_ref_by_gene_multiref(gene, feature, out_dir, ref_fasta_files, ref_ann_files, *args,
+                             domain_f = None, fname_template = "${source_id}_${gene}.fasta",
+                             attribute_mod = {}, **kwargs):
+    ref_ann_files = assign_alias(ref_ann_files)
+    ref_fasta_files = assign_alias(ref_fasta_files)
+    domain_f = {} if domain_f is None else assign_alias(domain_f)
+    relevant_aliases = [alias for alias, f_ann in ref_ann_files.items() if
+                        GFF(data = GFF(fname = f_ann, attr_mod = attribute_mod,
+                                       fmt = ("BED" if f_ann.split('.')[-1].upper() == "BED" else "GFF3"),
+                                       quiet = True).get_features_and_subfeatures(gene))]
+    from string import Template
+    for alias in relevant_aliases:
+        if alias in ref_fasta_files:
+            fout = os.path.join(out_dir, Template(fname_template).substitute(source_id = alias, gene = gene))
+            get_ref_by_gene(gene, feature, out_dir, fout = fout, gff_bed = ref_ann_files[alias],
+                            ref_fasta_files = ref_fasta_files, domain_f = domain_f.get(alias, ''),
+                            attribute_mod = attribute_mod, src = alias, **kwargs)
+    return
+
 ## note: setting by_gene to True will collapse identical entries from all isoforms
-def get_ref_by_gene(gene, feature, out_dir, gff_bed=bed_path, encoding="utf-8",
+def get_ref_by_gene(gene, feature, out_dir, fout=None, gff_bed=bed_path, encoding="utf-8",
                     ref_fasta_files=ref_fasta, complete=False, domain="", domain_f="",
                     start_inc=True, end_inc=True, translate=False, adj_dir=False,
                     # attribute_fields = fields["gff3"], merge=False,
                     by_gene=False, attribute_mod={}, fout_domain_gff_bed = None,
-                    store_fasta = None, store_bed = None, quiet = True, lvl = 0,
-                    seqid_template = "$source_id|$gene|$feature|$isoform|$domain|$n|$complete|$revcomp",
+                    store_fasta = None, store_bed = None, quiet = True, lvl = 0, src = None,
+                    seqid_template = "$source|$gene|$feature|$isoform|$domain|$n|$complete|$revcomp",
                     **kwargs):
     
     ## display function
@@ -554,7 +624,8 @@ def get_ref_by_gene(gene, feature, out_dir, gff_bed=bed_path, encoding="utf-8",
                     for entry in ann if entry.is_attr("Parent", gene)}
     seq_ranges = {}
     ## get gene sequence
-    ref_seq_original = get_ref_raw(chrom, start, end, encoding = encoding, ref_fasta_files = ref_fasta_files)
+    ref_seq_original = get_ref_raw(chrom, start, end, src = src,
+                                   encoding = encoding, ref_fasta_files = ref_fasta_files)
     source_id = ref_seq_original.source
     ## create function to make seqid
     from string import Template
@@ -588,7 +659,7 @@ def get_ref_by_gene(gene, feature, out_dir, gff_bed=bed_path, encoding="utf-8",
                     gene_domain_ann.start = domain_dat[0] + (1 if start_inc else 2)
                     gene_domain_ann.end = domain_dat[1] + (1 if end_inc else 0)
                     gene_domain_ann.feature = "domain"
-                    gene_domain_ann.source = "minorg"
+                    gene_domain_ann.source = "minorg" if src is None else src
                     domain_ann.add_entry(gene_domain_ann)
         else:
             domain_data = [(start, end)]
@@ -639,13 +710,14 @@ def get_ref_by_gene(gene, feature, out_dir, gff_bed=bed_path, encoding="utf-8",
                 seq_ranges[tuple(sorted(ranges))] = seq_ranges.get(tuple(sorted(ranges)), []) + [seq_name]
         if seqs_to_write:
             isoform_seqs = {**isoform_seqs, **seqs_to_write}
-    fasta_out_final = os.path.join(out_dir, (gene + "_ref_" + feature + \
-                                             ("_complete" if complete else '') + \
-                                             (('_' + ("domain" if not domain else domain))
-                                              if domain_f else '') + \
-                                             ("_protein" if (translate and (feature=="CDS") and
-                                                             not complete) else '')+\
-                                             ".fasta").replace('|', '_'))
+    fasta_out_final = (fout if fout is not None else
+                       os.path.join(out_dir, (gene + "_ref_" + feature + \
+                                              ("_complete" if complete else '') + \
+                                              (('_' + ("domain" if not domain else domain))
+                                               if domain_f else '') + \
+                                              ("_protein" if (translate and (feature=="CDS") and
+                                                              not complete) else '')+\
+                                              ".fasta").replace('|', '_')))
     if isoform_seqs:
         if not by_gene:
             dict_to_fasta(isoform_seqs, fasta_out_final)

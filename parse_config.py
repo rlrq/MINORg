@@ -14,6 +14,7 @@ try:
 except KeyError:
     ## TODO: set env variable so we can remove this KeyError exception handling thing
     config_fname = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
+    # config_fname = None
 
 def get_val_none(val, d: dict, none = None):
     '''
@@ -149,13 +150,24 @@ class Params():
     def __init__(self, config_file):
         
         ## read config file
-        self.config_file = config_file
-        conf = configparser.ConfigParser()
-        conf.read(self.config_file)
+        if config_file:
+            self.config_file = config_file
+            conf = configparser.ConfigParser()
+            conf.read(self.config_file)
+            def conf_get(*args, type = str, **kwargs):
+                if type is str: get = conf.get
+                elif type is bool: get = conf.getboolean
+                elif type is int: get = conf.getint
+                elif type is float: get = conf.getfloat
+                return get(*args, **kwargs)
+        else:
+            def conf_get(*args, **kwargs):
+                return None
         
         ## several lookups (parsed here because here is where the config file is parsed haha)
         section_lookup = "lookup"
-        get_lookup = lambda x: conf.get(section_lookup, x) ## for strings
+        # get_lookup = lambda x: conf.get(section_lookup, x) ## for strings
+        get_lookup = lambda x: get_val_default(conf_get(section_lookup, x), default = '')
         self.domain_mapping = '' ## TODO, analogous to genome_mapping and cluster_mapping
         self.domain_aliases = parse_multiline_inv_sdict(get_lookup("domain alias"))
         self.domain_aliases_inv = {k: sorted(v) for k, v in
@@ -168,14 +180,17 @@ class Params():
         self.cluster_sets = parse_multiline_multikey_sdict(get_lookup("cluster sets"))
         self.attr_mod_presets = parse_multiline_multikey_sdict(get_lookup("gff attribute modification presets"))
         self.reference_aliases = parse_multiline_multikey_sdict(get_lookup("reference alias"))
-        self.gff_bed_aliases = parse_multiline_multikey_sdict(get_lookup("gff_bed alias"))
+        self.annotation_aliases = parse_multiline_multikey_sdict(get_lookup("annotation alias"))
         self.rps_db_aliases = parse_multiline_multikey_sdict(get_lookup("rps database alias"))
         
         ## general
         section_general = "general"
         self.help = Param(None, "-h", "--help")
         self.version = Param(None, "-v", "--version")
-        self.quiet = Param(conf.getboolean(section_general, "quiet"), "--quiet/--verbose")
+        self.quiet = Param(get_val_default(conf_get(section_general, "quiet", type = bool), default = False),
+                           "--quiet/--verbose")
+        # self.quiet = Param(get_val_default(conf.getboolean(section_general, "quiet"), False),
+        #                    "--quiet/--verbose")
         
         ## user lookups (print to screen)
         self.genomes = Param(None, "--genomes")
@@ -186,33 +201,49 @@ class Params():
         
         ## executables
         section_binary = "binary"
-        get_binary = lambda x: conf.get(section_binary, x)
+        # get_binary = lambda x: conf.get(section_binary, x)
+        get_binary = lambda x, default: get_val_default(conf_get(section_binary, x), default = default)
         help_msg = lambda name: (f"absolute path to {name} executable/binary,"
                                  " OR command name if the executable/binary is accessible"
                                  " via the command line")
-        self.rpsblast = Param(get_binary("rpsblast"), "--rpsblast", help = help_msg("rpsblast or rpsblast+") )
-        self.blastn = Param(get_binary("blastn"), "--blastn", help = help_msg("blastn") )
-        self.mafft = Param(get_binary("mafft"), "--mafft", help = help_msg("mafft") )
+        self.rpsblast = Param(get_binary("rpsblast", default = "rpsblast"),
+                              "--rpsblast", help = help_msg("path to rpsblast or rpsblast+ executable") )
+        self.blastn = Param(get_binary("blastn", default = "blastn"),
+                            "--blastn", help = help_msg("path to blastn executable") )
+        self.mafft = Param(get_binary("mafft", default = "mafft"),
+                           "--mafft", help = help_msg("path to mafft executable") )
+        # self.rpsblast = Param(get_val_default(get_binary("rpsblast"), "rpsblast"),
+        #                       "--rpsblast", help = help_msg("path to rpsblast or rpsblast+ executable") )
+        # self.blastn = Param(get_val_default(get_binary("blastn"), "blastn"),
+        #                     "--blastn", help = help_msg("path to blastn executable") )
+        # self.mafft = Param(get_val_default(get_binary("mafft"), "mafft"),
+        #                    "--mafft", help = help_msg("path to mafft executable") )
         
         ## data
         section_data = "data"
-        get_data = lambda x: conf.get(section_data, x) ## for strings
-        self.reference = Param(get_val_none(get_data("reference"), self.reference_aliases, none = None),
+        # get_data = lambda x: conf.get(section_data, x) ## for strings
+        get_data = lambda x, **kwargs: conf_get(section_data, x, **kwargs)
+        self.reference_annotation = Param(get_val_default(get_data("reference + annotation"), None),
+                                          "--ref-ann", "--reference-annotation",
+                                          help = "alias for reference genome AND reference genome annotation",
+                                          description = ("specifies both reference genome sequences and"
+                                                         " annotation in a single parameter"))
+        self.reference = Param(get_val_none(get_data("reference"), self.reference_aliases),
                                "-r", "--reference",
                                help = "reference genome alias or path to FASTA file of reference genome",
                                description = "reference genome alias or path to FASTA file of reference genome")
-        self.bed = Param(get_val_none(get_data("gff_bed"), self.gff_bed_aliases, none = None),
+        self.bed = Param(get_val_none(get_data("annotation"), self.annotation_aliases),
                          "--bed", "--gff-bed",
                          help = ( "BED file of reference genome annotation, "
                                   "converted from GFF3 format using bedtools' gff2bed" ))
-        self.annotation = Param(get_val_none(get_data("gff_bed"), self.gff_bed_aliases, none = None),
+        self.annotation = Param(get_val_none(get_data("annotation"), self.annotation_aliases),
                                 "--ann", "--annotation",
                                 help = ( "GFF3 file of reference genome annotation or BED file"
                                          " converted from GFF3 format using bedtools' gff2bed" ))
-        self.db = Param(get_val_none(get_data("rps database"), self.rps_db_aliases, none = None),
+        self.db = Param(get_val_none(get_data("rps database"), self.rps_db_aliases),
                         "--rps-db",
                         help = "local or remote RPS-BLAST database")
-        self.remote_rps = Param(get_data("remote rps"), "--remote-rps",
+        self.remote_rps = Param(get_val_default(get_data("remote rps", type = bool), False), "--remote-rps",
                             help = "Raise --remote flag when executing RPS-BLAST")
         self.cluster_set = Param(get_val_none(get_data("cluster set"), self.cluster_sets),
                                     "--cluster-set",
@@ -252,7 +283,7 @@ class Params():
                                     help = ( "GFF3 file of extended genome(s) annotation or BED file"
                                              " converted from GFF3 format using bedtools' gff2bed;"
                                              " used with --extend-reference; molecules must be unique" ))
-        self.sep = Param(get_data("gene-isoform separator"), "--sep",
+        self.sep = Param(get_val_default(get_data("gene-isoform separator"), '.'), "--sep",
                          help = ( "character separating gene ID from isoform number/ID;"
                                   " used with --extend-cds and --extend-genome;"
                                   " for example: with gene ID AT1G01010 and isoform ID AT1G01010.1,"
@@ -263,13 +294,14 @@ class Params():
         self.directory = Param(os.getcwd(), "-d", "--dir", "--directory",
                                help = "output directory  [default: <working directory>]",
                                show_any_default = False)
-        self.prefix = Param(conf.get(section_shared, "prefix"), "--prefix",
-                            help = "output files/directory prefix")
+        self.prefix = Param(get_val_default(conf_get(section_shared, "prefix"), "minorg"),
+                            "--prefix", help = "output files/directory prefix")
         self.fasta = Param(None, "-f", "--fasta")
         self.thread = Param(1, "--thread")
         
         ## homolog/homologue
         section_homologue = "homologue"
+        get_homologue = lambda x, **kwargs: conf_get(section_homologue, x, **kwargs)
         self.gene = Param(None, "-g", "--gene", "--genes",
                           description = "comma-separated gene ID(s)")
         self.cluster = Param(None, "-c", "--cluster",
@@ -287,7 +319,7 @@ class Params():
                              help = "comma-separated GFF feature(s) to find gRNA in")
         # self.query = Param([conf.get(section_homologue, "query")], "-q", "--query")
         self.query = Param([], "-q", "--query")
-        self.domain = Param(get_val_none(conf.get(section_homologue, "domain"),
+        self.domain = Param(get_val_none(get_homologue("domain"),
                                          self.domain_aliases, none = "gene"), "--domain",
                                          # self.domain_aliases, none = None), "--domain",
                             # conf.get(section_homologue, "domain"), "--domain",
@@ -295,29 +327,34 @@ class Params():
                                                                      sorted([( pssmid, ','.join(aliases) )
                                                                              for pssmid, aliases in
                                                                              self.domain_aliases_inv.items()])))
-        self.merge_within = Param(conf.getint(section_homologue, "merge hits within"), "--merge-within")
-        self.minid = Param(conf.getfloat(section_homologue, "minimum hit id"), "--minid", "--min-id")
-        self.minlen = Param(conf.getint(section_homologue, "minimum target length"),
+        self.merge_within = Param(get_val_default(get_homologue("merge hits within", type = int), 100),
+                                  "--merge-within")
+        self.minid = Param(get_val_default(get_homologue("minimum hit id", type = float), 95),
+                           "--minid", "--min-id")
+        self.minlen = Param(get_val_default(get_homologue("minimum target length", type = int), 1),
                             "--minlen", "--min-len", "--min-target-len")
-        self.mincdslen = Param(conf.getint(section_homologue, ("minimum cds length")),
+        self.mincdslen = Param(get_val_default(get_homologue("minimum cds length", type = int), 1),
                                "--mincdslen", "--min-cds-len",
                                help = "minimum bases in target aligned by BLAST with reference CDS sequences")
-        self.check_recip = Param(conf.getboolean(section_homologue, "check reciprocal"),
+        self.check_recip = Param(get_val_default(get_homologue("check reciprocal", type = bool), True),
                                  "--check-recip", "--check-reciprocal")
-        self.relax_recip = Param(conf.getboolean(section_homologue, "relax reciprocal"),
+        self.relax_recip = Param(get_val_default(get_homologue("relax reciprocal", type = bool), False),
                                  "--relax-recip", "--relax-reciprocal")
-        self.check_id_premerge = Param(conf.getboolean(section_homologue, "check hit id before merging"),
+        self.check_id_premerge = Param(get_val_default(get_homologue("check hit id before merging",
+                                                                     type = bool), False),
                                        "--check-id-before-merge")
         
         ## generate_grna
         section_grna = "gRNA"
-        self.pam = Param(conf.get(section_grna, "pam"), "-p", "--pam")
-        self.length = Param(conf.getint(section_grna, "length"), "-l", "--len", "--length")
-        self.span_junction = Param(conf.getboolean(section_grna, "span junction"), "--span-junction",
-                                   help = "allow gRNA to span intron-exon boundary")
+        get_grna = lambda x, **kwargs: conf_get(section_grna, x, **kwargs)
+        self.pam = Param(get_val_default(get_grna("pam"), ".NGG"), "-p", "--pam")
+        self.length = Param(get_val_default(get_grna("length", type = int), 20), "-l", "--len", "--length")
+        self.span_junction = Param(get_val_default(get_grna("span junction", type = bool), False),
+                                   "--span-junction", help = "allow gRNA to span intron-exon boundary")
         
         ## filter
         section_filter = "filter"
+        get_filter = lambda x, **kwargs: conf_get(section_filter, x, **kwargs)
         self.check_all = Param(False, "--check-all",
                                false_true = ("execute some checks", "execute all checks"),
                                description = "Filter gRNA by all checks")
@@ -342,11 +379,14 @@ class Params():
                                         "  from a single individual, and all sequences from a single"
                                         "  individual should be contained in a single file"))
         self.alignment = Param(None, "--alignment") ## fname
-        self.ot_mismatch = Param(conf.getint(section_filter, "minimum off-target mismatch"), "--ot-mismatch")
-        self.ot_gap = Param(conf.getint(section_filter, "minimum off-target gap"), "--ot-gap")
-        self.ot_pamless = Param(conf.getboolean(section_filter, "pamless off-target search"), "--ot-pamless",
-                                help = ("ignore PAM when searching for off-target"))
-        self.ot_indv = Param([conf.get(section_filter, "screen individuals")], "--ot-indv",
+        self.ot_mismatch = Param(get_val_default(get_filter("minimum off-target mismatch", type = int), 1),
+                                 "--ot-mismatch")
+        self.ot_gap = Param(get_val_default(get_filter("minimum off-target gap", type = int), 0),
+                            "--ot-gap")
+        self.ot_pamless = Param(get_val_default(get_filter("pamless off-target search", type = bool), True),
+                                "--ot-pamless", help = ("ignore PAM when searching for off-target"))
+        self.ot_indv = Param([get_val_default(get_filter("screen individuals"), '.')],
+                             "--ot-indv",
                              # autocompletion = generate_autocompletion("indv",
                              #                                          [('.', ("<all genomes passed to '-i',"
                              #                                                  " valid only with full programme"
@@ -362,54 +402,58 @@ class Params():
                                                       " in combination with genome aliases."
                                                       " (E.g. '--bg-indv -,HeLa')")})
         self.exclude = Param(None, "-e", "--exclude") ## fname
-        self.gc_min = Param(conf.getfloat(section_filter, "GC minimum"), "--gc-min",
+        self.gc_min = Param(get_val_default(get_filter("GC minimum", type = float), 0.3), "--gc-min",
                             help = ( "minimum GC content (inclusive),"
                                      " where value should be between 0 (0% GC) and 1 (100% GC)"))
-        self.gc_max = Param(conf.getfloat(section_filter, "GC maximum"), "--gc-max",
+        self.gc_max = Param(get_val_default(get_filter("GC maximum", type = float), 0.7), "--gc-max",
                             help = ( "maximum GC content (inclusive),"
                                      " where value should be between 0 (0% GC) and 1 (100% GC)"))
-        self.accept_invalid = Param(conf.getboolean(section_filter, "accept invalid"),
+        self.accept_invalid = Param(get_val_default(get_filter("accept invalid", type = bool), False),
                                     "--accept-invalid/--reject-invalid",
                                     false_true = ("reject", "accept"), show_default = False)
-        self.accept_feature_unknown = Param(conf.getboolean(section_filter, "accept feature unknown"),
+        self.accept_feature_unknown = Param(get_val_default(get_filter("accept feature unknown",
+                                                                       type = bool), False),
                                             "--accept-feature-unknown/--reject-feature-unknown",
                                         false_true = ("reject", "accept"), show_default = False)
-        self.max_insertion = Param(conf.getint(section_filter, "maximum insertion size"),
+        self.max_insertion = Param(get_val_default(get_filter("maximum insertion size", type = int), 15),
                                    "--max-insertion",
                                    help = ("maximum allowable insertion size (bp) in feature."
                                            " gRNA overlapping with insertions larger than the specific size"
                                            " will be excluded."))
-        self.min_within_n = Param(conf.getint(section_filter,
-                                              "minimum number of genes which features a gRNA must fall within"),
+        self.min_within_n = Param(get_val_default(get_filter(("minimum number of genes which features a"
+                                                              " gRNA must fall within"), type = int), 1),
                                   "--min-within-n",
                                   help = ("minimum number of genes (-g) which desired features (-f) a"
                                           " gRNA must fall within to pass the 'within feature' check."))
-        self.min_within_fraction = Param(conf.getfloat(section_filter,
-                                                       ("minimum fraction of genes which features a gRNA"
-                                                        " must fall within")),
+        self.min_within_fraction = Param(get_val_default(get_filter(("minimum fraction of genes which"
+                                                                     " features a gRNA must fall within"),
+                                                                    type = float), 0),
                                          "--min-within-fraction",
                                          help = ("minimum fraction (0-1) of genes (-g) which desired"
                                                  " features (-f) a gRNA must fall within to pass"
                                                  " the 'within feature' check."))
-        self.skip_bg_check = Param(conf.getboolean(section_filter, "skip background check"),
+        self.skip_bg_check = Param(get_val_default(get_filter("skip background check", type = bool),
+                                                   False),
                                    "--skip-bg-check",
                                    false_true = ("execute off-target check", "skip off-target check"),
                                    show_default = False,
                                    help = "skip off-target screen")
-        self.screen_ref = Param(conf.getboolean(section_filter, "screen reference"),
+        self.screen_ref = Param(get_val_default(get_filter("screen reference", type = bool), False),
                                 "--screen-ref", show_any_default = False,
                                 help = "screen for off-targets in reference genome")
-        self.unmask_ref = Param(conf.getboolean(section_filter, "unmask gene(s) in reference"),
+        self.unmask_ref = Param(get_val_default(get_filter("unmask gene(s) in reference", type = bool),
+                                                False),
                                 "--unmask-ref", show_any_default = False,
                                 help = "skip masking of genes in reference genome for off-target check")
-        self.by_indv = Param(conf.getboolean(section_filter, "screen by individual"), "--by-indv",
+        self.by_indv = Param(get_val_default(get_filter("screen by individual", type = bool), False),
+                             "--by-indv",
                              help = ("if raised, gRNA may have off-target effects in some individuals."
                                      " For example, a gRNA targeting a gene in individual A will pass the"
                                      " the background check in individual A but may fail the background check"
                                      " in individual B. If not raised, all gRNA will pass background checks in"
                                      " all individuals."))
         self.mask = Param(None, "--mask")
-        self.mask_gene = Param(conf.get(section_filter, "mask"), "--mask-gene",
+        self.mask_gene = Param(get_val_default(get_filter("mask"), '.'), "--mask-gene",
                                description = "comma-separated gene ID(s)",
                                help = ("masked genes are hidden from background check so that"
                                        " gRNA hits to them will not be considered off-target."),
@@ -419,7 +463,7 @@ class Params():
                                                         " genes passed to '-g'. '.' and '-' can be used in"
                                                         " combination with gene IDs. (E.g. '--mask -,BRC1')")})
         ## the following parameters are only used with the "full" subcmd
-        self.unmask_gene = Param(conf.get(section_filter, "unmask"), "--unmask-gene",
+        self.unmask_gene = Param(get_val_default(get_filter("unmask"), '-'), "--unmask-gene",
                                  help = ("masked genes are hidden from background check so that"
                                          " gRNA hits to them will not be considered off-target."
                                          " Use '.' and '-' to indicate all and no (respectively) genes"
@@ -440,7 +484,7 @@ class Params():
                                     false_true = ("leave user-provided non-reference sequences unmasked",
                                                   ("infer homologues in user-provided non-reference"
                                                    " sequences and mask from off-target search")))
-        self.bg_indv = Param([conf.get(section_filter, "screen individuals")], "--bg-indv",
+        self.bg_indv = Param([get_val_default(get_filter("screen individuals"), '.')], "--bg-indv",
                              autocompletion = generate_autocompletion("indv",
                                                                       [('.', ("<all genomes passed to '-i',"
                                                                               " valid only with full programme"
@@ -458,16 +502,17 @@ class Params():
         
         ## minimumset
         section_minimumset = "minimumset"
+        get_minimumset = lambda x, **kwargs: conf_get(section_minimumset, x, **kwargs)
         self.grna = Param(None, "--grna")
         self.mapping = Param(..., "-m", "--mapping")
-        self.sets = Param(conf.getint(section_minimumset, "sets"), "-s", "--set", "--sets")
-        self.sc_algorithm = Param(conf.get(section_minimumset, "set cover algorithm"),
+        self.sets = Param(get_val_default(get_minimumset("sets", type = int), 1), "-s", "--set", "--sets")
+        self.sc_algorithm = Param(get_minimumset("set cover algorithm"),
                                   "--sc-algo", "--sc-algorithm",
                                   help = "algorithm for generating minimum set(s)",
                                   case_sensitive = False)
         self.out_mapping= Param(None, "--out-mapping")
         self.out_fasta = Param(None, "--out-fasta")
-        self.auto = Param(conf.getboolean(section_minimumset, "auto"), "--auto/--manual",
+        self.auto = Param(get_val_default(get_minimumset("auto", type = bool), True), "--auto/--manual",
                           # help = "[default: auto]",
                           false_true = ("manual", "auto"), show_default = False)
         self.input_ver = Param(None, "--input-ver")
@@ -680,21 +725,21 @@ class Config:
                 typer.echo(f"Output files have been generated in {self.out_dir}")
             ## remove tmpdir
             os.rmdir(self.tmpdir)
-    def set_reference(self, fasta, gff_bed):
+    def set_reference(self, fasta, annotation):
         self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
-        self.annotation_ext = self.annotation_ext if gff_bed is None else {"Reference": gff_bed}
+        self.annotation_ext = self.annotation_ext if annotation is None else {"Reference": annotation}
         return
     def add_reference(self, ref_id, fasta):
         self.reference_ext[ref_id] = fasta
         return
-    def add_annotation(self, ann_id, gff_bed):
-        self.annotation_ext[ann_id] = gff_bed
+    def add_annotation(self, ann_id, annotation):
+        self.annotation_ext[ann_id] = annotation
         return
-    def extend_reference(self, ref_id, fasta, gff_bed):
+    def extend_reference(self, ref_id, fasta, annotation):
         if ref_id in self.reference_ext:
             raise Exception("ID '{ref_id}' already in use as source id for config.reference_ext.")
         self.add_reference(ref_id, fasta)
-        self.add_annotation(ref_id, gff_bed)
+        self.add_annotation(ref_id, annotation)
         return
 
 ## make log file (TODO)

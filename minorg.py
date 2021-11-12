@@ -255,10 +255,13 @@ def reference_callback(val):
     return mapped_val
 
 def annotation_callback(val):
-    alias_or_file_callback = make_alias_or_file_callback(params.gff_bed_aliases, params.annotation)
+    alias_or_file_callback = make_alias_or_file_callback(params.annotation_aliases, params.annotation)
     mapped_val = alias_or_file_callback(val)
     config.set_reference(None, mapped_val)
     return mapped_val
+
+def reference_annotation_callback(val):
+    return val
 
 def positive_callback(val):
     if val > 0:
@@ -436,12 +439,18 @@ def valid_aliases(aliases, lookup, raise_error = True, message = None, param = N
 def make_reduced_ann(args, config, gene_sets):
     config.logfile.splain("Filtering annotation file(s)")
     if gene_sets:
-        ann_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
-        config.annotation_red = ann_red
-        reduce_ann(gff_beds = config.annotation_ext.values(),
-                   ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
-                   fout = ann_red,
-                   mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
+        # ann_red = config.mkfname(f"tmp_reduced.bed", tmp = True)
+        # config.annotation_red = ann_red
+        # reduce_ann(gff_beds = config.annotation_ext.values(),
+        #            ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
+        #            fout = ann_red,
+        #            mk_tmpf_name = lambda x: config.reserve_fname(f"tmp_reduced.{x}.gff", tmp = True))
+        config.annotation_red = reduce_ann(gff_beds = config.annotation_ext,
+                                           ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
+                                           fout_fmt = "GFF",
+                                           mk_tmpf_name = lambda x: config.reserve_fname("reduced_ann",
+                                                                                         f"reduced.{x}.gff",
+                                                                                         tmp = True))
         # bed_reds = []
         # for src, bed in config.bed_ext.items():
         #     bed_red = config.mkfname(f"tmp_reduced.{src}.bed", tmp = True)
@@ -833,6 +842,9 @@ def homologue(
         genome_set: str = typer.Option(*params.genome_set(), **params.genome_set.options,
                                        **oparams.file_valid, is_eager = True,
                                        callback = genome_set_callback),
+        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+                                                                 **params.reference_annotation.options,
+                                                                 callback = reference_annotation_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
@@ -926,6 +938,9 @@ def generate_grna(
                                         **oparams.file_valid, is_eager = True,
                                         callback = cluster_set_callback),
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
+        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+                                                                 **params.reference_annotation.options,
+                                                                 callback = reference_annotation_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
@@ -1037,6 +1052,9 @@ def filter_grna(
         grna: Path = typer.Option(*params.grna(), **params.grna.options, **oparams.file_valid),
         alignment: Path = typer.Option(*params.alignment(), **params.alignment.options, **oparams.file_valid),
         target: Path = typer.Option(*params.target(), **params.target.options, **oparams.file_valid),
+        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+                                                                 **params.reference_annotation.options,
+                                                                 callback = reference_annotation_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
@@ -1274,6 +1292,9 @@ def full(
         merge_within: int = typer.Option(*params.merge_within(), **params.merge_within.options,
                                          callback = non_negative_callback),
         check_id_premerge: bool = typer.Option(*params.check_id_premerge(), **params.check_id_premerge.options),
+        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+                                                                 **params.reference_annotation.options,
+                                                                 callback = reference_annotation_callback),
         reference: str = typer.Option(*params.reference(), **params.reference.options,
                                       callback = reference_callback),
                                       # callback = make_alias_or_file_callback(params.reference_aliases,

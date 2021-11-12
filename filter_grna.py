@@ -190,11 +190,15 @@ def filter_gc(gRNA_hits, gc_min = 0, gc_max = 1):
     return
 
 ## filter within feature
-def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_bed, features = None, target_names = None,
+def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_beds, features = None, target_names = None,
                           max_insertion = 15, min_within_n = 1, min_within_fraction = 0, ref = False,
-                          domain_gff_bed = None, alignment_rvs_pattern = "^_R_$seqid$$"):
+                          domain_gff_bed = None, alignment_rvs_pattern = "^_R_$seqid$$",
+                          seqid_source_pattern = f"(?<=^Reference\\|)[^|]+(?=\\|)"):
+    '''
+    gff_beds and domain_gff_bed must be dict of {<alias>: <path to file>}
+    '''
     print("Filtering for sequences within reference feature")
-    if not (os.path.exists(fasta_alignment) and os.path.exists(gff_bed)):
+    if not (os.path.exists(fasta_alignment) and sum(map(os.path.exists, gff_beds.values())) > 0):
         print("No alignment or reference annotations found. Aborting in-feature filtering step.")
         return # gRNA_hits
     else:
@@ -203,36 +207,45 @@ def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_bed, features = None, 
         genes = {'|'.join(seqid.split('|')[5:-1]):
                  seqid for seqid in alignment
                  if (seqid.split('|')[0] == "Reference" and seqid.split('|')[4] == "complete")}
-        ann = GFF(fname = gff_bed, quiet = True,
-                  fmt = ("BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF3"))
-        gene_ann = {gene: ann.get_id(gene, output_list = False) for gene in genes}
+        anns = {alias: GFF(fname = gff_bed, quiet = True,
+                           fmt = ("BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF3"))
+                for alias, gff_bed in gff_beds.items()}
+        gene_anns = {alias: {gene: ann.get_id(gene, output_list = False) for gene in genes}
+                     for alias, ann in anns.items()}
         if domain_gff_bed:
             ## if --domain is used, this function will be supplied with domain_gff_bed, which contains
             ##   feature 'domain'. All fields will be identical to that of the gene with exception
             ##   of feature ('domain'), ranges (whatever the start and end of the domain are),
             ##   and source ('minorg').
-            domain_ann = GFF(fname = domain_gff_bed, quiet = True,
-                             fmt = ("BED" if domain_gff_bed.split('.')[-1].upper() == "BED" else "GFF3"))
+            domain_anns = GFF(fname = domain_gff_bed, quiet = True,
+                              fmt = ("BED" if domain_gff_bed.split('.')[-1].upper()=="BED" else "GFF3"))
         if features is None:
-            feature_ranges = {gene: [(feature.start - 1, feature.end)]
-                              for gene, feature in genes.items()}
+            feature_ranges = {source: {gene: [(feature.start - 1, feature.end)]
+                                       for gene, feature in gene_ann.items()}
+                              for source, gene_ann in gene_anns.items()}
         else:
-            feature_ranges = {gene: ranges_union([[(x.start - 1, x.end) for x in
-                                                   ann.get_subfeatures_full(gene, *features)]])
-                              for gene in genes}
+            feature_ranges = {source: {gene: ranges_union([[(x.start - 1, x.end) for x in
+                                                            ann.get_subfeatures_full(gene, *features)]])
+                                       for gene in genes}
+                              for source, ann in anns.items()}
     def adjust_feature_ranges(gene, seqid, **kwargs):
+        source = re.search(seqid_source_pattern, seqid).group(0)
+        gene_ann = gene_anns[source]
+        gene_feature_ranges = feature_ranges[source]
         if domain_gff_bed:
+            domain_ann = [entry for entry in domain_anns.get_id(gene, output_list = True)
+                          if entry.source == source]
             return adjusted_feature_ranges(alignment[seqid],
                                            ranges_intersect([(gene_ann[gene].start-1, gene_ann[gene].end)],
                                                             (ranges_union([[(x.start-1, x.end)] for x in
-                                                                           domain_ann.get_id(gene, output_list = True)]))),
-                                           feature_ranges[gene],
+                                                                           domain_ann])))[0],
+                                           gene_feature_ranges[gene],
                                            strand = gene_ann[gene].strand,
                                            **kwargs)
         else:
             return adjusted_feature_ranges(alignment[seqid],
                                            (gene_ann[gene].start-1, gene_ann[gene].end),
-                                           feature_ranges[gene],
+                                           gene_feature_ranges[gene],
                                            strand = gene_ann[gene].strand,
                                            **kwargs)
     def is_rvs(aln_seqid, seqid):

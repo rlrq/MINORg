@@ -79,25 +79,28 @@ def execute_homologue(args, config, params, prefix, genes,
     
     ## reduce BED/GFF file if none provided
     if config.annotation_red is None:
-        ann_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
-        reduce_ann(beds = config.annotation_ext.values(), ids = tuple(genes), fout = ann_red,
-                   mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
-    #     bed_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
-    #     extract_features_and_subfeatures(args.bed, tuple(genes), bed_red,
-    #                                      quiet = True, fin_fmt = "BED", fout_fmt = "BED")
+        ann_red = reduce_ann(gff_beds = config.annotation_ext, ids = tuple(genes), fout_fmt = "GFF",
+                             mk_tmpf_name = lambda x: config.reserve_fname("reduced_ann",
+                                                                           f"reduced.{x}.gff", tmp = True))
+        # ann_red = config.mkfname(f"{prefix}_reduced.bed", tmp = True)
+        # reduce_ann(beds = config.annotation_ext.values(), ids = tuple(genes), fout = ann_red,
+        #            mk_tmpf_name = lambda x: config.mkfname(f"tmp_reduced.{x}.bed", tmp = True))
     else:
         ann_red = config.annotation_red
     
     ## generate common functions
+    seqid_template = "Reference|${source}|${domain}|${feature}|${complete}|${gene}|${isoform}"
+    seqid_source_pattern = f"(?<=^Reference\\|)[^|]+(?=\\|)"
     make_fname = lambda *path, **kwargs: config.reserve_fname(prefix, *path, **kwargs)
     def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
         return get_ref_by_genes_resolve(genes = genes, feature = feature, adj_dir = True,
                                         out_dir = out_dir, fout = fasta_out, ## output options
                                         ref_fasta_files = config.reference_ext, ## reference
-                                        gff_bed = ann_red, attribute_mod = args.attr_mod, ## reference annotation
+                                        ref_ann_files = ann_red,
+                                        attribute_mod = args.attr_mod, ## reference annotation
                                         minlen = args.minlen, quiet = True,
                                         # seqid_template = "Reference|$source|$domain|$feature|$complete|$gene",
-                                        seqid_template = "Reference|$source|$domain|$feature|$complete|$gene|$isoform",
+                                        seqid_template = seqid_template,
                                         no_bed = (not keep_bed), **kwargs)
     
     ## generate fnames
@@ -116,7 +119,8 @@ def execute_homologue(args, config, params, prefix, genes,
                      make_fname = make_fname, genes = genes, out_dir = fout_dir, out_pref = prefix,
                      fout = fasta_gene, fout_cds = fasta_cds, domain = args.domain,
                      fout_domain_gff_bed = fout_domain_gff_bed,
-                     # bedout = bed_complete, bedout_cds = bed_cds,
+                     seqid_source_pattern = seqid_source_pattern,
+                     # annout = bed_complete, annout_cds = bed_cds,
                      db = args.db, rpsblast = str(args.rpsblast))
     
     ## get homologues
@@ -134,8 +138,8 @@ def execute_homologue(args, config, params, prefix, genes,
                                  min_len = args.minlen, min_id = args.minid, min_cds_len = args.mincdslen,
                                  check_reciprocal = args.check_recip, relax = args.relax_recip,
                                  check_id_before_merge = args.check_id_premerge, blastn = args.blastn,
-                                 gff_beds = tuple(config.annotation_ext.values()),
-                                 fasta_ref = tuple(config.reference_ext.values()),
+                                 gff_beds = config.annotation_ext,
+                                 fasta_ref = config.reference_ext,
                                  merge_within_range = args.merge_within,
                                  keep_tmp = config.keep_tmp)
     
@@ -198,8 +202,8 @@ def collapse_identical_seqs(fasta, fout_fa, fout_seqid):
 
 ## bed should be a reduced BED file filtered for relevant entries
 def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pref,
-                     fout, fout_cds, db, gff_bed = None, fout_domain_gff_bed = None,
-                     bedout = None, bedout_cds = None, rpsblast = "rpsblast",
+                     fout, fout_cds, db, seqid_source_pattern, gff_bed = None, fout_domain_gff_bed = None,
+                     annout = None, annout_cds = None, rpsblast = "rpsblast",
                      domain = None, domain_aliases = {}, lvl = 0):
     
     ## make common functions
@@ -250,6 +254,9 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
         filter_rpsblast_for_domain(fname = tsv_domains, pssmid = pssmid)
         ## expand filtered output of rpsblast+ to sequences w/ identical protein
         expand_rpsblast_to_redundant_peptides(blast_fname = tsv_domains, collapsed_fname = seqid_aa_collapsed)
+        ## split tsv_domains by source into {<alias>: <path to tsv_domain file>}
+        tsv_domains = split_rpsblast_by_source(fname = tsv_domains, source_pattern = seqid_source_pattern,
+                                               mk_fname = lambda alias: make_refname(f"{domain}_{alias}.tsv"))
         
         ## get domain nucleotide sequences
         printi("Extracting reference domain nucleotide sequence(s)", overwrite = True)
@@ -259,9 +266,9 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
                            domain = domain, verbose = False, fasta_out = fasta_out, complete = complete,
                            by_gene = True, fout_domain_gff_bed = fout_domain_gff_bed, **kwargs)
         ## complete domain sequence
-        get_ref_domain(fasta_out = fout, complete = True, bed_out = bedout, feature = "CDS")
+        get_ref_domain(fasta_out = fout, complete = True, bed_out = annout, feature = "CDS")
         ## CDS-only domain sequence
-        get_ref_domain(fasta_out = fout_cds, complete = False, bed_out = bedout_cds, feature = "CDS")
+        get_ref_domain(fasta_out = fout_cds, complete = False, bed_out = annout_cds, feature = "CDS")
         # ## remove tmp files (tmp files to be removed w/ other tmp files on cleanup)
         # os.remove(tsv_domains)
         # os.remove(fasta_aa_collapsed)
@@ -273,9 +280,9 @@ def get_reference_fa(params, config, get_ref, make_fname, genes, out_dir, out_pr
             return get_ref(genes = genes, feature = feature, out_dir = out_dir, verbose = False,
                            fasta_out = fout, complete = complete, by_gene = True, **kwargs)
         ## get complete gene sequence
-        get_ref(genes, "gene", fout, out_dir, complete = True, by_gene = True, bed_out = bedout)
+        get_ref(genes, "gene", fout, out_dir, complete = True, by_gene = True, bed_out = annout)
         ## get CDS-only of gene sequence
-        get_ref(genes, "CDS", fout_cds, out_dir, complete = False, by_gene = True, bed_out = bedout_cds)
+        get_ref(genes, "CDS", fout_cds, out_dir, complete = False, by_gene = True, bed_out = annout_cds)
     return
 
 
@@ -297,3 +304,24 @@ def expand_rpsblast_to_redundant_peptides(blast_fname, collapsed_fname):
     write_tsv(blast_fname, [get(get_cols = True)] + output)
     return
 
+## split tsv_domains (passed as domain_f to get_ref_by_gene) by reference source
+def split_rpsblast_by_source(fname, source_pattern, mk_fname):
+    import re
+    split = {}
+    header = ''
+    with open(fname, 'r') as f:
+        for i, line in enumerate(f):
+            if i == 0:
+                header = line
+                cols = header.replace('\n', '').split('\t')
+                i_qseqid = cols.index("qseqid")
+                get_qseqid = lambda l: l.replace('\n', '').split('\t')[i_qseqid]
+            else:
+                alias = re.search(source_pattern, get_qseqid(line)).group(0)
+                split[alias] = split.get(alias, '') + line
+    fouts = {alias: mk_fname(alias) for alias in split}
+    for alias, alias_dat in split.items():
+        fout = fouts[alias]
+        with open(fout, "w+") as f:
+            f.write(header + alias_dat)
+    return fouts

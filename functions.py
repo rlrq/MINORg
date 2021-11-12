@@ -842,19 +842,22 @@ def gc_content(seq):
 ##  ANN MANIP  ##
 #################
 
-def reduce_ann(gff_beds, ids, fout, mk_tmpf_name = None):
+def reduce_ann(gff_beds, ids, fout = None, mk_tmpf_name = None, fout_fmt = "BED"):
     if mk_tmpf_name is None:
         import tempfile
         mk_tmpf_name = lambda x: tempfile.mkstemp()[1]
-    bed_reds = []
-    for i, gff_bed in enumerate(gff_beds):
-        bed_red = mk_tmpf_name(i)
-        bed_reds.append(bed_red)
+    gff_beds = assign_alias(gff_beds)
+    bed_reds = {}
+    for alias, gff_bed in gff_beds.items():
+        bed_red = mk_tmpf_name(alias)
+        bed_reds[alias] = bed_red
         fmt = "BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF"
         extract_features_and_subfeatures(gff_bed, ids, bed_red, quiet = True,
-                                         fin_fmt = fmt, fout_fmt = "BED")
-    cat_files(bed_reds, fout, remove = True)
-    return
+                                         fin_fmt = fmt, fout_fmt = fout_fmt)
+    if fout:
+        cat_files(tuple(bed_reds.values()), fout, remove = True)
+    else:
+        return bed_reds
 
 
 ####################
