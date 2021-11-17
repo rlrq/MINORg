@@ -225,6 +225,14 @@ def attr_mod_callback(val):
             else: raise InputFormatError(error_src = "for parameter --attr-mod", hint = params.attr_mod.help())
     else: return params.attr_mod.default
 
+def reference_required(args, msg):
+    if args.reference is None and (args.assembly is None or args.annotation is None):
+        raise click.UsageError( ("'-r <reference genome alias>' OR"
+                                 " '--assembly <reference assembly alias or path to FASTA file>"
+                                 " --annotation <reference annotation alias or GFF3 file or"
+                                 " BED file converted from GFF3 using gff2bed>'is required if using"
+                                 f" {msg}.") )
+    
 def domain_callback(val: str):
     config.raw_domain = val
     if val is not None:
@@ -245,20 +253,47 @@ def make_alias_or_file_callback(lookup: dict, param = None,
     return (lambda val: alias_or_file_callback(val, lookup = lookup,
                                                lookup_fail_message = lookup_fail_message_updated))
 
+
+def check_reference_args(args):
+    if args.assembly is not None and args.annotation is not None:
+        assembly_alias_or_file_callback = make_alias_or_file_callback(params.assembly_aliases, params.assembly)
+        assembly_mapped = assembly_alias_or_file_callback(args.assembly)
+        if assembly_mapped is not None:
+            params.indv_genomes["ref"] = assembly_mapped
+        ann_alias_or_file_callback = make_alias_or_file_callback(params.annotation_aliases, params.annotation)
+        ann_mapped = ann_alias_or_file_callback(args.annotation)
+        config.set_reference(assembly_mapped, ann_mapped)
+    if args.reference:
+        valid_aliases(aliases = args.reference, lookup = config.reference_aliases,
+                      none_value = None, all_value = "all",
+                      param = params.reference, display_cmd = "--references",
+                      additional_message = ("Alternatively, provide a FASTA file of a genome assembly using"
+                                            " '--assembly <path to FASTA file>' and a GFF3 file of genome"
+                                            " annotations using '--annotation <path to GFF3 file>'."))
+        for alias in args.reference:
+            fasta, ann = config.reference_aliases[str(alias)]
+            config.extend_reference(alias, fasta, ann)
+    if ((args.reference and args.assembly and args.annotation) or
+        (not args.reference and not (args.assembly and args.annotation))):
+        raise click.UsageError((f"Either '--reference <alias>' OR"
+                                " '--assembly <FASTA> --annotation <GFF3>' is required"))
+
 ## set ref: <reference genome> in params.indv_genomes
-def reference_callback(val):
-    alias_or_file_callback = make_alias_or_file_callback(params.reference_aliases, params.reference)
-    mapped_val = alias_or_file_callback(val)
-    if mapped_val is not None:
-        params.indv_genomes["ref"] = mapped_val
-    config.set_reference(mapped_val, None)
-    return mapped_val
+def assembly_callback(val):
+    return val
+    # alias_or_file_callback = make_alias_or_file_callback(params.assembly_aliases, params.assembly)
+    # mapped_val = alias_or_file_callback(val)
+    # if mapped_val is not None:
+    #     params.indv_genomes["ref"] = mapped_val
+    # config.set_reference(mapped_val, None)
+    # return mapped_val
 
 def annotation_callback(val):
-    alias_or_file_callback = make_alias_or_file_callback(params.annotation_aliases, params.annotation)
-    mapped_val = alias_or_file_callback(val)
-    config.set_reference(None, mapped_val)
-    return mapped_val
+    return val
+    # alias_or_file_callback = make_alias_or_file_callback(params.annotation_aliases, params.annotation)
+    # mapped_val = alias_or_file_callback(val)
+    # config.set_reference(None, mapped_val)
+    # return mapped_val
 
 def reference_annotation_callback(val):
     return val
@@ -281,6 +316,26 @@ def zero_to_one_callback(val):
         return val
     else:
         raise typer.BadParameter( f"Invalid value: {val}. Must be between 0 and 1 (inclusive)." )
+
+def reference_set_callback(val: str):
+    val = parse_lookup(val, params.reference_sets, return_first = True)
+    if val is not None and os.path.exists(os.path.abspath(val)):
+        config.reference_set = os.path.abspath(val)
+        try:
+            with open(config.reference_set, 'r') as f:
+                config.reference_aliases = {k: v.split('\t') for k, v in
+                                            parse_multiline_multikey_sdict(f.read(), kv_sep = '\t').items()}
+        except:
+            raise InputFormatError(error_src = "file", hint = f"File: {config.reference_set}")
+    else:
+        raise typer.BadParameter( ( f"Unrecognised reference set lookup file alias or non-existent file: {val}"
+                                    "\nFor a list of valid reference set lookup file aliases"
+                                    " and their locations, execute 'minorg --references'."
+                                    "\nAlternatively, please provide a valid file of",
+                                    " reference alias-FASTA-GFF3 mapping."
+                                    "\nHelp message for --reference-set: "
+                                    f"{params.reference_set.help}") )
+    return val
 
 def cluster_set_callback(val: str):
     val = parse_lookup(val, params.cluster_sets, return_first = True)
@@ -323,6 +378,22 @@ def genome_set_callback(val: str):
                                     "\nHelp message for --genome-set: "
                                     f"{params.genome_set.help}") )
     return val
+
+def references_callback(value: bool):
+    if value:
+        if config.reference_set is None:
+            typer.echo( (f"\nNo reference genomes have been defined."
+                         " Please use '--reference-set' to specify a file containing"
+                         " alias-FASTA-GFF3 mapping OR use '--assembly <FASTA>' and '--annotation <GFF3>'"
+                         " to specify genome sequences and annotations respectively." ))
+        else:
+            typer.echo(f"\nValid genome aliases (defined in {config.reference_set}):\n")
+            typer.echo("<semicolon-separated genome alias(es)>\t<FASTA file>\t<GFF3 file>")
+            with open(config.reference_set, 'r') as f:
+                aliases = [f.read()]
+            typer.echo('\n'.join(aliases) + '\n')
+        config.cleanup()
+        raise typer.Exit()
 
 def make_genomes_callback(mode: str = "independent"):
     def genomes_callback(value: bool):
@@ -385,13 +456,13 @@ def lookup_sets_callback(lookup: Lookup):
     lookup.print_sets_aliases()
     return
 
-def genome_sets_callback(value: bool):
-    if value:
-        lookup_sets_callback(config.genome_sets)
+# def genome_sets_callback(value: bool):
+#     if value:
+#         lookup_sets_callback(config.genome_sets)
 
-def cluster_sets_callback(value: bool):
-    if value:
-        lookup_sets_callback(config.genome_sets)
+# def cluster_sets_callback(value: bool):
+#     if value:
+#         lookup_sets_callback(config.genome_sets)
 
     
 def valid_aliases(aliases, lookup, raise_error = True, message = None, param = None,
@@ -494,13 +565,20 @@ def check_homologue_args(args, standalone = True):
             raise click.UsageError("'-g <gene(s)>' or '-c <cluster(s)>' is required if not using -t.'")
     ## if -g/-c is provided, check that --ref and --annotation are also provided
     if args.gene is not None or args.cluster is not None:
-        if args.reference is None:
-            raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
-                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
-        if args.annotation is None:
-            raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
-                                     " annotations using gff2bed>' is required if using"
-                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        reference_required(args, "'-g <gene(s)>' or '-c <cluster(s)>'")
+        # if args.reference is None and (args.assembly is None or args.annotation is None):
+        #     raise click.UsageError( ("'-r <reference genome alias>' OR"
+        #                              " '--assembly <reference assembly alias or path to FASTA file>"
+        #                              " --annotation <reference annotation alias or GFF3 file or"
+        #                              " BED file converted from GFF3 using gff2bed>'is required if using"
+        #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        # if args.reference is None:
+        #     raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
+        #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        # if args.annotation is None:
+        #     raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+        #                              " annotations using gff2bed>' is required if using"
+        #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
         if args.query is None and not indv_provided:
             raise click.UsageError( ("'-q <FASTA file>' or '-i <individual(s)>'"
                                      " is required if using '-g <gene(s)>' or '-c <cluster(s)>'.") )
@@ -562,24 +640,28 @@ def check_homologue_args(args, standalone = True):
     if args.query:
         query_map += [[i+1, str(query)] for i, query in enumerate(args.query)]
     if indv_provided:
+        indvs_special = {"all", "none", "ref", '.'}
+        indvs_ref = set(indv for indv in config.reference_ext) if "ref" in args.indv else set()
+        print("indvs_ref:", indvs_ref)
         if "all" in args.indv or '.' in args.indv:
-            indvs_special = {"all", "none", "ref", '.'}
-            indvs_all = set(indv for indv in config.genome_aliases if indv not in indvs_special)
-            indvs = (set(args.indv) - indvs_special).union(indvs_all)
-            args.indv = type(args.indv)(indvs)
+            indvs_genome = set(indv for indv in config.genome_aliases if indv not in indvs_special)
         else:
-            valid_aliases(aliases = args.indv, lookup = config.genome_aliases,
-                          none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
-                          param = params.indv, display_cmd = "--genomes",
-                          additional_message = ( "Alternatively, provide a FASTA file of the genome in"
-                                                 " which to query using '-q <path to FASTA file>'."))
+            indvs_genome = set(args.indv) - indvs_special
+        indvs = (set(args.indv) - indvs_special).union(indvs_genome).union(indvs_ref)
+        if set(args.indv) != {"ref"}: args.indv = type(args.indv)(indvs)
+        valid_aliases(aliases = list(indvs_genome), lookup = config.genome_aliases,
+                      none_value = IndvGenomesAll.none.value, all_value = IndvGenomesAll.all.value,
+                      param = params.indv, display_cmd = "--genomes",
+                      additional_message = ( "Alternatively, provide a FASTA file of the genome in"
+                                             " which to query using '-q <path to FASTA file>'."))
         # if IndvGenomesAll.all in args.indv:
         #     indvs_special = {IndvGenomesAll.all, IndvGenomesAll.none}
         #     indvs_all = set(indv for indv in IndvGenomesAll if \
         #                     (indv not in indvs_special.union({IndvGenomesAll.ref})))
         #     indvs = (set(args.indv) - indvs_special).union(indvs_all) ## union in case user also specified 'ref'
         #     args.indv = type(args.indv)(indvs)
-        query_map += [[indv, config.genome_aliases[str(indv)]] for indv in args.indv]
+        query_map += [[indv, config.genome_aliases[str(indv)]] for indv in indvs_genome] + \
+                     [[alias, config.reference_aliases[str(alias)][0]] for alias in indvs_ref]
     ## check that file names are unique
     ## - if multiple queries map to the same file, sort by query id and retain first entry
     ## - if same file provided to args.query and args.indv, priorities args.indv regardless of sort order
@@ -631,13 +713,20 @@ def check_grna_args(args, standalone = True):
             args.min_within_n = 1
             args.check_recip = args.relax_recip = args.check_id_premerge = False
             args.blastn = args.background = None
-        if args.reference is None:
-            raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
-                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
-        if args.annotation is None:
-            raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
-                                     " annotations using gff2bed>' is required if using"
-                                     " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        reference_required(args, "'-g <gene(s)>' or '-c <cluster(s)>'")
+        # if args.reference is None and (args.assembly is None or args.annotation is None):
+        #     raise click.UsageError( ("'-r <reference genome alias>' OR"
+        #                              " '--assembly <reference assembly alias or path to FASTA file>"
+        #                              " --annotation <reference annotation alias or GFF3 file or"
+        #                              " BED file converted from GFF3 using gff2bed>'is required if using"
+        #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        # if args.reference is None:
+        #     raise click.UsageError( ("'-r <reference genome FASTA>' is required if using"
+        #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
+        # if args.annotation is None:
+        #     raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+        #                              " annotations using gff2bed>' is required if using"
+        #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
     ## check that --rpsblast is provided if using --domain
     if args.domain is not None:
         if args.rpsblast is None:
@@ -716,9 +805,16 @@ def check_filter_args(args, standalone = True):
             raise click.UsageError("'--feature <feature>' is required if using '--filter-feature'.")
         if standalone and not args.alignment:
             raise click.UsageError("'--alignment <path to FASTA> is required if using '--filter-feature'.")
-        if not args.annotation:
-            raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
-                                     " annotations using gff2bed>' is required if using '--filter-feature'.") )
+        reference_required(args, "'--filter-feature'")
+        # if args.reference is None and (args.assembly is None or args.annotation is None):
+        #     raise click.UsageError( ("'-r <reference genome alias>' OR"
+        #                              " '--assembly <reference assembly alias or path to FASTA file>"
+        #                              " --annotation <reference annotation alias or GFF3 file or"
+        #                              " BED file converted from GFF3 using gff2bed>'is required if using"
+        #                              " '--filter-feature'.") )
+        # if not args.annotation:
+        #     raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+        #                              " annotations using gff2bed>' is required if using '--filter-feature'.") )
         if args.min_within_n is None: args.min_within_n = 1
         if args.min_within_fraction is None: args.min_within_fraction = 0
     ## background filter
@@ -735,10 +831,11 @@ def check_filter_args(args, standalone = True):
             if not args.reference:
                 raise click.UsageError("'--reference <path to FASTA> is required if using '--screen-ref'.'")
         if not args.annotation:
-            if args.mask_gene or args.unmask_gene or args.mask_cluster or args.unmask_cluster:
-                raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
-                                         " annotations using gff2bed>' is required if using '--mask-gene',"
-                                         " '--unmask-gene', '--mask-cluster', or '--unmask-cluster'.") )
+            reference_required(args, "'--unmask-gene', '--mask-cluster', or '--unmask-cluster'")
+            # if args.mask_gene or args.unmask_gene or args.mask_cluster or args.unmask_cluster:
+            #     raise click.UsageError( ("'--annotation <GFF3 file or BED file converted from GFF3"
+            #                              " annotations using gff2bed>' is required if using '--mask-gene',"
+            #                              " '--unmask-gene', '--mask-cluster', or '--unmask-cluster'.") )
         if args.ot_mismatch is None: args.ot_mismatch = 1
         if args.ot_gap is None: args.ot_mismatch = 0
         if not args.ot_pamless and args.pam is None:
@@ -842,11 +939,16 @@ def homologue(
         genome_set: str = typer.Option(*params.genome_set(), **params.genome_set.options,
                                        **oparams.file_valid, is_eager = True,
                                        callback = genome_set_callback),
-        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
-                                                                 **params.reference_annotation.options,
-                                                                 callback = reference_annotation_callback),
-        reference: str = typer.Option(*params.reference(), **params.reference.options,
-                                      callback = reference_callback),
+        # reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+        #                                                          **params.reference_annotation.options,
+        #                                                          callback = reference_annotation_callback),
+        reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
+                                          **oparams.file_valid, is_eager = True,
+                                          callback = reference_set_callback),
+        reference: Optional[List[str]] = typer.Option(*params.reference(), **params.reference.options,
+                                                      callback = split_callback_list),
+        assembly: str = typer.Option(*params.assembly(), **params.assembly.options,
+                                      callback = assembly_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
                                        callback = annotation_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
@@ -882,6 +984,7 @@ def homologue(
     ## this one can't be parsed using alias_or_file_callback cuz the path isn't actually to a file but a prefix
     args.db = os.path.abspath(parse_lookup(args.db, params.rps_db_aliases, return_first = True))
     ## check arguments are in order
+    check_reference_args(args)
     check_homologue_args(args, standalone = True)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
@@ -938,11 +1041,16 @@ def generate_grna(
                                         **oparams.file_valid, is_eager = True,
                                         callback = cluster_set_callback),
         domain: str = typer.Option(*params.domain(), **params.domain.options, callback = domain_callback),
-        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
-                                                                 **params.reference_annotation.options,
-                                                                 callback = reference_annotation_callback),
-        reference: str = typer.Option(*params.reference(), **params.reference.options,
-                                      callback = reference_callback),
+        # reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+        #                                                          **params.reference_annotation.options,
+        #                                                          callback = reference_annotation_callback),
+        reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
+                                          **oparams.file_valid, is_eager = True,
+                                          callback = reference_set_callback),
+        reference: Optional[List[str]] = typer.Option(*params.reference(), **params.reference.options,
+                                                      callback = split_callback_list),
+        assembly: str = typer.Option(*params.assembly(), **params.assembly.options,
+                                      callback = assembly_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
                                        callback = annotation_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
@@ -982,6 +1090,7 @@ def generate_grna(
     ## this one can't be parsed using alias_or_file_callback cuz the path isn't actually to a file but a prefix
     args.db = os.path.abspath(parse_lookup(args.db, params.rps_db_aliases, return_first = True))
     ## check arguments are in order
+    check_reference_args(args)
     check_grna_args(args, standalone = True)
     ## parse cluster --> gene
     gene_sets = parse_genes_from_args(args)
@@ -1052,11 +1161,16 @@ def filter_grna(
         grna: Path = typer.Option(*params.grna(), **params.grna.options, **oparams.file_valid),
         alignment: Path = typer.Option(*params.alignment(), **params.alignment.options, **oparams.file_valid),
         target: Path = typer.Option(*params.target(), **params.target.options, **oparams.file_valid),
-        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
-                                                                 **params.reference_annotation.options,
-                                                                 callback = reference_annotation_callback),
-        reference: str = typer.Option(*params.reference(), **params.reference.options,
-                                      callback = reference_callback),
+        # reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+        #                                                          **params.reference_annotation.options,
+        #                                                          callback = reference_annotation_callback),
+        reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
+                                          **oparams.file_valid, is_eager = True,
+                                          callback = reference_set_callback),
+        reference: Optional[List[str]] = typer.Option(*params.reference(), **params.reference.options,
+                                                      callback = split_callback_list),
+        assembly: str = typer.Option(*params.assembly(), **params.assembly.options,
+                                      callback = assembly_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
                                        callback = annotation_callback),
         ext_genome: Optional[List[Path]] = typer.Option(*params.ext_genome(), **params.ext_genome.options,
@@ -1147,6 +1261,7 @@ def filter_grna(
     ## check validity of args
     args = Namespace(**locals())
     ## check arguments are in order
+    check_reference_args(args)
     check_filter_args(args, standalone = True)
     ## parse [mask|unmask]_cluster -> genes
     gene_sets = parse_genes_for_filter(args)
@@ -1292,13 +1407,15 @@ def full(
         merge_within: int = typer.Option(*params.merge_within(), **params.merge_within.options,
                                          callback = non_negative_callback),
         check_id_premerge: bool = typer.Option(*params.check_id_premerge(), **params.check_id_premerge.options),
-        reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
-                                                                 **params.reference_annotation.options,
-                                                                 callback = reference_annotation_callback),
-        reference: str = typer.Option(*params.reference(), **params.reference.options,
-                                      callback = reference_callback),
+        # reference_annotation: Optional[List[str]] = typer.Option(*params.reference_annotation(),
+        #                                                          **params.reference_annotation.options,
+        #                                                          callback = reference_annotation_callback),
+        reference: Optional[List[str]] = typer.Option(*params.reference(), **params.reference.options,
+                                                      callback = split_callback_list),
                                       # callback = make_alias_or_file_callback(params.reference_aliases,
                                       #                                        params.reference)),
+        assembly: str = typer.Option(*params.assembly(), **params.assembly.options,
+                                      callback = assembly_callback),
         annotation: str = typer.Option(*params.annotation(), **params.annotation.options,
                                        callback = annotation_callback),
         db: str = typer.Option(*params.db(), **params.db.options),
@@ -1388,7 +1505,10 @@ def full(
                                         callback = cluster_set_callback),
         genome_set: str = typer.Option(*params.genome_set(), **params.genome_set.options,
                                        **oparams.file_valid, is_eager = True,
-                                       callback = genome_set_callback)):
+                                       callback = genome_set_callback),
+        reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
+                                          **oparams.file_valid, is_eager = True,
+                                          callback = reference_set_callback)):
     
         # genome_set: bool = typer.Option(*params.genome_set(), **params.genome_set.options,
         #                                 callback = genome_sets_callback),
@@ -1405,6 +1525,7 @@ def full(
     args.db = parse_lookup(args.db, params.rps_db_aliases, return_first = True)
     if args.db is not None: args.db = os.path.abspath(args.db)
     ## check arguments are in order
+    check_reference_args(args)
     check_homologue_args(args, standalone = False)
     check_grna_args(args, standalone = False)
     check_filter_args(args, standalone = False)

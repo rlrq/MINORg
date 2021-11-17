@@ -525,6 +525,72 @@ def make_pam_pattern(pam, gRNA_len):
     print("PAM pattern:", pam_pattern)
     return re.compile(pam_pattern, re.IGNORECASE)
 
+##################
+##  FILE_MANIP  ##
+##   (CLASSES)  ##
+##################
+
+class IndexedFile:
+    def __init__(self, filename, chunk_lines = 10000, skip = lambda x: False):
+        self.filename = filename
+        self.chunk_lines = chunk_lines
+        self.indices = None
+        ## if skip(line) returns True, the line will not be indexed
+        ##  and will be ignored (and will not add to line count) when using get_line
+        self.skip = skip
+        self.index()
+    def __iter__(self):
+        with open(self.filename, 'r') as f:
+            for line in f:
+                if self.skip(line): continue
+                else: yield line
+    def index(self, chunk_lines = None):
+        if chunk_lines is not None:
+            self.chunk_lines = chunk_lines
+        indices = [0]
+        with open(self.filename, 'r') as f:
+            i = 0
+            while True:
+                line = f.readline()
+                if not line: break
+                if self.skip(line): continue
+                i += 1
+                if i % self.chunk_lines == 0:
+                    indices.append(f.tell())
+        self.indices = indices
+    def get_line(self, *indices, strip_newline = False):
+        single_i = len(indices) == 1
+        ## remove invalid indices (<0)
+        is_valid = lambda i: i >= 0
+        invalid = [i for i in indices if not is_valid(i)]
+        if invalid: print(f"Invalid indices (will be ignored): {','.join(map(str, sorted(invalid)))}")
+        indices = [i for i in indices if is_valid(i)]
+        ## sort indices and split into bins according to self._chunk_lines
+        bins = {}
+        for i in sorted(indices):
+            i_chunk = i // self.chunk_lines
+            mod_chunk = i % self.chunk_lines
+            bins[i_chunk] = bins.get(i_chunk, []) + [mod_chunk]
+        ## jump to each bin and iterate within it
+        output = []
+        with open(self.filename, 'r') as f:
+            for i_chunk, mod_chunks in bins.items():
+                last_mod_chunk = mod_chunks[-1]
+                mod_chunks = set(mod_chunks)
+                ## jump to first line of bin
+                f.seek(self.indices[i_chunk])
+                i = 0
+                for line in f:
+                    if self.skip(line): continue
+                    if i in mod_chunks:
+                        output.append(line)
+                        ## exit bin if all desired lines in bin have been visited
+                        if i == last_mod_chunk: break
+                    i += 1
+        if strip_newline: output = [line.replace('\n', '') for line in output]
+        return output if not single_i else output[0]
+
+
 #################
 ##  GFF_MANIP  ##
 ##  (CLASSES)  ##
@@ -532,8 +598,11 @@ def make_pam_pattern(pam, gRNA_len):
     
 class GFF:
     
-    def __init__(self, fname = None, data = [], attr_mod = {}, fmt = "GFF3", quiet = False, **kwargs):
-        self._fmt = fmt
+    def __init__(self, fname = None, data = [], attr_mod = {}, fmt = None, quiet = False,
+                 memsave = False, chunk_lines = 1000, **kwargs):
+        self._fmt = (fmt if fmt
+                     else None if not fname
+                     else ("BED" if fname.split('.')[-1].upper() == "BED" else "GFF3"))
         self._fname = fname
         self._data = data
         self._attr_mod = attr_mod
@@ -545,35 +614,77 @@ class GFF:
         self._quiet = quiet
         self._kwargs = kwargs
         self._molecules = {}
+        self._chunk_lines = chunk_lines
+        self._indexed_file = None
         self.update_attr_fields()
-        self.parse()
+        if not memsave:
+            self.parse()
+        elif self.has_file():
+            self.index()
     
     def __iter__(self):
-        for entry in self._data:
-            yield entry
+        if self._data:
+            for entry in self._data:
+                yield entry
+        else:
+            mk_annotation = self.make_annotation_from_str_gen(strip_newline = True)
+            for entry in self.iter_raw():
+                yield mk_annotation(entry)
+        return
     
     def __len__(self):
         return len(self._data)
     
-    def parse(self):
-        if self._fname is None: return
-        ## create add_entry function
-        if self._fmt.upper() == "BED":
-            def add_entry(entry):
+    def is_bed(self):
+        return self._fmt.upper() == "BED"
+    def is_gff(self):
+        return self._fmt.upper() in {"GFF", "GFF3"}
+    def has_file(self):
+        return self._fname is not None
+    def index(self, chunk_lines = None):
+        if chunk_lines:
+            self._chunk_lines = chunk_lines
+        if self.has_file():
+            self._indexed_file = IndexedFile(self._fname, chunk_lines = self._chunk_lines,
+                                             skip = lambda line: (tuple(line[:1]) == ('#',) or line == '\n'))
+    def is_indexed(self):
+        return bool(self._indexed_file)
+    
+    def make_annotation_from_str_gen(self, strip_newline = True):
+        if strip_newline:
+            split_line = lambda entry: entry.replace('\n', '').split('\t')
+        else:
+            split_line = lambda entry: entry.split('\t')
+        if self.is_bed():
+            def mk_annotation(entry):
+                entry = split_line(entry)
                 gff_fmt = [entry[0], entry[6], entry[7], str(int(entry[1]) + 1), entry[2],
                            entry[4], entry[5], entry[8], entry[9]]
-                self.add_entry(Annotation(gff_fmt, self, **self._kwargs))
+                return Annotation(gff_fmt, self, **self._kwargs)
         else: ## GFF3
-            def add_entry(entry):
-                self.add_entry(Annotation(entry, self, **self._kwargs))
-        ## start parsing
-        self._data = []
-        with open(self._fname, 'r') as f:
-            for entry in f:
-                if entry[:1] == '#' or entry == '\n': continue
-                entry = entry.replace('\n', '').split('\t')
-                add_entry(entry)
-        self.index_molecules()
+            def mk_annotation(entry):
+                entry = split_line(entry)
+                return Annotation(entry, self, **self._kwargs)
+        return mk_annotation
+    
+    def iter_raw(self):
+        if self._indexed_file is not None:
+            for entry in self._indexed_file:
+                yield entry
+        elif self._fname is not None:
+            with open(self._fname, 'r') as f:
+                for entry in f:
+                    if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+                    yield entry
+        return
+    
+    def parse(self):
+        if self._fname is not None:
+            ## start parsing
+            self._data = []
+            for entry in self:
+                self.add_entry(entry)
+            self.index_molecules()
     
     def read_file(self, fname):
         self._fname = fname
@@ -584,7 +695,7 @@ class GFF:
             self._molecules = {}
         index = 0
         curr = None
-        for entry in self._data:
+        for entry in self:
             if entry.molecule != curr and entry.molecule not in self._molecules:
                 curr = entry.molecule
                 index += 1
@@ -627,11 +738,11 @@ class GFF:
             feature_ids = {feature_ids}
         else:
             feature_ids = set(feature_ids)
-        indices = [i for i, entry in enumerate(self._data) if
+        indices = [i for i, entry in enumerate(self) if
                    ((not features or entry.feature in features) and
                     entry.has_attr("Parent", feature_ids))]
         if index: return indices
-        else: return [self._data[i] for i in indices]
+        else: return self.get_i(indices)
     
     def get_subfeatures_full(self, feature_ids, *features, index = False):
         '''
@@ -669,13 +780,24 @@ class GFF:
         final_features = sorted(features + subfeatures)
         if index: return final_features
         else: return self.get_i(final_features)
+
+    def get_i_raw(self, indices, strip_newline = True):
+        indices = indices if not isinstance(indices, int) else [indices]
+        return self._indexed_file.get_line(*indices, strip_newline = strip_newline)
     
     def get_i(self, indices):
         '''
-        Get GFF entry by index
+        Get GFF entry/entries by line index
         '''
-        if type(indices) is int: return self._data[indices]
-        else: return [self._data[i] for i in indices]
+        if self._data:
+            if type(indices) is int: return self._data[indices]
+            else: return [self._data[i] for i in indices]
+        elif self.is_indexed():
+            raw_entries = self.get_i_raw(indices, strip_newline = True)
+            ## newline already stripped by get_i_raw. No need to strip them again.
+            mk_annotation = self.make_annotation_from_str_gen(strip_newline = False)
+            if type(indices) is int: return mk_annotation(raw_entries)
+            else: return [mk_annotation(entry) for entry in raw_entries]
     
     def get_id(self, feature_ids, index = False, output_list = False):
         ## if even if output_list is only used when len(indices) == 1 or == 0 AND type(feature_ids) is str.
@@ -684,15 +806,15 @@ class GFF:
         Get GFF entry by feature ID
         '''
         if type(feature_ids) is str:
-            indices = [i for i, entry in enumerate(self._data) if entry.has_attr("ID", [feature_ids])]
+            indices = [i for i, entry in enumerate(self) if entry.has_attr("ID", [feature_ids])]
         else:
-            indices = [i for i, entry in enumerate(self._data) if entry.has_attr("ID", feature_ids)]
+            indices = [i for i, entry in enumerate(self) if entry.has_attr("ID", feature_ids)]
         if type(feature_ids) and not output_list and len(indices) <= 1:
             if not indices: return None
             elif index: return indices[0]
             else: return self.get_i(indices[0])
         elif index: return indices
-        else: return [self.get_i(i) for i in indices]
+        else: return list(self.get_i(indices))
     
     def write(self, fout, entries, **kwargs):
         '''
@@ -760,9 +882,10 @@ class Annotation:
     def has_attr(self, a, vals, **kwargs): return self.attributes.has_attr(a, vals, **kwargs)
 
 class Attributes:
-    def __init__(self, val, gff, entry, field_sep_inter = ';', field_sep_intra = ','):
+    def __init__(self, val, gff, entry, field_sep_inter = ';', field_sep_intra = ',',
+                 **for_dummy_gff):
         self._entry = entry
-        self._gff = gff
+        self._gff = gff if gff is not None else GFF(**for_dummy_gff)
         self._raw = val
         self._sep_inter = field_sep_inter
         self._sep_intra = field_sep_intra
@@ -818,10 +941,10 @@ class Attributes:
 #############################
 
 def extract_features_and_subfeatures(gff_fname, feature_ids, fout, quiet = False,
-                                     fin_fmt = "GFF", fout_fmt = "GFF"):
+                                     fin_fmt = "GFF", fout_fmt = "GFF", memsave = True):
     printi = make_local_print(quiet = quiet)
     printi("Reading files")
-    gff = GFF(fname = gff_fname, fmt = fin_fmt, quiet = quiet)
+    gff = GFF(fname = gff_fname, fmt = fin_fmt, quiet = quiet, memsave = memsave)
     # feature_ids = splitlines(feature_id_fname)
     printi("Retrieving features")
     output_features = gff.get_features_and_subfeatures(feature_ids, index = True, full = True)
@@ -842,7 +965,7 @@ def gc_content(seq):
 ##  ANN MANIP  ##
 #################
 
-def reduce_ann(gff_beds, ids, fout = None, mk_tmpf_name = None, fout_fmt = "BED"):
+def reduce_ann(gff_beds, ids, fout = None, mk_tmpf_name = None, fout_fmt = "BED", memsave = True):
     if mk_tmpf_name is None:
         import tempfile
         mk_tmpf_name = lambda x: tempfile.mkstemp()[1]
@@ -852,7 +975,7 @@ def reduce_ann(gff_beds, ids, fout = None, mk_tmpf_name = None, fout_fmt = "BED"
         bed_red = mk_tmpf_name(alias)
         bed_reds[alias] = bed_red
         fmt = "BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF"
-        extract_features_and_subfeatures(gff_bed, ids, bed_red, quiet = True,
+        extract_features_and_subfeatures(gff_bed, ids, bed_red, quiet = True, memsave = memsave,
                                          fin_fmt = fmt, fout_fmt = fout_fmt)
     if fout:
         cat_files(tuple(bed_reds.values()), fout, remove = True)

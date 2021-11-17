@@ -26,7 +26,7 @@ from functions import (
     blast6multi,
     make_local_print,
     num_lines,
-    GFF
+    GFF, Annotation, Attributes
 )
 
 from exceptions import (
@@ -86,7 +86,7 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
 def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query, genes = None,
                         check_reciprocal = False, quiet = True, lvl = 0, blastn = "blastn",
                         gff_beds = None, fasta_ref = None, relax = False, keep_tmp = False,
-                        **for_merge_hits_and_filter):
+                        attribute_mod = {}, **for_merge_hits_and_filter):
     '''
     Finds homologue in single individual (technically, single fasta file).
     Lots of unnamed args to be passed to other functions.
@@ -119,7 +119,7 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     if check_reciprocal and genes:
         recip_blast_multiref(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
                              lvl = lvl, quiet = quiet, gff_beds = gff_beds, fasta_ref = fasta_ref, relax = relax,
-                             keep_tmp = keep_tmp)
+                             keep_tmp = keep_tmp, attribute_mod = attribute_mod)
     ## remove tmp files
     if not keep_tmp:
         os.remove(tsv_blast_ref)
@@ -253,7 +253,7 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     return
 
 def recip_blast_multiref(fasta_target, directory, gff_beds, fasta_ref,
-                         blastn = "blastn", keep_tmp = False, **kwargs):
+                         blastn = "blastn", keep_tmp = False, attribute_mod = {}, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
     gff_beds and fasta_ref must be dictionaries of {<alias>: <path to file>}
@@ -318,29 +318,6 @@ def recip_blast(fasta_target, directory, gff_beds, fasta_ref, blastn = "blastn",
     str_bed = '\n'.join(['\t'.join(x) for x in data_bed])
     ## bedtools intersect
     blast_bed = BedTool(str_bed, from_string = True)
-    # intersect_bed = []
-    # for gff_bed in gff_beds:
-    #     bed = BedTool(gff_bed)
-    #     ## get chromosomes in the gff_bed file
-    #     chrom = set(x.split('\t')[0] for x in open(bed.groupby(o = "first", c = 1, g = 1).fn, 'r').readlines())
-    #     ## filter for blast entries with chromosomes from the gff_bed file
-    #     dat_filt = [x for x in data_bed if x[0] in chrom]
-    #     ## skip gff_bed if no blast entries after filtering
-    #     if not dat_filt: continue
-    #     ## intersect
-    #     dat_intersect = BedTool('\n'.join(['\t'.join(x) for x in dat_filt])).intersect(bed, wao = True)
-    #     ## if gff_bed is a gff file, reorder columns
-    #     if len(str(dat_intersect).split('\n')[0].split('\t')) == (6 + len(blast_metrics) + 9):
-    #         str_intersect = ''
-    #         tmp_gff = GFF(fmt = "GFF")
-    #         for entry in dat_intersect.split('\n'):
-    #             entry = entry.split('\t')
-    #             if entry[6+len(blast_metrics)+4] == '.':
-    #                 str_intersect += '\t'.join(entry) + '\n'
-    #             else:
-    #                 pass ## convert
-    #         dat_intersect = BedTool(str_intersect, from_string = True)
-    #     intersect_bed.append(dat_intersect)
     ## this doesn't work if the -b databases are different formats (e.g. gff and bed :( )
     ##  but yknow what no i'm not doing this i'm either converting gff reference annotations to bed or
     ##  writing the extended annotations as gff. we're gonna standardise.
@@ -365,29 +342,48 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
                             colnames_blast=["chrom", "start", "end", "candidate", "cstart", "cend"],
                             blast_metrics = ["bitscore"],
                             colnames_bed=["bed_chrom", "bed_start", "bed_end", "id", "score", "strand", "source",
-                                          "feature", "phase", "attributes", "overlap"]):
+                                          "feature", "phase", "attributes", "overlap"],
+                            colnames_gff=["bed_chrom", "source", "feature", "bed_start", "bed_end", "score",
+                                          "strand", "phase", "attributes", "overlap"],
+                            attribute_mod = {}):
     import itertools
     from pybedtools import BedTool
     printi = make_local_print(quiet = quiet, printf = make_print_preindent(initial_lvl = lvl))
     genes = set(genes)
-    colnames = colnames_blast + blast_metrics + colnames_bed
-    get = make_custom_get(colnames)
+    cols_bed = colnames_blast + blast_metrics + colnames_bed
+    cols_gff = colnames_blast + blast_metrics + colnames_gff
+    ## make get function
+    get_bed = make_custom_get(cols_bed)
+    get_gff = make_custom_get(cols_gff)
+    def get(data, *args, **kwargs):
+        if not data:
+            helper_get = get_bed
+        else:
+            entry_len = len(data) if not isinstance(data[0], (list, tuple)) else len(data[0])
+            if entry_len == len(cols_bed): helper_get = get_bed
+            elif entry_len == len(cols_gff): helper_get = get_gff
+            else: return get_bed([], "dummy", suppress_print = True)
+        return helper_get(data, *args, **kwargs)
     data = {}
-    for entry in (x.split('\t') for x in
-                  # tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool]))
-                  (str(bedtool).split('\n') if isinstance(bedtool, BedTool)
-                   else tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool])))
-                  if ( x.count('\t') == len(colnames) - 1 \
-                       and get(x.split('\t'), "feature") in ("gene", "pseudogene", '.') )):
-        data[get(entry, "candidate")] = data.get(get(entry, "candidate"), []) + [entry]
+    for entry in (str(bedtool).split('\n') if isinstance(bedtool, BedTool)
+                  else tuple(itertools.chain(*[str(bedtool_obj).split('\n') for bedtool_obj in bedtool]))):
+        entry = entry.split('\t')
+        if get(entry, "feature") in ("gene", "pseudogene", '.'):
+            data[get(entry, "candidate")] = (data.get(get(entry, "candidate"), []) +
+                                             [{"ann": Annotation(get(entry, *colnames_gff), None,
+                                                                  attr_mod = attribute_mod),
+                                               "bitscore": get(entry, "bitscore")}])
     ## get largest bitscore for each candidate target
     max_bitscore = {candidate: max(get(data[candidate], "bitscore")) for candidate in data}
     ## identify sequences to discard and print warnings if candidate has max bitscore with target and non-target
     ## note that due to the algorithm, candidates that don't overlap with ANY features will also be kept
     throw = []
     for candidate in data:
-        max_bitscore_genes = set(get(entry, "id") for entry in data[candidate]
-                                 if get(entry, "bitscore") == max_bitscore[candidate])
+        # max_bitscore_genes = set(get(entry, "id") for entry in data[candidate]
+        #                          if get(entry, "bitscore") == max_bitscore[candidate])
+        max_bitscore_genes = set(entry["ann"].get_attr("ID", fmt = str)
+                                 for entry in data[candidate]
+                                 if entry["bitscore"] == max_bitscore[candidate])
         if max_bitscore_genes.issubset(genes): ## if max score genes are subset of target genes
             continue
         else:
@@ -576,9 +572,8 @@ def get_ref_by_gene_multiref(gene, feature, out_dir, ref_fasta_files, ref_ann_fi
     ref_fasta_files = assign_alias(ref_fasta_files)
     domain_f = {} if domain_f is None else assign_alias(domain_f)
     relevant_aliases = [alias for alias, f_ann in ref_ann_files.items() if
-                        GFF(data = GFF(fname = f_ann, attr_mod = attribute_mod,
-                                       fmt = ("BED" if f_ann.split('.')[-1].upper() == "BED" else "GFF3"),
-                                       quiet = True).get_features_and_subfeatures(gene))]
+                        GFF(fname = f_ann, attr_mod = attribute_mod, fmt = None, memsave = True,
+                            quiet = True).get_features_and_subfeatures(gene)]
     from string import Template
     for alias in relevant_aliases:
         if alias in ref_fasta_files:

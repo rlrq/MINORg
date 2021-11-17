@@ -9,7 +9,7 @@ import subprocess
 
 from functions import (
     # make_make_fname,
-    reduce_ann, GFF,
+    reduce_ann,
     blast6, extract_features_and_subfeatures,
     fasta_to_dict, dict_to_fasta,
     parse_get_data, write_tsv, splitlines
@@ -118,7 +118,7 @@ def execute_homologue(args, config, params, prefix, genes,
     get_reference_fa(params = params, config = config, get_ref = get_seq_ref_genes,
                      make_fname = make_fname, genes = genes, out_dir = fout_dir, out_pref = prefix,
                      fout = fasta_gene, fout_cds = fasta_cds, domain = args.domain,
-                     fout_domain_gff_bed = fout_domain_gff_bed,
+                     fout_domain_gff_bed = fout_domain_gff_bed, 
                      seqid_source_pattern = seqid_source_pattern,
                      # annout = bed_complete, annout_cds = bed_cds,
                      db = args.db, rpsblast = str(args.rpsblast))
@@ -140,6 +140,7 @@ def execute_homologue(args, config, params, prefix, genes,
                                  check_id_before_merge = args.check_id_premerge, blastn = args.blastn,
                                  gff_beds = config.annotation_ext,
                                  fasta_ref = config.reference_ext,
+                                 attribute_mod = args.attr_mod,
                                  merge_within_range = args.merge_within,
                                  keep_tmp = config.keep_tmp)
     

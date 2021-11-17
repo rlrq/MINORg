@@ -192,7 +192,7 @@ def filter_gc(gRNA_hits, gc_min = 0, gc_max = 1):
 ## filter within feature
 def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_beds, features = None, target_names = None,
                           max_insertion = 15, min_within_n = 1, min_within_fraction = 0, ref = False,
-                          domain_gff_bed = None, alignment_rvs_pattern = "^_R_$seqid$$",
+                          domain_gff_bed = None, alignment_rvs_pattern = "^_R_$seqid$$", memsave = True,
                           seqid_source_pattern = f"(?<=^Reference\\|)[^|]+(?=\\|)"):
     '''
     gff_beds and domain_gff_bed must be dict of {<alias>: <path to file>}
@@ -207,8 +207,8 @@ def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_beds, features = None,
         genes = {'|'.join(seqid.split('|')[5:-1]):
                  seqid for seqid in alignment
                  if (seqid.split('|')[0] == "Reference" and seqid.split('|')[4] == "complete")}
-        anns = {alias: GFF(fname = gff_bed, quiet = True,
-                           fmt = ("BED" if gff_bed.split('.')[-1].upper() == "BED" else "GFF3"))
+        ## fmt=None to let GFF obj detect format
+        anns = {alias: GFF(fname = gff_bed, quiet = True, memsave = memsave, fmt = None)
                 for alias, gff_bed in gff_beds.items()}
         gene_anns = {alias: {gene: ann.get_id(gene, output_list = False) for gene in genes}
                      for alias, ann in anns.items()}
@@ -227,7 +227,7 @@ def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_beds, features = None,
             feature_ranges = {source: {gene: ranges_union([[(x.start - 1, x.end) for x in
                                                             ann.get_subfeatures_full(gene, *features)]])
                                        for gene in genes}
-                              for source, ann in anns.items()}
+                              for source, ann in anns.items() if ann is not None}
     def adjust_feature_ranges(gene, seqid, **kwargs):
         source = re.search(seqid_source_pattern, seqid).group(0)
         gene_ann = gene_anns[source]

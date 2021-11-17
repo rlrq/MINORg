@@ -179,7 +179,8 @@ class Params():
                                  inverse_dict(self.indv_genomes).items()} ## {fname: [<aliases>]}, for '-i .')
         self.cluster_sets = parse_multiline_multikey_sdict(get_lookup("cluster sets"))
         self.attr_mod_presets = parse_multiline_multikey_sdict(get_lookup("gff attribute modification presets"))
-        self.reference_aliases = parse_multiline_multikey_sdict(get_lookup("reference alias"))
+        self.reference_sets = parse_multiline_multikey_sdict(get_lookup("reference sets"))
+        self.assembly_aliases = parse_multiline_multikey_sdict(get_lookup("assembly alias"))
         self.annotation_aliases = parse_multiline_multikey_sdict(get_lookup("annotation alias"))
         self.rps_db_aliases = parse_multiline_multikey_sdict(get_lookup("rps database alias"))
         
@@ -193,11 +194,13 @@ class Params():
         #                    "--quiet/--verbose")
         
         ## user lookups (print to screen)
+        self.references = Param(None, "--references")
         self.genomes = Param(None, "--genomes")
         self.clusters = Param(None, "--clusters")
         self.members = Param(None, "--members")
-        self.genome_set = Param(None, "--genome-set")
-        self.cluster_set = Param(None, "--cluster-set")
+        # self.reference_set = Param(None, "--reference-set")
+        # self.genome_set = Param(None, "--genome-set")
+        # self.cluster_set = Param(None, "--cluster-set")
         
         ## executables
         section_binary = "binary"
@@ -223,19 +226,26 @@ class Params():
         section_data = "data"
         # get_data = lambda x: conf.get(section_data, x) ## for strings
         get_data = lambda x, **kwargs: conf_get(section_data, x, **kwargs)
-        self.reference_annotation = Param(get_val_default(get_data("reference + annotation"), None),
-                                          "--ref-ann", "--reference-annotation",
-                                          help = "alias for reference genome AND reference genome annotation",
-                                          description = ("specifies both reference genome sequences and"
-                                                         " annotation in a single parameter"))
-        self.reference = Param(get_val_none(get_data("reference"), self.reference_aliases),
+        self.reference = Param(get_val_default(get_data("reference"), '').split(','),
                                "-r", "--reference",
-                               help = "reference genome alias or path to FASTA file of reference genome",
-                               description = "reference genome alias or path to FASTA file of reference genome")
+                               help = ("comma-separated alias(es) for"
+                                       " reference genome AND reference genome annotation"),
+                               description = ("reference alias"))
+                               # description = ("specifies both reference genome sequences and"
+                               #                " annotation in a single parameter"))
+        # self.reference = Param(get_val_none(get_data("reference"), self.reference_aliases),
+        #                        "-r", "--reference",
+        #                        help = "reference genome alias",
+        #                        description = "comma-separated reference genome alias(es)")
         self.bed = Param(get_val_none(get_data("annotation"), self.annotation_aliases),
                          "--bed", "--gff-bed",
                          help = ( "BED file of reference genome annotation, "
                                   "converted from GFF3 format using bedtools' gff2bed" ))
+        self.assembly = Param(get_val_none(get_data("assembly"), self.assembly_aliases),
+                              "--assembly",
+                              help = "reference assembly alias or path to FASTA file of reference assembly",
+                              description = ( "reference assembly alias"
+                                              " or path to FASTA file of reference assembly" ))
         self.annotation = Param(get_val_none(get_data("annotation"), self.annotation_aliases),
                                 "--ann", "--annotation",
                                 help = ( "GFF3 file of reference genome annotation or BED file"
@@ -245,6 +255,14 @@ class Params():
                         help = "local or remote RPS-BLAST database")
         self.remote_rps = Param(get_val_default(get_data("remote rps", type = bool), False), "--remote-rps",
                             help = "Raise --remote flag when executing RPS-BLAST")
+        self.reference_set = Param(get_val_none(get_data("reference set"), self.reference_sets),
+                                   "--reference-set",
+                                   help = ( "File containing reference alias-filename mapping or"
+                                            " alias of file containing genome alias-filename mapping as"
+                                            " described by 'reference sets' in the config file."
+                                            "\nFormat: <semicolon-separated reference aliases><tab>"
+                                            "<path to FASTA file of assembly><tab><path to GFF annotation file>"
+                                            "\nOne assembly-annotation pair per line." ))
         self.cluster_set = Param(get_val_none(get_data("cluster set"), self.cluster_sets),
                                     "--cluster-set",
                                     help = ( "File containing cluster alias-members mapping or"
@@ -650,12 +668,16 @@ class Config:
         self.query_map = []
         self.cluster_set = None
         self.genome_set = None
+        self.reference_aliases = None
         self.cluster_aliases = None
         self.genome_aliases = None
-        self.reference_ext = ({} if self.params.reference.default is None
-                              else {"Reference": self.params.reference.default})
-        self.bed_ext = {} if self.params.bed is None else {"Reference": self.params.bed}
-        self.annotation_ext = {} if self.params.annotation is None else {"Reference": self.params.annotation}
+        # self.reference_ext = ({} if self.params.reference.default is None
+        #                       else {"Reference": self.params.reference.default})
+        # self.bed_ext = {} if self.params.bed is None else {"Reference": self.params.bed}
+        # self.annotation_ext = {} if self.params.annotation is None else {"Reference": self.params.annotation}
+        self.reference_ext = {}
+        self.bed_ext = {}
+        self.annotation_ext = {}
         # ## transition to using Lookup object instead of a bunch of dictionaries
         # self.mapping_domain = Lookup(name = "domain mapping", config_string = params.domain_mapping)
         # self.mapping_cluster = Lookup(name = "cluster mapping", config_string = params.cluster_mapping)
