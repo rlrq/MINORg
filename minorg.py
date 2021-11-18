@@ -14,6 +14,7 @@
 ## TODO: 2021/10/31: use external txt file to track reference sequences ("^Reference|...") so changing naming format or having '|' in seqid is less likely to break the code. Easier maintenance. (columns can be seqid, gene, isoform, source, molecule, comma-separated ranges)
 ## TODO: 2021/11/08: enable all homologue discovery options for filtering in background as well
 ## TODO: 2021/11/09: ensure all arguments required for --indv are also enabled for --ot-indv (extract the query mapping part of check_homologue_args into separate function reusable for --ot-indv)
+## TODO: 2021/11/18: create Minorg object to facilitate passing of args (and storing parsed args (e.g. Minrog.query_map stores query filepaths mapped to aliases so we don't have to attach it to config)).
 
 import os
 import sys
@@ -827,6 +828,11 @@ def check_filter_args(args, standalone = True):
             if args.mask_gene or args.mask_cluster:
                 raise click.UsageError( ("'--unmask-ref' should not be used with"
                                          " '--mask-gene' or '--mask-cluster'.") )
+            if not standalone and "ref" in args.indv:
+                config.logfile.warning( ("'--unmask-ref' will be ignored if 'ref' is provided to '-i'"
+                                         " and not excluded using '--ot-indv'. When 'ref' is provided"
+                                         " to '-i', the reference genome(s) will be treated the same as"
+                                         " any other genomes passed to '-i'.") )
         if args.screen_ref:
             if not args.reference:
                 raise click.UsageError("'--reference <path to FASTA> is required if using '--screen-ref'.'")
@@ -1545,17 +1551,8 @@ def full(
     
     ## filter BED/GFF for relevant entries (reduces get_seq search time)
     make_reduced_ann(args, config, gene_sets)
-    
-    # ## generate wrapper for get_seq for common args
-    # def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
-    #     get_ref_by_genes_resolve(genes = genes, feature = feature,
-    #                              out_dir = out_dir, fout = fasta_out, no_bed = True, ## output options
-    #                              ref_fasta_files = config.reference_ext,
-    #                              bed = config.annotation_red, ## reference
-    #                              attribute_mod = args.attr_mod, by_gene = True, **kwargs)
-    
+        
     ## iterate through all gene sets
-    ## TODO: handle situations when args.target is defined
     for prefix, genes in gene_sets.items():
         ## do the thing where we find gRNA.
         ## call execute_homologue.
@@ -1577,14 +1574,15 @@ def full(
         set_grna_all, set_map_all, set_grna_fasta_all = output_grna
         ## call execute_filter.
         if args.screen_ref and not args.unmask_ref:
-            to_mask = {"targets": set_target, "reference": set_gene}
+            if set(args.indv) != {"ref"}:
+                to_mask = {"targets": set_target, "reference": set_gene}
+            else:
+                to_mask = {"reference": set_gene}
         else:
             to_mask = {"targets": set_target}
         set_grna_pass, set_map_all = execute_filter(args, config, set_dir, set_pref, set_grna_all,
                                                     set_map_all, set_grna_fasta_all, set_aln,
                                                     to_mask, set_ann,
-                                                    # checks = (["GC"] if target is not None else
-                                                    #           ["GC", "feature"]),
                                                     domain_gff_bed = set_domain_gff_bed)
         ## call execute_minimumset.
         set_map_final = '_'.join(set_map_all.split('_')[:-1]) + "_final.map"
@@ -1592,7 +1590,6 @@ def full(
         execute_minimumset(args, config, prefix = prefix, directory = set_dir,
                            mapping = set_map_all, grna = set_grna_fasta_all,
                            fout_mapping = set_map_final, fout_fasta = set_grna_fasta_final)
-        # pass
     
     typer.echo("heh")
     config.resolve()

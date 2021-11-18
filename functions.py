@@ -372,6 +372,31 @@ def extract_ranges(seq, ranges, strand = '+'):
                   seq[int(end)-1:int(start)-1:-1]
     return output
 
+def find_identical_in_fasta(query, subject):
+    """
+    Searches for exact matches.
+    DOES NOT EXPAND AMBIGUOUS BASES. (i.e. 'N' matches ONLY 'N' character, not any base)
+    """
+    from Bio import SeqIO
+    subject_seqs = SeqIO.parse(open(subject, 'r'), "fasta")
+    if isinstance(query, dict):
+        from Bio import Seq
+        query_fwd = {seqid: (seq if isinstance(seq, Seq.Seq) else Seq.Seq(seq))
+                     for seqid, seq in query.items()}
+    else:
+        query_fwd = fasta_to_dict(query)
+    query_rvs = {seqid: seq.reverse_complement() for seqid, seq in query_fwd.items()}
+    output = []
+    for subject_seq in subject_seqs:
+        for query_id in query_fwd:
+            fwd_pos = subject_seq.seq.find(query_fwd[query_id])
+            rvs_pos = subject_seq.seq.find(query_rvs[query_id])
+            if fwd_pos >= 0:
+                output.append((query_id, subject_seq.id, fwd_pos, fwd_pos + len(query_fwd[query_id])))
+            if rvs_pos >= 0:
+                output.append((query_id, subject_seq.id, rvs_pos, rvs_pos + len(query_rvs[query_id])))
+    return output
+
 
 ###################
 ##  RANGE ARITH  ##

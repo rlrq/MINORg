@@ -9,7 +9,7 @@ from functions import (
     assign_alias, blast,
     expand_ambiguous, infer_full_pam,
     GFF, within_any, gc_content,
-    fasta_to_dict, dict_to_fasta,
+    fasta_to_dict, dict_to_fasta, find_identical_in_fasta,
     tsv_entries_as_dict, prepend,
     ranges_union, ranges_to_pos, ranges_subtract, ranges_intersect, within,
     adjusted_feature_ranges, adjusted_pos
@@ -157,20 +157,24 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
         final_exclude = prelim_exclude if pamless_check else exclude_with_pam(prelim_exclude, fasta_subject)
         return set(x["qseqid"] for x in final_exclude)
     ## run blast to identify gRNA hits in background
-    if fasta_background:
-        print("Assessing off-target in user-provided sequences")
-        for bg_fname in fasta_background.values():
-            nonref_hits = mk_fname("hit_nonref.tsv")
-            excl_seqid = get_excl_seqid(fasta_grna, bg_fname, nonref_hits, fully_aligned_check = False)
-            resolve_bg_blast(nonref_hits)
-    else:
-        excl_seqid = set()
     if screen_reference and fasta_reference: ## find in reference
         print("Assessing off-target in reference genome")
         for ref_fname in fasta_reference.values():
             ref_hits = mk_fname("hit_ref.tsv")
-            excl_seqid |= get_excl_seqid(fasta_grna, ref_fname, ref_hits)
+            excl_seqid = get_excl_seqid(fasta_grna, ref_fname, ref_hits)
             resolve_bg_blast(ref_hits)
+        ## remove reference FASTA from fasta_background
+        ## - ensures that each file is screened only once if reference was also queried for gRNA
+        fasta_background = {alias: fname for alias, fname in fasta_background.items()
+                            if fname not in fasta_reference.values()}
+    else:
+        excl_seqid = set()
+    if fasta_background:
+        print("Assessing off-target in user-provided sequences")
+        for bg_fname in fasta_background.values():
+            nonref_hits = mk_fname("hit_nonref.tsv")
+            excl_seqid |= get_excl_seqid(fasta_grna, bg_fname, nonref_hits, fully_aligned_check = False)
+            resolve_bg_blast(nonref_hits)
     ## parse bg check status
     print("Filtering gRNA sequences")
     grna_seqs = fasta_to_dict(fasta_grna)
@@ -368,6 +372,39 @@ def make_exclude_function(pam, outside_targets, indexed_fa, max_mismatch, max_ga
         return output
     return exclude
 
+def mask_identical(to_mask_fname, fasta_fname, fout_fname, **kwargs):
+    seqs_to_mask = fasta_to_dict(to_mask_fname)
+    ## separate sequences with ambiguous bases (not compatible with BLAST) and those without
+    ##  - ambiguous bases typically present in scaffold-level assemblies as runs of 'N's
+    standard_bases = {'A','T','G','C','U'}
+    unambig_to_mask = {seqid: seq for seqid, seq in seqs_to_mask.items()
+                       if set(seq).issubset(standard_bases)}
+    ambig_to_mask = {seqid: seq for seqid, seq in seqs_to_mask.items()
+                     if seqid not in unambig_to_mask}
+    ## if some (but not all) sequences don't have unambiguous bases
+    if (unambig_to_mask and ambig_to_mask):
+        import tempfile
+        ## replace to_mask_fname with temporary file
+        tmp_to_mask_fname = tempfile.mkstemp()[1]
+        ## write unambig_to_mask to file to be used for BLAST
+        dict_to_fasta(unambig_to_mask, tmp_to_mask_fname)
+    else:
+        tmp_to_mask_fname = None
+    ## start masking
+    masked = []
+    ## if at least one sequence doesn't have ambiguous bases
+    if unambig_to_mask:
+        masked.extend(blast_mask((tmp_to_mask_fname if tmp_to_mask_fname is not None else to_mask_fname),
+                                 fasta_fname, fout_fname, **kwargs))
+    ## if at least one sequence has ambiguous bases
+    if ambig_to_mask:
+        masked.extend([{"qseqid": qseqid, "sseqid": sseqid, "sstart": str(start), "send": str(end)}
+                       for qseqid, sseqid, start, end in find_identical_in_fasta(ambig_to_mask, fasta_fname)])
+    ## remove temporary file if created
+    if tmp_to_mask_fname is not None:
+        os.remove(tmp_to_mask_fname)
+    return masked
+    
 def blast_mask(to_mask_fname, fasta_fname, fout_fname, blastn = "blastn",
                header = ['qseqid', 'sseqid', 'mismatch', 'gaps',
                          'sstart', 'send', 'qstart', 'qend', 'qlen']):
@@ -414,20 +451,26 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
     mask_fnames = assign_alias(mask_fnames, mk_name = lambda i: f"mask_{str(i).zfill(3)}")
     background_fnames = assign_alias(background_fnames, mk_name = lambda i: f"bg_{str(i).zfill(3)}")
     reference_fnames = assign_alias(reference_fnames, mk_name = lambda i: f"ref_{str(i).zfill(3)}")
-    if background_fnames:
-        print("Masking targets (in query or user-provided background)")
-        masked = {bg_fname: tuple(itertools.chain(*[blast_mask(mask_fname, bg_fname, to_mask_hits,
-                                                               blastn = blastn)
-                                                    for mask_fname in mask_fnames.values()]))
-                  for bg_fname in background_fnames.values()}
+    ## mask in reference
     if mask_reference and reference_fnames: ## mask in reference genome
         print("Masking gene(s) in reference")
         ## ALT: finish function to define masked regions in reference using GFF(_bed)
+        masked = {fname: tuple(itertools.chain(*[mask_identical(mask_fname, fname, to_mask_hits,
+                                                                blastn = blastn)
+                                                 for mask_fname in mask_fnames.values()]))
+                  for fname in reference_fnames.values()}
+        ## remove reference FASTA from background_fnames
+        ## - ensures that each file is only masked once if reference was also queried for gRNA
+        background_fnames = {alias: fname for alias, fname in background_fnames.items()
+                             if fname not in reference_fnames.values()}
+    ## mask in query or user-provided background
+    if background_fnames:
+        print("Masking targets (in query or user-provided background)")
         masked = {**masked,
-                  **{fname: tuple(itertools.chain(*[blast_mask(mask_fname, fname, to_mask_hits,
-                                                               blastn = blastn)
-                                                   for mask_fname in mask_fnames.values()]))
-                     for fname in reference_fnames.values()}}
+                  **{bg_fname: tuple(itertools.chain(*[mask_identical(mask_fname, bg_fname, to_mask_hits,
+                                                                      blastn = blastn)
+                                                       for mask_fname in mask_fnames.values()]))
+                     for bg_fname in background_fnames.values()}}
     ## write masked ranges if requested
     if fout_mask is not None:
         with open(fout_mask, "w+" if new_file else "a+") as f:
@@ -447,7 +490,7 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
             for fname, masked_in_f in masked.items():
                 alias = inv_fnames[fname]
                 for entry in masked_in_f:
-                    f.write('\t'.join([alias] + [entry[field] for field in fields_to_write]) + '\n')
+                    f.write('\t'.join([alias] + [str(entry[field]) for field in fields_to_write]) + '\n')
     ## functions to determine if gRNA sequences is outside masked regions
     ## (to_screen is a dictionary of a blast output entry, where keys are field names)
     def outside_targets(to_screen, bg_fname):
