@@ -325,7 +325,8 @@ class Params():
         self.cluster = Param(None, "-c", "--cluster",
                              description = "comma-separated cluster alias(es)",
                              alias_value_description = "cluster members")
-        self.indv = Param(["none"], "-a", "--acc", "-i", "--indv",
+        self.indv = Param(["none"], "-i", "--indv",
+                          # "-a", "--acc",
                           autocompletion = generate_autocompletion("indv",
                                                                    [("ref", "<reference genome>")] +
                                                                    list(sorted(self.indv_genomes.items())) +
@@ -398,9 +399,9 @@ class Params():
                                         "  individual should be contained in a single file"))
         self.alignment = Param(None, "--alignment") ## fname
         self.ot_mismatch = Param(get_val_default(get_filter("minimum off-target mismatch", type = int), 1),
-                                 "--ot-mismatch")
+                                 "--ot-mismatch", description = "minimum acceptable off-target mismatch")
         self.ot_gap = Param(get_val_default(get_filter("minimum off-target gap", type = int), 0),
-                            "--ot-gap")
+                            "--ot-gap", description = "minimum acceptable off-target gap")
         self.ot_pamless = Param(get_val_default(get_filter("pamless off-target search", type = bool), True),
                                 "--ot-pamless", help = ("ignore PAM when searching for off-target"))
         self.ot_indv = Param([get_val_default(get_filter("screen individuals"), '.')],
@@ -471,7 +472,7 @@ class Params():
                                      " in individual B. If not raised, all gRNA will pass background checks in"
                                      " all individuals."))
         self.mask = Param(None, "--mask")
-        self.mask_gene = Param(get_val_default(get_filter("mask"), '.'), "--mask-gene",
+        self.mask_gene = Param(get_val_default(get_filter("mask"), '.').split(','), "--mask-gene",
                                description = "comma-separated gene ID(s)",
                                help = ("masked genes are hidden from background check so that"
                                        " gRNA hits to them will not be considered off-target."),
@@ -481,7 +482,7 @@ class Params():
                                                         " genes passed to '-g'. '.' and '-' can be used in"
                                                         " combination with gene IDs. (E.g. '--mask -,BRC1')")})
         ## the following parameters are only used with the "full" subcmd
-        self.unmask_gene = Param(get_val_default(get_filter("unmask"), '-'), "--unmask-gene",
+        self.unmask_gene = Param(get_val_default(get_filter("unmask"), '-').split(','), "--unmask-gene",
                                  help = ("masked genes are hidden from background check so that"
                                          " gRNA hits to them will not be considered off-target."
                                          " Use '.' and '-' to indicate all and no (respectively) genes"
@@ -716,9 +717,15 @@ class Config:
     def rm_tmpfiles(self, *fnames):
         if not self.keep_tmp:
             to_remove = set(fnames if fnames else self.tmp_files)
-            for fname in to_remove:
-                if os.path.exists(os.path.join(fname)):
-                    os.remove(fname)
+            files_to_remove = [fname for fname in to_remove if
+                               (os.path.exists(fname) and os.path.isfile(fname))]
+            dir_to_remove = [fname for fname in to_remove if
+                             (os.path.exists(fname) and os.path.isdir(fname))]
+            for fname in files_to_remove:
+                os.remove(fname)
+            for fname in dir_to_remove:
+                if not os.listdir(fname):
+                    os.rmdir(fname)
             ## update tmp_files
             self.tmp_files -= to_remove
         return
@@ -746,7 +753,7 @@ class Config:
                 mv_dir_overwrite(self.tmpdir, self.out_dir)
                 typer.echo(f"Output files have been generated in {self.out_dir}")
             ## remove tmpdir
-            os.rmdir(self.tmpdir)
+            shutil.rmtree(self.tmpdir)
     def set_reference(self, fasta, annotation):
         self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
         self.annotation_ext = self.annotation_ext if annotation is None else {"Reference": annotation}

@@ -476,7 +476,7 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
         with open(fout_mask, "w+" if new_file else "a+") as f:
             ## write alias-filename mapping
             inv_fnames = {v: k for k, v in {**background_fnames, **reference_fnames}.items()}
-            f.write("alias\tfname\n")
+            f.write("#alias\tfname\n")
             for fname, alias in inv_fnames.items():
                 f.write(f"#{alias}\t{fname}\n")
             ## header

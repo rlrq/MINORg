@@ -15,6 +15,8 @@
 ## TODO: 2021/11/08: enable all homologue discovery options for filtering in background as well
 ## TODO: 2021/11/09: ensure all arguments required for --indv are also enabled for --ot-indv (extract the query mapping part of check_homologue_args into separate function reusable for --ot-indv)
 ## TODO: 2021/11/18: create Minorg object to facilitate passing of args (and storing parsed args (e.g. Minrog.query_map stores query filepaths mapped to aliases so we don't have to attach it to config)).
+## TODO: 2021/11/19: for filter, accept masked_report.tsv so we don't have to re-mask everything?
+
 
 import os
 import sys
@@ -319,6 +321,7 @@ def zero_to_one_callback(val):
         raise typer.BadParameter( f"Invalid value: {val}. Must be between 0 and 1 (inclusive)." )
 
 def reference_set_callback(val: str):
+    print("reference_set_callback")
     val = parse_lookup(val, params.reference_sets, return_first = True)
     if val is not None and os.path.exists(os.path.abspath(val)):
         config.reference_set = os.path.abspath(val)
@@ -517,10 +520,11 @@ def make_reduced_ann(args, config, gene_sets):
         #            ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
         #            fout = ann_red,
         #            mk_tmpf_name = lambda x: config.reserve_fname(f"tmp_reduced.{x}.gff", tmp = True))
+        dir_red_ann = config.mkfname("reduced_ann", tmp = True)
         config.annotation_red = reduce_ann(gff_beds = config.annotation_ext,
                                            ids = tuple(itertools.chain(*tuple(gene_sets.values()))),
                                            fout_fmt = "GFF",
-                                           mk_tmpf_name = lambda x: config.reserve_fname("reduced_ann",
+                                           mk_tmpf_name = lambda x: config.reserve_fname(dir_red_ann,
                                                                                          f"reduced.{x}.gff",
                                                                                          tmp = True))
         # bed_reds = []
@@ -976,6 +980,8 @@ def homologue(
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
         genomes: bool = typer.Option(*params.genomes(), **params.genomes.options,
                                      callback = make_genomes_callback("independent")),
+        references: bool = typer.Option(*params.references(), **params.reference.options,
+                                        callback = references_callback),
         ## clusters & members are not "eager" because we have to wait for --cluster-lookup to be processed
         clusters: bool = typer.Option(*params.clusters(), **params.clusters.options,
                                       callback = clusters_callback),
@@ -996,6 +1002,7 @@ def homologue(
     gene_sets = parse_genes_from_args(args)
     ## move logfile
     config.logfile.move(config, args)
+    config.logfile.args_expanded(args, params)
     # ## create LogFile obj
     # config.log_file = LogFile(config, args, params)
     
@@ -1102,6 +1109,7 @@ def generate_grna(
     gene_sets = parse_genes_from_args(args)
     ## move log file
     config.logfile.move(config, args)
+    config.logfile.args_expanded(args, params)
     
     print("post check:", vars(args))
     
@@ -1273,6 +1281,7 @@ def filter_grna(
     gene_sets = parse_genes_for_filter(args)
     ## move log file
     config.logfile.move(config, args)
+    config.logfile.args_expanded(args, params)
     
     print("post check:", vars(args))
     
@@ -1352,6 +1361,10 @@ def minimumset(
     gRNA sequences not present in the mapping file will be ignored.
     '''
     args = locals()
+    ## move log file
+    config.logfile.move(config, args)
+    config.logfile.args_expanded(args, params)
+    
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
     
@@ -1500,6 +1513,8 @@ def full(
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
         genomes: bool = typer.Option(*params.genomes(), **params.genomes.options,
                                      callback = make_genomes_callback("independent")),
+        references: bool = typer.Option(*params.references(), **params.reference.options,
+                                        callback = references_callback),
         ## clusters & members are not "eager" because we have to wait for --cluster-lookup to be processed
         clusters: bool = typer.Option(*params.clusters(), **params.clusters.options,
                                       callback = clusters_callback),
@@ -1540,6 +1555,7 @@ def full(
     gene_sets_for_filter = parse_genes_for_filter(args, priority = "mask")
     ## move log file
     config.logfile.move(config, args)
+    config.logfile.args_expanded([args, params])
     
     print("post check:", vars(args))
     
@@ -1677,9 +1693,11 @@ def main(ctx: typer.Context,
         ## if '--help' raised
         if _help:
             ## append --help to end of args (position relative to subcommand is impt!)
-            ## - if no subcommand provided, it defaults to sub_main's help page
-            ## - if subcommand provided, it uses subcommand's help page
-            sub_cmd_args = sub_cmd_args + ["--help"]
+            ## - if the first args in sub_cmd_args starts with '-' (i.e. is argument. checking '-' is only possible because this programme doesn't take positional arguments), clear sub_cmd_args so this function doesn't raise 'no such option' error if the keyword argument belongs to a subcommand. if not, we assume that the first element in sub_cmd_args is the subcommand name and we clear all args from second argument onward
+            ##  - if no subcommand provided, it defaults to sub_main's help page
+            ##  - if subcommand provided, it uses subcommand's help page
+            if sub_cmd_args and sub_cmd_args[0][0] == '-': sub_cmd_args = ["--help"]
+            else: sub_cmd_args = sub_cmd_args[:1] + ["--help"]
             ## remove tmpdir since programme exists after printing help manual
             config.cleanup()
         
@@ -1715,6 +1733,7 @@ if __name__ == "__main__":
     
     try:
         config.logfile = MINORgLogger(level = logging_level)
+        config.logfile.update_filename(config.mkfname(os.path.basename(config.logfile.filename)))
         print(config.logfile.filename)
         config.logfile.args(["raw", sys.argv])
     except Exception as e:

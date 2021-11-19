@@ -72,6 +72,15 @@ class MINORgLogger(DynamicFileLogger):
         # self.add_file_handler("fargs", format = "plain", level = logging.DEBUG)
         self.add_group("args", "fplain",
                        format_msg = lambda type_args: f"(({type_args[0]} args))\n{' '.join(type_args[1])}")
+        args_to_ignore = {"genomes", "references", "clusters", "members"}
+        mk_expanded_args_log = lambda args, params:'\n'.join([(k + ':\t' + str(v) +
+                                                               ('' if v != vars(params)[k].default
+                                                                else ' (default)'))
+                                                              for k, v in vars(args).items()
+                                                              if k not in args_to_ignore])
+        self.add_group("args_expanded", "fplain",
+                       format_msg = lambda args_params: ("\n((expanded args))\n" + \
+                                                         mk_expanded_args_log(*args_params)))
         # self.add_format("format_args", "%(message)s",
         #                 format_msg = lambda type_args: f"(({type_args[0]} args))\n{' '.join(type_args[1])}")
         # self.add_stream_handler("format_args", "format_args")
