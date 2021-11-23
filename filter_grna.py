@@ -6,9 +6,10 @@ from Bio import SeqIO
 from pathlib import Path
 
 from functions import (
+    IndexedFasta, GFF,
     assign_alias, blast,
     expand_ambiguous, infer_full_pam,
-    GFF, within_any, gc_content,
+    within_any, gc_content,
     fasta_to_dict, dict_to_fasta, find_identical_in_fasta,
     tsv_entries_as_dict, prepend,
     ranges_union, ranges_to_pos, ranges_subtract, ranges_intersect, within,
@@ -113,6 +114,8 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
     ## parse fasta_background and fasta_reference into {<alias>: <path>} dicts
     fasta_background = assign_alias(fasta_background, mk_name = lambda i: "bg_{str(i).zfill(3)}")
     fasta_reference = assign_alias(fasta_reference, mk_name = lambda i: "ref_{str(i).zfill(3)}")
+    reference_fnames = {alias: (fasta if not isinstance(fasta, IndexedFasta) else fasta.filename)
+                        for alias, fasta in fasta_reference.items()}
     ## combine fasta_mask, fasta_ref_genes & fasta_target into single dict
     to_mask = {**assign_alias(fasta_mask, mk_name = lambda i: f"mask_{str(i).zfill(3)}"),
                **assign_alias(fasta_target, mk_name = lambda i: f"target_{str(i).zfill(3)}")}
@@ -120,11 +123,13 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
     outside_targets = mask_and_generate_outside(to_mask, out_dir = out_dir, blastn = blastn,
                                                 mask_reference = mask_reference,
                                                 background_fnames = fasta_background,
-                                                reference_fnames = fasta_reference,
+                                                reference_fnames = reference_fnames,
                                                 mk_fname = mk_fname,
                                                 fout_mask = fout_mask, new_file = True)
     ## index fasta files
-    indexed_fa = {fname: SeqIO.index(fname, "fasta") for fname in
+    # indexed_fa = {fname: SeqIO.index(fname, "fasta") for fname in
+    #               itertools.chain(*[fnames.values() for fnames in [fasta_background, fasta_reference]])}
+    indexed_fa = {fname: IndexedFasta(fname) for fname in
                   itertools.chain(*[fnames.values() for fnames in [fasta_background, fasta_reference]])}
     ## make exclude function (function that returns True if gRNA fails off-target check)
     exclude_with_pam = make_exclude_function(pam, outside_targets, indexed_fa, max_mismatch, max_gap)
@@ -159,7 +164,7 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
     ## run blast to identify gRNA hits in background
     if screen_reference and fasta_reference: ## find in reference
         print("Assessing off-target in reference genome")
-        for ref_fname in fasta_reference.values():
+        for ref_fname in reference_fnames.values():
             ref_hits = mk_fname("hit_ref.tsv")
             excl_seqid = get_excl_seqid(fasta_grna, ref_fname, ref_hits)
             resolve_bg_blast(ref_hits)

@@ -95,7 +95,8 @@ def execute_homologue(args, config, params, prefix, genes,
     def get_seq_ref_genes(genes, feature, fasta_out, out_dir, **kwargs):
         return get_ref_by_genes_resolve(genes = genes, feature = feature, adj_dir = True,
                                         out_dir = out_dir, fout = fasta_out, ## output options
-                                        ref_fasta_files = config.reference_ext, ## reference
+                                        # ref_fasta_files = config.reference_ext, ## reference
+                                        ref_fasta_files = config.reference_indexed,
                                         ref_ann_files = ann_red,
                                         attribute_mod = args.attr_mod, ## reference annotation
                                         minlen = args.minlen, quiet = True,

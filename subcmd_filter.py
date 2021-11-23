@@ -46,7 +46,7 @@ def execute_filter(args, config, directory, prefix, gRNA_hits, grna_map, fasta_g
     if "BACKGROUND" in checks:
         ## parse fasta_background and fasta_reference into {<alias>: <path>} dicts
         fasta_background = assign_alias(args.background, mk_name = lambda i: "bg_{str(i).zfill(3)}")
-        fasta_reference = assign_alias(config.reference_ext, mk_name = lambda i: "ref_{str(i).zfill(3)}")
+        fasta_reference = assign_alias(config.reference_indexed, mk_name = lambda i: "ref_{str(i).zfill(3)}")
         fasta_query = dict(config.query_map)
         fout_mask = config.mkfname("masked_report.tsv")
         filter_background_gen(gRNA_hits, fasta_grna, fasta_target, {**fasta_background, **fasta_query},

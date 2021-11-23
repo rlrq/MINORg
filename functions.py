@@ -555,6 +555,10 @@ def make_pam_pattern(pam, gRNA_len):
 ##   (CLASSES)  ##
 ##################
 
+import copy
+from Bio import Seq
+from pyfaidx import Fasta
+
 class IndexedFile:
     def __init__(self, filename, chunk_lines = 10000, skip = lambda x: False):
         self.filename = filename
@@ -593,28 +597,43 @@ class IndexedFile:
         ## sort indices and split into bins according to self._chunk_lines
         bins = {}
         for i in sorted(indices):
-            i_chunk = i // self.chunk_lines
-            mod_chunk = i % self.chunk_lines
-            bins[i_chunk] = bins.get(i_chunk, []) + [mod_chunk]
+            i_bin = i // self.chunk_lines
+            i_offset = i % self.chunk_lines
+            bins[i_bin] = bins.get(i_bin, []) + [i_offset]
         ## jump to each bin and iterate within it
         output = []
         with open(self.filename, 'r') as f:
-            for i_chunk, mod_chunks in bins.items():
-                last_mod_chunk = mod_chunks[-1]
-                mod_chunks = set(mod_chunks)
+            for i_bin, i_offsets in bins.items():
+                last_i_offset = i_offsets[-1]
+                i_offsets = set(i_offsets)
                 ## jump to first line of bin
-                f.seek(self.indices[i_chunk])
+                f.seek(self.indices[i_bin])
                 i = 0
                 for line in f:
                     if self.skip(line): continue
-                    if i in mod_chunks:
+                    if i in i_offsets:
                         output.append(line)
                         ## exit bin if all desired lines in bin have been visited
-                        if i == last_mod_chunk: break
+                        if i == last_i_offset: break
                     i += 1
         if strip_newline: output = [line.replace('\n', '') for line in output]
         return output if not single_i else output[0]
 
+## basically pyfaidx.Fasta class, but returns Bio.Seq.Seq item when sliced
+class IndexedFasta(Fasta):
+    def __init__(self, fasta, *args, **kwargs):
+        if isinstance(fasta, self.__class__):
+            self.__dict__ = copy.copy(fasta.__dict__) ## no need for deep copy
+        elif isinstance(fasta, Fasta):
+            super().__init__(fasta.filename, *args, **kwargs)
+        else:
+            super().__init__(fasta, *args, **kwargs)
+    def get_seq(self, *args, **kwargs):
+        pyfaidx_seq = super().get_seq(*args, **kwargs)
+        return Seq.Seq(pyfaidx_seq.seq)
+    def get_spliced_seq(self, *args, **kwargs):
+        pyfaidx_seq = super().get_spliced_seq(*args, **kwargs)
+        return Seq.Seq(pyfaidx_seq.seq)
 
 #################
 ##  GFF_MANIP  ##

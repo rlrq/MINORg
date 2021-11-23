@@ -7,6 +7,8 @@ import configparser
 from enum import Enum
 from argparse import Namespace
 
+from functions import IndexedFasta
+
 ## ensure that 'config = Config(params, keep_on_crash = True)' is updated to 'config = Config(params, keep_on_crash = False)' when released (keep_on_crash set to False)
 
 try:
@@ -677,6 +679,7 @@ class Config:
         # self.bed_ext = {} if self.params.bed is None else {"Reference": self.params.bed}
         # self.annotation_ext = {} if self.params.annotation is None else {"Reference": self.params.annotation}
         self.reference_ext = {}
+        self.reference_indexed = {}
         self.bed_ext = {}
         self.annotation_ext = {}
         # ## transition to using Lookup object instead of a bunch of dictionaries
@@ -755,11 +758,23 @@ class Config:
             ## remove tmpdir
             shutil.rmtree(self.tmpdir)
     def set_reference(self, fasta, annotation):
-        self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
-        self.annotation_ext = self.annotation_ext if annotation is None else {"Reference": annotation}
+        if fasta is not None:
+            self.clear_reference()
+            self.add_reference("Reference", fasta)
+        if annotation is not None:
+            self.clear_annotation()
+            self.add_annotation("Reference", annotation)
+        # self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
+        # self.annotation_ext = self.annotation_ext if annotation is None else {"Reference": annotation}
         return
+    def clear_reference(self):
+        self.reference_ext = {}
+        self.reference_indexed = {}
+    def clear_annotation(self):
+        self.annotation_ext = {}
     def add_reference(self, ref_id, fasta):
         self.reference_ext[ref_id] = fasta
+        self.reference_indexed[ref_id] = IndexedFasta(fasta)
         return
     def add_annotation(self, ann_id, annotation):
         self.annotation_ext[ann_id] = annotation

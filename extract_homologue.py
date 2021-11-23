@@ -26,7 +26,8 @@ from functions import (
     blast6multi,
     make_local_print,
     num_lines,
-    GFF, Annotation, Attributes
+    GFF, Annotation, Attributes,
+    IndexedFasta
 )
 
 from exceptions import (
@@ -532,7 +533,7 @@ def get_ref_raw(chrom, start, end, fasta_out = None, encoding="utf-8", ref_fasta
                 store_fasta = None, src = None, **kwargs):
     import fileinput
     from Bio import SeqIO
-    ## convert fasta input to dictionary ({source_id: path_to_file}) if not already a dictionary
+    ## convert fasta input to dictionary ({source_id: fasta}) if not already a dictionary
     if not isinstance(ref_fasta_files, dict):
         import collections
         import six
@@ -540,27 +541,45 @@ def get_ref_raw(chrom, start, end, fasta_out = None, encoding="utf-8", ref_fasta
         if (not isinstance(ref_fasta_files, dict) and
             isinstance(ref_fasta_files, collections.Iterable)
             and not isinstance(ref_fasta_files, six.string_types)):
-            ref_fasta_files = {i: fname for fname in enumerate(ref_fasta_files)}
+            ref_fasta_files = {i: fasta for fasta in enumerate(ref_fasta_files)}
         ## else if string (or even Path)
         else:
             ref_fasta_files = {"Reference": ref_fasta_files}
             src = "Reference"
-    ## get relevant files and create inverse mapping ({path_to_file: source_id})
-    file_map = {fname: src_id for src_id, fname in ref_fasta_files.items() if src is None or src_id == src}
-    ## stream all files
+    ## filter for relevant reference files and convert fasta to IndexedFasta
+    ref_fasta_files = {src_id: IndexedFasta(fasta) for src_id, fasta in ref_fasta_files.items()
+                       if (src is None or src_id == src)}
+    ## loop through all indexed fasta files
     output = {}
-    with fileinput.input(list(file_map.keys())) as f:
-        for record in SeqIO.parse(f, "fasta"):
-            if record.id == chrom:
+    for src_id, fasta in ref_fasta_files.items():
+        for seqid in fasta.keys():
+            if seqid == chrom :
                 ## get seq and exit loop + stream immediately after finding first match?
                 if not fasta_out:
-                    output = record.seq[start:end]
-                    output.source = file_map[f.filename()]
+                    output = fasta[seqid][start:end]
+                    output.source = src_id
                     return output
                 else:
                     ## extract sequence. Prepend seqid with source_id
-                    output[f"{file_map[f.filename()]}|{chrom}:{start+1}..{end}"] = record.seq[start:end]
+                    output[f"{src_id}|{chrom}:{start+1}..{end}"] = fasta[seqid][start:end]
                     break
+    # ## stream all files
+    # output = {}
+    # ## get relevant files and create inverse mapping ({path_to_file: source_id})
+    # file_map = {fasta.filename: src_id for src_id, fname in ref_fasta_files.items()
+    #             if src is None or src_id == src}
+    # with fileinput.input(list(file_map.keys())) as f:
+    #     for record in SeqIO.parse(f, "fasta"):
+    #         if record.id == chrom:
+    #             ## get seq and exit loop + stream immediately after finding first match?
+    #             if not fasta_out:
+    #                 output = record.seq[start:end]
+    #                 output.source = file_map[f.filename()]
+    #                 return output
+    #             else:
+    #                 ## extract sequence. Prepend seqid with source_id
+    #                 output[f"{file_map[f.filename()]}|{chrom}:{start+1}..{end}"] = record.seq[start:end]
+    #                 break
     dict_to_fasta(output, fasta_out)
     store_fname(store_fasta, fasta_out)
     return 
