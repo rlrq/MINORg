@@ -171,8 +171,7 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
         ## remove reference FASTA from fasta_background
         ## - ensures that each file is screened only once if reference was also queried for gRNA
         fasta_background = {alias: fname for alias, fname in fasta_background.items()
-                            if fname not in fasta_reference.values()}
-        print("fasta_reference:", fasta_reference, "fasta_background:", fasta_background)
+                            if fname not in reference_fnames.values()}
     else:
         excl_seqid = set()
     if fasta_background:

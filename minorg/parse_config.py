@@ -11,13 +11,6 @@ from functions import IndexedFasta
 
 ## ensure that 'config = Config(params, keep_on_crash = True)' is updated to 'config = Config(params, keep_on_crash = False)' when released (keep_on_crash set to False)
 
-try:
-    config_fname = os.environ["MINORG_CONFIG"]
-except KeyError:
-    ## TODO: set env variable so we can remove this KeyError exception handling thing
-    config_fname = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
-    # config_fname = None
-
 def get_val_none(val, d: dict, none = None):
     '''
     Attempt to retrieve value of key-value pair in 'd' if val in d.keys().
@@ -691,7 +684,7 @@ class Config:
         # self.lookup_genome = Lookup(name = "genome", config_string = params.cluster_mapping)
         # # self.cluster_set = params.cluster_mapping.get(params.cluster_set.default,
         # #                                                  params.cluster_set.default)
-        
+    
     ## make directory (or directories)
     def mkdir(self, *directories):
         output = []
@@ -812,23 +805,27 @@ class LogFile:
                     f.write(f"{name}\t{fname}\n")
         return
 
-## import some namespace things
-# params = Params(os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.ini")) ## parse params
-params = Params(config_fname)
-oparams = OptionParams() ## namespace for some pre-defined sets of parameter options
-config = Config(params, keep_on_crash = True)
-
 ## Enum choices
 class SetCoverAlgo(str, Enum):
     lar = "LAR"
     greedy = "greedy"
 
+# IndvGenomesAll = Enum(
+#     "IndvGenomesAll",
+#     {**{k: k for k in params.indv_genomes.keys()}, **{"ref":"ref", "none":"none", 'all':'.'}},
+#     type = str)
+
+# IndvGenomesAllClear = Enum(
+#     "IndvGenomesAll",
+#     {**{k: k for k in params.indv_genomes.keys()}, **{"ref":"ref", "none":"none", 'all':'.', 'clear':'-'}},
+#     type = str)
+
 IndvGenomesAll = Enum(
     "IndvGenomesAll",
-    {**{k: k for k in params.indv_genomes.keys()}, **{"ref":"ref", "none":"none", 'all':'.'}},
+    {"ref":"ref", "none":"none", 'all':'.'},
     type = str)
 
 IndvGenomesAllClear = Enum(
     "IndvGenomesAll",
-    {**{k: k for k in params.indv_genomes.keys()}, **{"ref":"ref", "none":"none", 'all':'.', 'clear':'-'}},
+    {"ref":"ref", "none":"none", 'all':'.', 'clear':'-'},
     type = str)
