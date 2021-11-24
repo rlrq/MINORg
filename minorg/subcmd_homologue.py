@@ -3,7 +3,6 @@ import typer
 import shutil
 import tempfile
 import itertools
-import subprocess
 
 ## TODO: figure out a way to have _complete.bed report the complete range (i.e. min-max for each gene, not range of all features within the "complete" range)
 
@@ -159,15 +158,6 @@ def execute_homologue(args, config, params, prefix, genes,
             stdout, stderr = MafftCommandline(args.mafft, input = fasta_cds, # quiet = True,
                                               thread = args.thread)()
             f.write(stdout)
-            # ## if fewer than 2 seqs, duplicate so that --seed doesn't throw error
-            # if stdout.count('>') == 1:
-            #     if stdout[0] != '\n' and stdout[-1] != '\n':
-            #         f.write('\n')
-            #     f.write('\n'.join([(x if x[0] != '>' else ">Duplicate|tmp") for x in stdout.split('\n')]))
-            #     # # f.write(">Duplicate|" + '|'.join(stdout.split('\n')[0].split('|')[1:]) + '\n')
-            #     # f.write(">Duplicate|" + '|'.join(stdout.split('\n')[0].split('|')[1:]) + '\n')
-            #     # f.write('\n'.join(stdout.split('\n')[1:]))
-            #     duplicated = True
         with open(tmp_f, "w+") as f:
             stdout, stderr = MafftCommandline(args.mafft, add = fasta_gene, # quiet = True,
                                               thread = args.thread, input = fasta_aln)()
@@ -184,7 +174,6 @@ def execute_homologue(args, config, params, prefix, genes,
                                                   thread = args.thread, input = tmp_f,
                                                   adjustdirectionaccurately = True)()
                 f.write(stdout)
-                # subprocess.run(["mafft", "--quiet", "--add", fasta_target, tmp_f], stdout = f)
             ## remove '_seed_' prefix
             remove_seed(fasta_aln)
         config.rm_tmpfiles(tmp_f)

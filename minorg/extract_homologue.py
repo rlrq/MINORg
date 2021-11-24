@@ -4,7 +4,6 @@ import re
 import shutil
 import tempfile
 import itertools
-import subprocess
 import pybedtools
 from datetime import datetime
 
