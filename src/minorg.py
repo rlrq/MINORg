@@ -70,11 +70,11 @@ from display import (
     print_overwrite_multi as printom
 )
 
-__version_main__ = "2.1"
+__version_main__ = "3.1"
 __version_full__ = "2.1"
 __version_homologue__ = "1.0"
-__version_grna__ = "unimplemented"
-__version_filter__ = "unimplemented"
+__version_grna__ = "1.0"
+__version_filter__ = "1.0"
 __version_minimumset__ = "1.1"
 
 default_sub_cmd = "full"
