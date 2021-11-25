@@ -619,7 +619,7 @@ class IndexedFile:
         if strip_newline: output = [line.replace('\n', '') for line in output]
         return output if not single_i else output[0]
 
-## basically pyfaidx.Fasta class, but returns Bio.Seq.Seq item when sliced
+## basically pyfaidx.Fasta class, but returns Bio.Seq.Seq item when sliced and filename for __repr__
 class IndexedFasta(Fasta):
     def __init__(self, fasta, *args, **kwargs):
         if isinstance(fasta, self.__class__):
@@ -628,6 +628,8 @@ class IndexedFasta(Fasta):
             super().__init__(fasta.filename, *args, **kwargs)
         else:
             super().__init__(fasta, *args, **kwargs)
+    def __repr__(self):
+        return self.filename
     def get_seq(self, *args, **kwargs):
         pyfaidx_seq = super().get_seq(*args, **kwargs)
         return Seq.Seq(pyfaidx_seq.seq)
