@@ -374,7 +374,7 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
                                                                   attr_mod = attribute_mod),
                                                "bitscore": get(entry, "bitscore")}])
     ## get largest bitscore for each candidate target
-    max_bitscore = {candidate: max(get(data[candidate], "bitscore")) for candidate in data}
+    max_bitscore = {candidate: max([entry["bitscore"] for entry in data[candidate]]) for candidate in data}
     ## identify sequences to discard and print warnings if candidate has max bitscore with target and non-target
     ## note that due to the algorithm, candidates that don't overlap with ANY features will also be kept
     throw = []

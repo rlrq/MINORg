@@ -83,9 +83,9 @@ logging_level = logging.DEBUG
 try:
     CONFIG = os.environ["MINORG_CONFIG"]
 except KeyError:
-    ## TODO: set env variable so we can remove this KeyError exception handling thing
-    CONFIG = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
-    # config_fname = None
+    # ## TODO: set env variable so we can remove this KeyError exception handling thing
+    # CONFIG = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
+    CONFIG = None
 
 ## generate Params, OParmas, and Config objects
 params = Params(CONFIG)
@@ -267,20 +267,30 @@ def check_reference_args(args):
         assembly_alias_or_file_callback = make_alias_or_file_callback(params.assembly_aliases, params.assembly)
         assembly_mapped = assembly_alias_or_file_callback(args.assembly)
         if assembly_mapped is not None:
+            assembly_mapped = os.path.abspath(assembly_mapped)
             params.indv_genomes["ref"] = assembly_mapped
         ann_alias_or_file_callback = make_alias_or_file_callback(params.annotation_aliases, params.annotation)
         ann_mapped = ann_alias_or_file_callback(args.annotation)
+        if ann_mapped is not None:
+            ann_mapped = os.path.abspath(ann_mapped)
         config.set_reference(assembly_mapped, ann_mapped)
+        args.assembly = assembly_mapped
+        args.annotation = ann_mapped
+        config.reference_aliases["Reference"] = (args.assembly, args.annotation)
     if args.reference:
+        none_val = '-'
         valid_aliases(aliases = args.reference, lookup = config.reference_aliases,
-                      none_value = None, all_value = "all",
+                      none_value = '-', all_value = "all",
                       param = params.reference, display_cmd = "--references",
                       additional_message = ("Alternatively, provide a FASTA file of a genome assembly using"
                                             " '--assembly <path to FASTA file>' and a GFF3 file of genome"
                                             " annotations using '--annotation <path to GFF3 file>'."))
-        for alias in args.reference:
-            fasta, ann = config.reference_aliases[str(alias)]
-            config.extend_reference(alias, fasta, ann)
+        if set(args.reference) == {none_val}:
+            args.reference = None
+        else:
+            for alias in args.reference:
+                fasta, ann = config.reference_aliases[str(alias)]
+                config.extend_reference(alias, fasta, ann)
     if ((args.reference and args.assembly and args.annotation) or
         (not args.reference and not (args.assembly and args.annotation))):
         raise click.UsageError((f"Either '--reference <alias>' OR"
@@ -328,22 +338,26 @@ def zero_to_one_callback(val):
 def reference_set_callback(val: str):
     print("reference_set_callback")
     val = parse_lookup(val, params.reference_sets, return_first = True)
-    if val is not None and os.path.exists(os.path.abspath(val)):
-        config.reference_set = os.path.abspath(val)
-        try:
-            with open(config.reference_set, 'r') as f:
-                config.reference_aliases = {k: v.split('\t') for k, v in
-                                            parse_multiline_multikey_sdict(f.read(), kv_sep = '\t').items()}
-        except:
-            raise InputFormatError(error_src = "file", hint = f"File: {config.reference_set}")
-    else:
-        raise typer.BadParameter( ( f"Unrecognised reference set lookup file alias or non-existent file: {val}"
-                                    "\nFor a list of valid reference set lookup file aliases"
-                                    " and their locations, execute 'minorg --references'."
-                                    "\nAlternatively, please provide a valid file of",
-                                    " reference alias-FASTA-GFF3 mapping."
-                                    "\nHelp message for --reference-set: "
-                                    f"{params.reference_set.help}") )
+    if val is not None:
+        if os.path.exists(os.path.abspath(val)):
+            config.reference_set = os.path.abspath(val)
+            try:
+                with open(config.reference_set, 'r') as f:
+                    config.reference_aliases = {**config.reference_aliases,
+                                                **{k: v.split('\t') for k, v in
+                                                   parse_multiline_multikey_sdict(f.read(),
+                                                                                  kv_sep = '\t').items()}}
+            except:
+                raise InputFormatError(error_src = "file", hint = f"File: {config.reference_set}")
+        else:
+            raise typer.BadParameter( ( "Unrecognised reference set lookup file alias or non-existent file:"
+                                        f" {val}"
+                                        "\nFor a list of valid reference set lookup file aliases"
+                                        " and their locations, execute 'minorg --references'."
+                                        "\nAlternatively, please provide a valid file of",
+                                        " reference alias-FASTA-GFF3 mapping."
+                                        "\nHelp message for --reference-set: "
+                                        f"{params.reference_set.help}") )
     return val
 
 def cluster_set_callback(val: str):
@@ -604,7 +618,7 @@ def check_homologue_args(args, standalone = True):
          and args.blastn is None):
         raise click.UsageError( "Path to blastn executable is required: --blastn <path>" )
     ## check that --rpsblast is provided if using --domain
-    if args.domain is not None:
+    if args.domain is not None and args.domain != "gene":
         if args.rpsblast is None:
             raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
                                      " is required if using '--domain <domain alias or PSSM-Id>'") )
@@ -738,7 +752,7 @@ def check_grna_args(args, standalone = True):
         #                              " annotations using gff2bed>' is required if using"
         #                              " '-g <gene(s)>' or '-c <cluster(s)>'.") )
     ## check that --rpsblast is provided if using --domain
-    if args.domain is not None:
+    if args.domain is not None and args.domain != "gene":
         if args.rpsblast is None:
             raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
                                      " is required if using '--domain <domain alias or PSSM-Id>'") )
@@ -843,8 +857,10 @@ def check_filter_args(args, standalone = True):
                                          " to '-i', the reference genome(s) will be treated the same as"
                                          " any other genomes passed to '-i'.") )
         if args.screen_ref:
-            if not args.reference:
-                raise click.UsageError("'--reference <path to FASTA> is required if using '--screen-ref'.'")
+            if not (args.reference or (args.assembly and args.annotation)):
+                raise click.UsageError("'--reference <reference genome alias>' OR"
+                                       " '--assembly <path to FASTA> --annotation <path to GFF3>'"
+                                       " is required if using '--screen-ref'.")
         if not args.annotation:
             reference_required(args, "'--unmask-gene', '--mask-cluster', or '--unmask-cluster'")
             # if args.mask_gene or args.unmask_gene or args.mask_cluster or args.unmask_cluster:

@@ -221,7 +221,8 @@ class Params():
         section_data = "data"
         # get_data = lambda x: conf.get(section_data, x) ## for strings
         get_data = lambda x, **kwargs: conf_get(section_data, x, **kwargs)
-        self.reference = Param(get_val_default(get_data("reference"), '').split(','),
+        parse_reference = lambda x: None if not x else x.split(',')
+        self.reference = Param(parse_reference(get_val_default(get_data("reference"), '')),
                                "-r", "--reference",
                                help = ("comma-separated alias(es) for"
                                        " reference genome AND reference genome annotation"),
@@ -520,7 +521,7 @@ class Params():
         self.grna = Param(None, "--grna")
         self.mapping = Param(..., "-m", "--mapping")
         self.sets = Param(get_val_default(get_minimumset("sets", type = int), 1), "-s", "--set", "--sets")
-        self.sc_algorithm = Param(get_minimumset("set cover algorithm"),
+        self.sc_algorithm = Param(get_val_default(get_minimumset("set cover algorithm"), "LAR"),
                                   "--sc-algo", "--sc-algorithm",
                                   help = "algorithm for generating minimum set(s)",
                                   case_sensitive = False)
@@ -664,7 +665,7 @@ class Config:
         self.query_map = []
         self.cluster_set = None
         self.genome_set = None
-        self.reference_aliases = None
+        self.reference_aliases = {}
         self.cluster_aliases = None
         self.genome_aliases = None
         # self.reference_ext = ({} if self.params.reference.default is None

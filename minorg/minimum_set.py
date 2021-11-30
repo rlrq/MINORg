@@ -184,7 +184,6 @@ def set_cover_LAR(gRNA_coverage, target_ids, id_key = lambda x: x, tie_breaker =
         coverage_remaining = set().union(*[v for k, v in result_cover.items() if k != seq_id])
         if coverage.issubset(coverage_remaining):
             del result_cover[seq_id]
-    
     return set(result_cover.keys())
 
 

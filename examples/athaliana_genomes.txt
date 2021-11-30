@@ -1,0 +1,2 @@
+tair10;TAIR10	/path/to/subset_ref_TAIR10.fasta	/path/to/subset_ref_TAIR10.gff
+araport11	/path/to/subset_ref_Araport11.fasta	/path/to/subset_ref_Araport11.gff

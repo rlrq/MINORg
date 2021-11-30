@@ -495,7 +495,7 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
             for fname, masked_in_f in masked.items():
                 alias = inv_fnames[fname]
                 for entry in masked_in_f:
-                    f.write('\t'.join([alias] + [str(entry[field]) for field in fields_to_write]) + '\n')
+                    f.write('\t'.join([str(alias)] + [str(entry[field]) for field in fields_to_write]) + '\n')
     ## functions to determine if gRNA sequences is outside masked regions
     ## (to_screen is a dictionary of a blast output entry, where keys are field names)
     def outside_targets(to_screen, bg_fname):
