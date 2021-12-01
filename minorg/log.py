@@ -60,6 +60,12 @@ class MINORgLogger(DynamicFileLogger):
         self.add_group("full", "sfull", "ffull")
         self.add_group("sfull", "sfull")
         self.add_group("ffull", "ffull")
+        ## developer-only groups
+        import getpass
+        if getpass.getuser() in {"rachelle"}:
+            self.add_group("devsplain", "splain")
+        else:
+            self.add_group("devsplain")
         ## wrap preset log calls (except exception, which seems to require special handling)
         self.add_group("critical", "sfull", "ffull", default_log_level = logging.CRITICAL)
         self.add_group("error", "sfull", "ffull", default_log_level = logging.ERROR, level = logging.ERROR)

@@ -643,9 +643,9 @@ class Config:
             ## self.directory is used outside Config objects.
             ## Config object will handle cleanup if self.directory points to self.tmpdir
             self.directory = self.tmpdir
-            typer.echo(f"tmpdir: {self.tmpdir}")
+            print(f"tmpdir: {self.tmpdir}")
         else:
-            typer.echo("Problem!! No temporary directory!!")
+            print("Problem!! No temporary directory!!")
             exit
         
         ## handle log file
@@ -731,7 +731,7 @@ class Config:
         if self.tmp_on and self.keep_on_crash and os.path.exists(self.tmpdir):
             self.resolve()
         if self.tmp_on and not self.keep_on_crash and os.path.exists(self.tmpdir):
-            typer.echo(f"cleaning up {self.tmpdir}")
+            print(f"cleaning up {self.tmpdir}")
             shutil.rmtree(self.tmpdir)
     ## move output files to final output directory
     def resolve(self):
@@ -748,7 +748,7 @@ class Config:
                 self.rm_tmpfiles()
                 ## copy items
                 mv_dir_overwrite(self.tmpdir, self.out_dir)
-                typer.echo(f"Output files have been generated in {self.out_dir}")
+                print(f"Output files have been generated in {self.out_dir}")
             ## remove tmpdir
             shutil.rmtree(self.tmpdir)
     def set_reference(self, fasta, annotation):

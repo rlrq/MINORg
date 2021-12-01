@@ -83,6 +83,7 @@ logging_level = logging.DEBUG
 try:
     CONFIG = os.environ["MINORG_CONFIG"]
 except KeyError:
+    print("key error!")
     # ## TODO: set env variable so we can remove this KeyError exception handling thing
     # CONFIG = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
     CONFIG = None
@@ -264,6 +265,8 @@ def make_alias_or_file_callback(lookup: dict, param = None,
 
 def check_reference_args(args):
     if args.assembly is not None and args.annotation is not None:
+        if args.reference:
+            print("As --assembly and --annotation are used, --reference will be ignored.")
         assembly_alias_or_file_callback = make_alias_or_file_callback(params.assembly_aliases, params.assembly)
         assembly_mapped = assembly_alias_or_file_callback(args.assembly)
         if assembly_mapped is not None:
@@ -277,7 +280,7 @@ def check_reference_args(args):
         args.assembly = assembly_mapped
         args.annotation = ann_mapped
         config.reference_aliases["Reference"] = (args.assembly, args.annotation)
-    if args.reference:
+    elif args.reference:
         none_val = '-'
         valid_aliases(aliases = args.reference, lookup = config.reference_aliases,
                       none_value = '-', all_value = "all",
@@ -291,10 +294,13 @@ def check_reference_args(args):
             for alias in args.reference:
                 fasta, ann = config.reference_aliases[str(alias)]
                 config.extend_reference(alias, fasta, ann)
-    if ((args.reference and args.assembly and args.annotation) or
-        (not args.reference and not (args.assembly and args.annotation))):
+    else:
         raise click.UsageError((f"Either '--reference <alias>' OR"
                                 " '--assembly <FASTA> --annotation <GFF3>' is required"))
+    # if ((args.reference and args.assembly and args.annotation) or
+    #     (not args.reference and not (args.assembly and args.annotation))):
+    #     raise click.UsageError((f"Either '--reference <alias>' OR"
+    #                             " '--assembly <FASTA> --annotation <GFF3>' is required"))
 
 ## set ref: <reference genome> in params.indv_genomes
 def assembly_callback(val):
@@ -336,7 +342,6 @@ def zero_to_one_callback(val):
         raise typer.BadParameter( f"Invalid value: {val}. Must be between 0 and 1 (inclusive)." )
 
 def reference_set_callback(val: str):
-    print("reference_set_callback")
     val = parse_lookup(val, params.reference_sets, return_first = True)
     if val is not None:
         if os.path.exists(os.path.abspath(val)):
@@ -666,7 +671,6 @@ def check_homologue_args(args, standalone = True):
     if indv_provided:
         indvs_special = {"all", "none", "ref", '.'}
         indvs_ref = set(indv for indv in config.reference_ext) if "ref" in args.indv else set()
-        print("indvs_ref:", indvs_ref)
         if "all" in args.indv or '.' in args.indv:
             indvs_genome = set(indv for indv in config.genome_aliases if indv not in indvs_special)
         else:
@@ -1132,7 +1136,7 @@ def generate_grna(
     config.logfile.move(config, args)
     config.logfile.args_expanded(args, params)
     
-    print("post check:", vars(args))
+    config.logfile.devsplain(f"post check: {str(vars(args))}")
     
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
@@ -1304,7 +1308,8 @@ def filter_grna(
     config.logfile.move(config, args)
     config.logfile.args_expanded(args, params)
     
-    print("post check:", vars(args))
+    # print("post check:", vars(args))
+    config.logfile.devsplain(f"post check: {str(vars(args))}")
     
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
@@ -1578,7 +1583,8 @@ def full(
     config.logfile.move(config, args)
     config.logfile.args_expanded([args, params])
     
-    print("post check:", vars(args))
+    # print("post check:", vars(args))
+    config.logfile.devsplain(f"post check: {str(vars(args))}")
     
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
@@ -1628,7 +1634,7 @@ def full(
                            mapping = set_map_all, grna = set_grna_fasta_all,
                            fout_mapping = set_map_final, fout_fasta = set_grna_fasta_final)
     
-    typer.echo("heh")
+    config.logfile.devsplain("heh")
     config.resolve()
     return
 
@@ -1663,7 +1669,7 @@ def sub_main(
     '''
     For documentation I guess??
     '''
-    print("in sub main")
+    config.logfile.devsplain("in sub main")
     
     ## config
     if quiet: config.verbose = False
@@ -1737,7 +1743,7 @@ def main(ctx: typer.Context,
         ## assign default subcmd if no subcmd or args provided at all, else set subcmd to user-provided subcmd
         config.subcmd = 'full' if not sub_cmd_args else sub_cmd_args[0]
         if keep_on_crash: config.keep_on_crash = True
-        print(sys.argv)
+        config.logfile.devsplain(sys.argv)
         
         ## execute subcommand
         app_sub()
@@ -1755,7 +1761,7 @@ if __name__ == "__main__":
     try:
         config.logfile = MINORgLogger(level = logging_level)
         config.logfile.update_filename(config.mkfname(os.path.basename(config.logfile.filename)))
-        print(config.logfile.filename)
+        config.logfile.devsplain(config.logfile.filename)
         config.logfile.args(["raw", sys.argv])
     except Exception as e:
         print("Unable to instantiate logger.")
