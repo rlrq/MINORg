@@ -322,6 +322,12 @@ def annotation_callback(val):
 def reference_annotation_callback(val):
     return val
 
+def genetic_code_callback(val):
+    try:
+        return int(val)
+    except ValueError:
+        return val
+
 def positive_callback(val):
     if val > 0:
         return val
@@ -1000,6 +1006,8 @@ def homologue(
                                                             **params.ext_annotation.options,
                                                             **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
+        genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
+                                         callback = genetic_code_callback),
         
         ## user lookups (this is right at the end because we might need the other args)
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
@@ -1027,7 +1035,7 @@ def homologue(
     gene_sets = parse_genes_from_args(args)
     ## move logfile
     config.logfile.move(config, args)
-    config.logfile.args_expanded(args, params)
+    config.logfile.args_expanded([args, params])
     # ## create LogFile obj
     # config.log_file = LogFile(config, args, params)
     
@@ -1105,6 +1113,8 @@ def generate_grna(
                                                             **params.ext_annotation.options,
                                                             **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
+        genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
+                                         callback = genetic_code_callback),
         
         ## basic filtering
         gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
@@ -1134,7 +1144,7 @@ def generate_grna(
     gene_sets = parse_genes_from_args(args)
     ## move log file
     config.logfile.move(config, args)
-    config.logfile.args_expanded(args, params)
+    config.logfile.args_expanded([args, params])
     
     config.logfile.devsplain(f"post check: {str(vars(args))}")
     
@@ -1194,6 +1204,8 @@ def filter_grna(
         rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
         remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
         db: str = typer.Option(*params.db(), **params.db.options),
+        genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
+                                         callback = genetic_code_callback),
         
         ## input files
         mapping: Path = typer.Option(*params.mapping(), **params.mapping.options, **oparams.file_valid),
@@ -1306,7 +1318,7 @@ def filter_grna(
     gene_sets = parse_genes_for_filter(args)
     ## move log file
     config.logfile.move(config, args)
-    config.logfile.args_expanded(args, params)
+    config.logfile.args_expanded([args, params])
     
     # print("post check:", vars(args))
     config.logfile.devsplain(f"post check: {str(vars(args))}")
@@ -1389,7 +1401,7 @@ def minimumset(
     args = locals()
     ## move log file
     config.logfile.move(config, args)
-    config.logfile.args_expanded(args, params)
+    config.logfile.args_expanded([args, params])
     
     if prefix: config.prefix = prefix
     if directory: config.out_dir = directory
@@ -1477,6 +1489,8 @@ def full(
                                                             **params.ext_annotation.options,
                                                             **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
+        genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
+                                         callback = genetic_code_callback),
         
         ## gRNA generation options
         pam: str = typer.Option(*params.pam(), **params.pam.options),

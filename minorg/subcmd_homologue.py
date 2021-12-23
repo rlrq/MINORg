@@ -101,6 +101,7 @@ def execute_homologue(args, config, params, prefix, genes,
                                         minlen = args.minlen, quiet = True,
                                         # seqid_template = "Reference|$source|$domain|$feature|$complete|$gene",
                                         seqid_template = seqid_template,
+                                        genetic_code = args.genetic_code,
                                         no_bed = (not keep_bed), **kwargs)
     
     ## generate fnames

@@ -20,10 +20,15 @@ def get_val_none(val, d: dict, none = None):
     val = d.get(val, val)
     return val if val else none
 
-def get_val_default(val, default = None):
+def get_val_default(val, default = None, coerce = None):
     '''
     If val is empty (None or empty iterable), return default.
     '''
+    if coerce is not None:
+        try:
+            val = coerce(val)
+        except ValueError:
+            pass
     if val == 0: return val
     elif val: return val
     else: return default
@@ -302,6 +307,12 @@ class Params():
                                   " used with --extend-cds and --extend-genome;"
                                   " for example: with gene ID AT1G01010 and isoform ID AT1G01010.1,"
                                   " the separator is '.'" ))
+        self.genetic_code = Param(get_val_default(get_data("genetic code"), 1, coerce = int), "--genetic-code",
+                                  description = "NCBI genetic code number or name",
+                                  help = ( "NCBI genetic code number or name;"
+                                           " used with --domain and --db for translation of DNA to amino acids"
+                                           " to search for domain using RPS-BLAST;"
+                                           " See: https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi") )
         
         ## shared
         section_shared = "shared"

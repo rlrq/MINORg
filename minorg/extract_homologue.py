@@ -528,7 +528,7 @@ def store_fname(fout, fname):
 ## get reference ##
 ###################
 
-def get_ref_raw(chrom, start, end, fasta_out = None, encoding="utf-8", ref_fasta_files=ref_fasta,
+def get_ref_raw(chrom, start, end, fasta_out = None, ref_fasta_files=ref_fasta,
                 store_fasta = None, src = None, **kwargs):
     import fileinput
     from Bio import SeqIO
@@ -602,7 +602,7 @@ def get_ref_by_gene_multiref(gene, feature, out_dir, ref_fasta_files, ref_ann_fi
     return
 
 ## note: setting by_gene to True will collapse identical entries from all isoforms
-def get_ref_by_gene(gene, feature, out_dir, fout=None, gff_bed=bed_path, encoding="utf-8",
+def get_ref_by_gene(gene, feature, out_dir, fout=None, gff_bed=bed_path, genetic_code=1,
                     ref_fasta_files=ref_fasta, complete=False, domain="", domain_f="",
                     start_inc=True, end_inc=True, translate=False, adj_dir=False,
                     # attribute_fields = fields["gff3"], merge=False,
@@ -637,8 +637,7 @@ def get_ref_by_gene(gene, feature, out_dir, fout=None, gff_bed=bed_path, encodin
                     for entry in ann if entry.is_attr("Parent", gene)}
     seq_ranges = {}
     ## get gene sequence
-    ref_seq_original = get_ref_raw(chrom, start, end, src = src,
-                                   encoding = encoding, ref_fasta_files = ref_fasta_files)
+    ref_seq_original = get_ref_raw(chrom, start, end, src = src, ref_fasta_files = ref_fasta_files)
     source_id = ref_seq_original.source
     ## create function to make seqid
     from string import Template
@@ -695,7 +694,7 @@ def get_ref_by_gene(gene, feature, out_dir, fout=None, gff_bed=bed_path, encodin
             ## translate sequence if translate flag raised AND feature is CDS
             if translate:
                 if feature == "CDS" and not complete:
-                    ref_seq = ref_seq.translate(to_stop = True)
+                    ref_seq = ref_seq.translate(to_stop = True, table = genetic_code)
                 else:
                     printi("Translation is only possible when the selected feature is 'CDS' and the flag 'complete' is not raised.")
             seq_name = mk_seqid(isoform = isoform, n = i+1)
@@ -764,17 +763,9 @@ def get_ref_by_gene(gene, feature, out_dir, fout=None, gff_bed=bed_path, encodin
     #     os.remove(fasta_raw)
     store_fname(store_fasta, fasta_out_final)
 
-# def get_ref_by_range(chrom, start, end, out_dir, encoding="utf-8", ref_fasta_files=ref_fasta,
-#                      store_fasta = None):
-#     fasta_out = os.path.join(out_dir, "chr{}_p{}-{}_ref.fasta".format(chrom, start + 1, end))
-#     get_ref_raw(chrom_pref + chrom, start, end, fasta_out, encoding = encoding,
-#                 ref_fasta_files = ref_fasta_files, store_fasta = store_fasta)
-#     store_fname(store_fasta, fasta_out)
-#     printi("Sequences were successfully written to: {}".format(fasta_out))
-
 ## output is...0-indexed, I think...it seems like it follows .bed conventions...
 def get_domain_in_genome_coords(gene, domain, domain_f, out_dir, pos_type="aa", isoform='',
-                                gff_bed=bed_path, encoding="utf-8", start_inc = True, end_inc = True,
+                                gff_bed=bed_path, start_inc = True, end_inc = True,
                                 attribute_fields = fields["gff3"], attribute_mod = {},
                                 qname_dname=("name", "domain name"), qstart_qend=("start", "end")):
     import re
