@@ -2,13 +2,16 @@ import os
 import itertools
 import regex as re
 
-from functions import (
+from minorg.functions import (
     splitlines,
     fasta_to_dict,
     dict_to_fasta,
     infer_full_pam,
     expand_ambiguous,
-    make_pam_pattern,
+    make_pam_pattern
+)
+
+from minorg.grna import (
     Target,
     gRNAHits,
     gRNAHit

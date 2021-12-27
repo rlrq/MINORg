@@ -6,21 +6,24 @@ import itertools
 
 ## TODO: figure out a way to have _complete.bed report the complete range (i.e. min-max for each gene, not range of all features within the "complete" range)
 
-from functions import (
+from minorg.functions import (
     # make_make_fname,
-    reduce_ann,
-    blast6, extract_features_and_subfeatures,
+    blast6,
     fasta_to_dict, dict_to_fasta,
     parse_get_data, write_tsv, splitlines
 )
 
-from extract_homologue import (
+from minorg.annotation import (
+    reduce_ann, extract_features_and_subfeatures
+)
+
+from minorg.extract_homologue import (
     find_homologue_multiindv,
     find_homologue_indv,
     get_ref_by_genes_resolve
 )
 
-from exceptions import (
+from minorg.exceptions import (
     MessageError,
     InputFormatError,
     InvalidPath,
@@ -28,11 +31,11 @@ from exceptions import (
     UnreadableFile
 )
 
-from display import (
+from minorg.display import (
     make_print_preindent
 )
 
-from mafftcommandline_add import MafftCommandline
+from minorg.mafftcommandline_add import MafftCommandline
 
 ## These functions will not do any type checking.
 ## All args are assumed to have been properly parsed.

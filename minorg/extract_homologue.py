@@ -7,9 +7,9 @@ import itertools
 import pybedtools
 from datetime import datetime
 
-from display import make_print_preindent
+from minorg.display import make_print_preindent
 
-from functions import (
+from minorg.functions import (
     assign_alias,
     parse_get_data,
     get_dat,
@@ -24,16 +24,20 @@ from functions import (
     blast6,
     blast6multi,
     make_local_print,
-    num_lines,
-    GFF, Annotation, Attributes,
-    IndexedFasta
+    num_lines
 )
 
-from exceptions import (
+from minorg.annotation import (
+    GFF, Annotation, Attributes
+)
+
+from minorg.index import IndexedFasta
+
+from minorg.exceptions import (
     MessageError
 )
 
-from parse_config import (
+from minorg.parse_config import (
     IndvGenomesAll, IndvGenomesAllClear,
 )
 

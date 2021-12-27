@@ -238,10 +238,6 @@ class Params():
         #                        "-r", "--reference",
         #                        help = "reference genome alias",
         #                        description = "comma-separated reference genome alias(es)")
-        self.bed = Param(get_val_none(get_data("annotation"), self.annotation_aliases),
-                         "--bed", "--gff-bed",
-                         help = ( "BED file of reference genome annotation, "
-                                  "converted from GFF3 format using bedtools' gff2bed" ))
         self.assembly = Param(get_val_none(get_data("assembly"), self.assembly_aliases),
                               "--assembly",
                               help = "reference assembly alias or path to FASTA file of reference assembly",

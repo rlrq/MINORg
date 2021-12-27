@@ -34,7 +34,9 @@ from argparse import Namespace
 ## just cheat it a little so the minorg.X imports work without this actually being installed
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-from minorg.functions import get_count_dict, cat_files, reduce_ann, assign_alias, gRNAHits
+from minorg.functions import get_count_dict, cat_files, assign_alias
+from minorg.grna import gRNAHits
+from minorg.annotation import reduce_ann
 from minorg.log import MINORgLogger
 
 ## import subcommand functions
@@ -53,7 +55,7 @@ from minorg.parse_config import (
     parse_multiline_multikey_sdict
 )
 
-from exceptions import (
+from minorg.exceptions import (
     MessageError,
     InputFormatError,
     InvalidPath,
@@ -61,7 +63,7 @@ from exceptions import (
     UnreadableFile
 )
 
-from display import (
+from minorg.display import (
     print_indent as printi,
     print_overwrite_multi as printom
 )

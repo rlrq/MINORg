@@ -5,8 +5,7 @@ import regex as re
 from Bio import SeqIO
 from pathlib import Path
 
-from functions import (
-    IndexedFasta, GFF,
+from minorg.functions import (
     assign_alias, blast,
     expand_ambiguous, infer_full_pam,
     within_any, gc_content,
@@ -15,6 +14,9 @@ from functions import (
     ranges_union, ranges_to_pos, ranges_subtract, ranges_intersect, within,
     adjusted_feature_ranges, adjusted_pos
 )
+
+from minorg.index import IndexedFasta
+from minorg.annotation import GFF
 
 ## TODO: report location of feature(s) for each reference gene
 

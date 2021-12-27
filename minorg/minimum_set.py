@@ -6,9 +6,10 @@ from Bio.Seq import Seq
 
 from functions import (
     splitlines,
-    fasta_to_dict, dict_to_fasta,
-    gRNAHits
+    fasta_to_dict, dict_to_fasta
 )
+
+from minorg.grna import gRNAHits
 
 # sys.path.append("/mnt/chaelab/rachelle/src")
 # from data_manip import splitlines
