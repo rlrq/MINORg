@@ -35,7 +35,7 @@ class IndexedFile:
                 if i % self.chunk_lines == 0:
                     indices.append(f.tell())
         self.indices = indices
-    def get_line(self, *indices, strip_newline = False):
+    def get_line(self, *indices, strip_newline = False, output_fmt = None):
         single_i = len(indices) == 1
         ## remove invalid indices (<0)
         is_valid = lambda i: i >= 0
@@ -65,7 +65,7 @@ class IndexedFile:
                         if i == last_i_offset: break
                     i += 1
         if strip_newline: output = [line.replace('\n', '') for line in output]
-        return output if not single_i else output[0]
+        return output if ((not single_i) or (output_fmt is list)) else output[0]
 
 ## basically pyfaidx.Fasta class, but returns Bio.Seq.Seq item when sliced and filename for __repr__
 class IndexedFasta(Fasta):
@@ -77,7 +77,7 @@ class IndexedFasta(Fasta):
         else:
             super().__init__(fasta, *args, **kwargs)
     def __repr__(self):
-        return f"IndexedFasta(self.filename)"
+        return f"IndexedFasta({self.filename})"
     def get_seq(self, *args, **kwargs):
         pyfaidx_seq = super().get_seq(*args, **kwargs)
         return Seq.Seq(pyfaidx_seq.seq)

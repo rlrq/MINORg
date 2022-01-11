@@ -1,5 +1,12 @@
 import itertools
 from minorg.index import IndexedFile, IndexedFasta
+from minorg.fasta import (
+    fasta_to_dict,
+    dict_to_fasta,
+    extract_ranges,
+    find_identical_in_fasta,
+    collapse_identical_seqs
+)
 
 def set_overlap(a, b):
     for x in a:
@@ -16,6 +23,33 @@ def assign_alias(val, mk_name = lambda i: i, start_index = 1):
         return val
     else:
         return {mk_name(i+start_index): v for v in val}
+
+def non_string_iter(val):
+    import collections
+    import six
+    ## if some kind of (non-generator) iterable
+    return (not isinstance(val, dict)
+            and isinstance(val, collections.Iterable)
+            and not isinstance(val, six.string_types))
+
+def fill_template(template, **kwargs):
+    return Template
+
+##############
+##  SPLITS  ##
+##############
+
+def split_none(iterable):
+    return None if ( iterable is None or len(iterable) == 0 ) else \
+        (iterable if isinstance(iterable, str) else ','.join(iterable)).split(',')
+
+## previously: split_callback_str
+def split_str(val):
+    return ','.join(split_none(val))
+
+## previously: split_callback_list
+def split_list(val):
+    return split_none(val)
 
 ###############
 ##  DISPLAY  ##
@@ -71,16 +105,18 @@ def blast6multi(blastf, header, fout, subjects,
         filter_blast6_topn(fout, fout, n = n, metric = metric)
     return
 
-def blast(blastf, header, fout, append = False, dir = None, **kwargs):
+def blast(blastf, header, fout, append = False, dir = None, outfmt = 6, **kwargs):
     import os
     ## parse header
     if isinstance(header, str):
         header = header.split(',')
+    blast_outfmt = f"'{outfmt}{(' ' + ' '.join(header)) if outfmt in [6,7,10] else ''}'"
     ## execute blast
     if append and os.path.exists(fout):
         import tempfile
         tmpf = tempfile.mkstemp(dir = dir)[1]
-        blast_cline = blastf(out = tmpf, outfmt = f"'6 {' '.join(header)}'", **kwargs)
+        blast_cline = blastf(out = tmpf, outfmt = blast_outfmt,
+                             **kwargs)
         blast_cline()
         with open(fout, 'a+') as f:
             ## add newline if file to append to doesn't already end with newline
@@ -92,7 +128,7 @@ def blast(blastf, header, fout, append = False, dir = None, **kwargs):
                     f.write(line)
         os.remove(tmpf)
     else:
-        blast_cline = blastf(out = fout, outfmt = f"'6 {' '.join(header)}'", **kwargs)
+        blast_cline = blastf(out = fout, outfmt = blast_outfmt, **kwargs)
         blast_cline()
     return
 
@@ -137,7 +173,7 @@ def filter_blast6_topn(fname, fout, n = 1, metric = "bitscore"):
                               for val, i in values[qseqid] if val >= threshold)
     with open(fname, 'r') as f:
         output = [line for i, line in enumerate(f) if i in lines_to_retain]
-    with open(fout, 'w+') as f:
+    with open(fout, 'w') as f:
         ## we're not joining the entries w/ '\n' since we didn't strip them to begin with
         f.write(''.join(['\t'.join(header) + '\n'] + output))
     return
@@ -151,10 +187,75 @@ def filter_blast6_threshold(fname, fout, threshold = 0, metric = "bitscore"):
         ## filter
         output = [entry for entry in f
                   if float(entry.replace('\n', '').split('\t')[i_metric]) >= threshold]
-    with open(fout, 'w+') as f:
+    with open(fout, 'w') as f:
         ## we're not joining the entries w/ '\n' since we didn't strip them to begin with
         f.write(''.join(['\t'.join(header) + '\n'] + output))
     return
+
+## overwrites original file
+def filter_rpsblast_for_domain(fname, *pssmids, fout = None):
+    pssmids = set(str(pssmid) for pssmid in pssmids)
+    pssmid_str = '|'.join(sorted(pssmids))
+    get, dat = parse_get_data(fname, delim = '\t')
+    output = [list(x) + [pssmid_str] for x in dat if get(x, "sseqid").split('|')[-1] in pssmids]
+    if fout:
+        write_tsv(fout, [get(get_cols = True) + ["domain"]] + output)
+    else:
+        ## return dictionary of hits {<qseqid>: [(hit1_start, hit1_end), (hit2_start, hit2_end)...]}
+        output_dict = {}
+        for entry in output:
+            qseqid = get(entry, "qseqid")
+            output_dict[qseqid] = output_dict.get(qseqid, []) + [tuple(get(entry, "qstart", "qend"))]
+        return output_dict
+
+class BlastNR:
+    def __init__(self, query, blastf, header, fout, directory = None, keep_tmp = False, **kwargs):
+        self.directory = directory
+        self.query = query
+        self.blastf = blastf ## e.g. NcbirpsblastCommandline
+        self.header = header
+        self.fout = fout
+        self.kwargs = kwargs
+        ## tmp files
+        self.query_nr = None
+        self.query_nr_map = None
+        self.collapse_query()
+        self.blast()
+        self.expand()
+        if not keep_tmp:
+            import os
+            os.remove(self.query_nr)
+            os.remove(self.query_nr_map)
+        return
+    def collapse_query(self, fout_fasta = None, fout_map = None):
+        import tempfile
+        self.query_nr = fout_fasta if fout_fasta is not None else tempfile.mkstemp(dir = self.directory)[1]
+        self.query_nr_map = fout_map if fout_map is not None else tempfile.mkstemp(dir = self.directory)[1]
+        dat = fasta_to_dict(self.query)
+        identicals = {k: set(seqid for seqid, seq in dat.items() if str(seq) == str(v))
+                      for k, v in dat.items()}
+        identical_sets = set(map(lambda x: tuple(sorted(x)), identicals.values()))
+        ## write nr sequences
+        dict_to_fasta({seqids[0]: dat[seqids[0]] for seqids in identical_sets}, self.query_nr)
+        ## write nr mapping
+        with open(self.query_nr_map, 'w') as f:
+            f.write('\n'.join(['\t'.join(seqids) for seqids in identical_sets]))
+        return
+    def blast(self):
+        header = self.header if "qseqid" in self.header.split(',') else f"qseqid,{header}"
+        blast6(blastf = self.blastf, header = header, fout = self.fout, query = self.query_nr, **self.kwargs)
+    def expand(self, write = True):
+        get, dat = parse_get_data(self.fout, delim = '\t')
+        repr_map = [x.split('\t') for x in splitlines(self.query_nr_map)]
+        ## expand entry for identical peptides previously collapsed
+        qseqid_i = get(get_cols = True).index("qseqid")
+        output = [line[:qseqid_i] + [seqid] + line[qseqid_i+1:]
+                  for seqids in repr_map for seqid in seqids for line in dat \
+                  if line[0] == seqids[0]]
+        if write:
+            write_tsv(self.fout, [get(get_cols = True)] + output)
+        else:
+            return output
 
 ##################
 ##  DATA_MANIP  ##
@@ -220,7 +321,7 @@ def parse_get_data(fname, delim = None, detect = True):
     return get, data[1:]
 
 def write_tsv(fname, dat):
-    with open(fname, "w+") as f:
+    with open(fname, 'w') as f:
         f.write('\n'.join(['\t'.join([str(y) for y in x]) for x in dat]))
     return
 
@@ -243,8 +344,13 @@ def get_count_dict(iterable):
 
 import fileinput
 
+def empty_file(fname):
+    with open(fname, 'w') as f:
+        f.write()
+    return
+
 def cat_files(fnames, fout, remove = False):
-    with open(fout, "w+") as f, fileinput.input(fnames) as fin:
+    with open(fout, 'w') as f, fileinput.input(fnames) as fin:
         for line in fin:
             f.write(line)
     if remove:
@@ -257,7 +363,7 @@ def cat_files(fnames, fout, remove = False):
 def prepend(fname, string, insert_newline = False):
     with open(fname, 'r') as f:
         dat = f.read()
-    with open(fname, "w+") as f: ## prepend header
+    with open(fname, 'w') as f: ## prepend header
         f.write(string + ('\n' if insert_newline else '') + dat)
     return
 
@@ -313,95 +419,30 @@ def tsv_entries_as_dict(fname, header, f_filter = lambda x: True, fields = None)
                 output.append({col_name: entry[i] for i, col_name in enumerate(header) if col_name in fields})
     return output
 
-###################
-##  FASTA_MANIP  ##
-###################
-
-def fasta_to_dict(fname):
-    """
-    returns dictionary of sequences indexed by sequence name
-    """
-    from Bio import SeqIO
-    seqs = {}
-    for seq_record in SeqIO.parse(fname, "fasta"):
-        seqs[seq_record.id] = seq_record.seq
-    return seqs
-
-def dict_to_SeqRecordList(d, description = '', seq_id_func = lambda x:x, iupac_letters = None,
-                          seq_type = "DNA", gap_char = '-', gapped = False):
-    out_l = []
-    from Bio.Seq import Seq
-    from Bio.SeqRecord import SeqRecord
-    from Bio.Alphabet import IUPAC, Gapped
-    for seq_id,seq in d.items():
-        out_l.append(SeqRecord(seq if isinstance(seq, Seq) else \
-                               Seq(str(seq),
-                                   Gapped(iupac_letters if iupac_letters else \
-                                          IUPAC.ambiguous_dna if seq_type == "DNA" else \
-                                          IUPAC.ambiguous_protein if seq_type == "protein" else \
-                                          IUPAC.ambiguous_rna, gap_char)) if gapped else \
-                               Seq(str(seq)),
-                               id = seq_id_func(seq_id), description = description))
-    return out_l
-
-def dict_to_fasta(d, fout, seq_type = "detect", gap_char = '-', gapped = False):
-    def detect_iupac_letters(iupac_alphabet):
-        char_set = set(itertools.chain(*[set(str(seq)) for seq in d.values()]))
-        iupac_set = set(str(iupac_alphabet) + str(iupac_alphabet).lower() + gap_char)
-        return char_set - iupac_set == set()
-    if seq_type == "detect":
-        from Bio.Alphabet import IUPAC
-        iupac_letters = IUPAC.unambiguous_dna if detect_iupac_letters(IUPAC.unambiguous_dna) else \
-                        IUPAC.unambiguous_rna if detect_iupac_letters(IUPAC.unambiguous_rna) else \
-                        IUPAC.extended_dna if detect_iupac_letters(IUPAC.extended_dna) else \
-                        IUPAC.ambiguous_dna if detect_iupac_letters(IUPAC.ambiguous_dna) else \
-                        IUPAC.ambiguous_rna if detect_iupac_letters(IUPAC.ambiguous_rna) else \
-                        IUPAC.protein if detect_iupac_letters(IUPAC.protein) else \
-                        IUPAC.extended_protein if detect_iupac_letters(IUPAC.extended_protein) else \
-                        None
-    else:
-        iupac_letters = None
-    from Bio import SeqIO
-    SeqIO.write(dict_to_SeqRecordList(d, gap_char = gap_char, gapped = gapped, iupac_letters = iupac_letters),
-                fout, "fasta")
-
-def extract_ranges(seq, ranges, strand = '+'):
-    ranges_sorted = sorted(ranges, key = lambda x: int(x[0]), reverse = (strand == '-'))
-    output = seq[:0]
-    for start, end in ranges_sorted:
-        output += seq[int(start):int(end)] if strand == '+' else \
-                  seq[int(end)-1:int(start)-1:-1]
-    return output
-
-def find_identical_in_fasta(query, subject):
-    """
-    Searches for exact matches.
-    DOES NOT EXPAND AMBIGUOUS BASES. (i.e. 'N' matches ONLY 'N' character, not any base)
-    """
-    from Bio import SeqIO
-    subject_seqs = SeqIO.parse(open(subject, 'r'), "fasta")
-    if isinstance(query, dict):
-        from Bio import Seq
-        query_fwd = {seqid: (seq if isinstance(seq, Seq.Seq) else Seq.Seq(seq))
-                     for seqid, seq in query.items()}
-    else:
-        query_fwd = fasta_to_dict(query)
-    query_rvs = {seqid: seq.reverse_complement() for seqid, seq in query_fwd.items()}
-    output = []
-    for subject_seq in subject_seqs:
-        for query_id in query_fwd:
-            fwd_pos = subject_seq.seq.find(query_fwd[query_id])
-            rvs_pos = subject_seq.seq.find(query_rvs[query_id])
-            if fwd_pos >= 0:
-                output.append((query_id, subject_seq.id, fwd_pos, fwd_pos + len(query_fwd[query_id])))
-            if rvs_pos >= 0:
-                output.append((query_id, subject_seq.id, rvs_pos, rvs_pos + len(query_rvs[query_id])))
-    return output
-
 
 ###################
 ##  RANGE ARITH  ##
 ###################
+
+def is_range(r):
+    return len(r) == 2 and {type(r[0]), type(r[1])}.issubset({int, float})
+
+def convert_range(ranges, index_in = 0, index_out = 1, start_incl_in = True, start_incl_out = True,
+                  end_incl_in = False, end_incl_out = True):
+    '''
+    ranges: [(1, 2), (3, 4)]
+    Converts from one indexing system to another.
+    Default values converts from 0-index [start, end) ranges to 1-index [start, end] ranges.
+    '''
+    ## compensate index
+    index_offset = index_out - index_in
+    start_offset = int(start_incl_out) - int(start_incl_in)
+    end_offset = int(end_incl_in) - int(end_incl_out)
+    if is_range(ranges):
+        start, end = ranges
+        return (start + index_offset + start_offset, end + index_offset + end_offset)
+    else:
+        return [convert_range(r) for r in ranges]
 
 ## returns a in b
 def within(a, b):
@@ -502,54 +543,6 @@ def adjusted_feature_ranges(seq, seq_range, feature_ranges, strand = '+', sort =
         start_adj_ranges = [tuple(sorted([abs(x - seq_start) for x in r])) for r in feature_ranges]
     adj_ranges = adjusted_ranges(seq, *start_adj_ranges, **kwargs)
     return list(sorted(adj_ranges)) if sort else adj_ranges
-
-###########
-##  PAM  ##
-###########
-
-import regex as re
-def infer_full_pam(pam):
-    ## use default 3' PAM + 1 base spacer if '.' and 'N' not provided
-    pam = pam.upper()
-    if '.' not in pam:
-        ## assume 3' PAM if not indicated
-        if 'N' not in pam: pam = 'N' + pam
-        ## 3' PAM
-        if pam[0] == 'N': pam = '.' + pam
-        ## if 5' PAM
-        else: pam = pam + '.'
-    return pam
-
-def expand_ambiguous(pam):
-    """
-    Map ambiguous bases
-    """
-    from Bio import Seq
-    amb_dna = Seq.IUPAC.IUPACData.ambiguous_dna_values
-    pam_mapped = ''
-    for c in pam:
-        mapped = amb_dna.get(c.upper(), c)
-        if len(mapped) == 1: pam_mapped += mapped
-        else: pam_mapped += f"[{mapped}]"
-    return pam_mapped
-
-def make_pam_pattern(pam, gRNA_len):
-    """
-    Square brackets not allowed in PAM pattern.
-    """
-    ## infer pam location + spacer if not explicitly described
-    pam = infer_full_pam(pam)
-    ## map ambiguous bases
-    pam_mapped = expand_ambiguous(pam)
-    ## generate pattern for compilation
-    grna_pre, grna_post = pam_mapped.split('.')
-    pam_pattern = ''
-    if grna_pre: pam_pattern += f"(?<={grna_pre})"
-    pam_pattern += ".{" + str(gRNA_len) + '}'
-    if grna_post: pam_pattern += f"(?={grna_post})"
-    ## generate pattern for gRNA extraction
-    print("PAM pattern:", pam_pattern)
-    return re.compile(pam_pattern, re.IGNORECASE)
 
 #################
 ##  SEQ_MANIP  ##

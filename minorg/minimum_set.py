@@ -150,14 +150,18 @@ def set_cover(gRNA_hits, target_ids, algorithm = "LAR", id_key = lambda x: x, **
     gRNA_coverage = {seq: hits for seq, hits in gRNA_hits.hits().items()
                      if str(seq).upper() not in exclude_seqs}
     ## check if set cover is possible before attempting to solve set cover
-    if ( set(id_key(y) for x in gRNA_coverage.values() for y in x) & set(target_ids) ) < set(target_ids):
-        print("\nWARNING: The provided gRNA sequences cannot cover all target sequences.\n")
-    elif algorithm == "LAR":
-        return set_cover_LAR(gRNA_coverage, target_ids, id_key = id_key,
-                             **{k: v for k, v in kwargs.items() if k in ["tie_breaker"]})
-    elif algorithm == "greedy":
-        return set_cover_greedy(gRNA_coverage, target_ids, id_key = id_key,
-                                **{k: v for k, v in kwargs.items() if k in ["tie_breaker"]})
+    try:
+        if ( set(id_key(y) for x in gRNA_coverage.values() for y in x) & set(target_ids) ) < set(target_ids):
+            print("\nWARNING: The provided gRNA sequences cannot cover all target sequences.\n")
+        elif algorithm == "LAR":
+            return set_cover_LAR(gRNA_coverage, target_ids, id_key = id_key,
+                                 **{k: v for k, v in kwargs.items() if k in ["tie_breaker"]})
+        elif algorithm == "greedy":
+            return set_cover_greedy(gRNA_coverage, target_ids, id_key = id_key,
+                                    **{k: v for k, v in kwargs.items() if k in ["tie_breaker"]})
+    except Exception as e:
+        print(len(gRNA_coverage), len(target_ids))
+        raise e
     return []
 
 ## LAR algorithm

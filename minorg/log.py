@@ -96,8 +96,8 @@ class MINORgLogger(DynamicFileLogger):
         self.add_file_handler("fheader", format = "header", level = logging.DEBUG)
         self.add_group("header", "sheader", "fheader")
     
-    def move(self, config, args, check_path = True):
-        fout = os.path.join(config.directory, f"{args.prefix}.log")
+    def move(self, directory, prefix, check_path = True):
+        fout = os.path.join(directory, f"{prefix}.log")
         self.update_filename(fout, check_path = check_path)
         
 

@@ -5,10 +5,7 @@ import regex as re
 from minorg.functions import (
     splitlines,
     fasta_to_dict,
-    dict_to_fasta,
-    infer_full_pam,
-    expand_ambiguous,
-    make_pam_pattern
+    dict_to_fasta
 )
 
 from minorg.grna import (
@@ -16,6 +13,8 @@ from minorg.grna import (
     gRNAHits,
     gRNAHit
 )
+
+from minorg.pam import PAM
 
 ## These functions will not do any type checking.
 ## All args are assumed to have been properly parsed.
@@ -37,7 +36,9 @@ def find_multi_gRNA(target_fname, pam = "NGG", gRNA_len = 20): #Let NGG be GG, o
     Returns: {<seq>: set(ids of targeted targets)}
     """
     ## specifying 'N' allows users to specify how many wobble/N bases
-    pam_pattern = make_pam_pattern(pam, gRNA_len = gRNA_len)
+    pam = PAM(pam = pam, gRNA_length = gRNA_len)
+    pam_pattern = pam.regex()
+    # pam_pattern = make_pam_pattern(pam, gRNA_len = gRNA_len)
     # TODO: some function to parse NXX or XXN PAM into regex (done)
     dic_target = {}
     from Bio import SeqIO

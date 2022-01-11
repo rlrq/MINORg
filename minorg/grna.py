@@ -29,6 +29,8 @@ class CheckObj:
             else: return "NA"
         else:
             return check_value
+    def check_exists(self, check_name):
+        return check_name in self._checks
     def some_checks_passed(self, *check_names, **kwargs):
         return all(self.check(check_name, **kwargs) for check_name in check_names)
     def some_valid_checks_passed(self, *check_names):
@@ -92,12 +94,12 @@ class gRNASeq(CheckObj):
 
 class gRNAHits:
     ## seqs are stored in uppercase
-    def __init__(self, d = {}, gRNA_seqs = {}, gRNA_hits = {}):
-        self._gRNAseqs = gRNA_seqs ## dictionary of {seq: <gRNASeq obj>}
-        self._hits = gRNA_hits ## dictionary of {seq: [list of <gRNAHit obj>]}
+    def __init__(self, d = None, gRNA_seqs = None, gRNA_hits = None):
+        self._gRNAseqs = {} if gRNA_seqs is None else gRNA_seqs ## dictionary of {seq: <gRNASeq obj>}
+        self._hits = {} if gRNA_hits is None else gRNA_hits ## dictionary of {seq: [list of <gRNAHit obj>]}
         if d:
             self.parse_from_dict(d)
-    def __repr__(self): return self.hits()
+    def __repr__(self): return f"gRNAHits(len = {len(self)})"
     def __len__(self): return len(self.seqs())
     def update_records(self): ## update dictionaries to remove any discrepancies
         self._gRNAseqs = {k: v for k, v in self.gRNAseqs() if k in self.hits()}
@@ -112,6 +114,14 @@ class gRNAHits:
     ##  BOOLEANS  ##
     ################
     def all_target_len_valid(self): return all(map(lambda hit: hit.target().valid_len(), self.flatten_hits()))
+    def valid_seq_check(self, check_name):
+        return set(seq.check(check_name) for seq in self.flatten_gRNAseqs()) != {None}
+    def valid_hit_check(self, check_name):
+        return set(hit.check(check_name) for hit in self.flatten_hits()) != {None}
+    def seq_check_exists(self, check_name):
+        return all(seq.check_exists(check_name) for seq in self.flatten_gRNAseqs())
+    def hit_check_exists(self, check_name):
+        return all(hit.check_exists(check_name) for hit in self.flatten_hits())
     ###############
     ##  PARSERS  ##
     ###############
@@ -223,9 +233,10 @@ class gRNAHits:
             if gRNA_seq:
                 gRNA_seq.set_id(name)
         return
-    def assign_seqid(self, prefix = "gRNA_", zfill = 3):
+    def assign_seqid(self, prefix = "gRNA_", zfill = 3, assign_all = True):
         for i, gRNA_seq in enumerate(self.flatten_gRNAseqs()):
-            gRNA_seq.set_id(f"{prefix}{str(i+1).zfill(zfill)}")
+            if gRNA_seq.id() is None or assign_all:
+                gRNA_seq.set_id(f"{prefix}{str(i+1).zfill(zfill)}")
         return
     ###############
     ##  GETTERS  ##
@@ -261,14 +272,23 @@ class gRNAHits:
     ##  (& return new)  ##
     ######################
     ## filter gRNAHit objects for certain criteria and return new gRNAHits object
-    def filter_hits(self, *check_names, exclude_empty_seqs = True, ignore_invalid = True):
-        filtered = {seq: [hit for hit in hits
-                          if ( (check_names and ( (ignore_invalid and hit.some_valid_checks_passed(*check_names))
-                                                  or ( (not ignore_invalid) and
-                                                       hit.some_checks_passed(*check_names) ) ) ) or
-                               ( (not check_names) and ( (ignore_invalid and hit.all_valid_checks_passed())
+    def filter_hits(self, *check_names, exclude_empty_seqs = True, ignore_invalid = True,
+                    ignore_invalid_field = True, all_checks = False):
+        ## remove checks that don't exist
+        check_names = [check_name for check_name in check_names if self.hit_check_exists(check_name)]
+        if (ignore_invalid_field
+            and check_names
+            and not [check_name for check_name in check_names if self.valid_hit_check(check_name)]):
+            filtered = {seq: hits for seq, hits in self.hits().items()}
+        else:
+            filtered = {seq: [hit for hit in hits
+                              if ( (not all_checks and ( (ignore_invalid and
+                                                          hit.some_valid_checks_passed(*check_names))
                                                          or ( (not ignore_invalid) and
-                                                              hit.all_checks_passed() ) ) ) ) ]
+                                                              hit.some_checks_passed(*check_names) ) ) ) or
+                                   ( (all_checks) and ( (ignore_invalid and hit.all_valid_checks_passed())
+                                                        or ( (not ignore_invalid) and
+                                                             hit.all_checks_passed() ) ) ) ) ]
                     for seq, hits in self.hits().items()}
         if exclude_empty_seqs:
             filtered = {seq: hits for seq, hits in filtered.items() if hits}
@@ -277,26 +297,35 @@ class gRNAHits:
         return output
     def filter_hits_some_checks_passed(self, *check_names, **kwargs):
         return self.filter_hits(*check_names, **kwargs)
-    def filter_hits_all_checks_passed(self, **kwargs):
+    def filter_hits_all_checks_passed(self, all_checks = True, **kwargs):
         return self.filter_hits(**kwargs)
     ## filter gRNASeq objects for certain criteria and return new gRNAHits object
-    def filter_seqs(self, *check_names, ignore_invalid = True):
-        filtered = {seq: hits for seq, hits in self.hits().items()
-                    if ((check_names and ((ignore_invalid and
-                                           self.get_gRNAseq_by_seq(seq).some_valid_checks_passed(*check_names))
-                                          or (not ignore_invalid and
-                                              self.get_gRNAseq_by_seq(seq).some_checks_passed(*check_names)))) or
-                         ((not check_names) and ((ignore_invalid and
-                                                  self.get_gRNAseq_by_seq(seq).all_valid_checks_passed())
-                                                 or (not ignore_invalid and
-                                                     self.get_gRNAseq_by_seq(seq).all_checks_passed()))))}
+    def filter_seqs(self, *check_names, ignore_invalid = True, ignore_invalid_field = True,
+                    all_checks = False):
+        check_names = [check_name for check_name in check_names if self.seq_check_exists(check_name)]
+        if (ignore_invalid_field
+            and check_names
+            and not [check_name for check_name in check_names if self.valid_seq_check(check_name)]):
+            filtered = {seq: hits for seq, hits in self.hits().items()}
+        else:
+            filtered = {seq: hits for seq, hits in self.hits().items()
+                        if (((not all_checks)
+                             and ((ignore_invalid
+                                   and self.get_gRNAseq_by_seq(seq).some_valid_checks_passed(*check_names))
+                                  or (not ignore_invalid and
+                                      self.get_gRNAseq_by_seq(seq).some_checks_passed(*check_names)))) or
+                            ((all_checks)
+                             and ((ignore_invalid
+                                   and self.get_gRNAseq_by_seq(seq).all_valid_checks_passed())
+                                  or (not ignore_invalid
+                                      and self.get_gRNAseq_by_seq(seq).all_checks_passed()))))}
         filtered_seqs = {seq: self.get_gRNAseq_by_seq(seq) for seq in filtered.keys()}
         output = gRNAHits(gRNA_seqs = filtered_seqs, gRNA_hits = filtered)
         return output
     def filter_seqs_some_checks_passed(self, *check_names, **kwargs):
         return self.filter_seqs(*check_names, **kwargs)
     def filter_seqs_all_checks_passed(self, **kwargs):
-        return self.filter_seqs(**kwargs)
+        return self.filter_seqs(all_checks = True, **kwargs)
     #############
     ##  WRITE  ##
     #############
@@ -376,6 +405,7 @@ class gRNAHits:
         else: open(fout, "w+").write('')
         ## rename sequences per fasta file (if fasta file provided)
         fasta_inv = {} if not fasta else {str(seq): k for k, seq in fasta_to_dict(fasta).items()}
+        self.assign_seqid(assign_all = False)
         to_write = {fasta_inv.get(gRNA_seq.seq(), gRNA_seq.id()): gRNA_seq.seq() for gRNA_seq in gRNA_seqs}
         if to_write:
             dict_to_fasta(to_write, fout)

@@ -7,9 +7,19 @@ import configparser
 from enum import Enum
 from argparse import Namespace
 
-from functions import IndexedFasta
+from minorg.functions import IndexedFasta
+from minorg.constants import (
+    INDV_GENOMES_ALL,
+    INDV_GENOMES_NONE,
+    INDV_GENOMES_REF,
+    REFERENCED_ALL,
+    REFERENCED_NONE
+)
+from minorg.reference import AnnotatedFasta
+from minorg.annotation import reduce_ann
 
 ## ensure that 'config = Config(params, keep_on_crash = True)' is updated to 'config = Config(params, keep_on_crash = False)' when released (keep_on_crash set to False)
+## TODO: ensure genetic code specified in reference_set files are used
 
 def get_val_none(val, d: dict, none = None):
     '''
@@ -24,7 +34,7 @@ def get_val_default(val, default = None, coerce = None):
     '''
     If val is empty (None or empty iterable), return default.
     '''
-    if coerce is not None:
+    if coerce is not None and val is not None:
         try:
             val = coerce(val)
         except ValueError:
@@ -74,6 +84,7 @@ def parse_multiline_multikey_sdict(s: str, k_sep: str = ';', **kwargs):
 
 def parse_attr_mod_sdict(s: str, attr_sep: str = ',', feature_sep: str = ';', fa_sep: str = ':',
                          alias_sep: str = '='):
+    if not s: return {}
     parse_attr_mod = lambda mappings: dict(mapping.split(alias_sep) for mapping in mappings.split(attr_sep))
     feature_dict = parse_sep_sdict(s, kv_sep = fa_sep, item_sep = feature_sep)
     return {feature: parse_attr_mod(mappings) for feature, mappings in feature_dict.items()}
@@ -144,13 +155,27 @@ class Param():
         if val == self.default:
             output += " (default)"
         return output
+    
+    ## get shortest name or longest name
+    @property
+    def short(self):
+        shortest_len = min(len(name) for name in self.names)
+        shortest_names = [name for name in self.names if len(name) == shortest_len]
+        ## tie-breaker: return first result
+        return shortest_names[0]
+    @property
+    def long(self):
+        longest_len = max(len(name) for name in self.names)
+        longest_names = [name for name in self.names if len(name) == longest_len]
+        ## tie-breaker: return first result
+        return longest_names[0]
 
 ## parameter names namespace
 class Params():
     def __init__(self, config_file):
         
         ## read config file
-        if config_file:
+        if config_file and os.path.exists(config_file):
             self.config_file = config_file
             conf = configparser.ConfigParser()
             conf.read(self.config_file)
@@ -160,6 +185,8 @@ class Params():
                 elif type is int: get = conf.getint
                 elif type is float: get = conf.getfloat
                 return get(*args, **kwargs)
+        elif config_file and not os.path.exists(config_file):
+            raise InvalidPath(config_file)
         else:
             def conf_get(*args, **kwargs):
                 return None
@@ -285,22 +312,29 @@ class Params():
                                        "<standard field name>=<nonstandard field name>;"
                                        "<feature>:<standard field name>=<nonstandard field name>'"
                                        "\nExample: 'mRNA:Parent=Locus_id,ID=Transcript_id;all:ID=Id'") )
-        self.ext_cds = Param(None, "--extend-cds",
+        self.ext_cds = Param([], "--extend-cds",
                              help = ( "FASTA file of CDS sequence;"
-                                      " used with --extend-genome to generated extended GFF3 annotation" ))
-        self.ext_genome = Param(None, "--extend-genome", "--extend-gene",
-                                help = ( "FASTA file of genomic gene sequence;"
-                                         " used with --extend-cds to generate extended GFF3 annotation" ))
-        self.ext_reference = Param(None, "--extend-reference",
-                                   help = ( "FASTA file of genomic data;"
-                                            " used with --extend-annotation; molecules must be unique" ))
+                                      " used with --extend-gene to generated extended GFF3 annotation" ))
+        self.ext_gene = Param([], "--extend-genome", "--extend-gene",
+                              help = ( "FASTA file of genomic gene sequence;"
+                                       " used with --extend-cds to generate extended GFF3 annotation" ))
+        # self.ext_reference = Param(None, "--extend-reference",
+        #                            help = ( "FASTA file of genomic data;"
+        #                                     " used with --extend-annotation; molecules must be unique" ))
+        # self.ext_annotation = Param(None, "--extend-annotation",
+        #                             help = ( "GFF3 file of extended genome(s) annotation or BED file"
+        #                                      " converted from GFF3 format using bedtools' gff2bed;"
+        #                                      " used with --extend-reference; molecules must be unique" ))
+        self.ext_assembly = Param(None, "--extend-assembly",
+                                  help = ( "FASTA file of genomic data;"
+                                           " used with --extend-annotation; molecules must be unique" ))
         self.ext_annotation = Param(None, "--extend-annotation",
                                     help = ( "GFF3 file of extended genome(s) annotation or BED file"
                                              " converted from GFF3 format using bedtools' gff2bed;"
-                                             " used with --extend-reference; molecules must be unique" ))
+                                             " used with --extend-assembly; molecules must be unique" ))
         self.sep = Param(get_val_default(get_data("gene-isoform separator"), '.'), "--sep",
                          help = ( "character separating gene ID from isoform number/ID;"
-                                  " used with --extend-cds and --extend-genome;"
+                                  " used with --extend-cds and --extend-gene;"
                                   " for example: with gene ID AT1G01010 and isoform ID AT1G01010.1,"
                                   " the separator is '.'" ))
         self.genetic_code = Param(get_val_default(get_data("genetic code"), 1, coerce = int), "--genetic-code",
@@ -319,6 +353,9 @@ class Params():
                             "--prefix", help = "output files/directory prefix")
         self.fasta = Param(None, "-f", "--fasta")
         self.thread = Param(1, "--thread")
+        ## shared by grna, filter, and mininmumset
+        self.out_map = Param(None, "--out-map")
+        self.out_fasta = Param(None, "--out-fasta")
         
         ## homolog/homologue
         section_homologue = "homologue"
@@ -331,9 +368,10 @@ class Params():
         self.indv = Param(["none"], "-i", "--indv",
                           # "-a", "--acc",
                           autocompletion = generate_autocompletion("indv",
-                                                                   [("ref", "<reference genome>")] +
+                                                                   [(INDV_GENOMES_REF, "<reference genome>")] +
                                                                    list(sorted(self.indv_genomes.items())) +
-                                                                   [('.', "<all genomes except reference>")]),
+                                                                   [(INDV_GENOMES_ALL,
+                                                                     "<all genomes except reference>")]),
                           description = "comma-separated genome alias(es)",
                           alias_value_description = "the location of their FASTA files")
         self.target = Param(None, "-t", "--target")
@@ -362,9 +400,9 @@ class Params():
                                  "--check-recip", "--check-reciprocal")
         self.relax_recip = Param(get_val_default(get_homologue("relax reciprocal", type = bool), False),
                                  "--relax-recip", "--relax-reciprocal")
-        self.check_id_premerge = Param(get_val_default(get_homologue("check hit id before merging",
-                                                                     type = bool), False),
-                                       "--check-id-before-merge")
+        self.check_id_before_merge = Param(get_val_default(get_homologue("check hit id before merging",
+                                                                         type = bool), False),
+                                           "--check-id-before-merge")
         
         ## generate_grna
         section_grna = "gRNA"
@@ -407,7 +445,7 @@ class Params():
                             "--ot-gap", description = "minimum acceptable off-target gap")
         self.ot_pamless = Param(get_val_default(get_filter("pamless off-target search", type = bool), True),
                                 "--ot-pamless", help = ("ignore PAM when searching for off-target"))
-        self.ot_indv = Param([get_val_default(get_filter("screen individuals"), '.')],
+        self.ot_indv = Param([get_val_default(get_filter("screen individuals"), REFERENCED_ALL)],
                              "--ot-indv",
                              # autocompletion = generate_autocompletion("indv",
                              #                                          [('.', ("<all genomes passed to '-i',"
@@ -419,10 +457,12 @@ class Params():
                              #                                          list(sorted(self.indv_genomes.items()))),
                              description = "comma-separated genome alias(es)",
                              alias_value_description = "the location of their FASTA files",
-                             help_subcmd = {"full" :( "Use '.' and '-' to indicate all and no (respectively)"
-                                                      " individuals passed to '-i'. '.' and '-' can be used"
-                                                      " in combination with genome aliases."
-                                                      " (E.g. '--bg-indv -,HeLa')")})
+                             help_subcmd = {"full" :( f"Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                                      " to indicate all and no (respectively)"
+                                                      " individuals passed to '-i'."
+                                                      f" '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                                      " can be used in combination with genome aliases."
+                                                      f" (E.g. '--bg-indv {REFERENCED_NONE},HeLa')")})
         self.exclude = Param(None, "-e", "--exclude") ## fname
         self.gc_min = Param(get_val_default(get_filter("GC minimum", type = float), 0.3), "--gc-min",
                             help = ( "minimum GC content (inclusive),"
@@ -460,9 +500,9 @@ class Params():
                                    false_true = ("execute off-target check", "skip off-target check"),
                                    show_default = False,
                                    help = "skip off-target screen")
-        self.screen_ref = Param(get_val_default(get_filter("screen reference", type = bool), False),
-                                "--screen-ref", show_any_default = False,
-                                help = "screen for off-targets in reference genome")
+        self.screen_reference = Param(get_val_default(get_filter("screen reference", type = bool), False),
+                                      "--screen-ref", "--screen-reference", show_any_default = False,
+                                      help = "screen for off-targets in reference genome")
         self.unmask_ref = Param(get_val_default(get_filter("unmask gene(s) in reference", type = bool),
                                                 False),
                                 "--unmask-ref", show_any_default = False,
@@ -474,23 +514,28 @@ class Params():
                                      " the background check in individual A but may fail the background check"
                                      " in individual B. If not raised, all gRNA will pass background checks in"
                                      " all individuals."))
-        self.mask = Param(None, "--mask")
+        self.mask = Param([], "--mask")
         self.mask_gene = Param(get_val_default(get_filter("mask"), '.').split(','), "--mask-gene",
                                description = "comma-separated gene ID(s)",
                                help = ("masked genes are hidden from background check so that"
                                        " gRNA hits to them will not be considered off-target."),
                                help_subcmd = {"full": ( "masked genes are hidden from background check so that"
                                                         " gRNA hits to them will not be considered off-target."
-                                                        " Use '.' and '-' to indicate all and no (respectively)"
-                                                        " genes passed to '-g'. '.' and '-' can be used in"
-                                                        " combination with gene IDs. (E.g. '--mask -,BRC1')")})
+                                                        f" Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                                        " to indicate all and no (respectively)"
+                                                        " genes passed to '-g'."
+                                                        f" '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                                        " can be used in combination with gene IDs."
+                                                        f" (E.g. '--mask {REFERENCED_NONE},BRC1')")})
         ## the following parameters are only used with the "full" subcmd
         self.unmask_gene = Param(get_val_default(get_filter("unmask"), '-').split(','), "--unmask-gene",
                                  help = ("masked genes are hidden from background check so that"
                                          " gRNA hits to them will not be considered off-target."
-                                         " Use '.' and '-' to indicate all and no (respectively) genes"
-                                         " passed to '-g'. '.' and '-' can be used in combination with"
-                                         " gene IDs. (E.g. '--unmask -,BRC1')"
+                                         f" Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                         " to indicate all and no (respectively) genes passed to '-g'."
+                                         f" '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                         " can be used in combination with gene IDs."
+                                         f" (E.g. '--mask {REFERENCED_NONE},BRC1')"
                                          " --unmask will be processed first, followed by --mask."))
         self.mask_cluster = Param(None, "--mask-cluster",
                                   description = "comma-separated cluster alias(es)",
@@ -508,32 +553,37 @@ class Params():
                                                    " sequences and mask from off-target search")))
         self.bg_indv = Param([get_val_default(get_filter("screen individuals"), '.')], "--bg-indv",
                              autocompletion = generate_autocompletion("indv",
-                                                                      [('.', ("<all genomes passed to '-i',"
-                                                                              " valid only with full programme"
-                                                                              " and when '-i' is used>")),
-                                                                       ('-', ("<no genomes passed to '-i',"
-                                                                              " valid only with full programme"
-                                                                              " and when '-i' is used>"))] +
+                                                                      [(REFERENCED_ALL,
+                                                                        ("<all genomes passed to '-i',"
+                                                                         " valid only with full programme"
+                                                                         " and when '-i' is used>")),
+                                                                       (REFERENCED_NONE,
+                                                                        ("<no genomes passed to '-i',"
+                                                                         " valid only with full programme"
+                                                                         " and when '-i' is used>"))] +
                                                                       list(sorted(self.indv_genomes.items()))),
                              description = "comma-separated genome alias(es)",
                              alias_value_description = "the location of their FASTA files",
-                             help_subcmd = {"full" :( "Use '.' and '-' to indicate all and no (respectively)"
-                                                      " individuals passed to '-i'. '.' and '-' can be used"
-                                                      " in combination with genome aliases."
-                                                      " (E.g. '--bg-indv -,HeLa')")})
+                             help_subcmd = {"full" :( f"Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                                      " to indicate all and no (respectively)"
+                                                      " individuals passed to '-i'."
+                                                      f" '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                                      " can be used in combination with genome aliases."
+                                                      f" (E.g. '--bg-indv {REFERENCED_NONE},HeLa')" )})
         
         ## minimumset
         section_minimumset = "minimumset"
         get_minimumset = lambda x, **kwargs: conf_get(section_minimumset, x, **kwargs)
         self.grna = Param(None, "--grna")
-        self.mapping = Param(..., "-m", "--mapping")
+        self.map = Param(..., "-m", "--map")
+        self.in_place = Param(False, "--in-place",
+                              false_true = ("writes .map to user-specified new file or default output file",
+                                            "overwrites .map file passed to --map"))
         self.sets = Param(get_val_default(get_minimumset("sets", type = int), 1), "-s", "--set", "--sets")
         self.sc_algorithm = Param(get_val_default(get_minimumset("set cover algorithm"), "LAR"),
                                   "--sc-algo", "--sc-algorithm",
                                   help = "algorithm for generating minimum set(s)",
                                   case_sensitive = False)
-        self.out_mapping= Param(None, "--out-mapping")
-        self.out_fasta = Param(None, "--out-fasta")
         self.auto = Param(get_val_default(get_minimumset("auto", type = bool), True), "--auto/--manual",
                           # help = "[default: auto]",
                           false_true = ("manual", "auto"), show_default = False)
@@ -633,185 +683,202 @@ class Lookup:
             if postpend is not None: print(postpend)
         return        
 
-class Config:
-    def __init__(self, params, keep_on_crash = False, tmp_on = True, keep_tmp = False):
-        self.verbose = False
-        self.out_dir = None ## final output directory
-        self.new_dirs = []
-        self.keep_on_crash = keep_on_crash
-        self.keep_tmp = keep_tmp
-        # self.move_on_crash = False
-        self.tmp_on = tmp_on
-        self.tmp_files = set()
-        self.prefix = None
-        if self.tmp_on:
-            ## tmp directory; contents to be moved to self.out_dir upon fulfilment of command using self.resolve
-            self.tmpdir = tempfile.mkdtemp()
-            ## self.directory is used outside Config objects.
-            ## Config object will handle cleanup if self.directory points to self.tmpdir
-            self.directory = self.tmpdir
-            print(f"tmpdir: {self.tmpdir}")
-        else:
-            print("Problem!! No temporary directory!!")
-            exit
+# class Config:
+#     def __init__(self, params, keep_on_crash = False, tmp_on = True, keep_tmp = False):
+#         self.verbose = False
+#         self.out_dir = None ## final output directory
+#         self.new_dirs = []
+#         self.keep_on_crash = keep_on_crash
+#         self.keep_tmp = keep_tmp
+#         # self.move_on_crash = False
+#         self.tmp_on = tmp_on
+#         self.tmp_files = set()
+#         self.prefix = None
+#         if self.tmp_on:
+#             ## tmp directory; contents to be moved to self.out_dir upon fulfilment of command using self.resolve
+#             self.tmpdir = tempfile.mkdtemp()
+#             ## self.directory is used outside Config objects.
+#             ## Config object will handle cleanup if self.directory points to self.tmpdir
+#             self.directory = self.tmpdir
+#             print(f"tmpdir: {self.tmpdir}")
+#         else:
+#             print("Problem!! No temporary directory!!")
+#             exit
         
-        ## handle log file
-        self.logfile = None
+#         ## handle log file
+#         self.logfile = None
         
-        ## parameter things
-        ## programme params
-        self.raw_args = None
-        self.subcmd = None
-        self.params = params
-        ## shared params
-        self.bed_red = None ## all bed entries to be collapsed into single file regardless of source
-        self.annotation_red = None ## all bed entries to be collapsed into single file regardless of source
-        self.attr_mod = None
-        ## homologue params
-        self.raw_domain = None
-        self.query_map = []
-        self.cluster_set = None
-        self.genome_set = None
-        self.reference_aliases = {}
-        self.cluster_aliases = None
-        self.genome_aliases = None
-        # self.reference_ext = ({} if self.params.reference.default is None
-        #                       else {"Reference": self.params.reference.default})
-        # self.bed_ext = {} if self.params.bed is None else {"Reference": self.params.bed}
-        # self.annotation_ext = {} if self.params.annotation is None else {"Reference": self.params.annotation}
-        self.reference_ext = {}
-        self.reference_indexed = {}
-        self.bed_ext = {}
-        self.annotation_ext = {}
-        # ## transition to using Lookup object instead of a bunch of dictionaries
-        # self.mapping_domain = Lookup(name = "domain mapping", config_string = params.domain_mapping)
-        # self.mapping_cluster = Lookup(name = "cluster mapping", config_string = params.cluster_mapping)
-        # self.mapping_genome = Lookup(name = "genome mapping", config_string = params.cluster_mapping)
-        # self.lookup_domain = Lookup(name = "domain", config_string = params.domain_mapping)
-        # self.lookup_cluster = Lookup(name = "cluster", config_string = params.cluster_mapping)
-        # self.lookup_genome = Lookup(name = "genome", config_string = params.cluster_mapping)
-        # # self.cluster_set = params.cluster_mapping.get(params.cluster_set.default,
-        # #                                                  params.cluster_set.default)
+#         ## parameter things
+#         ## programme params
+#         self.raw_args = None
+#         self.subcmd = None
+#         self.params = params
+#         ## shared params
+#         self.bed_red = None ## all bed entries to be collapsed into single file regardless of source
+#         self.annotation_red = None ## all bed entries to be collapsed into single file regardless of source
+#         self.attr_mod = None
+#         ## homologue params
+#         self.raw_domain = None
+#         self.query_map = []
+#         # self.cluster_set = None
+#         # self.genome_set = None
+#         self.reference_aliases = {}
+#         self.cluster_aliases = None
+#         self.genome_aliases = None
+#         # self.reference_ext = ({} if self.params.reference.default is None
+#         #                       else {"Reference": self.params.reference.default})
+#         # self.bed_ext = {} if self.params.bed is None else {"Reference": self.params.bed}
+#         # self.annotation_ext = {} if self.params.annotation is None else {"Reference": self.params.annotation}
+#         self.reference = {}
+#         self.reference_ext = {}
+#         self.reference_indexed = {}
+#         self.bed_ext = {}
+#         self.annotation_ext = {}
+#         self.genetic_code_ext = {}
+#         self.attr_mod_ext = {}
+#         # ## transition to using Lookup object instead of a bunch of dictionaries
+#         # self.mapping_domain = Lookup(name = "domain mapping", config_string = params.domain_mapping)
+#         # self.mapping_cluster = Lookup(name = "cluster mapping", config_string = params.cluster_mapping)
+#         # self.mapping_genome = Lookup(name = "genome mapping", config_string = params.cluster_mapping)
+#         # self.lookup_domain = Lookup(name = "domain", config_string = params.domain_mapping)
+#         # self.lookup_cluster = Lookup(name = "cluster", config_string = params.cluster_mapping)
+#         # self.lookup_genome = Lookup(name = "genome", config_string = params.cluster_mapping)
+#         # # self.cluster_set = params.cluster_mapping.get(params.cluster_set.default,
+#         # #                                                  params.cluster_set.default)
     
-    ## make directory (or directories)
-    def mkdir(self, *directories):
-        output = []
-        for directory in directories:
-            if not os.path.isabs(directory):
-                directory = os.path.join(self.directory, directory)
-            output.append(directory)
-            if not os.path.exists(directory) and not directory in self.new_dirs:
-                os.mkdir(directory)
-                self.new_dirs.append(directory)
-        return output[0] if len(directories) == 1 else output
-    ## generate fname (usage: self.mkfname('ref', 'tmp.txt'))
-    def mkfname(self, *path, tmp = False):
-        if os.path.isabs(os.path.join(*path)): path = os.path.join(*path)
-        else: path = os.path.join(self.directory, *path)
-        if tmp: self.tmp_files.add(path)
-        return path
-    ## mkfname, except it also creates path to directory + empty file
-    def reserve_fname(self, *path, tmp = False):
-        fname = self.mkfname(*path)
-        fdir = os.path.dirname(fname)
-        os.makedirs(fdir, exist_ok = True)
-        open(fname, 'a').close()
-        if tmp: self.tmp_files.add(fname)
-        return fname
-    def rm_tmpfiles(self, *fnames):
-        if not self.keep_tmp:
-            to_remove = set(fnames if fnames else self.tmp_files)
-            files_to_remove = [fname for fname in to_remove if
-                               (os.path.exists(fname) and os.path.isfile(fname))]
-            dir_to_remove = [fname for fname in to_remove if
-                             (os.path.exists(fname) and os.path.isdir(fname))]
-            for fname in files_to_remove:
-                os.remove(fname)
-            for fname in dir_to_remove:
-                if not os.listdir(fname):
-                    os.rmdir(fname)
-            ## update tmp_files
-            self.tmp_files -= to_remove
-        return
-    ## remove files upon mid-execution termination or crash etc.
-    def cleanup(self):
-        if self.tmp_on and self.keep_on_crash and os.path.exists(self.tmpdir):
-            self.resolve()
-        if self.tmp_on and not self.keep_on_crash and os.path.exists(self.tmpdir):
-            print(f"cleaning up {self.tmpdir}")
-            shutil.rmtree(self.tmpdir)
-    ## move output files to final output directory
-    def resolve(self):
-        # ## rename log file
-        # shutil.move(self.log_file.path, self.reserve_fname(f"{self.prefix}_minorg.log"))
-        # self.log_file.write(f"{self.prefix}_minorg.log")
-        ## move files to final destination (lol)
-        if self.tmp_on:
-            if self.out_dir:
-                ## create final output directory if doesn't exist
-                if not os.path.exists(self.out_dir):
-                    os.makedirs(self.out_dir, exist_ok = True)
-                ## remove tmp files
-                self.rm_tmpfiles()
-                ## copy items
-                mv_dir_overwrite(self.tmpdir, self.out_dir)
-                print(f"Output files have been generated in {self.out_dir}")
-            ## remove tmpdir
-            shutil.rmtree(self.tmpdir)
-    def set_reference(self, fasta, annotation):
-        if fasta is not None:
-            self.clear_reference()
-            self.add_reference("Reference", fasta)
-        if annotation is not None:
-            self.clear_annotation()
-            self.add_annotation("Reference", annotation)
-        # self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
-        # self.annotation_ext = self.annotation_ext if annotation is None else {"Reference": annotation}
-        return
-    def clear_reference(self):
-        self.reference_ext = {}
-        self.reference_indexed = {}
-    def clear_annotation(self):
-        self.annotation_ext = {}
-    def add_reference(self, ref_id, fasta):
-        self.reference_ext[ref_id] = fasta
-        self.reference_indexed[ref_id] = IndexedFasta(fasta)
-        return
-    def add_annotation(self, ann_id, annotation):
-        self.annotation_ext[ann_id] = annotation
-        return
-    def extend_reference(self, ref_id, fasta, annotation):
-        if ref_id in self.reference_ext:
-            raise Exception("ID '{ref_id}' already in use as source id for config.reference_ext.")
-        self.add_reference(ref_id, fasta)
-        self.add_annotation(ref_id, annotation)
-        return
+#     ## make directory (or directories)
+#     def mkdir(self, *directories):
+#         output = []
+#         for directory in directories:
+#             if not os.path.isabs(directory):
+#                 directory = os.path.join(self.directory, directory)
+#             output.append(directory)
+#             if not os.path.exists(directory) and not directory in self.new_dirs:
+#                 os.mkdir(directory)
+#                 self.new_dirs.append(directory)
+#         return output[0] if len(directories) == 1 else output
+#     ## generate fname (usage: self.mkfname('ref', 'tmp.txt'))
+#     def mkfname(self, *path, tmp = False):
+#         if os.path.isabs(os.path.join(*path)): path = os.path.join(*path)
+#         else: path = os.path.join(self.directory, *path)
+#         if tmp: self.tmp_files.add(path)
+#         return path
+#     ## mkfname, except it also creates path to directory + empty file
+#     def reserve_fname(self, *path, tmp = False):
+#         fname = self.mkfname(*path)
+#         fdir = os.path.dirname(fname)
+#         os.makedirs(fdir, exist_ok = True)
+#         open(fname, 'a').close()
+#         if tmp: self.tmp_files.add(fname)
+#         return fname
+#     def rm_tmpfiles(self, *fnames):
+#         if not self.keep_tmp:
+#             to_remove = set(fnames if fnames else self.tmp_files)
+#             files_to_remove = [fname for fname in to_remove if
+#                                (os.path.exists(fname) and os.path.isfile(fname))]
+#             dir_to_remove = [fname for fname in to_remove if
+#                              (os.path.exists(fname) and os.path.isdir(fname))]
+#             for fname in files_to_remove:
+#                 os.remove(fname)
+#             for fname in dir_to_remove:
+#                 if not os.listdir(fname):
+#                     os.rmdir(fname)
+#             ## update tmp_files
+#             self.tmp_files -= to_remove
+#         return
+#     ## remove files upon mid-execution termination or crash etc.
+#     def cleanup(self):
+#         if self.tmp_on and self.keep_on_crash and os.path.exists(self.tmpdir):
+#             self.resolve()
+#         if self.tmp_on and not self.keep_on_crash and os.path.exists(self.tmpdir):
+#             print(f"cleaning up {self.tmpdir}")
+#             shutil.rmtree(self.tmpdir)
+#     ## move output files to final output directory
+#     def resolve(self):
+#         # ## rename log file
+#         # shutil.move(self.log_file.path, self.reserve_fname(f"{self.prefix}_minorg.log"))
+#         # self.log_file.write(f"{self.prefix}_minorg.log")
+#         ## move files to final destination (lol)
+#         if self.tmp_on:
+#             if self.out_dir:
+#                 ## create final output directory if doesn't exist
+#                 if not os.path.exists(self.out_dir):
+#                     os.makedirs(self.out_dir, exist_ok = True)
+#                 ## remove tmp files
+#                 self.rm_tmpfiles()
+#                 ## copy items
+#                 mv_dir_overwrite(self.tmpdir, self.out_dir)
+#                 print(f"Output files have been generated in {self.out_dir}")
+#             ## remove tmpdir
+#             shutil.rmtree(self.tmpdir)
+#     def set_reference(self, fasta, annotation, genetic_code = 1, attr_mod = {}):
+#         self.reference["Reference"] = AnnotatedFasta(fasta, annotation, attr_mod = attr_mod,
+#                                                      genetic_code = genetic_code, name = "Reference")
+#         if fasta is not None:
+#             self.clear_reference()
+#             self.add_reference("Reference", fasta)
+#         if annotation is not None:
+#             self.clear_annotation()
+#             self.add_annotation("Reference", annotation, genetic_code = genetic_code)
+#         # self.reference_ext = self.reference_ext if fasta is None else {"Reference": fasta}
+#         # self.annotation_ext = self.annotation_ext if annotation is None else {"Reference": annotation}
+#         return
+#     def clear_reference(self):
+#         self.reference_ext = {}
+#         self.reference_indexed = {}
+#     def clear_annotation(self):
+#         self.annotation_ext = {}
+#     def add_reference(self, ref_id, fasta):
+#         self.reference_ext[ref_id] = fasta
+#         self.reference_indexed[ref_id] = IndexedFasta(fasta)
+#         return
+#     def add_annotation(self, ann_id, annotation, genetic_code = 1, attribute_modification = {}):
+#         self.annotation_ext[ann_id] = annotation
+#         self.genetic_code_ext[ann_id] = genetic_code
+#         self.attr_mod_ext[ann_id] = attribute_modification
+#         return
+#     def extend_reference(self, ref_id, fasta, annotation, genetic_code = 1, attribute_modification = {}):
+#         if ref_id in self.reference_ext:
+#             raise Exception(f"ID '{ref_id}' already in use as source id for config.reference_ext.")
+#         self.reference[ref_id] = AnnotatedFasta(fasta, annotation, genetic_code = genetic_code,
+#                                                 attr_mod = attribute_modification, name = ref_id)
+#         self.add_reference(ref_id, fasta)
+#         self.add_annotation(ref_id, annotation, genetic_code = genetic_code,
+#                             attribute_modification = attribute_modification)
+#         return
+#     def reduce_annotation(self, ids, fout_fmt = "GFF"):
+#         mk_tmpf_name = lambda x: self.reserve_fname("reduced_ann", f"reduced.{x}.gff", tmp = True)
+#         self.annotation_red = reduce_ann(gff_beds = self.annotation_ext, ids = tuple(ids), fout_fmt = "GFF",
+#                                          mk_tmpf_name = mk_tmpf_name, attr_mods = self.attr_mod_ext)
+#         for alias, annotated_ref in self.reference.items():
+#             annotated_ref.reduce_annotation(tuple(ids), fout = mk_tmpf_name(alias))
+#         return
 
-## make log file (TODO)
-class LogFile:
-    def __init__(self, config: Config, args: Namespace, params: Params,
-                 ignore = ["version", "quiet", "members", "clusters", "genomes"]):
-        self.config = config
-        self.params = params
-        self.args = vars(args)
-        self.ignore = set(ignore) ## variables not to be written to log file (e.g. eager ones like --version)
+# ## make log file (TODO)
+# class LogFile:
+#     def __init__(self, config, args: Namespace, params: Params,
+#                  ignore = ["version", "quiet", "members", "clusters", "genomes"]):
+#         self.config = config
+#         self.params = params
+#         self.args = vars(args)
+#         self.ignore = set(ignore) ## variables not to be written to log file (e.g. eager ones like --version)
     
-    def format_entry(self, argname):
-        argval = self.args[argname]
-        return params.get_param(argname).format_log(argval)
+#     def format_entry(self, argname):
+#         argval = self.args[argname]
+#         return params.get_param(argname).format_log(argval)
     
-    def write(self, fout = "minorg.log"):
-        if not os.path.isabs(fout):
-            fout = config.mkfname(fout)
-        output = [self.format_entry(argname) for argname in self.args if argname not in self.ignore]
-        with open(fout, "w+") as f:
-            f.write(' '.join(config.raw_args) + '\n\n' + '\n'.join(output) + '\n')
-            ## write query file mapping (especially useful if -q is used)
-            if config.query_map:
-                f.write("\nquery_name\tquery_file\n")
-                for name, fname in config.query_map:
-                    f.write(f"{name}\t{fname}\n")
-        return
+#     def write(self, fout = "minorg.log"):
+#         if not os.path.isabs(fout):
+#             fout = config.mkfname(fout)
+#         output = [self.format_entry(argname) for argname in self.args if argname not in self.ignore]
+#         with open(fout, "w+") as f:
+#             f.write(' '.join(config.raw_args) + '\n\n' + '\n'.join(output) + '\n')
+#             ## write query file mapping (especially useful if -q is used)
+#             if config.query_map:
+#                 f.write("\nquery_name\tquery_file\n")
+#                 for name, fname in config.query_map:
+#                     f.write(f"{name}\t{fname}\n")
+#         return
 
 ## Enum choices
 class SetCoverAlgo(str, Enum):
@@ -828,12 +895,12 @@ class SetCoverAlgo(str, Enum):
 #     {**{k: k for k in params.indv_genomes.keys()}, **{"ref":"ref", "none":"none", 'all':'.', 'clear':'-'}},
 #     type = str)
 
-IndvGenomesAll = Enum(
-    "IndvGenomesAll",
-    {"ref":"ref", "none":"none", 'all':'.'},
-    type = str)
+# IndvGenomesAll = Enum(
+#     "IndvGenomesAll",
+#     {"ref":INDV_GENOMES_REF, "none":INDV_GENOMES_NONE, 'all':INDV_GENOMES_ALL},
+#     type = str)
 
-IndvGenomesAllClear = Enum(
-    "IndvGenomesAll",
-    {"ref":"ref", "none":"none", 'all':'.', 'clear':'-'},
-    type = str)
+# IndvGenomesAllClear = Enum(
+#     "IndvGenomesAll",
+#     {"ref":"ref", "none":"none", 'all':'.', 'clear':'-'},
+#     type = str)

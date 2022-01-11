@@ -13,6 +13,7 @@ requires = [
      "pyfaidx",
      "regex",
      "shutil",
+     "string",
      "sys",
      "tempfile",
      "time",

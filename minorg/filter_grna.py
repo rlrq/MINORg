@@ -2,21 +2,21 @@ import os
 import itertools
 import regex as re
 
-from Bio import SeqIO
+from Bio import SeqIO, SearchIO
 from pathlib import Path
 
 from minorg.functions import (
     assign_alias, blast,
-    expand_ambiguous, infer_full_pam,
     within_any, gc_content,
     fasta_to_dict, dict_to_fasta, find_identical_in_fasta,
     tsv_entries_as_dict, prepend,
-    ranges_union, ranges_to_pos, ranges_subtract, ranges_intersect, within,
+    ranges_union, ranges_to_pos, ranges_subtract, ranges_intersect, within, convert_range,
     adjusted_feature_ranges, adjusted_pos
 )
 
 from minorg.index import IndexedFasta
 from minorg.annotation import GFF
+from minorg.pam import PAM
 
 ## TODO: report location of feature(s) for each reference gene
 
@@ -134,7 +134,8 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
     indexed_fa = {fname: IndexedFasta(fname) for fname in
                   itertools.chain(*[fnames.values() for fnames in [fasta_background, fasta_reference]])}
     ## make exclude function (function that returns True if gRNA fails off-target check)
-    exclude_with_pam = make_exclude_function(pam, outside_targets, indexed_fa, max_mismatch, max_gap)
+    has_pam = (lambda *args, **kwargs: True) if pamless_check else make_has_pam(pam)
+    # exclude_with_pam = make_exclude_function(pam, outside_targets, indexed_fa, max_mismatch, max_gap)
     ## prep for blast
     blast_output_header = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch',
                            'gaps', 'qstart', 'qend', 'sstart', 'send', 'qlen', 'slen', 'sstrand']
@@ -145,41 +146,45 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
         else: os.remove(fname)
     ## function to get seqs to exclude
     def get_excl_seqid(fasta_query, fasta_subject, fout_fname, fully_aligned_check = True):
-        def precheck_exclude(x, mismatch_check = True, gap_check = True, unaligned_check = True):
-            mismatch_excess = max_mismatch - int(x["mismatch"])
-            gap_excess = max_gap - int(x["gaps"])
-            unaligned_excess = (int(x["qlen"]) - int(x["qend"])) + (int(x["qstart"]) - 1)
-            fully_aligned = (int(x["length"]) + int(x["gaps"]) == int(x["qlen"])) \
-                            if fully_aligned_check else True
+        def excl_by_loc(hsp):
+            return outside_targets(hsp, fasta_subject)
+        def excl_by_aln(query_result, hsp, mismatch_check = True, gap_check = True):
+            qlen = query_result.seq_len
+            mismatch_excess = max_mismatch - (qlen - hsp.ident_num)
+            gap_excess = max_gap - hsp.gap_num
+            unaligned_excess = qlen - hsp.query_end + hsp.query_start
             mismatch_pass = (mismatch_excess >= 0) if mismatch_check else True
             gap_pass = (gap_excess >= 0) if gap_check else True
-            unaligned_pass = unaligned_excess <= (mismatch_excess + gap_excess) if unaligned_check else True
-            return fully_aligned and mismatch_pass and gap_pass and unaligned_pass and \
-                outside_targets(x, fasta_subject)
+            fully_aligned = unaligned_excess == 0 if fully_aligned_check else True
+            return fully_aligned and mismatch_pass and gap_pass
+        def excl_by_pam(query_result, hsp):
+            return has_pam(fasta_subject, query_result, hsp)
+        def exclude(query_result, hsp, mismatch_check = True, gap_check = True):
+            return (excl_by_loc(hsp) and excl_by_aln(query_result, hsp) and \
+                excl_by_pam(query_result, hsp))
         from Bio.Blast.Applications import NcbiblastnCommandline
-        blast(NcbiblastnCommandline, header = blast_output_header, fout = fout_fname,
+        blast(NcbiblastnCommandline, header = blast_output_header, fout = fout_fname, outfmt = 5,
               query = fasta_query, subject = fasta_subject, cmd = blastn, task = "blastn-short")
-        entries = tsv_entries_as_dict(fout_fname, header = blast_output_header)
-        prelim_exclude = [entry for entry in entries if precheck_exclude(entry)]
-        final_exclude = prelim_exclude if pamless_check else exclude_with_pam(prelim_exclude, fasta_subject)
-        return set(x["qseqid"] for x in final_exclude)
+        return set(hsp.query_id
+                   for query_result in SearchIO.parse(fout_fname, "blast-xml")
+                   for hit in query_result for hsp in hit.hsps
+                   if exclude(query_result, hsp))
     ## run blast to identify gRNA hits in background
+    excl_seqid = set()
     if screen_reference and fasta_reference: ## find in reference
         print("Assessing off-target in reference genome")
-        for ref_fname in reference_fnames.values():
-            ref_hits = mk_fname("hit_ref.tsv")
-            excl_seqid = get_excl_seqid(fasta_grna, ref_fname, ref_hits)
+        for i, ref_fname in enumerate(reference_fnames.values()):
+            ref_hits = mk_fname(f"hit_ref_{i}.xml")
+            excl_seqid |= get_excl_seqid(fasta_grna, ref_fname, ref_hits)
             resolve_bg_blast(ref_hits)
         ## remove reference FASTA from fasta_background
         ## - ensures that each file is screened only once if reference was also queried for gRNA
         fasta_background = {alias: fname for alias, fname in fasta_background.items()
                             if fname not in reference_fnames.values()}
-    else:
-        excl_seqid = set()
     if fasta_background:
         print("Assessing off-target in user-provided sequences")
         for bg_fname in fasta_background.values():
-            nonref_hits = mk_fname("hit_nonref.tsv")
+            nonref_hits = mk_fname("hit_nonref.xml")
             excl_seqid |= get_excl_seqid(fasta_grna, bg_fname, nonref_hits, fully_aligned_check = False)
             resolve_bg_blast(nonref_hits)
     ## parse bg check status
@@ -326,58 +331,53 @@ def filter_unique_flank(gRNA_hits, length, background_fname, out_dir):
 #########################
 
 
-## function to get maximum pattern length
-def pattern_max_len(pattern):
-    ## count number of sets [], which get reduced to length of 1 each
-    nsets = len(re.findall("(?<=\[).+?(?=\])", pattern))
-    ## remove sets from pattern
-    pattern_no_sets = ''.join(re.findall("(?<=^|\]).+?(?=$|\[)", pattern))
-    ## count number of reps {n}, which get reduced to length of n - 1 each
-    ## ## n-1 because the char to be repeated itself will count as the 1st rep
-    reps = sum(map(lambda x: int(x.split(',')[-1]) - 1, re.findall("(?<=\{).+?(?=\})", pattern_no_sets)))
-    ## remove reps from pattern
-    nchars = sum(map(lambda x: len(x), re.findall("(?<=^|\}).+?(?=$|\{)", pattern_no_sets)))
-    return nchars + nsets + reps ## sum
-
-## helper function to judge if off-target crosses threshold
-def make_exclude_function(pam, outside_targets, indexed_fa, max_mismatch, max_gap):
-    pam_pattern = expand_ambiguous(infer_full_pam(pam))
-    pam_pre, pam_post = pam_pattern.split('.')
-    pam_pre_max = pattern_max_len(pam_pre)
-    pam_post_max = pattern_max_len(pam_post)
+def make_has_pam(pam, max_gap):
+    pam = PAM(pam)
+    pam_pre = pam.five_prime()
+    pam_post = pam.three_prime()
+    pam_pre_max = pam.five_prime_maxlen()
+    pam_post_max = pam.three_prime_maxlen()
     ## output function
-    def exclude(entries, fasta_fname, fully_aligned_check = False, mismatch_check = True, gap_check = True):
-        d_entries = {}
-        for entry in entries:
-            d_entries[entry["sseqid"]] = d_entries.get(entry["sseqid"], []) + [entry]
-        output = []
-        for molecule, entries in d_entries.items():
-            ## check for presence of PAM of potentially excluded gRNA hits; if no PAM, it's not off-target
-            seq = indexed_fa[fasta_fname][molecule]
-            for x in entries:
-                ## note that "pass" in this function means that a gRNA hit entry will be considered off-target
-                gaps, qlen, qstart, qend = int(x["gaps"]), int(x["qlen"]), int(x["qstart"]), int(x["qend"])
-                sstart, send = int(x["sstart"]), int(x["send"])
-                ## get maximum PAM distance (unused gap allowance + uanligned gRNA length)
-                gap_excess = max_gap - gaps
-                len_excess = qlen - (qend - qstart + 1)
-                pre_excess = int(x["qstart"]) - 1
-                post_excess = int(x["qlen"]) - int(x["qend"])
-                pre_len_max = pam_pre_max + gap_excess + pre_excess
-                post_len_max = pam_post_max + gap_excess + post_excess
-                ## get the sequences flanking the gRNA hit
-                if x["sstrand"] == "plus" or x["sstrand"] == '+':
-                    pre_seq = seq[sstart - pre_len_max : sstart]
-                    post_seq = seq[send : send + post_len_max]
-                else:
-                    post_seq = seq[sstart - post_len_max: sstart].reverse_complement()
-                    pre_seq = seq[send : send + pre_len_max].reverse_complement()
-                ## assess whether pre-gRNA and post-gRNA regions match PAM pattern
-                pre_pass = True if not pam_pre else bool(re.search(pam_pre, str(pre_seq)))
-                post_pass = True if not pam_post else bool(re.search(pam_post, str(post_seq)))
-                if pre_pass and post_pass: output.append(x)
-        return output
-    return exclude
+    def has_pam(fasta, query_result, hsp):
+        seq = fasta[hsp.hit_id]
+        qlen = query_result.seq_len
+        ## get maximum PAM distance (unused gap allowance + uanligned gRNA length)
+        gap_excess = max_gap - hsp.gap_num
+        len_excess = qlen - (hsp.query_end - hsp.query_start)
+        pre_excess = hsp.query_start
+        post_excess = qlen - hsp.query_end
+        pre_len_max = pam_pre_max + gap_excess + pre_excess
+        post_len_max = pam_post_max + gap_excess + post_excess
+        ## get the sequences flanking the gRNA hit
+        if hsp.hit_strand == 1:
+            pre_seq = seq[sstart - pre_len_max : sstart]
+            post_seq = seq[send : send + post_len_max]
+        else:
+            post_seq = seq[sstart - post_len_max: sstart].reverse_complement()
+            pre_seq = seq[send : send + pre_len_max].reverse_complement()
+        ## assess whether pre-gRNA and post-gRNA regions match PAM pattern
+        has_pam_pre = False if not pam_pre else bool(re.search(pam_pre, str(pre_seq)))
+        has_pam_post = False if not pam_post else bool(re.search(pam_post, str(post_seq)))
+        return pre_pass or post_pass
+    return has_pam
+
+class Masked:
+    ## takes in a HSP object (produced by Bio.SearchIO)
+    def __init__(self, hsp):
+        self.hsp = hsp
+    @property
+    def masked(self): return self.hsp.query_id
+    @property
+    def molecule(self): return self.hsp.hit_id
+    ## Biopython converts ranges to 0-index, end-exclusive! and also sorts them so start is always smaller!
+    @property
+    def start(self): return self.hsp.hit_start
+    @property
+    def end(self): return self.hsp.hit_end
+    def within(self, r, index = 0, end_incl = False):
+        return within(r, convert_range((self.start, self.end), index_in = 0, index_out = index,
+                                       start_incl_in = True, start_incl_out = True,
+                                       end_incl_in = False, end_incl_out = end_incl))
 
 def mask_identical(to_mask_fname, fasta_fname, fout_fname, **kwargs):
     seqs_to_mask = fasta_to_dict(to_mask_fname)
@@ -392,7 +392,7 @@ def mask_identical(to_mask_fname, fasta_fname, fout_fname, **kwargs):
     if (unambig_to_mask and ambig_to_mask):
         import tempfile
         ## replace to_mask_fname with temporary file
-        tmp_to_mask_fname = tempfile.mkstemp()[1]
+        tmp_to_mask_fname = tempfile.mkstemp(suffix = ".fasta")[1]
         ## write unambig_to_mask to file to be used for BLAST
         dict_to_fasta(unambig_to_mask, tmp_to_mask_fname)
     else:
@@ -405,8 +405,9 @@ def mask_identical(to_mask_fname, fasta_fname, fout_fname, **kwargs):
                                  fasta_fname, fout_fname, **kwargs))
     ## if at least one sequence has ambiguous bases
     if ambig_to_mask:
-        masked.extend([{"qseqid": qseqid, "sseqid": sseqid, "sstart": str(start), "send": str(end)}
-                       for qseqid, sseqid, start, end in find_identical_in_fasta(ambig_to_mask, fasta_fname)])
+        masked.extend([Masked(hsp)
+                       for query_result in find_identical_in_fasta(ambig_to_mask, fasta_fname)
+                       for hit in query_result for hsp in hit.hsps])
     ## remove temporary file if created
     if tmp_to_mask_fname is not None:
         os.remove(tmp_to_mask_fname)
@@ -417,24 +418,21 @@ def blast_mask(to_mask_fname, fasta_fname, fout_fname, blastn = "blastn",
                          'sstart', 'send', 'qstart', 'qend', 'qlen']):
     ## masking criteria: perfect match from end to end
     col_i = {col_name: i for i, col_name in enumerate(header)}
-    is_to_mask = lambda x: (x[col_i["qstart"]] == '1'
-                            and x[col_i["qend"]] == x[col_i["qlen"]]
-                            and x[col_i["mismatch"]] == '0'
-                            and x[col_i["gaps"]] == '0')
-    ## reformat blast output
-    fields_to_keep = ["sseqid", "sstart", "send", "qseqid"]
-    get_pos_dict = lambda x: {col_name: x[col_name] for col_name in fields_to_keep}
+    is_to_mask = lambda query_result, hsp: (hsp.query_start == 0
+                                            and hsp.query_end == query_result.seq_len
+                                            and hsp.mismatch_num == 0
+                                            and hsp.gap_num == 0)
     ## run blast
     from Bio.Blast.Applications import NcbiblastnCommandline
     blast(NcbiblastnCommandline, cmd = blastn, header = header, fout = fout_fname, task = "megablast",
           query = to_mask_fname, subject = fasta_fname)
     ## get perfect matches
-    masked = [get_pos_dict(entry) for entry in tsv_entries_as_dict(fout_fname, header = header,
-                                                                   f_filter = is_to_mask)]
+    from Bio import SearchIO
+    masked = [Masked(hsp)
+              for query_result in SearchIO.parse(fout_fname, "blast-tab", fields = ' '.join(header))
+              for hit in query_result for hsp in hit.hsps
+              if is_to_mask(query_result, hsp)]
     return masked
-    # return [get_pos_dict(x)
-    #         for x in blastn(to_mask_fname, fasta_fname, to_dict = True,
-    #                         task = "megablast", fout = fout_fname) if is_to_mask(x)]
 
 ## mask_fnames, background_fname and reference_fasta can be dict of {<alias>: <path>} or [<path>].
 ##  - if list provided, files will be indexed by well index of position in list.
@@ -451,7 +449,7 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
         to_mask_hits = f"{out_dir}/tmp.tsv"
     else:
         import tempfile
-        to_mask_hits = tempfile.mkstemp()[1]
+        to_mask_hits = tempfile.mkstemp(suffix = ".tsv")[1]
     ## all file paths are assumed to be valid
     ## mask things
     masked = {}
@@ -487,29 +485,23 @@ def mask_and_generate_outside(mask_fnames, background_fnames = None, mask_refere
             for fname, alias in inv_fnames.items():
                 f.write(f"#{alias}\t{fname}\n")
             ## header
-            fields_to_write = ["sseqid", "sstart", "send", "qseqid"]
-            f.write('\t'.join(["source"] + [("molecule" if field == "sseqid"
-                                             else "start" if field == "sstart"
-                                             else "end" if field == "send"
-                                             else "masked" if field == "qseqid" else x)
-                                            for field in fields_to_write]) + '\n')
+            f.write('\t'.join(["source", "molecule", "start", "end", "masked"]) + '\n')
             ## write entries
             for fname, masked_in_f in masked.items():
                 alias = inv_fnames[fname]
                 for entry in masked_in_f:
-                    f.write('\t'.join([str(alias)] + [str(entry[field]) for field in fields_to_write]) + '\n')
+                    f.write('\t'.join([str(alias),
+                                       entry.molecule, str(entry.start+1), str(entry.end), entry.masked]) + '\n')
     ## functions to determine if gRNA sequences is outside masked regions
     ## (to_screen is a dictionary of a blast output entry, where keys are field names)
-    def outside_targets(to_screen, bg_fname):
+    def outside_targets(hsp, bg_fname):
         if bg_fname not in masked:
             return True
         for masked_target in masked[bg_fname]:
-            same_molecule = to_screen["sseqid"] == masked_target["sseqid"]
+            same_molecule = hsp.hit_id == masked_target.molecule
             if same_molecule:
-                within_target = within([to_screen[x] for x in ["sstart", "send"]],
-                                       [masked_target[x] for x in ["sstart", "send"]])
-                if within_target:
-                    return False
+                within_target = masked_target.within((hsp.hit_start, hsp.hit_end))
+                return not within_target
         return True
     return outside_targets
 
@@ -537,9 +529,12 @@ def make_target_feature_ranges_function(feature_only_ranges, feature_gaps_ranges
         for seqid, gaps_ranges in feature_gaps_ranges.items():
             ## skip if q_seqid is a reference sequence and seqid is NOT <reference + same gene as q_seqid>
             if (q_seqid.split('|')[0] == "Reference" and
-                not (re.search("\|complete\|", seqid)
-                     and re.search("\|" + re.escape(re.search("(?<=\|complete\|).+(?=\|\d)", seqid).group(0)) +
-                                   "\|\d+-\d+(,|$)", q_seqid))):
+                not ((re.search("\|complete\|", seqid)
+                      and re.search("\|" + re.escape(re.search("(?<=\|complete\|).+(?=\|\d)", seqid).group(0)) +
+                                    "\|\d+-\d+(,|$)", q_seqid))
+                     or (re.search("\|gene\|", seqid)
+                         and re.search("\|" + '|'.join(seqid.split('|')[5:-1]) + "\|\d+-\d+(,|$)",
+                                       q_seqid)))):
                 continue
             ## keep gaps if the bases of target in the gap is fewer than max_insertion
             ## (i.e. if the target & ref gene were the only 2 in the alignment,
