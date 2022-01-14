@@ -106,10 +106,7 @@ class GFF:
         else: ## GFF3
             def mk_annotation(entry):
                 entry = split_line(entry)
-                try:
-                    return Annotation(entry, self, **self._kwargs)
-                except Exception as e:
-                    print("mk_annotation entry:", entry)
+                return Annotation(entry, self, **self._kwargs)
         return mk_annotation
     
     def iter_raw(self):

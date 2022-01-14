@@ -404,9 +404,9 @@ class MINORgCLI (MINORg):
             raise click.UsageError( ("'--extend-gene <FASTA file>' and '--extend-cds <FASTA file>'"
                                      " should either be used together or not used at all.") )
         elif self.args.ext_gene and self.args.ext_cds:
-            self.ext_gene = self.args.ext_gene
-            self.ext_cds = self.args.ext_cds
-            self.extend_reference()
+            # self.ext_gene = self.args.ext_gene
+            # self.ext_cds = self.args.ext_cds
+            self.extend_reference(self.args.ext_gene, self.args.ext_cds)
         return
     
     def check_target_args(self, standalone = True):

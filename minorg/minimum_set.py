@@ -4,7 +4,7 @@ import sys
 import itertools
 from Bio.Seq import Seq
 
-from functions import (
+from minorg.functions import (
     splitlines,
     fasta_to_dict, dict_to_fasta
 )

@@ -55,8 +55,8 @@ def split_list(val):
 ##  DISPLAY  ##
 ###############
 
-from display import (print_indent, make_print_preindent,
-                     print_overwrite_multi, make_print_overwrite_multi_preindent)
+from minorg.display import (print_indent, make_print_preindent,
+                            print_overwrite_multi, make_print_overwrite_multi_preindent)
 
 def make_local_print(quiet, printf = print):
     def local_print(*args, **kwargs):
