@@ -1,4 +1,4 @@
-from dynamic_logger import *
+from minorg.dynamic_logger import *
 
 # def minorg_logger(fname = None, level = logging.INFO, default_log_level = logging.INFO):
 #     if fname is None: fname = tempfile.mkstemp()[1]

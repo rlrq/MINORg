@@ -64,8 +64,19 @@ class InvalidFeatureID(MessageError):
 #######################
 
 class AnnotatedFeature(GFF):
-    
+    """
+    Representation of GFF3 feature annotation
+    """
     def __init__(self, id, annotated_fasta, gff = None, rps_hits = None):
+        """
+        Creat an AnnotatedFeature object.
+        
+        Arguments:
+            id (str): required, ID of feature (typically gene name or isoform name)
+            annotated_fasta (AnnotatedFasta): required, :class:`AnnotatedFasta` object
+            gff (str or GFF): optional, path to GFF file or :class:`minorg.annotation.GFF` object
+            rps_hits (str): optional, path to RPS-BLAST output (outfmt 6, with header)
+        """
         self.annotated_fasta = annotated_fasta
         self.annotation = (self.annotated_fasta.annotation if gff is None else
                            gff if isinstance(gff, GFF) else GFF(gff))
@@ -375,6 +386,10 @@ class AnnotatedFeature(GFF):
 
 ## inherits from IndexedFasta so AnnotatedFasta_obj["chr"][:50] works
 class AnnotatedFasta(IndexedFasta):
+
+    """
+    Representation of FASTA file with GFF3 annotations
+    """
     
     def __init__(self, fasta, gff, name = None, attr_mod = {}, genetic_code = 1,
                  memsave = True):

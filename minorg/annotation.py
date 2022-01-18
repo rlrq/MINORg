@@ -22,7 +22,9 @@ def get_recursively(d, default, *keys):
     return helper(d, keys)
 
 class GFF:
-    
+    """
+    Representation of GFF3 file
+    """
     def __init__(self, fname = None, data = [], attr_mod = {}, genetic_code = 1, fmt = None,
                  quiet = False, memsave = False, chunk_lines = 1000, **kwargs):
         self._fmt = (fmt if fmt
@@ -332,6 +334,9 @@ class GFF:
         self.write(fout, self.get_id(feature_ids), **kwargs)
 
 class Annotation:
+    """
+    Representation of GFF3 annotation/feature
+    """
     def __init__(self, entry, gff, **kwargs):
         self._gff = gff
         try:
@@ -385,6 +390,9 @@ class Annotation:
     def has_attr(self, a, vals, **kwargs): return self.attributes.has_attr(a, vals, **kwargs)
 
 class Attributes:
+    """
+    Reprsentation of GFF3 feature attributes
+    """
     def __init__(self, val, gff, entry, field_sep_inter = ';', field_sep_intra = ',',
                  **for_dummy_gff):
         self._entry = entry

@@ -44,12 +44,6 @@ from minorg.pam import PAM
 from minorg.log import MINORgLogger
 from minorg.MINORgCLI import MINORgCLI
 
-## import subcommand functions
-from minorg.subcmd_homologue import execute_homologue
-from minorg.subcmd_grna import execute_grna
-from minorg.subcmd_filter import execute_filter
-from minorg.subcmd_minimumset import execute_minimumset
-
 from minorg.extend_reference import extend_reference_cli
 
 from minorg.parse_config import (
@@ -105,16 +99,6 @@ params = minor_g.params
 ## argument parsing functions
 def is_true(value):
     return value is True
-
-def valid_readable_file(pathname):
-    pathname = os.path.abspath(pathname)
-    if not os.path.exists(pathname):
-        raise InvalidPath(pathname)
-    if not os.path.isfile(pathname):
-        raise InvalidFile(pathname)
-    if not os.access(pathname, os.R_OK):
-        raise UnreadableFile(pathname)
-    return pathname
 
 def version_callback(value: bool):
     if value:
@@ -240,10 +224,10 @@ def homologue(
     
     ## check validity of args
     args = Namespace(**locals())
-    minor_g.parse_args(args, "target")
+    minor_g.parse_args(args, "seq")
     
     ## call execute_homologue.
-    minor_g.seq()
+    minor_g.subcmd_seq()
     minor_g.resolve()
     return
 
@@ -340,7 +324,7 @@ def generate_grna(
     minor_g.logfile.devsplain(f"post check: {str(vars(args))}")
     
     ## generate gRNA
-    minor_g.grna()
+    minor_g.subcmd_grna()
     minor_g.resolve()
     return
 
@@ -493,7 +477,7 @@ def filter_grna(
     args = Namespace(**locals())
     minor_g.parse_args(args, "filter")
     minor_g.logfile.devsplain(f"post check: {str(vars(args))}")
-    minor_g.filter()
+    minor_g.subcmd_filter()
     minor_g.resolve()
     # ## check arguments are in order
     # check_reference_args(args)
@@ -584,7 +568,7 @@ def minimumset(
     '''
     args = Namespace(**locals())
     minor_g.parse_args(args, "minimumset")
-    minor_g.minimumset()
+    minor_g.subcmd_minimumset()
     minor_g.resolve()
     return
 
@@ -738,7 +722,7 @@ def full(
     ## check validity of args
     args = Namespace(**locals())
     minor_g.parse_args(args, "full")
-    minor_g.full()
+    minor_g.subcmd_full()
     minor_g.resolve()
     minor_g.logfile.devsplain("heh")
     return
@@ -889,4 +873,5 @@ if __name__ == "__main__":
         minor_g.cleanup()
         raise e
 
-
+minor_g.keep_on_crash = False
+minor_g.cleanup()

@@ -56,11 +56,13 @@ from minorg.functions import (
     ranges_intersect,
     ranges_subtract
 )
-from minorg.subcmd_grna import find_multi_gRNA
+from minorg.generate_grna import find_multi_gRNA
 from minorg.fasta import dict_to_fasta, fasta_to_dict
 from minorg.filter_grna import mask_identical
 from minorg.grna import gRNAHits
 from minorg.pam import PAM
+
+from typing import Optional, Type, Dict
 
 #######################
 ##  PARSE FUNCTIONS  ##
@@ -138,16 +140,37 @@ def valid_aliases(aliases, lookup: dict, raise_error: bool = True, message: str 
 ###############
 
 class PathHandler:
-    def __init__(self, tmp = False, keep_tmp = False, keep_on_crash = False, directory = None):
+    """
+    Tracks new files/directories and temporary files.
+    """
+    def __init__(self, tmp = False, keep_tmp = False, directory = None):
+        """
+        Create a PathHandler object.
+        
+        Arguments:
+            tmp (bool): write files to temporary directory
+                (to be deleted or moved to final output directory using resolve)
+            keep_tmp (bool): retain temporary files/directories
+            directory (str): final output directory (will be directly written into if tmp=False)
+        
+        Attributes:
+            tmp (bool): whether temporary directory is used
+            keep_tmp (bool): whether to retain temporary files/directories
+            out_dir (str): absolute path to final output directory
+            new_dirs (list of str): paths of newly created directories
+            tmp_files (list of str): paths of temporary files/directories
+            tmp_dir (str): path of temporary directory
+            directory (str): path of directory being written into.
+                If tmp=True, this will point to a temporary directory.
+                Else, this will be the output directory.
+        """
         self.out_dir = None if directory is None else os.path.abspath(directory) ## final output directory
-        self.tmp_on = (tmp if self.out_dir is not None else True)
-        self.new_dirs = []
-        self.keep_on_crash = keep_on_crash
+        self.tmp = (tmp if self.out_dir is not None else True)
         self.keep_tmp = keep_tmp
+        self.new_dirs = []
         self.tmp_files = set()
-        self.prefix = None
         ## create temporary directory
-        if self.tmp_on:
+        if self.tmp:
             ## contents to be moved to self.out_dir upon fulfilment of command using self.resolve
             self.tmpdir = tempfile.mkdtemp()
             ## self.directory is used outside PathHandler objects.
@@ -164,6 +187,14 @@ class PathHandler:
             exit
     ## update output directory
     def mv(self, directory):
+        """
+        Update output directory.
+        
+        Contents of the current output directory will also be moved to the new directory.
+        
+        Arguments:
+            directory (str): required, path to new output directory
+        """
         if directory is None: return
         directory = os.path.abspath(directory)
         if directory == self.out_dir: return
@@ -178,6 +209,13 @@ class PathHandler:
         self.out_dir = directory
     ## make directory (or directories)
     def mkdir(self, *directories, tmp = False):
+        """
+        Create directory/directories.
+        
+        Arguments:
+            *directories (str): path
+            tmp (bool): mark directory as temporary (for deletion when self.rm_tmpfiles is called)
+        """
         output = []
         for directory in directories:
             if not os.path.isabs(directory):
@@ -190,12 +228,42 @@ class PathHandler:
         return output[0] if len(directories) == 1 else output
     ## generate fname (usage: self.mkfname('ref', 'tmp.txt'))
     def mkfname(self, *path, tmp = False):
+        """
+        Generate path.
+        
+        If path provided is not absolute, self.directory is assumed to be the root directory.
+        
+        Arguments:
+            *path (str): required, path to output file
+                (e.g. self.mkfname('tmp', 'tmp.fasta') --> <self.directory>/tmp/tmp.fasta)
+            tmp (bool): mark file as temporary (for deletion when self.rm_tmpfiles is called)
+        
+        Returns
+        -------
+        str
+            path
+        """
         if os.path.isabs(os.path.join(*path)): path = os.path.join(*path)
         else: path = os.path.join(self.directory, *path)
         if tmp: self.tmp_files.add(path)
         return path
     ## mkfname, except it also creates path to directory + empty file if they don't already exist
     def reserve_fname(self, *path, tmp = False, newfile = False):
+        """
+        Generate new file.
+        
+        Operates exactly as :meth:`PathHandler.mkfname`, with the additional options of creating an empty file or clearing an existing file.
+        
+        Arguments:
+            *path (str): path to output file
+            tmp (bool): mark file as temporary (for deletion when self.rm_tmpfiles is called)
+            newfile (bool): clear an existing file at destination if it already exists
+        
+        Returns
+        -------
+        str
+            path
+        """
         fname = self.mkfname(*path)
         fdir = os.path.dirname(fname)
         os.makedirs(fdir, exist_ok = True)
@@ -206,6 +274,14 @@ class PathHandler:
         if tmp: self.tmp_files.add(fname)
         return fname
     def rm_tmpfiles(self, *fnames):
+        """
+        Delete all files and directories marked as temporary (in self.tmp_files).
+        
+        Directories will only be deleted if they are empty.
+        
+        Arguments:
+            *fnames (str): optional, path. If provided, only the specified files/directories will be deleted if they are also marked as temporary. Otherwise, all temporary files and directories are deleted.
+        """
         if not self.keep_tmp:
             to_remove = set(fnames if fnames else self.tmp_files)
             files_to_remove = [fname for fname in to_remove if
@@ -220,17 +296,13 @@ class PathHandler:
             ## update tmp_files
             self.tmp_files -= to_remove
         return
-    ## remove files upon mid-execution termination or crash etc.
-    def cleanup(self):
-        if self.tmp_on and self.keep_on_crash and os.path.exists(self.tmpdir):
-            self.resolve()
-        if self.tmp_on and not self.keep_on_crash and os.path.exists(self.tmpdir):
-            print(f"cleaning up {self.tmpdir}")
-            shutil.rmtree(self.tmpdir)
     ## move output files to final output directory
     def resolve(self):
+        """
+        If self.tmp, move output files to final output directory.
+        """
         ## move files to final destination (lol)
-        if self.tmp_on:
+        if self.tmp:
             if self.out_dir:
                 ## create final output directory if doesn't exist
                 if not os.path.exists(self.out_dir):
@@ -257,7 +329,7 @@ class PathHandler:
 # _query_reference = True
 
 # x = MINORg(verbose = _verbose, directory = _directory, config = _config, prefix = _prefix,
-#            tmp = _tmp, keep_tmp = _keep_tmp, keep_on_crash = _keep_on_crash, thread = _thread)
+#            tmp = _tmp, keep_tmp = _keep_tmp, thread = _thread)
 # x.genes = ["AT3G44400", "AT3G44480", "AT3G44670", "AT3G44630"]
 # x.subset_annotation()
 # # [y.get_attr("ID") for y in x.reference["TAIR10"].annotation.get_subfeatures("AT3G44400")]
@@ -293,17 +365,17 @@ class PathHandler:
 # _thread = 1
 
 # # x = MINORg(verbose = _verbose, directory = _directory, config = _config, prefix = _prefix,
-# #            tmp = _tmp, keep_tmp = _keep_tmp, keep_on_crash = _keep_on_crash, thread = _thread)
+# #            tmp = _tmp, keep_tmp = _keep_tmp, thread = _thread)
 
 # x = MINORg(directory = "/mnt/chaelab/rachelle/scripts/minorgpy/test/minorg_nrg", prefix = "test",
-#            tmp = False, keep_tmp = True, keep_on_crash = True, thread = 1)
+#            tmp = False, keep_tmp = True, thread = 1)
 # x.genes = ["AT5G66900", "AL8G44500.v2.1"]
 # x.add_reference("TAIR10", "/mnt/chaelab/shared/genomes/TAIR10/fasta/a_thaliana_all.fasta", "/mnt/chaelab/rachelle/scripts/minorgpy/test/full/test_full_NRG1_1/reduced_ann/reduced.TAIR10.gff", replace = True)
 # x.add_reference("araly2", "/mnt/chaelab/rachelle/data/Alyrata/v2.1/Alyrata_384_v1.fa", "/mnt/chaelab/rachelle/scripts/minorgpy/test/full/test_full_NRG1_1/reduced_ann/reduced.araly2.gff")
 # x.subset_annotation()
 # # [y.get_attr("ID") for y in x.reference["TAIR10"].annotation.get_subfeatures(x.genes)]
 # x.query_reference = True
-# x.target()
+# x.seq()
 # x.grna()
 # x.screen_reference = True
 # x.filter_background()
@@ -318,72 +390,128 @@ class PathHandler:
 class MINORg (PathHandler):
     """
     Tracks parameters, intermediate files, and output file for reuse.
+    
+    >>> from minorg.MINORg import MINORg
+    >>> my_minorg = MINORg(directory = "/my/output/directory", 
+                           prefix = "test", tmp = False, keep_tmp = True, thread = 1)
+    >>> my_minorg.add_reference("TAIR10", "/path/to/TAIR10_Chr.all.fasta", "/path/to/TAIR10_GFF3.genes.gff", replace = True)
+    >>> my_minorg.add_reference("araly2", "/path/to/Alyrata_384_v1.fa", "/path/to/Alyrata_384_v2.1.gene.gff3")
+    >>> my_minorg.genes = ["AT5G66900", "AL8G44500.v2.1"]
+    >>> my_minorg.subset_annotation()
+    >>> [y.get_attr("ID") for y in my_minorg.reference["TAIR10"].annotation.get_subfeatures(x.genes)]
+    [['AT5G66900.1']]
+    >>> [y.get_attr("ID") for y in my_minorg.reference["TAIR10"].annotation.get_subfeatures(x.genes)]
+    [['AL8G44500.t1.v2.1']]
+    >>> my_minorg.query_reference = True
+    >>> my_minorg.seq()
+    >>> my_minorg.grna()
+    >>> my_minorg.screen_reference = True
+    >>> my_minorg.filter_background()
+    >>> my_minorg.grna_hits.filter_seqs("background")
+    gRNAHits(len = 352)
+    >>> my_minorg.filter_gc()
+    >>> my_minorg.grna_hits.filter_seqs("GC")
+    gRNAHits(len = 370)
+    >>> my_minorg.grna_hits.filter_seqs("background", "GC")
+    gRNAHits(len = 321)
+    >>> my_minorg.filter_feature()
+    Max acceptable insertion length: 15
+    >>> my_minorg.grna_hits.filter_hits("feature")
+    gRNAHits(len = 344)
+    >>> my_minorg.passed_grna
+    gRNAHits(len = 278)
+    >>> my_minorg.minimumset()
+    >>> my_minorg.resolve()
+
     """
-    def __init__(self, verbose = False, directory = None, config = None, prefix = None,
-                 keep_tmp = False, thread = None, **kwargs):
-        """
-        Create a MINORg object.
+    def __init__(self, directory = None, config = None, prefix = None,
+                 thread = None, keep_tmp = False, **kwargs):
+        """Create a MINORg object.
         
         Arguments:
-        - directory - path to output directory (string)
-        - config - path to config.ini file (string)
-        - prefix - prefix for output directories and files (string)
-        - thread - maximum number of threads for parallel processing (integer)
-        - keep_tmp - retain temporary files (bool)
+            directory (str): path to output directory
+            config (str): path to config.ini file
+            prefix (str): prefix for output directories and files
+            thread (int): maximum number of threads for parallel processing
+            keep_tmp (bool): retain temporary files
+            **kwargs: other arguments supplied to parent class :class:`PathHandler`
         
         Attributes:
-        - prefix - prefix for output directories and files (string)
-        - thread - maximum number of threads for parallel processing (integer)
-        - rpsblast - path to rpsblast or rpsblast+ executable (string)
-        - blastn - path to blastn executable (string)
-        - mafft - path to mafft executable (string)
-        - db - path to local RPS-BLAST database (string)
-        - remote_rps - use remote database instead of local database for RPS-BLAST (bool)
-        - pssmids - list of Pssm-Ids of domain(s) for homologue search. If multiple Pssm-Ids are provided, overlapping domain hits will be merged. (list of string)
-        - domain_name - human-readable domain name used in sequence and file names in place of Pssm-Ids (string)
-        - genes - list of target gene IDs (list of string)
-        - query_reference - include reference genes as targets for gRNA discovery (bool)
+            prefix (str): [general] prefix for output directories and files
+            thread (int): [general] maximum number of threads for parallel processing
+            
+            blastn (str): [executable] path to blastn executable
+            rpsblast (str): [executable] path to rpsblast or rpsblast+ executable
+            mafft (str): [executable] path to mafft executable
+            
+            db (str): [RPS-BLAST option] path to local RPS-BLAST database
+            remote_rps (bool): [RPS-BLAST option] use remote database instead of local database for RPS-BLAST
+            
+            pssmid (list of str):
+                [target] list of Pssm-Ids of domain(s) for homologue search. 
+                If multiple Pssm-Ids are provided, overlapping domains will be merged.
+            domain_name (str): human-readable domain name used in sequence and file names in place of Pssm-Ids
+            genes (list or str): [target] list of target gene IDs
+            query_reference (bool): [target] include reference genes as targets
+            
+            minlen (int): [target: homologue] minimum homologue length (bp)
+            minid (float): [target: homologue] minimum hit % identity
+            mincdslen (int):
+                [target: homologue] minimum number of bases in homologue aligned with reference gene CDS
+            merge_within (int): [target: homologue] maximum distance (bp) between hits for merging
+            check_recip (bool): [target: homologue] execute reciprocal check
+            relax_recip (bool): [target: homologue] execute relaxed reciprocal check
+            check_id_before_merge (bool):
+                [target: homologue] filter out hits by % identity before merging into potential homologues
         
-        Attibutes (homologue discovery):
-        - minlen - minimum homologue length (bp) (int)
-        - minid - minimum hit % identity (float)
-        - mincdslen - minimum number of bases in homologue aligned with reference gene CDS (int)
-        - check_recip - execute reciprocal check (bool)
-        - relax_recip - execute relaxed reciprocal check (bool)
-        - check_id_before_merge - filter out hits by % identity before merging into potential homologues (bool)
-        - merge_within - maximum distance (bp) between hits for merging (int)
+            length (int): [grna] gRNA length (bp)
+            pam (str): [grna] PAM pattern
+            
+            screen_reference (bool): [filter: background] include reference genome for screening
+            ot_pamless (bool): [filter: background] ignore absence of PAM when assessing off-target gRNA hits
+            offtarget (func):
+                [filter: background] function that accepts Biopython's HSP and QueryResult objects and determines whether an off-target gRNA hit is problematic.
+                If not set by user, ot_mismatch and ot_gap will be used
+                ## TODO!!! integrate this somehow?
+            ot_mismatch (int):
+                [filter: background] minimum number of mismatches allowed for off-target gRNA hits
+            ot_gap (int): [filter: background] minimum number of gaps allowed for off-target gRNA hits
+            
+            gc_min (float):
+                [filter: GC] minimum GC content (between 0 and 1, where 0 is no GC content and 1 is all GC)
+            gc_max (float):
+                [filter: GC] maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)
+            
+            feature (str): [filter: feature] GFF3 feature within which gRNA are to be designed
+            max_insertion (int): [filter: feature] maximum allowable insertion size in feature (bp)
+            min_within_n (int):
+                [filter: feature] minimum number of reference genes which feature a gRNA must align within
+            min_within_fraction (float): 
+                [filter: feature] minimum fraction of reference genes which feature a gRNA must align within
+                (between 0 and 1, where 0 is none and 1 is all; if 0, min_within_n will be set to 1)
+            
+            sets (int): [minimumset] number of sets to generate
+            auto (bool): [minimumset] generate sets without requiring manual user confirmation for each set
+            accept_invalid (bool): [minimumset] score 'NA' as 'pass'
+            accept_feature_unknown (bool): [minimumset] score 'NA' as 'pass' for feature check
+            accept_invalid_field (bool): [minimumset] score 'NA' as 'pass' if all entries for a check are 'NA'
+            pass_map (str):
+                [minimumset] path to output .map file for gRNA that pass all valid checks
+                (autogenerated by MINORg if not provided)
+            pass_fasta (str):
+                [minimumset] path to output .fasta file for gRNA that pass all valid checks
+                (autogenerated by MINORg if not provided)
+            final_map (str):
+                [minimumset] path to output .map file for final gRNA set(s)
+                (autogenerated by MINORg if not provided)
+            final_fasta (str):
+                [minimumset] path to output .fasta file for final gRNA set(s)
+                (autogenerated by MINORg if not provided)
         
-        Attributes (gRNA):
-        - length - gRNA length (bp) (int)
-        - pam - PAM pattern (string)
-        
-        Attributes (background filter):
-        - screen_reference - include reference genome for screening (bool)
-        - ot_pamless - ignore absence of PAM when assessing off-target gRNA hits (bool)
-        - offtarget - function that accepts Biopython's HSP and QueryResult objects and determines whether an off-target gRNA hit is problematic; if not set by user, ot_mismatch and ot_gap will be used (func) ## TODO!!! integrate this somehow?
-        - ot_mismatch - minimum number of mismatches allowed for off-target gRNA hits (int)
-        - ot_gap - minimum number of gaps allowed for off-target gRNA hits (int)
-        
-        Attributes (GC filter):
-        - gc_min - minimum GC content (between 0 and 1, where 0 is no GC content and 1 is all GC) (float)
-        - gc_max - maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC) (float)
-        
-        Attributes (feature filter):
-        - feature - GFF3 feature within which gRNA are to be designed (string)
-        - max_insertion - maximum allowable insertion size in feature (bp) (int)
-        - min_within_n - minimum number of reference genes which feature a gRNA must align within (bool)
-        - min_within_fraction - minimum fraction of reference genes which feature a gRNA must align within (between 0 and 1, where 0 is none and 1 is all; if 0, min_within_n will be set to 1) (float)
-        
-        Attributes (minimum set):
-        - sets - number of sets to generate (int)
-        - auto - generate sets without requiring manual user confirmation for each set (bool)
-        - accept_invalid - score 'NA' as 'pass' (bool)
-        - accept_feature_unknown - score 'NA' as 'pass' for feature check (bool)
-        - accept_invalid_field - score 'NA' as 'pass' if all entries for a check are 'NA' (bool)
-        - pass_map - path to output .map file for gRNA that pass all valid checks (autogenerated by MINORg if not provided) (string)
-        - pass_fasta - path to output .fasta file for gRNA that pass all valid checks (autogenerated by MINORg if not provided) (string)
-        - final_map - path to output .map file for final gRNA set(s) (autogenerated by MINORg if not provided) (string)
-        - final_fasta - path to output .fasta file for final gRNA set(s) (autogenerated by MINORg if not provided) (string)
+        Returns
+        -------
+        :class:`~minorg.MINORg.MINORg`
+            a MINORg object
         """
         self.verbose = False
         super().__init__(directory = directory, keep_tmp = keep_tmp, **kwargs)
@@ -471,28 +599,73 @@ class MINORg (PathHandler):
         self.accept_invalid_field = True
     ## getters
     @property
-    def query_map(self): return [(str(k), v) for k, v in self.query.items()]
+    def query_map(self):
+        """
+        Mapping of alias to FASTA for queries.
+        
+        :getter: Returns list of (<alias>, </path/to/FASTA>)
+        :type: list
+        """
+        return [(str(k), v) for k, v in self.query.items()]
     @property
     def domain_name(self):
+        """
+        Domain name for use in sequence IDs and file names
+        
+        :getter: Returns domain name if set, else 'gene' not :attr:`MINORg.pssmids`, else dash-separated :attr:`MINORg.pssmids`
+        :setter: Sets domain name
+        :type: str
+        """
         if self._domain_name is not None: return self._domain_name
         elif not self.pssmids: return "gene"
         elif non_string_iter(self.pssmids): return '-'.join(self.pssmids)
         else: return self.pssmids
     @property
     def check_recip(self):
+        """
+        Whether to execute reciprocal check
+        
+        :getter: Returns True if MINORg.check_recip=True OR MINORg.relax_recip=True
+        :setter: Sets this check
+        :type: bool
+        """
         ## return True if self.relax_recip is raised
         return self.relax_recip or self._check_recip
     @property
     def assemblies(self):
+        """
+        Reference assemblies
+        
+        :getter: Returns {<alias>: </path/to/FASTA>}
+        :type: dict
+        """
         return {alias: ref.fasta for alias, ref in self.reference.items()}
     @property
     def annotations(self):
+        """
+        Reference annotations
+        
+        :getter: Returns {<alias>: </path/to/GFF3>}
+        :type: dict
+        """
         return {alias: ref._gff for alias, ref in self.reference.items()}
     @property
     def attr_mods(self):
+        """
+        Attribute modifications
+        
+        :getter: Returns {<reference alias>: <dict of attribute modifications>}
+        :type: dict
+        """
         return {alias: ref.attr_mod for alias, ref in self.reference.items()}
     @property
     def offtarget(self): ## TODO!!! integrate this somehow?
+        """
+        Function to assess off-target goodness of alignment
+        
+        :getter: Returns function that accepts HSP and QueryResult
+        :type: func
+        """
         if self._offtarget:
             return self._offtarget
         else:
@@ -501,12 +674,33 @@ class MINORg (PathHandler):
                               max_gap = max(1, self.ot_gap)-1)
     @property
     def pam(self):
+        """
+        PAM pattern
+        
+        :getter: Returns expanded PAM pattern (includes explicit position of gRNA; e.g. '.NGG')
+        :setter: Sets PAM pattern and parses it into expanded PAM pattern
+        :type: str
+        """
         return self._pam
     @property
     def length(self):
+        """
+        gRNA length
+        
+        :getter: Returns gRNA length (bp)
+        :setter: Sets gRNA length and updates MINORg.PAM
+        :type: int
+        """
         return self._length
     @property
     def feature(self): ## returns first feature if multiple are present
+        """
+        Target feature
+        
+        :getter: Returns first feature if multiple have been provided
+        :setter: Sets target feature
+        :type: str
+        """
         if non_string_iter(self._feature):
             if len(self._feature) == 1: return tuple(self._feature)[0]
             elif len(self._feature) == 0: return None
@@ -514,10 +708,24 @@ class MINORg (PathHandler):
         else: return self._feature
     @property
     def features(self):
+        """
+        Target features
+        
+        :getter: Returns list of target feature(s)
+        :type: list
+        """
         if non_string_iter(self._feature): return self._feature
         else: return [self._feature]
     @property
     def passed_grna(self):
+        """
+        gRNA that have passed background, GC, and feature checks
+        
+        Relevant attributes: accept_invalid, accept_invalid_field
+        
+        :getter: Returns gRNA that have passed checks
+        :type: gRNAHits
+        """
         filtered = self.grna_hits.filter_seqs("background", "GC",
                                               ignore_invalid = self.accept_invalid,
                                               ignore_invalid_field = self.accept_invalid_field)
@@ -552,12 +760,12 @@ class MINORg (PathHandler):
     ## update 'mv' so that it also moves logfile
     def mv(self, directory):
         """
-        Update output directory. 
+        Update output directory.
         
         Contents of the current output directory will also be moved to the new directory.
         
         Arguments:
-        - directory: required path to new output directory (string)
+            directory (str): required, path to new output directory
         """
         super().mv(directory)
         ## move logfile
@@ -571,9 +779,9 @@ class MINORg (PathHandler):
         If path provided is not absolute, self.directory is assumed to be the root directory.
         
         Arguments:
-        - *path - required path to output file (e.g. self.mkfname('tmp', 'tmp.fasta')) (string)
-        - tmp - mark file as temporary (for deletion when self.rm_tmpfiles is called) (bool)
-        - prefix - prefix self.prefix to basename
+            *path (str): required, path to output file (e.g. self.mkfname('tmp', 'tmp.fasta'))
+            tmp (bool): mark file as temporary (for deletion when self.rm_tmpfiles is called)
+            prefix (bool): prefix self.prefix to basename
         """
         if path and prefix:
             path_last = path[-1]
@@ -585,13 +793,13 @@ class MINORg (PathHandler):
         """
         Generate new file name in results directory (<self.directory>/<self.prefix>).
         
-        Operates exactly as mkfname, with the additional options of creating an empty file or clearing an existing file.
+        Operates exactly as :meth:`MINORg.mkfname`, with the additional options of creating an empty file or clearing an existing file.
         
         Arguments:
-        - *path - path to output file (string)
-        - reserve - create empty file at destination if it does not exist (bool)
-        - newfile - clear an existing file at destination if it already exists (bool)
-        - other arguments supplied to mkfname
+            *path (str): path to output file
+            reserve (bool): create empty file at destination if it does not exist
+            newfile (bool): clear an existing file at destination if it already exists
+            **kwargs: other arguments supplied to :meth:`MINORg.mkfname`
         """
         fpath = os.path.dirname(self.mkfname(self.prefix, *path))
         ## create directory if directory path does not currently exist
@@ -605,8 +813,13 @@ class MINORg (PathHandler):
         Extract attribute of sequence from sequence name (for sequences generated by self.target)
         
         Arguments:
-        - seqid - required sequence name (string)
-        - attr - required attribute to return. Valid attributes: 'gene', 'feature', 'source'. (string)
+            seqid (str): required, sequence name
+            attr (str): required, attribute to return.
+                Valid attributes: 'gene', 'feature', 'source'.
+        
+        Returns
+        -------
+        str
         """
         if attr == "gene": return re.search(self.ref_seqid_gene_pattern, seqid).group(0)
         elif attr == "feature": return re.search(self.ref_seqid_feature_pattern, seqid).group(0)
@@ -622,8 +835,9 @@ class MINORg (PathHandler):
         Add file for background filter.
         
         Arguments:
-        - fname - required path to file (string)
-        - alias - optional alias. Used when writing mask report and for removing background. (string)
+            fname (str): required, path to file
+            alias (str): optional, alias for background file.
+                Used when writing mask report and for removing background.
         """
         if not alias:
             alias = f"bg_{str(len(self.background) + 1).zfill(3)}"
@@ -635,7 +849,7 @@ class MINORg (PathHandler):
         Remove file for background filter.
         
         Arguments:
-        - alias - required alias (string)
+            alias (str): required, alias of background file to remove
         """
         if alias not in self.background:
             raise MessageError(f"'{alias}' is not a valid background alias.")
@@ -647,7 +861,7 @@ class MINORg (PathHandler):
         Read candidate gRNA from .map file output by MINORg.
         
         Arguments:
-        - fname - required path to MINORg .map file
+            fname (str): required, path to MINORg .map file
         """
         grna_hits = gRNAHits()
         grna_hits.parse_from_mapping(fname, version = None)
@@ -658,7 +872,7 @@ class MINORg (PathHandler):
         Rename candidate gRNA according to FASTA file.
         
         Arguments:
-        - fasta - required path to FASTA file
+            fasta (str): required, path to FASTA file
         """
         self.grna_hits.rename_seqs(fasta)
     
@@ -667,7 +881,8 @@ class MINORg (PathHandler):
         Write FASTA file of all candidate gRNA.
         
         Arguments:
-        - fout - optional absolute path to output file. Autogenerated using self.prefix and self.directory if not provided. (string)
+            fout (str): optional, absolute path to output file.
+                Autogenerated using self.prefix and self.directory if not provided.
         """
         if fout is None: fout = get_val_default(self.grna_fasta, self.results_fname("gRNA_all.fasta"))
         self.grna_fasta = fout
@@ -678,8 +893,9 @@ class MINORg (PathHandler):
         Write .map file of all candidate gRNA.
         
         Arguments:
-        - fout - optional absolute path to output file. Autogenerated using self.prefix and self.directory if not provided. (string)
-        - write_checks - include check status (bool)
+            fout (str): optional, absolute path to output file.
+                Autogenerated using self.prefix and self.directory if not provided.
+            write_checks (bool): write all check statuses
         """
         if fout is None: fout = get_val_default(self.grna_map, self.results_fname("gRNA_all.map"))
         self.grna_map = fout
@@ -690,7 +906,8 @@ class MINORg (PathHandler):
         Write FASTA file of gRNA that pass all valid checks.
         
         Arguments:
-        - fout - optional absolute path to output file. Autogenerated using self.prefix and self.directory if not provided. (string)
+            fout (str): optional, absolute path to output file.
+                Autogenerated using self.prefix and self.directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_fasta, self.results_fname("gRNA_pass.fasta"))
         self.passed_grna.write_fasta(fout, write_all = True)
@@ -700,7 +917,8 @@ class MINORg (PathHandler):
         Write .map file of gRNA that pass all valid checks.
         
         Arguments:
-        - fout - optional absolute path to output file. Autogenerated using self.prefix and self.directory if not provided. (string)
+            fout (str): optional, absolute path to output file.
+                Autogenerated using self.prefix and self.directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_map, self.results_fname("gRNA_pass.map"))
         self.passed_grna.write_mapping(fout, version = 2, write_all = True, write_checks = False)
@@ -712,6 +930,10 @@ class MINORg (PathHandler):
     def _parse_reference(self, reference = None, reference_set = None):
         """
         Parse reference assembly and annotation read from config.ini file into self.params.
+        
+        Arguments:
+            reference (str): alias of reference genome
+            reference_set (str): alias of or path to reference set file
         """
         ## parse reference lookup
         val_ref_set = parse_lookup(get_val_default(reference_set, self.params.reference_set.default),
@@ -756,12 +978,12 @@ class MINORg (PathHandler):
         Add reference genome.
         
         Arguments:
-        - alias - required name of fasta-annotation combo (string)
-        - fasta - required path to fasta file (string)
-        - annotation - required path to GFF3 file (string)
-        - genetic_code - NCBI genetic code (default=1) (string or int)
-        - attr_mod - mapping for non-standard attribute field names in GFF3 file (default={}) (dict)
-        - replace - replace any existing reference with same alias (default=False) (bool)
+            alias (str): required, name of fasta-annotation combo
+            fasta (str): required, path to fasta file
+            annotation (str): required path to GFF3 file
+            genetic_code (str or int): NCBI genetic code (default=1)
+            attr_mod (dict): mapping for non-standard attribute field names in GFF3 file (default={})
+            replace (bool): replace any existing reference with same alias (default=False)
         """
         if alias in self.reference and not replace:
             raise Exception(f"ID '{alias}' is already in use.")
@@ -773,7 +995,7 @@ class MINORg (PathHandler):
         Remove reference genome.
         
         Arguments:
-        - alias - required alias (string)
+            alias (str): required, alias of reference genome
         """
         if alias in self.reference:
             del self.reference[alias]
@@ -812,8 +1034,8 @@ class MINORg (PathHandler):
         Reduces annotation lookup time.
         
         Arguments:
-        - quiet - silence printing of non-essential messages (bool)
-        - sort - sort subset data (bool)
+            quiet (bool): silence printing of non-essential messages
+            sort (bool): sort subset data
         """
         if self.genes:
             self._subset_annotation(self.genes, quiet = quiet, sort = sort)
@@ -827,8 +1049,8 @@ class MINORg (PathHandler):
         Sequence IDs of gene sequences in ext_gene file(s) should not be repeated and should not contain '|'. Sequences in ext_cds file(s) should be named <sequence ID in ext_gene file(s)>.<int> to indicate their parent gene. Corresponding gene and CDS sequences will be aligned with mafft for inference of CDS range in genes.
         
         Arguments:
-        - ext_gene - required path to file or list of paths to files of gene sequences (string or list)
-        - ext_cds - required path to file or list of paths to files of CDS sequences (string or list)
+            ext_gene (str or list): required, path to file or list of paths to files of gene sequences
+            ext_cds (str or list): required, path to file or list of paths to files of CDS sequences
         """
         # if not (self.ext_gene and self.ext_cds):
         #     return
@@ -900,26 +1122,35 @@ class MINORg (PathHandler):
                           # apply_template_to_dict=False,
                           **fouts):
         """
-        Return dictionary of sequence(s) of reference genes or isoforms (specified in self.genes), grouped by feature. Format: {<feature>: {<seqid>: <seq>}}
+        Get sequence(s) of reference genes or isoforms.
         
         If self.pssmids is provided, sequences are restricted to the relevant domain(s).
         
-        Output sequence name, which will be parsed by string.Template, may be customised. The default template is "Reference|$source|$gene|$isoform|$feature|$n".
-        $source: reference genome alias
-        $gene: gene/isoform ID
-        $isoform: isoform ID if by_gene = False, else same as $gene
-        $feature: GFF3 feature type
-        $n: if multiple domains are present, they will be numbered according to proximity to 5' of sense strand
-        
         Arguments:
-        - *features - optional GFF3 feature type(s) to retrieve. If not specified, sequence of the gene or isoform will be retrieved directly. (string)
-        - ref - alias of reference genome from which to extract sequences. If not specified, all reference genomes will be searched for genes. (string)
-        - seqid_template - template for sequence name, format according to stings.Template. (string)
-        - adj_dir - output sense strand (bool)
-        - by_gene - merge sequences from all isoforms of a gene (bool)
-        - translate - translate sequence. Should be used with adj_dir. (bool)
-        - fout - optional path to output file if *features is not specified (string)
-        - **fouts - path to output files for each feature (e.g. self.get_reference_seq("CDS", CDS = <path to file>) --> returns dict AND writes to file) (string)
+            *features (str): optional, GFF3 feature type(s) to retrieve
+                If not specified, sequence of the gene or isoform will be retrieved directly.
+            ref (str): optional, alias of reference genome from which to extract sequences.
+                If not specified, all reference genomes will be searched for genes.
+            seqid_template (str): optional, template for output sequence name.
+                Template will be parsed by strings.Template.
+                The default template is "Reference|$source|$gene|$isoform|$feature|$n".
+                    $source: reference genome alias\n
+                    $gene: gene/isoform ID\n
+                    $isoform: isoform ID if by_gene = False, else same as $gene\n
+                    $feature: GFF3 feature type\n
+                    $n: if multiple domains are present, they will be numbered according to proximity to 5' of sense strand
+            adj_dir (bool): output sense strand
+            by_gene (bool): merge sequences from all isoforms of a gene
+            translate (bool): translate sequence. Should be used with adj_dir.
+            fout (str): optional, path to output file if features is not specified.
+            **fouts (str): optional, path to output files for each feature if features is specified.
+                Example: self.get_reference_seq("CDS", CDS = <path to file>) returns dict AND writes to file
+        
+        Returns
+        -------
+        dict
+            sequence(s) of reference genes or isoforms (specified in self.genes), grouped by feature.
+            Format: {<feature>: {<seqid>: <seq>}}
         """
         return self._get_reference_seq(self.genes, *features, adj_dir = adj_dir,
                                        by_gene = by_gene, ref = ref,
@@ -997,12 +1228,12 @@ class MINORg (PathHandler):
         All arguments are optional. If not provided, the corresponding value stored in self's attributes will be used.
         
         Arguments:
-        - minlen - optional. See attributes. (int)
-        - minid - optional. See attributes. (float)
-        - mincdslen - optional. See attributes. (int)
-        - check_recip - optional. See attributes. (bool)
-        - relax_recip - optional. See attributes. (bool)
-        - check_id_before_merge - optiona. See attributes. (bool)
+            minlen (int): optional. See attributes.
+            minid (float): optional. See attributes.
+            mincdslen (in): optional. See attributes.
+            check_recip (bool): optional. See attributes.
+            relax_recip (bool): optional. See attributes.
+            check_id_before_merge (bool): optional. See attributes.
         """
         if not self.genes:
             raise Exception("Requires self.genes (list of gene IDs)")
@@ -1021,11 +1252,11 @@ class MINORg (PathHandler):
         self.target = fout
         return
     
-    def homologue(self, **kwargs):
-        return self.seq(**kwargs)
+    # def homologue(self, **kwargs):
+    #     return self.seq(**kwargs)
     
-    def homolog(self, **kwargs):
-        return self.seq(**kwargs)
+    # def homolog(self, **kwargs):
+    #     return self.seq(**kwargs)
     
     ####################
     ##  SUBCMD: gRNA  ##
@@ -1038,17 +1269,14 @@ class MINORg (PathHandler):
             length = self.length
         return find_multi_gRNA(fname, pam = pam, gRNA_len = length)
     
-    def generate_grna(self):
-        self.grna_hits = self._generate_grna(self.target, pam = self.pam, length = self.length)
-        self.write_all_grna_fasta()
-        # self.grna_hits.write_fasta(self.grna_fasta, write_all = True)
-        return
-    
     def grna(self):
         """
         Generate all possible gRNA from self.target file based on self's attributes: pam, length.
         """
-        return self.generate_grna()
+        self.grna_hits = self._generate_grna(self.target, pam = self.pam, length = self.length)
+        self.write_all_grna_fasta()
+        # self.grna_hits.write_fasta(self.grna_fasta, write_all = True)
+        return
     
     ######################
     ##  SUBCMD: FILTER  ##
@@ -1081,7 +1309,7 @@ class MINORg (PathHandler):
         Details masked regions as well as which sequence each region is identical to.
         
         Arguments:
-        - fout - required path to output file (string)
+            fout (str): required, path to output file
         """
         with open(fout, 'w') as f:
             inv_fnames = {fname: alias for alias, fname in
@@ -1109,11 +1337,16 @@ class MINORg (PathHandler):
     
     def is_offtarget_pos(self, hsp, ifasta):
         """
-        Return whether a HSP hit is outside of a masked region.
+        Check whether gRNA hit is outside masked target regions.
         
         Arguments:
-        - hsp: required Biopython's HSP object
-        - ifasta: required IndexedFasta object
+            hsp (Biopython HSP): required
+            ifasta (IndexedFasta): required, subject of BLAST search
+        
+        Returns
+        -------
+        bool
+            whether a HSP hit is outside of a masked region
         """
         return self._is_offtarget_pos(hsp, ifasta)
     
@@ -1130,11 +1363,19 @@ class MINORg (PathHandler):
     
     def is_offtarget_aln(self, hsp, query_result, **kwargs):
         """
-        Return whether a HSP hit meets the threshold for problematic off-target gRNA hit.
+        Check whether (potentially off-target) gRNA hit aligns too well.
+        
+        Used in combination with is_offtarget_pos to determine if an off-target gRNA hit could be problematic.
         
         Arguments:
-        - hsp - required Biopython's HSP object
-        - query_result - required Biopython's QueryResult object
+            hsp (Biopython HSP): required
+            query_result (Biopython QueryResult): required
+            **kwargs: other arguments supplied passed to :meth:`MINORg._is_offtarget_aln`
+        
+        Returns
+        -------
+        bool
+            whether a HSP hit meets the threshold for problematic off-target gRNA hit
         """
         return self._is_offtarget_aln(hsp, query_result, **kwargs)
     
@@ -1166,12 +1407,17 @@ class MINORg (PathHandler):
     
     def is_offtarget_pam(self, hsp, query_result, ifasta):
         """
-        Return whether a HSP hit is in close proximity and correct orientation to a PAM site.
+        Check for presence of PAM in close proximity and correct orientation to gRNA hit.
         
         Arguments:
-        - hsp - required Biopython's HSP object
-        - query_result - required Biopython's QueryResult object
-        - ifasta - required IndexedFasta object
+            hsp (Biopython HSP): required
+            query_result (Biopython QueryResult): required
+            ifasta (IndexedFasta): required
+        
+        Returns
+        -------
+        bool
+            whether a HSP hit is in close proximity and correct orientation to a PAM site
         """
         if self.ot_pamless: return True
         return self._has_pam(hsp, query_result, ifasta)
@@ -1179,14 +1425,19 @@ class MINORg (PathHandler):
     ## function to judge if off-target crosses threshold
     def is_offtarget_hit(self, hsp, query_result, ifasta):
         """
-        Return whether a gRNA hit is off-target and problematic.
+        Check whether a gRNA hit aligns too well outside of masked target regions.
         
-        Output is: is_offtarget_pos AND is_offtarget_aln AND is_offtarget_pam for a given HSP, QueryResult, and FASTA file combination.
+        Determined by is_offtarget_pos AND is_offtarget_aln AND is_offtarget_pam for a given HSP, QueryResult, and FASTA file combination.
         
         Arguments:
-        - hsp - required Biopython's HSP object
-        - query_result - required Biopython's QueryResult object
-        - ifasta - required IndexedFasta object
+            hsp (Biopython HSP): required
+            query_result (Biopython QueryResult): required
+            ifasta (IndexedFasta): required
+        
+        Returns
+        -------
+        bool
+            whether a gRNA hit is off-target and problematic
         """
         ifasta = IndexedFasta(ifasta)
         return self.is_offtarget_pos(hsp, ifasta) and self.is_offtarget_aln(hsp, query_result) and \
@@ -1218,20 +1469,14 @@ class MINORg (PathHandler):
         
         Masks target sequences in all FASTA files to be screened for off-target, BLASTs all candidate gRNAs to those FASTA files, and assesses each BLAST hit individually for whether they could potentially be problematic.
         
-        Arguments:
-        - keep_blast_output - retain BLAST output file. Default behaviour deleters it. (bool)
-        - mask_reference - mask reference genes (bool)
-        - *other_mask_fnames - optional paths to other FASTA files not in self.background that are also to be screened for off-target (string)
-        
-        Relevant attributes:
-        - screen_reference
-        - ot_pamless
-        - ot_mismatch
-        - ot_gap
+        Relevant attributes: screen_reference, ot_pamless, ot_mismatch, ot_gap
 
-        Relevant methods:
-        - add_background
-        - remove_background
+        Relevant methods: add_background, remove_background
+        
+        Arguments:
+            keep_blast_output (bool): retain BLAST output file. Default behaviour deletes it.
+            mask_reference (bool): mask reference genes (default=True)
+            *other_mask_fnames (str): optional, paths to other FASTA files not in self.background that are also to be screened for off-target
         """
         if not self.grna_hits:
             raise MessageError( ("MINORg.filter_background requires self.grna_hits"
@@ -1276,8 +1521,8 @@ class MINORg (PathHandler):
         Set GC check for candidate gRNA.
         
         Arguments:
-        - gc_min - optional. See attributes. (float)
-        - gc_max - optional. See attributes. (float)
+            gc_min (float): optional. See attributes.
+            gc_max (float): optional. See attributes.
         """
         gc_min = get_val_default(gc_min, self.gc_min)
         gc_max = get_val_default(gc_max, self.gc_max)
@@ -1306,7 +1551,7 @@ class MINORg (PathHandler):
         CDS are first aligned. Full genes are then added to the alignment.
         
         Arguments:
-        - fout - required path to output FASTA file (string)
+            fout (str): required, path to output FASTA file
         """
         if not self.ref_cds and self.ref_gene:
             raise MessageError( ("MINORg.align_reference_and_targets requires"
@@ -1353,7 +1598,7 @@ class MINORg (PathHandler):
         Align reference genes and targets. Path to FASTA file generated will be stored in self.alignment.
         
         Arguments:
-        - domain_name - optional domain name to be used when naming output file (string)
+            domain_name (str): optional, domain name to be used when naming output file
         """
         if not self.ref_cds and self.ref_gene and self.target:
             raise MessageError( ("MINORg.align_reference_and_targets requires"
@@ -1388,9 +1633,9 @@ class MINORg (PathHandler):
         Range(s) for desired feature of inferred homologue targets discoverd by MINORg will be inferred based on alignment with reference genes based on self's attributes: max_insertion
         
         Arguments:
-        - max_insertion - optional. See attributes. (int)
-        - min_within_n - optional. See attributes. (int)
-        - min_within_fraction - optional. See attributes. (float)
+            max_insertion (int): optional. See attributes.
+            min_within_n (int): optional. See attributes.
+            min_within_fraction (float): optional. See attributes.
         """
         max_insertion = get_val_default(max_insertion, self.max_insertion)
         min_within_n = get_val_default(min_within_n, self.min_within_n)
@@ -1485,9 +1730,9 @@ class MINORg (PathHandler):
         Checks if check contains only NAs, if some entries are NAs and some are set, or if all are set.
         
         Arguments:
-        - check_name - required check name (string)
-        - type - required type of feature for which check is relevant. Should be 'hit' or 'seq'. (string)
-        - descr - required description of check (string)
+            check_name (str): required, check name
+            type (str): required, type of feature for which check is relevant. Should be 'hit' or 'seq'.
+            descr (str): required, description of check
         """
         if type == "hit":
             valid_check = self.grna_hits.valid_hit_check(check_name)
@@ -1518,12 +1763,14 @@ class MINORg (PathHandler):
         Generate minimum set(s) of gRNA required to cover all targets.
         
         Arguments:
-        - sets - optional. See attributes. (int)
-        - manual - manually approve all gRNA sets. Defaults to NOT self.auto if not provided. (bool)
-        - fasta - optional path to FASTA file. Used for renaming gRNA. (string)
-        - fout_fasta - optional path to output FASTA file. Autogenerated using self.prefix and self.directory if not provided. (string)
-        - fout_map - optional path to output .map file. Autogenerated using self.prefix and self.directory if not provided. (string)
-        - report_full_path - print full path to output files upon successful writing (bool)
+            sets (int): optional. See attributes.
+            manual (bool): manually approve all gRNA sets. Defaults to NOT self.auto if not provided.
+            fasta (str): optional, path to FASTA file. Used for renaming gRNA.
+            fout_fasta (str): optional, path to output FASTA file.
+                Autogenerated using self.prefix and self.directory if not provided.
+            fout_map (str): optional, path to output .map file.
+                Autogenerated using self.prefix and self.directory if not provided.
+            report_full_path (bool): print full path to output files upon successful writing
         """
         if sets is None: sets = self.sets
         ## assume all targets in self.grna_hits are to be, well, targeted
@@ -1576,3 +1823,90 @@ class MINORg (PathHandler):
         ## print summary
         print(f"\n{sets} mutually exclusive gRNA set(s) requested. {len(grna_sets)} set(s) found.")
         return
+
+
+
+
+# :param directory: path to output directory
+# :type directory: str
+# :param config: path to config.ini file
+# :type config: str
+# :param prefix: prefix for output files and directories
+# :type prefix: str
+# :param thread: maximum number of threads for parallel processing
+# :type thread: int
+# :param keep_tmp: retain temporary files
+# :type keep_tmp: bool
+
+# :ivar prefix: [general] (str) prefix for output directories and files
+# :ivar thread: [general] (int) maximum number of threads for parallel processing
+
+# >>> from minorg.MINORg import MINORg
+# >>> my_minorg = MINORg()
+# '{"oh no"}'
+
+
+# """
+# Create a MINORg object.
+
+# Arguments:
+# - directory - path to output directory (string)
+# - config - path to config.ini file (string)
+# - prefix - prefix for output directories and files (string)
+# - thread - maximum number of threads for parallel processing (integer)
+# - keep_tmp - retain temporary files (bool)
+
+# Attributes:
+# - prefix - prefix for output directories and files (string)
+# - thread - maximum number of threads for parallel processing (integer)
+# - rpsblast - path to rpsblast or rpsblast+ executable (string)
+# - blastn - path to blastn executable (string)
+# - mafft - path to mafft executable (string)
+# - db - path to local RPS-BLAST database (string)
+# - remote_rps - use remote database instead of local database for RPS-BLAST (bool)
+# - pssmids - list of Pssm-Ids of domain(s) for homologue search. If multiple Pssm-Ids are provided, overlapping domain hits will be merged. (list of string)
+# - domain_name - human-readable domain name used in sequence and file names in place of Pssm-Ids (string)
+# - genes - list of target gene IDs (list of string)
+# - query_reference - include reference genes as targets for gRNA discovery (bool)
+
+# Attibutes (homologue discovery):
+# - minlen - minimum homologue length (bp) (int)
+# - minid - minimum hit % identity (float)
+# - mincdslen - minimum number of bases in homologue aligned with reference gene CDS (int)
+# - check_recip - execute reciprocal check (bool)
+# - relax_recip - execute relaxed reciprocal check (bool)
+# - check_id_before_merge - filter out hits by % identity before merging into potential homologues (bool)
+# - merge_within - maximum distance (bp) between hits for merging (int)
+
+# Attributes (gRNA):
+# - length - gRNA length (bp) (int)
+# - pam - PAM pattern (string)
+
+# Attributes (background filter):
+# - screen_reference - include reference genome for screening (bool)
+# - ot_pamless - ignore absence of PAM when assessing off-target gRNA hits (bool)
+# - offtarget - function that accepts Biopython's HSP and QueryResult objects and determines whether an off-target gRNA hit is problematic; if not set by user, ot_mismatch and ot_gap will be used (func) ## TODO!!! integrate this somehow?
+# - ot_mismatch - minimum number of mismatches allowed for off-target gRNA hits (int)
+# - ot_gap - minimum number of gaps allowed for off-target gRNA hits (int)
+
+# Attributes (GC filter):
+# - gc_min - minimum GC content (between 0 and 1, where 0 is no GC content and 1 is all GC) (float)
+# - gc_max - maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC) (float)
+
+# Attributes (feature filter):
+# - feature - GFF3 feature within which gRNA are to be designed (string)
+# - max_insertion - maximum allowable insertion size in feature (bp) (int)
+# - min_within_n - minimum number of reference genes which feature a gRNA must align within (bool)
+# - min_within_fraction - minimum fraction of reference genes which feature a gRNA must align within (between 0 and 1, where 0 is none and 1 is all; if 0, min_within_n will be set to 1) (float)
+
+# Attributes (minimum set):
+# - sets - number of sets to generate (int)
+# - auto - generate sets without requiring manual user confirmation for each set (bool)
+# - accept_invalid - score 'NA' as 'pass' (bool)
+# - accept_feature_unknown - score 'NA' as 'pass' for feature check (bool)
+# - accept_invalid_field - score 'NA' as 'pass' if all entries for a check are 'NA' (bool)
+# - pass_map - path to output .map file for gRNA that pass all valid checks (autogenerated by MINORg if not provided) (string)
+# - pass_fasta - path to output .fasta file for gRNA that pass all valid checks (autogenerated by MINORg if not provided) (string)
+# - final_map - path to output .map file for final gRNA set(s) (autogenerated by MINORg if not provided) (string)
+# - final_fasta - path to output .fasta file for final gRNA set(s) (autogenerated by MINORg if not provided) (string)
+# """

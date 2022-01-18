@@ -84,6 +84,25 @@ def parse_multiline_multikey_sdict(s: str, k_sep: str = ';', **kwargs):
 
 def parse_attr_mod_sdict(s: str, attr_sep: str = ',', feature_sep: str = ';', fa_sep: str = ':',
                          alias_sep: str = '='):
+    """
+    Parse attribute modifications from string to dictionary.
+
+    Arguments:
+        s (str): required, string of attribute modifications in format
+            '<feature type>:<standard attribute field name>=<nonstandard attribute field name>,<standard attribute field name>=<nonstandard attribute field name>;<feature type>:<standard attribute field name>=<nonstandard attribute field name>'
+            (e.g. 'mRNA:Parent=Locus_id')
+        attr_sep (str): delimiter for attribute modifications of same feature type (default=',')
+        feature_sep (str): delimiter for feature types (default=';')
+        fa_sep (str): delimiter between feature type and attribute modifications (default=':')
+        alias_sep (str): delimiter between standard attribute field name and non-standard attribute field name
+            (default='=')
+
+    Returns
+    -------
+    dict
+        parsed attribute modifications in format
+            {<feature>: {<standard attribute field name>: <nonstandard attribute field name>}}
+    """
     if not s: return {}
     parse_attr_mod = lambda mappings: dict(mapping.split(alias_sep) for mapping in mappings.split(attr_sep))
     feature_dict = parse_sep_sdict(s, kv_sep = fa_sep, item_sep = feature_sep)

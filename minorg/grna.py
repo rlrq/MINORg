@@ -12,6 +12,9 @@ from minorg.functions import (
 ####################
 
 class CheckObj:
+    """
+    Object with checks that can be set
+    """
     def __init__(self, *check_names):
         self._checks = {check_name: None for check_name in check_names}
     def clear_checks(self):
@@ -41,6 +44,9 @@ class CheckObj:
         return self.some_checks_passed(*self._checks.keys())
 
 class Target(CheckObj):
+    """
+    gRNA target sequence
+    """
     ## seqs are stored in uppercase
     def __init__(self, seq, id = None, strand = None):
         self._seq = str(seq).upper()
@@ -73,6 +79,9 @@ class Target(CheckObj):
     def valid_len(self): return ( len(self) > 0 )
 
 class gRNASeq(CheckObj):
+    """
+    gRNA sequence
+    """
     ## seqs are stored in uppercase
     def __init__(self, seq):
         super().__init__("background", "exclude", "GC")
@@ -93,6 +102,9 @@ class gRNASeq(CheckObj):
         return
 
 class gRNAHits:
+    """
+    Tracks multiple gRNASeq and gRNAHit objects
+    """
     ## seqs are stored in uppercase
     def __init__(self, d = None, gRNA_seqs = None, gRNA_hits = None):
         self._gRNAseqs = {} if gRNA_seqs is None else gRNA_seqs ## dictionary of {seq: <gRNASeq obj>}
@@ -414,6 +426,9 @@ class gRNAHits:
         return
 
 class gRNAHit(CheckObj):
+    """
+    gRNA hit
+    """
     def __init__(self, target, start, end, strand, hit_id):
         ## note: unless something is weird, seq_strand is the same as strand
         super().__init__("background", "GC", "feature", "exclude", "flank")
