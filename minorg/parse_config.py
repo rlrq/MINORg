@@ -16,7 +16,7 @@ from minorg.constants import (
     REFERENCED_NONE
 )
 from minorg.reference import AnnotatedFasta
-from minorg.annotation import reduce_ann
+# from minorg.annotation import reduce_ann
 
 ## ensure that 'config = Config(params, keep_on_crash = True)' is updated to 'config = Config(params, keep_on_crash = False)' when released (keep_on_crash set to False)
 ## TODO: ensure genetic code specified in reference_set files are used

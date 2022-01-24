@@ -1,7 +1,7 @@
-minorg\.index module
-====================
+minorg.index module
+===================
 
 .. automodule:: minorg.index
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

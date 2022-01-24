@@ -1,6 +1,9 @@
 import copy
+import Bio
 from Bio import Seq
 from pyfaidx import Fasta
+
+from typing import Union
 
 ###################
 ##  INDEX FILES  ##
@@ -8,7 +11,26 @@ from pyfaidx import Fasta
 ###################
 
 class IndexedFile:
+    """
+    File indexed by line.
+    
+    Stores position of every ``chunk_lines`` th line.
+    During retrieval, jumps to largest ``chunk_lines`` th line before or equal to desired line number
+    and iterates from that line.
+    """
     def __init__(self, filename, chunk_lines = 10000, skip = lambda x: False):
+        """
+        Create IndexedFile object.
+        
+        Arguments:
+            filename (str): required, path to file to index
+            chunk_lines (int): number of lines between each stored position.
+                The larger the number the fewer number of positions that will have to be stored in memory
+                BUT the slower the lookup.
+            skip (func): function that accepts line (str) from file and outputs whether to skip that line. 
+                Skipped lines are effectively hidden from self and do not contribute to line count 
+                during indexing or retrieval. (default=lambda x: False)
+        """
         self.filename = filename
         self.chunk_lines = chunk_lines
         self.indices = None
@@ -17,11 +39,18 @@ class IndexedFile:
         self.skip = skip
         self.index()
     def __iter__(self):
+        """Iterates through lines and yields contents of line if ``not self.skip(line)``."""
         with open(self.filename, 'r') as f:
             for line in f:
                 if self.skip(line): continue
                 else: yield line
-    def index(self, chunk_lines = None):
+    def index(self, chunk_lines = None) -> None:
+        """
+        Index file.
+        
+        Arguments:
+            chunk_lines (int): see __init__.
+        """
         if chunk_lines is not None:
             self.chunk_lines = chunk_lines
         indices = [0]
@@ -35,7 +64,23 @@ class IndexedFile:
                 if i % self.chunk_lines == 0:
                     indices.append(f.tell())
         self.indices = indices
-    def get_line(self, *indices, strip_newline = False, output_fmt = None):
+    def get_line(self, *indices, strip_newline = False, output_fmt = None) -> Union[str, list]:
+        """
+        Retrieve line content by line number(s).
+        
+        Arguments:
+            *indices (int): line numbers of lines to retrieve
+            strip_newline (bool): remove newline from returned lines
+            output_fmt (type): output format. Valid value: ``list``.
+                If ``output_fmt = list``, returns list even if ``len(indices) == 1``.
+        
+        Returns
+        -------
+        str
+            If ``len(indices) == 1 and output_fmt != list``
+        list
+            If ``len(indices) > 1 or output_fmt == list``
+        """
         single_i = len(indices) == 1
         ## remove invalid indices (<0)
         is_valid = lambda i: i >= 0
@@ -69,6 +114,9 @@ class IndexedFile:
 
 ## basically pyfaidx.Fasta class, but returns Bio.Seq.Seq item when sliced and filename for __repr__
 class IndexedFasta(Fasta):
+    """
+    pyfaidx.Fasta class object wrapped to return Bio.Seq.Seq when sliced.
+    """
     def __init__(self, fasta, *args, **kwargs):
         if isinstance(fasta, self.__class__):
             self.__dict__ = copy.copy(fasta.__dict__) ## no need for deep copy
@@ -78,10 +126,10 @@ class IndexedFasta(Fasta):
             super().__init__(fasta, *args, **kwargs)
     def __repr__(self):
         return f"IndexedFasta({self.filename})"
-    def get_seq(self, *args, **kwargs):
+    def get_seq(self, *args, **kwargs) -> Bio.Seq.Seq:
         pyfaidx_seq = super().get_seq(*args, **kwargs)
         return Seq.Seq(pyfaidx_seq.seq)
-    def get_spliced_seq(self, *args, **kwargs):
+    def get_spliced_seq(self, *args, **kwargs) -> Bio.Seq.Seq:
         pyfaidx_seq = super().get_spliced_seq(*args, **kwargs)
         return Seq.Seq(pyfaidx_seq.seq)
 

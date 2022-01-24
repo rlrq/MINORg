@@ -1,7 +1,7 @@
-minorg\.MINORgCLI module
-========================
+minorg.MINORgCLI module
+=======================
 
 .. automodule:: minorg.MINORgCLI
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

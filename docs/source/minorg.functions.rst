@@ -1,7 +1,7 @@
-minorg\.functions module
-========================
+minorg.functions module
+=======================
 
 .. automodule:: minorg.functions
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

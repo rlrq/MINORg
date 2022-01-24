@@ -1,7 +1,7 @@
-minorg\.display module
-======================
+minorg.display module
+=====================
 
 .. automodule:: minorg.display
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

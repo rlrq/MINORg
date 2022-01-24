@@ -1,7 +1,7 @@
-minorg\.filter\_grna module
-===========================
+minorg.filter\_grna module
+==========================
 
 .. automodule:: minorg.filter_grna
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

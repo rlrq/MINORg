@@ -1,7 +1,7 @@
-minorg\.pam module
-==================
+minorg.pam module
+=================
 
 .. automodule:: minorg.pam
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

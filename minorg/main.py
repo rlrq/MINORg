@@ -55,7 +55,7 @@ from minorg.parse_config import (
 )
 
 from minorg.exceptions import (
-    MessageError,
+    MINORgError,
     InputFormatError,
     InvalidPath,
     InvalidFile,
@@ -66,13 +66,6 @@ from minorg.display import (
     print_indent as printi,
     print_overwrite_multi as printom
 )
-
-__version_main__ = "3.1"
-__version_full__ = "2.1"
-__version_homologue__ = "1.0"
-__version_grna__ = "1.0"
-__version_filter__ = "1.0"
-__version_minimumset__ = "1.1"
 
 default_sub_cmd = "full"
 app_main = typer.Typer()
@@ -97,35 +90,43 @@ minor_g = MINORgCLI(config = CONFIG, keep_on_crash = False)
 params = minor_g.params
 
 ## argument parsing functions
-def is_true(value):
-    return value is True
-
-def version_callback(value: bool):
-    if value:
-        typer.echo(
-            f"minorg version: {__version_main__}\n"
-            f"minorg full: {__version_full__}\n"
-            f"minorg homologue: {__version_homologue__}\n"
-            f"minorg grna: {__version_grna__}\n"
-            f"minorg filter: {__version_filter__}\n"
-            f"minorg minimumset: {__version_minimumset__}"
-        )
-        minor_g.cleanup()
-        raise typer.Exit()
-
 def positive_callback(val):
+    """
+    Callback that checks if float or integer value is greater than zero.
+    
+    Raises
+    ------
+    typer.BadParameter
+        If value is not positive
+    """
     if val > 0:
         return val
     else:
         raise typer.BadParameter( f"Invalid value: {val}. Positive value required." )
 
 def non_negative_callback(val):
+    """
+    Callback that checks if float or integer value is greater than or equal to zero.
+    
+    Raises
+    ------
+    typer.BadParameter
+        If value is negative
+    """
     if val >= 0:
         return val
     else:
         raise typer.BadParameter( f"Invalid value: {val}. Non-negative value required." )
 
 def zero_to_one_callback(val):
+    """
+    Callback that checks if float or integer value is between 0 and 1 (inclusive).
+    
+    Raises
+    ------
+    typer.BadParameter
+        If value is less than zero or greater than 1
+    """
     val = non_negative_callback(val)
     if val <= 1:
         return val
@@ -137,8 +138,7 @@ def zero_to_one_callback(val):
 # @app_sub.command("homolog")
 @app_sub.command("target")
 @app_sub.command("seq")
-def homologue(
-        
+def seq(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
@@ -155,8 +155,6 @@ def homologue(
                                                     callback = split_callback_list),
         indv: Optional[List[str]] = typer.Option(*params.indv(), **params.indv.options,
                                                  callback = split_callback_list),
-        # indv: Optional[List[IndvGenomesAll]] = typer.Option(*params.indv(), **params.indv.options,
-        #                                                     callback = split_callback_list),
         target: Path = typer.Option(*params.target(), **params.target.options,
                                     **oparams.file_valid),
         query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options,
@@ -197,12 +195,6 @@ def homologue(
                                                       **oparams.file_valid),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
                                                      **oparams.file_valid),
-        # ext_assembly: Optional[List[Path]] = typer.Option(*params.ext_assembly(),
-        #                                                   **params.ext_assembly.options,
-        #                                                   **oparams.file_valid),
-        # ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
-        #                                                     **params.ext_annotation.options,
-        #                                                     **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
                                          callback = minor_g.genetic_code_callback),
@@ -218,9 +210,13 @@ def homologue(
                                       callback = minor_g.clusters_callback),
         members: str = typer.Option(*params.members(), **params.members.options,
                                     callback = minor_g.members_callback) ):
-    '''
-    Discover homologues in non-reference genomes
-    '''
+    """
+    Subcommand seq.
+    
+    Generate target sequences. 
+    If query/queries is/are non-reference genomes, conducts homologue discovery and outputs homologues.
+    Else if querying reference genome, reference genes will be output.
+    """
     
     ## check validity of args
     args = Namespace(**locals())
@@ -238,7 +234,6 @@ def generate_grna(
         remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
         mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
-        # blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
         
         ## output files: option A
         out_map: Path = typer.Option(*params.out_map(), resolve_path = True),
@@ -277,12 +272,6 @@ def generate_grna(
                                                         **oparams.file_valid),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
                                                      **oparams.file_valid),
-        # ext_assembly: Optional[List[Path]] = typer.Option(*params.ext_assembly(),
-        #                                                   **params.ext_assembly.options,
-        #                                                   **oparams.file_valid),
-        # ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
-        #                                                     **params.ext_annotation.options,
-        #                                                     **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
                                          callback = minor_g.genetic_code_callback),
@@ -312,9 +301,11 @@ def generate_grna(
                                           **oparams.file_valid, is_eager = True,
                                           callback = minor_g.reference_set_callback)):
     
-    '''
+    """
+    Subcommand grna.
+    
     Generate gRNA from either user-provided FASTA file or reference genes
-    '''
+    """
     
     typer.echo("generating grna")
     
@@ -365,12 +356,6 @@ def filter_grna(
                                                       **oparams.file_valid),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
                                                      **oparams.file_valid),
-        # ext_assembly: Optional[List[Path]] = typer.Option(*params.ext_assembly(),
-        #                                                    **params.ext_assembly.options,
-        #                                                    **oparams.file_valid),
-        # ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
-        #                                                     **params.ext_annotation.options,
-        #                                                     **oparams.file_valid),
         background: Optional[List[Path]] = typer.Option(*params.background(), **params.background.options,
                                                         **oparams.file_valid),
         mask: Optional[List[Path]] = typer.Option(*params.mask(), **params.mask.options, **oparams.file_valid),
@@ -403,8 +388,6 @@ def filter_grna(
         in_place: bool = typer.Option(*params.in_place(), **params.in_place.options),
         
         ## background filter options
-        # gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
-        #                                          callback = split_callback_list),
         screen_reference: bool = typer.Option(*params.screen_reference(), **params.screen_reference.options),
         unmask_ref: bool = typer.Option(*params.unmask_ref(), **params.unmask_ref.options),
         ot_indv: Optional[List[str]] = typer.Option(*params.ot_indv(), **params.ot_indv.options,
@@ -467,9 +450,11 @@ def filter_grna(
                                           **oparams.file_valid, is_eager = True,
                                           callback = minor_g.reference_set_callback)):
     
-    '''
-    Filter gRNA by checks
-    '''
+    """
+    Subcommand filter.
+    
+    Filter gRNA by checks (background, feature, and GC)
+    """
     
     typer.echo("filtering")
     
@@ -561,11 +546,13 @@ def minimumset(
         accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
                                                     **params.accept_feature_unknown.options) ):
     
-    '''
+    """
+    Subcommand minimumset.
+    
     Generate minimum set(s) of gRNA required to cover all targets from mapping file and FASTA file of gRNA.
     Requires mapping file (generated by minorg's 'full' subcommand) and a FASTA file of gRNA sequences.
     gRNA sequences not present in the mapping file will be ignored.
-    '''
+    """
     args = Namespace(**locals())
     minor_g.parse_args(args, "minimumset")
     minor_g.subcmd_minimumset()
@@ -621,12 +608,6 @@ def full(
                                                         **oparams.file_valid),
         ext_cds: Optional[List[Path]] = typer.Option(*params.ext_cds(), **params.ext_cds.options,
                                                      **oparams.file_valid),
-        # ext_assembly: Optional[List[Path]] = typer.Option(*params.ext_assembly(),
-        #                                                    **params.ext_assembly.options,
-        #                                                    **oparams.file_valid),
-        # ext_annotation: Optional[List[Path]] = typer.Option(*params.ext_annotation(),
-        #                                                     **params.ext_annotation.options,
-        #                                                     **oparams.file_valid),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
                                          callback = minor_g.genetic_code_callback),
@@ -709,15 +690,12 @@ def full(
         reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
                                           **oparams.file_valid, is_eager = True,
                                           callback = minor_g.reference_set_callback)):
+    """
+    Subcommand full.
     
-        # genome_set: bool = typer.Option(*params.genome_set(), **params.genome_set.options,
-        #                                 callback = genome_sets_callback),
-        # cluster_set: bool = typer.Option(*params.cluster_set(), **params.cluster_set.options,
-        #                                  callback = cluster_sets_callback)):
-    '''
     Executes commands homologue, grna, filter, and minimumset in sequence to
     generate minimum set(s) of gRNA required to cover all targets.
-    '''
+    """
     
     ## check validity of args
     args = Namespace(**locals())
@@ -725,18 +703,6 @@ def full(
     minor_g.subcmd_full()
     minor_g.resolve()
     minor_g.logfile.devsplain("heh")
-    return
-
-@app_sub.command("test")
-def test(suff: int = 1):
-    typer.echo("test")
-    fname = minor_g.mkfname(f"bruh_{suff}.txt")
-    open(fname, 'a').close()
-    fname = minor_g.mkfname("hoo boy", f"aiyo_{suff}.txt")
-    minor_g.reserve_fname(fname)
-    typer.echo("trying to resolve")
-    minor_g.resolve()
-    typer.echo("resolved")
     return
     
 
@@ -753,11 +719,13 @@ def sub_main(
         quiet: bool = typer.Option(*params.quiet()),
         # directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         # prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
-        version: bool = typer.Option(*params.version(), callback = version_callback, is_eager = True)):
+        version: bool = typer.Option(*params.version(), callback = minor_g.version_callback, is_eager = True)):
     
-    '''
-    For documentation I guess??
-    '''
+    """
+    Sub-application for redirecting to correct subcommand.
+    
+    All subcommands are grouped under this application.
+    """
     minor_g.logfile.devsplain("in sub main")
     
     ## config
@@ -782,7 +750,15 @@ def main(ctx: typer.Context,
          keep_on_crash: bool = typer.Option(default = False), ## remove this option once done?
          keep_all: bool = typer.Option(default = False),
          _help: bool = typer.Option(*params.help(None))): ## catch help
+    """
+    Wrapper main application.
     
+    An additional application over app_sub that enables default subcommand by
+    redirecting an execution that does not specify a subcommand to subcommand full.
+    
+    Also handles some execution-level shared arguments
+    (``--version``, ``--keep-on-crash``, ``--keep-all``).
+    """
     minor_g.keep_tmp = keep_all
     
     ## regenerate/reformat args for sub_main
@@ -839,11 +815,6 @@ def main(ctx: typer.Context,
     
     return
 
-# app.set_default_command(full) ## idk how click_default_group is supposed to work :/
-
-# print(main.params)
-
-# print("callback:", dir(app_main.registered_callback))
     
 if __name__ == "__main__":
     
@@ -865,7 +836,7 @@ if __name__ == "__main__":
         minor_g.cleanup()
         if e.code != 0: ## click returns 0 upon successful execution; catch and ignore
             raise e
-    except MessageError as e:
+    except MINORgError as e:
         print(e.message)
         minor_g.cleanup()
     except Exception as e:
@@ -873,5 +844,6 @@ if __name__ == "__main__":
         minor_g.cleanup()
         raise e
 
+## cleanup for sphinx
 minor_g.keep_on_crash = False
 minor_g.cleanup()

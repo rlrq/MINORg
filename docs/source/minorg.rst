@@ -5,6 +5,7 @@ Submodules
 ----------
 
 .. toctree::
+   :maxdepth: 4
 
    minorg.MINORg
    minorg.MINORgCLI
@@ -18,6 +19,7 @@ Submodules
    minorg.fasta
    minorg.filter_grna
    minorg.functions
+   minorg.generate_grna
    minorg.grna
    minorg.index
    minorg.log
@@ -32,6 +34,6 @@ Module contents
 ---------------
 
 .. automodule:: minorg
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,7 +1,7 @@
-minorg\.constants module
-========================
+minorg.constants module
+=======================
 
 .. automodule:: minorg.constants
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,7 +1,7 @@
-minorg\.reference module
-========================
+minorg.reference module
+=======================
 
 .. automodule:: minorg.reference
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,7 +1,7 @@
-minorg\.log module
-==================
+minorg.log module
+=================
 
 .. automodule:: minorg.log
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

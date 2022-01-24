@@ -1,7 +1,7 @@
-minorg\.grna module
-===================
+minorg.grna module
+==================
 
 .. automodule:: minorg.grna
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

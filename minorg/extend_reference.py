@@ -73,7 +73,7 @@ def extract_annotation(fa_aln, sep = '.', attr_mod = {}):
             elif start != None and (pos == (len(seq) - 1) or seq[pos+1] == '-'):
                 new_annotation = UserAnnotation(f"{seqid}.cds{str(feature_count).zfill(6)}",
                                                 seqid_ref, "CDS", parent = seqid)
-                new_annotation.set_range(start + 1, pos + 1)
+                new_annotation.set_range(start, pos + 1)
                 new_annotation.set_phase(seq[:start])
                 cds_annotations.append(new_annotation)
                 feature_count += 1
@@ -101,9 +101,19 @@ class UserAnnotation:
         self._end = None ## 1-index, incl
         self._strand = '+'
     def set_range(self, start, end):
+        """0-index, start inclusive, end exclusive"""
         self._start = start
         self._end = end
     def set_phase(self, seq):
+        """
+        Set phase.
+        
+        Accepts sequences of CDS up to self._start and counts number of non-gap characters 
+        to determine phase of current CDS feature.
+        
+        Arguments:
+            seq (str or Biopython Seq.Seq): CDS sequence up to self._start
+        """
         self._phase = len([c for c in seq if c != '-']) % 3
     def generate_attr(self):
         def get_mod(field):
@@ -119,10 +129,10 @@ class UserAnnotation:
             output = self.generate_bed()
         return '\t'.join(map(str, output))
     def generate_gff(self):
-        return [self._molecule, self._source, self._feature, self._start, self._end,
+        return [self._molecule, self._source, self._feature, self._start + 1, self._end,
                 self._score, self._strand, self._phase, self.generate_attr()]
     def generate_bed(self):
-        return [self._molecule, self._start - 1, self._end, self._ID, self._score,
+        return [self._molecule, self._start, self._end, self._ID, self._score,
                 self._strand, self._source, self._feature, self._phase, self.generate_attr()]
 
 def extend_reference(feature: list, subfeature: list, fout_fasta, fout_gff, mafft = "mafft",

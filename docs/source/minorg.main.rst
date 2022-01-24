@@ -1,7 +1,8 @@
-minorg\.main module
-===================
+minorg.main module
+==================
 
 .. automodule:: minorg.main
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :member-order: bysource

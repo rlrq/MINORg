@@ -1,7 +1,7 @@
-minorg\.exceptions module
-=========================
+minorg.exceptions module
+========================
 
 .. automodule:: minorg.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

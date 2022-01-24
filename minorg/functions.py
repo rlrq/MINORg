@@ -91,6 +91,39 @@ def imap_progress(f, args, threads = 1, overwrite = True, overwrite_last = True,
 ##  BLAST FORMATTING  ##
 ########################
 
+class BlastHSP:
+    """
+    Class that binds HSP object with QueryResult and Hit as query and subject respectively.
+    """
+    import copy
+    def __init__(self, hsp, query, subject):
+        self.hsp = hsp
+        self.query = query
+        self.subject = subject
+
+class BlastResult(list):
+    """
+    Read blast-tab format and flattens it into a list of BlastHSP,
+    which stores a HSP object with it associated QueryResult and Hit objects 
+    as attributes query and subject respectively.
+    """
+    def __init__(self, filename, fmt, **kwargs):
+        """
+        Create a BlastTab object.
+        
+        Arguments:
+            filename (str): path to file
+            fmt (str): file format (e.g. 'blast-tab', 'blast-xml')
+            **kwargs: additional arguments for SearchIO (notably, fields)
+        """
+        from Bio import SearchIO
+        self.filename = filename
+        super().__init__()
+        for query_result in SearchIO.parse(filename, fmt, **kwargs):
+            for hit in query_result:
+                for hsp in hit:
+                    self.append(BlastHSP(hsp, query_result, hit))
+
 def blast6multi(blastf, header, fout, subjects,
                 threshold = None, n = None, metric = None, dir = None, **kwargs):
     ## execute blast6 for first subject only
@@ -429,11 +462,26 @@ def is_range(r):
 
 def convert_range(ranges, index_in = 0, index_out = 1, start_incl_in = True, start_incl_out = True,
                   end_incl_in = False, end_incl_out = True):
-    '''
-    ranges: [(1, 2), (3, 4)]
-    Converts from one indexing system to another.
+    """
+    Convert range(s) from one indexing system to another.
+    
     Default values converts from 0-index [start, end) ranges to 1-index [start, end] ranges.
-    '''
+    
+    Arguments:
+        ranges (list or tuple): range(s) to convert.
+            Ranges may nested and discontiuous (e.g. [(1, 3), (5, 8)]) or single level (e.g. (1, 3)).
+        index_in (int): index of input range(s)
+        index_out (int): index of output range(s)
+        start_incl_in (bool): whether input range(s) is/are start-inclusive
+        start_incl_out (bool): whether output range(s) is/are start-inclusive
+        end_incl_in (bool): whether input range(s) is/are end_inclusive
+        end_incl_out (bool): whether output range(s) is/are end_inclusive
+    
+    Returns
+    -------
+    tuple or list
+        In same structure as input.
+    """
     ## compensate index
     index_offset = index_out - index_in
     start_offset = int(start_incl_out) - int(start_incl_in)
@@ -445,25 +493,66 @@ def convert_range(ranges, index_in = 0, index_out = 1, start_incl_in = True, sta
         return [convert_range(r) for r in ranges]
 
 ## returns a in b
-def within(a, b):
+def within(a, b) -> bool:
+    """
+    Return whether range ``a`` is within or equal to range ``b``.
+    
+    Arguments:
+        a (tuple or list): single-level range (e.g. (4, 6))
+        b (tuple or list): single-level range (e.g. (2, 7))
+    
+    Returns
+    -------
+    bool
+        Whether range ``a`` is within or equal to range ``b``.
+    """
     a = [int(x) for x in a]
     b = [int(x) for x in b]
     return min(a) >= min(b) and max(a) <= max(b)
 
 ## returns a in any range in ranges
-def within_any(a, ranges):
+def within_any(a, ranges) -> bool:
+    """
+    Return whether range ``a`` is within at least one range in ``ranges``.
+    
+    Arguments:
+        a (tuple or list): single-level range (e.g (4, 6))
+        ranges (tuple or list): list of ranges (e.g. [(-1, 1), (2, 7), (5, 12)])
+    
+    Returns
+    -------
+    bool
+        Whether range ``a`` is within any range in ``ranges``
+    """
     for r in ranges:
         if within(a, r):
             return True
     return False
 
 def ranges_subtract(r1, r2):
+    """
+    Subtract second range(s) from first range(s). Ranges should only be of integer values.
+    
+    Ranges are converted to sets of integer values so set operations can be applied.
+    Resultant set is then converted back to a list of range(s).
+    
+    Arguments:
+        r1 (list): range(s) to be subtracted from.
+            Range(s) may nested and discontiuous (e.g. [(1, 3), (5, 8)]) or single level (e.g. (1, 3)).
+        r2 (list): range(s) to subtract from ``r1``.
+            Range(s) may nested and discontiuous (e.g. [(1, 3), (5, 8)]) or single level (e.g. (1, 3)).
+    
+    Returns
+    -------
+    list
+        Of range(s)
+    """
     pos_subtract = ranges_to_pos(r1) - ranges_to_pos(r2)
     return pos_to_ranges(pos_subtract)
 
 ## e.g. [[(1, 3), (6, 9)], [(2, 3), (6, 10)]] --> {1, 2, 6, 7, 8, 9} --> [(1, 3), (6, 10)]
 def ranges_union(ranges):
-    pos_set = ranges_to_pos(itertools.chain(*ranges))
+    pos_set = ranges_to_pos(list(itertools.chain(*ranges)))
     return pos_to_ranges(pos_set)
 
 ## e.g. [(1, 3), (4, 20)], [(2, 10)] --> {2, 4, 5, 6, 7, 8, 9} --> [(2, 3), (4, 10)]
@@ -475,14 +564,41 @@ def ranges_intersect(r1, r2):
 
 ## convert ranges of [start, end) into set of positions
 ## e.g. [(1, 3), (6, 10)] --> {1, 2, 6, 7, 8, 9}
-def ranges_to_pos(ranges):
-    return set(itertools.chain(*[set(range(x[0], x[1])) for x in ranges]))
+def ranges_to_pos(r):
+    """
+    Convert integer start-inclusive & end-exclusive range(s) to set of integer values in the range.
+    
+    Arguments:
+        r (tuple or list): range(s) to convert.
+            Ranges may nested and discontiuous (e.g. [(1, 3), (5, 8)]) or single level (e.g. (1, 3)).
+    
+    Returns
+    -------
+    set
+        Of integer values within range
+    """
+    if is_range(r):
+        return set(range(r[0], r[1]))
+    else:
+        return set(itertools.chain(*[ranges_to_pos(x) for x in r]))
 
 ## convert set of positions into list of ranges of [start, end)
 ## e.g. {1, 2, 6, 7, 8, 9} --> [(1, 3), (6, 10)]
-def pos_to_ranges(pos):
+def pos_to_ranges(pos) -> list:
+    """
+    Convert an iterable of integer positions to range(s).
+    E.g. pos_to_range({1, 2, 6, 7, 8, 9}) --> [(1, 3), (6, 10)]
+    
+    Arguments:
+        pos (iterable): iterable of integer positions
+    
+    Returns
+    -------
+    list
+        Of 0-index, start-inclusive, end-exclusive ranges
+    """
     if not pos: return []
-    pos = sorted(pos)
+    pos = sorted(set(pos))
     output = []
     start_v = pos[0]
     last_v = pos[0] - 1
@@ -498,8 +614,17 @@ def pos_to_ranges(pos):
 
 def adjusted_pos(seq, pos, gap_char = '-'):
     """
-    returns position, adjusted for gaps in alignment
-    0-indexed
+    Return 0-indexed position adjusted for gaps in alignment
+    
+    Arguments:
+        seq (str or Biopython Seq.Seq): gapped sequence
+        pos (int): ungapped position
+        gap_char (str): gap character
+    
+    Returns
+    -------
+    int
+        ``pos`` adjusted for gaps in sequence
     """
     last_pos = 0
     while True:

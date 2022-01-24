@@ -21,6 +21,7 @@ from minorg.functions import (
     dict_to_fasta,
     extract_ranges,
     imap_progress,
+    BlastResult,
     blast6,
     blast6multi,
     make_local_print,
@@ -41,6 +42,7 @@ from minorg.exceptions import (
 #     IndvGenomesAll, IndvGenomesAllClear,
 # )
 
+## TODO: test merge_hits_and_filter
 
 
 ##############################
@@ -61,6 +63,9 @@ from minorg.exceptions import (
 #     return fasta_queries
 
 def find_homologue_imap(indv_fout_query_dir_kwargs):
+    """
+    Wrapper of find_homologue_indv function for pickling.
+    """
     indv_i, fout, fasta_query, directory, for_find_homologue_indv = indv_fout_query_dir_kwargs
     find_homologue_indv(fout = fout, fasta_query = fasta_query, indv_i = indv_i,
                         directory = directory, **for_find_homologue_indv)
@@ -68,12 +73,21 @@ def find_homologue_imap(indv_fout_query_dir_kwargs):
 
 def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
                              **for_find_homologue_indv):
-    '''
+    """
+    Parallel discovery of homologues in multiple query FASTA.
+    
+    Arguments:
+        fasta_queries (list): require, list of paths(s) to FASTA file(s) in which to find homologues
+        fout (str): required, path to output FASTA file in which to write homologues
+        directory (str): required, path in which to write temporary files
+        threads (int): maximum number of parallel processes
+        **for_find_homologue_indv: additional arguments for find_homologue_indv
+    
     Additional args: 
     fasta_complete (path), fasta_cds (path), genes (tuple), check_reciprocal (bool), quiet (bool), lvl (int), 
-    relax (bool), fasta_ref (list of path), gff_beds (list of path)
+    relax (bool), fasta_ref (list of path), gff (list of path)
     Note that fasta_queries is an iterable like such [[<indv_alias/index>, <path to indv's FASTA file>]...]
-    '''
+    """
     def mkfout(indv_i):
         import os
         return os.path.join(directory, f"{indv_i}_targets.fasta")
@@ -87,25 +101,56 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
     cat_files(tmp_fouts, fout, remove = True)
     return
 
-def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query, genes = None,
-                        check_reciprocal = False, quiet = True, lvl = 0, blastn = "blastn",
-                        gff_beds = None, fasta_ref = None, relax = False, keep_tmp = False,
+def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
+                        quiet = True, lvl = 0, keep_tmp = False,
+                        check_reciprocal = False, relax = False,
+                        genes = None, blastn = "blastn", fasta_ref = None, gff = None,
                         attribute_mod = {}, **for_merge_hits_and_filter):
-    '''
-    Finds homologue in single individual (technically, single fasta file).
-    Lots of unnamed args to be passed to other functions.
-    '''
+    """
+    Find homologue in single FASTA file.
+    
+    1. Execute BLASTN of reference sequences (``fasta_complete`` and ``fasta_cds``) against ``fasta_query``.
+    2. :func:`~minorg.extract_homologue.merge_hits_and_filter`: Merge hits based on proximity to each other, filtering by length and % identity, to generate candidate homologues.
+    3. :func:`~minorg.extract_homologue.recip_blast_multiref`: If check_reciprocal=True, execute BLASTN of candidate homologues to reference genome.
+        - :func:`~minorg.extract_homologue.recip_blast_multiref`: Remove candidate homolougues if the hit with the best bitscore is NOT to a gene in ``gene``.
+        - :func:`~minorg.extract_homologue.recip_blast_multiref`: If relax=False, candidate homologues which best bitscore hit overlaps with gene in ``gene`` AND ALSO a gene NOT IN ``gene`` will be removed.
+    
+    Arguments:
+        fout (str): required, path to output FASTA file in which to write homologues
+        directory (path): required, directory in which to write temporary files
+        fasta_complete (str): required, path to FASTA file containing genomic reference sequences
+        fasta_cds (str): required, path to FASTA file containing CDS reference sequences
+        fasta_query (str): required, path to FASTA file in which to search for homologues
+        quiet (bool): print only essential messages
+        lvl (int): optional, indentation level of printed messages
+        keep_tmp (bool): keep temporary files (default=False)
+        check_reciprocal (bool): execute reciprocal check
+        genes (tuple): optional, required only if check_reciprocal=True, on-target gene IDs
+        blastn (str): optional, required only if check_reciprocal=True, 
+            blastn command (e.g. 'blastn') if available at CLI else path to blastn executable
+        fasta_ref (dict): optional, required only if check_reciprocal=True,
+            dictionary of paths to reference genome FASTA files in format {'<alias>': '/path/to/FASTA'}.
+            Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
+        gff (dict): optional, required only if check_reciprocal=True,
+            dictionary of paths to reference genome GFF3 files in format {'<alias>': '/path/to/GFF3'}.
+            Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
+        attribute_mod (dict): optional, 
+            required only if non-standard attriute field names are present in GFF3 files.
+            Dictionary describing attribute modification.
+        **for_merge_hits_and_filter: additional arguments for 
+            :func:`~minorg.extract_homologue.for_merge_hits_and_filter`
+    """
     ## execute BLASTN of reference genes against query
     ## note: directory must be valid path
     tsv_blast_ref = os.path.join(directory, f"{fout}_tmp_blastn_ref.tsv")
     tsv_blast_cds = os.path.join(directory, f"{fout}_tmp_blastn_cds.tsv")
     from Bio.Blast.Applications import NcbiblastnCommandline
-    blast6(blastf = NcbiblastnCommandline, cmd = blastn,
-           header = "qseqid,sseqid,pident,length,sstart,send",
-           fout = tsv_blast_ref, query = fasta_complete, subject = fasta_query)
-    blast6(blastf = NcbiblastnCommandline, cmd = blastn,
-           header = "qseqid,sseqid,pident,length,sstart,send",
-           fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
+    blast(blastf = NcbiblastnCommandline, cmd = blastn,
+          # header = "qseqid,sseqid,pident,length,sstart,send",
+          fout = tsv_blast_ref, query = fasta_complete, subject = fasta_query)
+    blast(blastf = NcbiblastnCommandline, cmd = blastn,
+          # header = "qseqid,sseqid,pident,length,sstart,send",
+          fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
     ## check for hits
     if not parse_get_data(tsv_blast_ref)[1]:
         # raise MessageError("No blast hits during homologue search, exiting programme.")
@@ -122,7 +167,7 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     ## check reciprocal
     if check_reciprocal and genes:
         recip_blast_multiref(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
-                             lvl = lvl, quiet = quiet, gff_beds = gff_beds, fasta_ref = fasta_ref, relax = relax,
+                             lvl = lvl, quiet = quiet, gff = gff, fasta_ref = fasta_ref, relax = relax,
                              keep_tmp = keep_tmp, attribute_mod = attribute_mod)
     ## remove tmp files
     if not keep_tmp:
@@ -131,23 +176,47 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     return
 
 def merge_hits_and_filter(blast6_fname, fout, fasta, quiet = True, min_cds_len = 0, indv_i = 1,
-                          colnames = ("sseqid", "sstart", "send", "pident", "length"),
+                          # colnames = ("sseqid", "sstart", "send", "pident", "length"),
+                          colnames = ("molecule", "start", "end", "max_pident", "length"),
                           blast6cds_fname = None, lvl = 0, **for_merge_hits):
+    """
+    Merge hits to generate homologues and filter by minimum inferred CDS length.
+    
+    1. :func:`~minorg.extract_homologue.merge_hits`: Merge hits in proximity to each other to generate candidate homologues.
+    2. [optional] Filter candidate homologues by minimum CDS length (``min_cds_len``), as determined by how many bases in the candidate are covered by hits from reference CDS sequences.
+    
+    Arguments:
+        blast6_fname (str): path to BLASTN output file (outfmt 6) prepended with header,
+            where query was reference genomic sequences and subject was ``fasta``
+        fout (str): path to output FASTA file in which to write homologues
+        fasta (str): path to FASTA file in which to find homologues
+        quiet (bool): print only essential messages
+        min_cds_len (int): minimum CDS length in homologues (default=0)
+        indv_i (str or int): alias for ``fasta``, used for generating sequence names
+        colnames (tuple or list): fields in ``blast6_fname`` and ``blast6cds_fname``
+        blast6cds_fname (str): optional, 
+            if provided then candidate homologues will be filtere by minimum CDS length,
+            path to BLASTN output file (outfmt 6) prepended with header,
+            where query was reference CDS sequences and subject was ``fasta``
+        lvl (int): optional, indentation level of printed messages
+    """
     printi = make_local_print(quiet, printf = make_print_preindent(initial_lvl = lvl))
     ## get domain pos
     printi("Merging hits")
-    header, dat = get_dat(blast6_fname)
-    if not dat:
+    dat = BlastResult(blast6_fname, "blast-tab")
+    if len(dat) == 0:
         printi("No domain found, writing empty file.")
         f = open(fout, "w+")
         f.write()
         f.close()
     else:
-        merged = merge_hits(dat, header, colnames = colnames, **for_merge_hits)
+        merged = merge_hits(dat, colnames = colnames, **for_merge_hits)
         if blast6cds_fname is not None:
             merged = filter_min_cds_len(blast6cds_fname = blast6cds_fname, merged = merged,
                                         min_cds_len = min_cds_len, colnames = colnames)
-        write_table(merged, fout, header = list(colnames))
+            colnames = list(colnames) + ["cds_overlap"]
+        ## use fout as temporary file to store merged ranges
+        write_table([tuple(x[colname] for colname in colnames) for x in merged], fout, header = list(colnames))
         ## get domain seqs
         printi("Writing sequences to file")
         get_merged_seqs(fout, fasta, fout, header = colnames, indv_i = indv_i)
@@ -155,81 +224,111 @@ def merge_hits_and_filter(blast6_fname, fout, fasta, quiet = True, min_cds_len =
     return
     
 ## merge overlapping ranges if same domain
-def merge_hits(data, header = [], merge_within_range = 100, min_id = 90, min_len = 100,
+def merge_hits(data, merge_within_range = 100, min_id = 90, min_len = 100,
                check_id_before_merge = False, colnames = ("sseqid", "sstart", "send", "pident", "length")):
-    get = make_custom_get(header)
-    dat = [get(x, *colnames) for x in data]
-    get = make_custom_get(colnames)
-    dat = [x for x in dat if ((not check_id_before_merge) or get(x, "pident") >= min_id)]
-    dat.sort(key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
+    """
+    Merge BLAST hits to generate candidate homologues.
+    
+    1. [optional] If check_id_before_merge=True, discard hits with % identity < ``min_id``
+    2. Merge hits within ``merge_within_range`` bp of each other
+        - Discard if no hit included in the merge has a % identity >= ``min_id``
+        - Discard if resultant merged range is shorter than ``min_len`` bp
+    
+    Arguments:
+        data (:class:`minorg.functions.BlastResult`): BLASTN result
+        merge_within_range (int): maximum number of bases between hits to be merged
+        min_id (float): minimum hit % identity
+        min_len (int): minimum candidate homologue length
+        check_id_before_merge (bool): discard hits with % identity < ``min_id`` before merging
+        colnames (tuple): BLASTN fields to retain in output tsv of merged hits
+    
+    Returns
+    -------
+    list
+        Of dict of merged hit data, where fields for each entry are: molecule, start, end, length
+    """
+    dat = [x for x in dat if x.hsp.ident_pct >= min_id]
+    dat.sort(key = lambda x: (x.subject.id, x.hsp.hit_start))
     output = []
     if len(dat) <= 0:
         return output
-    last = {x: get(dat[0], x) for x in colnames}
-    s, e = last["sstart"], last["send"]
-    last["sstart"], last["send"] = min(s,e), max(s,e)
-    plus_minus = [0, 0]
+    first = dat[0]
+    curr_merged = {"molecule": first.subject.id, "start": first.hsp.hit_start, "end": first.hsp.hit_end,
+                   "max_pident": first.hsp.ident_pct, "length": first.hsp.hit_end - first.hsp.hit_start}
     for i, entry in enumerate(dat):
-        curr = {x: get(entry, x) for x in colnames}
-        s, e = curr["sstart"], curr["send"]
-        curr["sstart"], curr["send"] = min(s,e), max(s,e)
         ## check if current entry overlaps with stored merged entries (same sseqid + overlapping range)
-        if curr["sseqid"] != last["sseqid"] or curr["sstart"] > (last["send"] + merge_within_range):
+        if (entry.subject.id != curr_merged["molecule"]
+            or entry.hsp.hit_start > (curr_merged["end"] + merge_within_range)):
             ## if no overlap, check if last merged entries meet minimum len and id requirement
-            if last["pident"] >= min_id and last["length"] >= min_len:
-                output.append([last[x] for x in colnames])
+            if (curr_merged["max_pident"] >= min_id
+                and (curr_merged["end"] - curr_merged["start"]) >= min_len):
+                output.append(curr_merged)
             ## update last merged entries
-            last = curr
+            curr_merged = {"molecule": entry.subject.id, "start": entry.hsp.hit_start, "end": entry.hsp.hit_end,
+                           "max_pident": entry.hsp.ident_pct, "length": entry.hsp.hit_end - entry.hsp.hit_start}
         ## update stored merged entries with data from current entry
         else:
-            last["send"] = max(curr["send"], last["send"])
-            last["pident"] = max(curr["pident"], last["pident"])
-            last["length"] = last["send"] - last["sstart"] + 1
+            curr_merged["end"] = max(curr_merged["end"], entry.hsp.hit_end)
+            curr_merged["max_pident"] = max(curr_merged["max_pident"], entry.hsp.ident_pct)
+            curr_merged["length"] = curr_merged["end"] - curr_merged["start"]
         ## if is last entry and meets minimum id and len requirement, add to output
-        if i == len(dat)-1 and last["pident"] >= min_id and last["length"] >= min_len:
-            output.append([last[x] for x in colnames])
+        if i == len(dat)-1 and curr_merged["max_pident"] >= min_id and curr_merged["length"] >= min_len:
+            output.append(curr_merged)
     return output
 
 def filter_min_cds_len(blast6cds_fname, merged, min_cds_len = 0,
                        colnames = ("sseqid", "sstart", "send", "pident", "length")):
+    """
+    Filter candidate homologues by minimum CDS length.
+    
+    Arguments:
+        blast6cds_fname (str): required, path to BLASTN output file (outfmt 6) prepended with header,
+            where query was reference CDS sequences and subject was ``fasta``
+        merged (list): list of candidate homologue data output by :func:`~minorg.extract_homologue.merge_hits`
+        min_cds_len (int): minimum CDS length in homologues (default=0)
+    
+    Returns
+    -------
+    list
+        Of dict of merged hit data, where fields for each entry are: molecule, start, end, length
+    """
     if min_cds_len <= 0:
+        for entry in merged:
+            entry["cds_overlap"] = "NA"
         return merged
     else:
-        header, dat_cds = get_dat(blast6cds_fname)
-        get = make_custom_get(header)
-        dat_cds = [get(x, *colnames) for x in dat_cds]
-        get = make_custom_get(colnames)
+        dat_cds = BlastResult(blast6cds_fname, "blast-tab")
         if len(dat_cds) == 0:
             print("No CDS detected. Returning empty data.")
             return []
-        dat_cds.sort(key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
-        cds_output = sorted(merge_hits(dat_cds, colnames, merge_within_range = 0, colnames = colnames),
-                            key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
+        cds_output = sorted(merge_hits(dat_cds, merge_within_range = 0, colnames = colnames),
+                            key = lambda x: (x["molecule"], x["start"]))
         output = []
         def overlap_size(a, b):
-            return max(0, min(max(a), max(b)) - max(min(a), min(b)) + 1)
+            return max(0, min(a[1], b[1]) - max(a[0], b[0]))
         ## get CDS-complete overlap for each merged complete range
         cds_i_start = 0
-        merged.sort(key = lambda x: (get(x, "sseqid"), min(get(x, "sstart", "send"))))
+        merged.sort(key = lambda x: (x["molecule"], x["start"]))
         for entry in merged:
-            overlap, sseqid, start, end = 0, *get(entry, "sseqid", "sstart", "send")
-            start, end = min(start, end), max(start, end)
+            overlap, sseqid, start, end = 0, entry["molecule"], entry["start"], entry["end"]
             cds_i = cds_i_start
             ## find first overlapping cds entry
-            while cds_i < len(cds_output) - 1 and (get(cds_output[cds_i], "sseqid") != sseqid or \
-                  (get(cds_output[cds_i], "sseqid") == sseqid and \
-                   max(get(cds_output[cds_i], "send", "sstart")) < start)):
+            while cds_i < len(cds_output) - 1 and cds_output[cds_i]["molecule"] != sseqid or \
+                  (cds_output[cds_i]["molecule"] == sseqid and \
+                   cds_output[cds_i]["end"] <= start):
                 cds_i += 1
             ## update cds_last_start so we don't keep searching earlier cds entries
             cds_i_start = cds_i_start if cds_i >= len(cds_output) - 1 else cds_i
-            ## while cds entries, overlap, get total overlap size
+            ## while cds entries overlap, get total overlap size
             while cds_i < len(cds_output) and \
-                  get(cds_output[cds_i], "sseqid") == sseqid and \
-                  min(get(cds_output[cds_i], "sstart", "send")) <= end:
-                overlap += overlap_size(get(cds_output[cds_i], "sstart", "send"), (start, end))
+                  cds_output[cds_i]["molecule"] == sseqid and \
+                  cds_output[cds_i]["start"] < end:
+                overlap += overlap_size((cds_output[cds_i]["start"], cds_output[cds_i]["end"]),
+                                        (start, end))
                 cds_i += 1
             if overlap >= min_cds_len:
-                output.append(entry + [overlap])
+                entry["overlap"] = overlap
+                output.append(entry)
         return output
 
 ## read table in and get sequences
@@ -243,20 +342,19 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     ## get sequences
     output = {}
     for i, entry in enumerate(dat):
-        ## note: domain_dat is 1-indexed, start and end inclusive, but Python splicing is 0-indexed
-        seq = seqs[get(entry, "sseqid")][get(entry, "sstart") - 1:get(entry, "send")]
+        seq = seqs[get(entry, "molecule")][get(entry, "start"):get(entry, "end")]
         key = '|'.join([str(x) for x in \
-                        ([get(entry, "sseqid"), i + 1,
-                          '-'.join([str(y) for y in get(entry, "sstart", "send")]), indv_i])])
+                        ([get(entry, "molecule"), i + 1,
+                          f"{get(entry, 'start')}-{get(entry, 'end')}", indv_i])])
         output[key] = seq
     dict_to_fasta(output, fout)
     return
 
-def recip_blast_multiref(fasta_target, directory, gff_beds, fasta_ref,
+def recip_blast_multiref(fasta_target, directory, gff, fasta_ref,
                          blastn = "blastn", keep_tmp = False, attribute_mod = {}, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
-    gff_beds and fasta_ref must be dictionaries of {<alias>: <path to file>}
+    gff and fasta_ref must be dictionaries of {<alias>: <path to file>}
     '''
     from pybedtools import BedTool
     from Bio.Blast.Applications import NcbiblastnCommandline
@@ -264,7 +362,7 @@ def recip_blast_multiref(fasta_target, directory, gff_beds, fasta_ref,
     tsv_blasts = []
     intersect_beds = []
     i = 0
-    for alias in gff_beds:
+    for alias in gff:
         if not alias in fasta_ref: continue
         tsv_blast = tempfile.mkstemp(prefix = f"tmp_recipblast_{alias}", suffix = "tsv", dir = directory)[1]
         tsv_blasts.append(tsv_blast)
@@ -285,7 +383,7 @@ def recip_blast_multiref(fasta_target, directory, gff_beds, fasta_ref,
         ##  writing the extended annotations as gff. we're gonna standardise.
         ##  of course if we choose gff (which i'm super inclined to actually) we're gonna have to adjust
         ##  the colnames_bed of remove_non_max_bitscore.
-        intersect_beds.append(blast_bed.intersect(BedTool(gff_beds[alias]), wao = True))
+        intersect_beds.append(blast_bed.intersect(BedTool(gff[alias]), wao = True))
     remove_non_max_bitscore(fasta_target, intersect_beds, blast_metrics = blast_metrics,
                             **kwargs) ## kwargs: genes, lvl, quiet
     ## remove temporary files
@@ -300,7 +398,7 @@ def recip_blast_multiref(fasta_target, directory, gff_beds, fasta_ref,
     return
 
 
-def recip_blast(fasta_target, directory, gff_beds, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
+def recip_blast(fasta_target, directory, gff, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
     '''
@@ -324,7 +422,7 @@ def recip_blast(fasta_target, directory, gff_beds, fasta_ref, blastn = "blastn",
     ##  writing the extended annotations as gff. we're gonna standardise.
     ##  of course if we choose gff (which i'm super inclined to actually) we're gonna have to adjust
     ##  the colnames_bed of remove_non_max_bitscore.
-    intersect_bed = blast_bed.intersect([BedTool(gff_bed) for gff_bed in gff_beds], wao = True)
+    intersect_bed = blast_bed.intersect([BedTool(fname) for fname in gff], wao = True)
     remove_non_max_bitscore(fasta_target, intersect_bed, blast_metrics = blast_metrics,
                             **kwargs) ## kwargs: genes, lvl, quiet
     ## remove temporary files

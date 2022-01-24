@@ -241,7 +241,7 @@ def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_beds, features = None,
                               for source, gene_ann in gene_anns.items()}
         else:
             feature_ranges = {source: {gene: ranges_union([[(x.start - 1, x.end) for x in
-                                                            ann.get_subfeatures_full(gene, *features)]])
+                                                            ann.get_subfeatures_full(gene, features)]])
                                        for gene in genes}
                               for source, ann in anns.items() if ann is not None}
     def adjust_feature_ranges(gene, seqid, **kwargs):
