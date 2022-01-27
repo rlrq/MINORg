@@ -4,6 +4,7 @@ import copy
 import click
 import typer
 import shutil
+import logging
 import itertools
 
 from typing import Callable, Tuple, Union
@@ -39,6 +40,7 @@ from minorg.functions import (
     fasta_to_dict
 )
 
+LOGGING_LEVEL = logging.DEBUG
 
 __version_main__ = "3.1"
 __version_full__ = "2.1"
@@ -189,6 +191,7 @@ class MINORgCLI (MINORg):
         """
         from argparse import Namespace
         super().__init__(tmp = True, keep_tmp = keep_tmp, config = config)
+        self.tracebacklimit = (None if LOGGING_LEVEL <= logging.DEBUG else 0)
         self.keep_on_crash = keep_on_crash
         self._raw_args = Namespace() ## hidden from user. Stores raw args for posterity/logging
         self._args = Namespace()
@@ -697,15 +700,12 @@ class MINORgCLI (MINORg):
         Callback for ``--attr-mod`` to parse attribute modifications from string to dictionary.
         
         Attribute modification string should be in format
-        '<feature type>:<standard attribute field name>=<nonstandard attribute field name>,<standard attribute field name>=<nonstandard attribute field name>;<feature type>:<standard attribute field name>=<nonstandard attribute field name>'.
-            Feature separator: ';'
-            
-            Feature-attribute separator: ':'
-            
-            Attribute-attribute separator: ','
-            
-            Standard name-nonstandard name separator: '='
-        (e.g. 'mRNA:Parent=Locus_id')
+        '<feature type>:<standard attribute field name>=<nonstandard attribute field name>,<standard attribute field name>=<nonstandard attribute field name>;<feature type>:<standard attribute field name>=<nonstandard attribute field name>'. (e.g. 'mRNA:Parent=Locus_id')
+        
+            - Feature separator: ';'
+            - Feature-attribute separator: ':'
+            - Attribute-attribute separator: ','
+            - Standard name-nonstandard name separator: '='
         
         Arguments:
             val (str): required, string of attribute modifications in format
@@ -1139,7 +1139,7 @@ class MINORgCLI (MINORg):
         """
         if self.args.target is not None:
             ## set None as val; execute_homologue will exit if it detects that val is None
-            output = {self.master_prefix: None}
+            output = {self.master_prefix: ()}
         elif self.args.cluster is None:
             output = {self.master_prefix: tuple(self.args.gene)}
         else:
@@ -1437,9 +1437,16 @@ class MINORgCLI (MINORg):
         """
         Full MINORg programme.
         """
+        ## generate sequences to mask
+        if background_check and self.mask_gene_sets["mask"]:
+            self._get_reference_seq(*self.mask_gene_sets["mask"], adj_dir = True,
+                                    fout = self.mkfname("to_mask.fasta", tmp = True))
+        ## execute MINORg
         for prefix in self.gene_sets:
             self.set_genes(prefix)
-            super().seq(quiet = False)
+            ## get targets if not user-provided
+            if self.genes:
+                super().seq(quiet = False)
             ## abort if no targets
             if len(fasta_to_dict(self.target)) == 0:
                 raise MessageError("No targets found. Aborting programme.")
@@ -1447,7 +1454,14 @@ class MINORgCLI (MINORg):
             ## abort if no gRNA
             if len(self.grna_hits) == 0:
                 raise MessageError("No gRNA found. Aborting programme.")
-            self.filter()
+            ## filter
+            if background_check:
+                super().filter_background()
+            if feature_check:
+                super().filter_feature()
+            if gc_check:
+                super().filter_gc()
+            ## minimumset
             super().minimumset()
         return
             

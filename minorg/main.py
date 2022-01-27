@@ -35,16 +35,16 @@ from argparse import Namespace
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from minorg.functions import (
-    split_list as split_callback_list,
-    get_count_dict, cat_files, assign_alias
+    split_list as split_callback_list#,
+    # get_count_dict, cat_files, assign_alias
 )
-from minorg.grna import gRNAHits
-from minorg.annotation import reduce_ann
-from minorg.pam import PAM
+# from minorg.grna import gRNAHits
+# from minorg.annotation import reduce_ann
+# from minorg.pam import PAM
 from minorg.log import MINORgLogger
 from minorg.MINORgCLI import MINORgCLI
 
-from minorg.extend_reference import extend_reference_cli
+# from minorg.extend_reference import extend_reference_cli
 
 from minorg.parse_config import (
     # Config,
@@ -62,10 +62,10 @@ from minorg.exceptions import (
     UnreadableFile
 )
 
-from minorg.display import (
-    print_indent as printi,
-    print_overwrite_multi as printom
-)
+# from minorg.display import (
+#     print_indent as printi,
+#     print_overwrite_multi as printom
+# )
 
 default_sub_cmd = "full"
 app_main = typer.Typer()

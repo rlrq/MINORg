@@ -405,25 +405,19 @@ class AnnotatedFeature(Annotation):
             seqid_template (str): optional, template for output sequence name.
                 Template will be parsed by strings.Template.
                 The default template is "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense".
-                    $source: reference genome alias
-        
-                    $gene: gene/isoform ID
-        
-                    $feature: GFF3 feature type
-        
-                    $isoform: isoform ID if by_gene = False, else same as $gene
-        
-                    $domain: Pssm-Id
-        
-                    $n: if multiple domains are present, they will be numbered according to 
-                    proximity to 5' of sense strand
                     
-                    $complete: 'complete' if ``complete=True`` else 'stitched'
-                    
-                    $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
-        
-                    $sense: 'NA' if self.strand is not set
-                    else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+                    - $source: reference genome alias
+                    - $gene: gene/isoform ID
+                    - $feature: GFF3 feature type
+                    - $isoform: isoform ID if by_gene = False, else same as $gene
+                    - $domain: Pssm-Id
+                    - $n: if multiple domains are present, they will be numbered according to 
+                      proximity to 5' of sense strand
+                    - $complete: 'complete' if ``complete=True`` else 'stitched'
+                    - $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
+                    - $sense: 'NA' if self.strand is not set
+                      else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+            
             apply_template_to_dict (bool): flatten output dict and assign sequence names
         
         Returns
@@ -517,25 +511,19 @@ class AnnotatedFeature(Annotation):
             seqid_template (str): optional, template for output sequence name.
                 Template will be parsed by strings.Template.
                 The default template is "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense".
-                    $source: reference genome alias
-        
-                    $gene: gene/isoform ID
-        
-                    $feature: GFF3 feature type
-        
-                    $isoform: isoform ID if by_gene = False, else same as $gene
-        
-                    $domain: Pssm-Id
-        
-                    $n: if multiple domains are present, they will be numbered according to 
-                    proximity to 5' of sense strand
                     
-                    $complete: 'complete' if ``complete=True`` else 'stitched'
-                    
-                    $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
-        
-                    $sense: 'NA' if self.strand is not set
-                    else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+                    - $source: reference genome alias
+                    - $gene: gene/isoform ID
+                    - $feature: GFF3 feature type
+                    - $isoform: isoform ID if by_gene = False, else same as $gene
+                    - $domain: Pssm-Id
+                    - $n: if multiple domains are present, they will be numbered according to 
+                      proximity to 5' of sense strand
+                    - $complete: 'complete' if ``complete=True`` else 'stitched'
+                    - $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
+                    - $sense: 'NA' if self.strand is not set
+                      else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+            
             apply_template_to_dict (bool): flatten output dict and assign sequence names
         
         Returns
@@ -850,25 +838,19 @@ class AnnotatedFasta(IndexedFasta):
             seqid_template (str): optional, template for output sequence name.
                 Template will be parsed by strings.Template.
                 The default template is "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense".
-                    $source: reference genome alias
-        
-                    $gene: gene/isoform ID
-        
-                    $feature: GFF3 feature type
-        
-                    $isoform: isoform ID if by_gene = False, else same as $gene
-        
-                    $domain: Pssm-Id
-        
-                    $n: if multiple domains are present, they will be numbered according to 
-                    proximity to 5' of sense strand
-                    
-                    $complete: 'complete' if ``complete=True`` else 'stitched'
-                    
-                    $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
-        
-                    $sense: 'NA' if self.strand is not set
-                    else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+                
+                    - $source: reference genome alias
+                    - $gene: gene/isoform ID
+                    - $feature: GFF3 feature type
+                    - $isoform: isoform ID if by_gene = False, else same as $gene
+                    - $domain: Pssm-Id
+                    - $n: if multiple domains are present, they will be numbered according to 
+                      proximity to 5' of sense strand
+                    - $complete: 'complete' if ``complete=True`` else 'stitched'
+                    - $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
+                    - $sense: 'NA' if self.strand is not set
+                      else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+            
             apply_template_to_dict (bool): flatten output dict and assign sequence names
         
         Returns
@@ -951,25 +933,19 @@ class AnnotatedFasta(IndexedFasta):
             seqid_template (str): optional, template for output sequence name.
                 Template will be parsed by strings.Template.
                 The default template is "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense".
-                    $source: reference genome alias
-        
-                    $gene: gene/isoform ID
-        
-                    $feature: GFF3 feature type
-        
-                    $isoform: isoform ID if by_gene = False, else same as $gene
-        
-                    $domain: Pssm-Id
-        
-                    $n: if multiple domains are present, they will be numbered according to 
-                    proximity to 5' of sense strand
-                    
-                    $complete: 'complete' if ``complete=True`` else 'stitched'
-                    
-                    $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
-        
-                    $sense: 'NA' if self.strand is not set
-                    else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+                
+                    - $source: reference genome alias
+                    - $gene: gene/isoform ID
+                    - $feature: GFF3 feature type
+                    - $isoform: isoform ID if by_gene = False, else same as $gene
+                    - $domain: Pssm-Id
+                    - $n: if multiple domains are present, they will be numbered according to 
+                      proximity to 5' of sense strand
+                    - $complete: 'complete' if ``complete=True`` else 'stitched'
+                    - $strand: 'minus' if ``adj_dir=False`` and not self.plus else 'plus'
+                    - $sense: 'NA' if self.strand is not set
+                      else 'antisense' if ``adj_dir=False`` and not self.plus else 'sense'
+            
             apply_template_to_dict (bool): flatten output dict and assign sequence names
         
         Returns

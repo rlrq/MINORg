@@ -490,7 +490,9 @@ def convert_range(ranges, index_in = 0, index_out = 1, start_incl_in = True, sta
         start, end = ranges
         return (start + index_offset + start_offset, end + index_offset + end_offset)
     else:
-        return [convert_range(r) for r in ranges]
+        return [convert_range(r, index_in = index_in, index_out = index_out,
+                              start_incl_in = start_incl_in, start_incl_out = start_incl_out,
+                              end_incl_in = end_incl_in, end_incl_out = end_incl_out) for r in ranges]
 
 ## returns a in b
 def within(a, b) -> bool:

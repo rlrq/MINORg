@@ -201,7 +201,7 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
 
 ## filter GC content
 def filter_gc(gRNA_hits, gc_min = 0, gc_max = 1):
-    for gRNA_seq in gRNA_hits.gRNAseqs().values():
+    for gRNA_seq in gRNA_hits.gRNAseqs.values():
         gRNA_seq.set_gc_check(gc_min = gc_min, gc_max = gc_max)
     return
 
@@ -282,21 +282,21 @@ def filter_in_feature_gen(gRNA_hits, fasta_alignment, gff_beds, features = None,
     if target_names is not None: target_names = set(target_names)
     from string import Template
     ## iterate through all gRNAs
-    for gRNA_seq, coverage in gRNA_hits.hits().items():
+    for gRNA_seq, coverage in gRNA_hits.hits.items():
         # new_coverage = []
         ## assess each hit
         for gRNA_hit in coverage:
             seq_id_seq = [(seq_id, seq) for seq_id, seq in alignment.items()
-                          if (seq_id == gRNA_hit.target_id() or is_rvs(seq_id, gRNA_hit.target_id()))]
+                          if (seq_id == gRNA_hit.target_id or is_rvs(seq_id, gRNA_hit.target_id))]
             ## if target not among user-specified targets or not in alignment, skip to next gRNA hit
-            if ( (target_names is not None and gRNA_hit.target_id() not in target_names) or
+            if ( (target_names is not None and gRNA_hit.target_id not in target_names) or
                  len(seq_id_seq) == 0 ): continue
             seq_id, seq = [(seq_id, seq) for seq_id, seq in alignment.items()
-                           if (seq_id == gRNA_hit.target_id() or is_rvs(seq_id, gRNA_hit.target_id()))][0]
-            seq_plus = seq_id == gRNA_hit.target_id()
+                           if (seq_id == gRNA_hit.target_id or is_rvs(seq_id, gRNA_hit.target_id))][0]
+            seq_plus = seq_id == gRNA_hit.target_id
             gRNA_hit.set_parent_sense('+' if seq_plus == ref_plus else '-') ## used to tie break set cover
-            gRNA_range = gRNA_hit.range() if (not is_rvs(seq_id, gRNA_hit.target_id())) \
-                         else gRNA_hit.reverse_range()
+            gRNA_range = gRNA_hit.range if (not is_rvs(seq_id, gRNA_hit.target_id)) \
+                         else gRNA_hit.reverse_range
             ## append gRNAHit object if within at least 1 feature
             if (within_feature(targets_feature_ranges[seq_id], seq, gRNA_range,
                                min_within_n = min_within_n, min_within_fraction = min_within_fraction)):

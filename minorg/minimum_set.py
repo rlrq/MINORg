@@ -23,7 +23,7 @@ impossible_set_message_default = "Consider adjusting --minlen, --minid, and --me
 def get_minimum_sets_from_files_and_write(mapping, targets = None, input_map_ver = None, **kwargs):
     ## read data
     gRNA_hits = gRNAHits()
-    gRNA_hits.parse_from_mapping(mapping, targets = targets, version = input_map_ver)
+    gRNA_hits.parse_from_mapping(mapping, targets = targets)
     return get_minimum_sets_and_write(gRNA_hits, target_len_provided = gRNA_hits.all_target_len_valid(),
                                       **kwargs)
 
@@ -33,16 +33,16 @@ def get_minimum_sets_and_write(gRNA_hits, num_sets = 1, targets = None, exclude_
                                fasta = None, prefix = None, directory = None,
                                fout_fasta = None, fout_mapping = None, exclude_fname = None,
                                accept_unknown_within_feature_status = False, exclude_seqs = set(),
-                               ignore_invalid = True, output_map_ver = 3, **kwargs):
+                               accept_invalid = True, output_map_ver = 3, **kwargs):
     
     ## assume all targets in gRNA_hits are to be, well, targeted
     targets = ( targets if targets is not None else \
-                set(hit.target_id() for hit in gRNA_hits.flatten_hits() \
-                    if hit.target_id() not in exclude_targets) )
+                set(hit.target_id for hit in gRNA_hits.flatten_hits() \
+                    if hit.target_id not in exclude_targets) )
     
     ## remove sequences not included in fasta file from gRNA_hits if fasta file provided
     if fasta:
-        gRNA_hits.remove_seqs(*[seq for seq in gRNA_hits.seqs() if
+        gRNA_hits.remove_seqs(*[seq for seq in gRNA_hits.seqs if
                                 str(seq).upper() not in map(lambda x: str(x).upper(),
                                                             fasta_to_dict(fasta).values())])
         gRNA_hits.rename_seqs(fasta)
@@ -60,9 +60,9 @@ def get_minimum_sets_and_write(gRNA_hits, num_sets = 1, targets = None, exclude_
             print("The programme will assume that these hits are within coding regions and treat them as viable candidates.\n")
     ## filter feature and remaining valid checks
     print("Filtering gRNA by checks")
-    filtered_gRNA_hits = gRNA_hits.filter_hits_some_checks_passed("feature", ignore_invalid = ignore_invalid,
+    filtered_gRNA_hits = gRNA_hits.filter_hits_some_checks_passed("feature", accept_invalid = accept_invalid,
                                                                   exclude_empty_seqs = True)
-    filtered_gRNA_hits = filtered_gRNA_hits.filter_seqs_all_checks_passed(ignore_invalid = True)
+    filtered_gRNA_hits = filtered_gRNA_hits.filter_seqs_all_checks_passed(accept_invalid = True)
     if len(filtered_gRNA_hits) < num_sets:
         print(f"\nWARNING: The gRNA sequences cannot cover all target sequences the desired number of times ({len(filtered_gRNA_hits)} valid gRNA, {num_sets} set(s) requested).\n")
         return
@@ -103,13 +103,13 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
         ## note: If antisense, tie break by minimum -end. Else, tie break by minimum start.
         ## note: tie-breaker uses AVERAGE distance of hits (to inferred N-terminus)
         seq_set = set_cover(gRNA_hits, (targets if targets is not None else
-                                        set(hit.target_id() for hit in gRNA_hits.flatten_hits())),
+                                        set(hit.target_id for hit in gRNA_hits.flatten_hits())),
                             algorithm = sc_algorithm, exclude_seqs = exclude_seqs,
-                            id_key = lambda x: x.target_id(),
+                            id_key = lambda x: x.target_id,
                             tie_breaker = lambda x: min(x.items(),
-                                                        key = lambda y: sum((-z.range()[1] if
-                                                                             z.target().sense() == '-' else
-                                                                             z.range()[0])
+                                                        key = lambda y: sum((-z.range[1] if
+                                                                             z.target.sense == '-' else
+                                                                             z.range[0])
                                                                             for z in y[1])/len(y[1])))
         ## if empty set, print message and break out of loop to exit and return the empty set
         if set(seq_set) == set():
@@ -120,16 +120,16 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
         ## if valid set AND manual check requested
         else:
             ## print gRNA sequences in seq_set to screen for user to evaluate
-            gRNA_seq_set = sorted(gRNA_hits.get_gRNAseqs_by_seq(*seq_set), key = lambda gRNA_seq: gRNA_seq.id())
+            gRNA_seq_set = sorted(gRNA_hits.get_gRNAseqs_by_seq(*seq_set), key = lambda gRNA_seq: gRNA_seq.id)
             print(f"\tID\tsequence (Set {set_num})")
             for gRNA_seq in gRNA_seq_set:
-                print(f"\t{gRNA_seq.id()}\t{gRNA_seq.seq()}")
+                print(f"\t{gRNA_seq.id}\t{gRNA_seq.seq}")
             ## obtain user input
             usr_input = input(f"Hit 'x' to continue if you are satisfied with these sequences. Otherwise, enter the sequence ID or sequence of an undesirable gRNA (case-sensitive) and hit the return key to update this list: ")
             if usr_input.upper() == 'X':
                 break
             else:
-                id_seq_dict = {gRNA_seq.id(): gRNA_seq.seq() for gRNA_seq in gRNA_seq_set}
+                id_seq_dict = {gRNA_seq.id: gRNA_seq.seq for gRNA_seq in gRNA_seq_set}
                 if usr_input in id_seq_dict:
                     exclude_seqs |= {str(id_seq_dict[usr_input])}
                 elif usr_input.upper() in set(str(x).upper() for x in id_seq_dict.values()):
@@ -147,7 +147,7 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
 ## note that tie_breaker function should work on dictionaries of {gRNA_seq: {gRNAHit objects}} and return a tuple or list of two values: (gRNA_seq, {gRNAHit objects})
 def set_cover(gRNA_hits, target_ids, algorithm = "LAR", id_key = lambda x: x, **kwargs):
     exclude_seqs = set(map(lambda s: str(s).upper(), kwargs["exclude_seqs"]))
-    gRNA_coverage = {seq: hits for seq, hits in gRNA_hits.hits().items()
+    gRNA_coverage = {seq: hits for seq, hits in gRNA_hits.hits.items()
                      if str(seq).upper() not in exclude_seqs}
     ## check if set cover is possible before attempting to solve set cover
     try:

@@ -638,7 +638,7 @@ class Annotation:
                         "phase": self.phase,
                         "attributes": self.attributes}
     def __eq__(self, other):
-        return (self.generate_gff() == other.generate_gff())
+        return (self.generate_gff(standardise = True) == other.generate_gff(standardise = True))
     @property
     def plus(self):
         return self.strand == '+'
@@ -651,13 +651,14 @@ class Annotation:
         elif fmt.upper() in {"BED"}:
             output = self.generate_bed()
         return '\t'.join(map(str, output))
-    def generate_gff(self):
+    def generate_gff(self, standardise = False):
         return list(map(str, [self.seqid, self.source, self.type, self.start + 1, self.end,
-                              self.score, self.strand, self.phase, self.generate_attr()]))
-    def generate_bed(self):
+                              self.score, self.strand, self.phase,
+                              self.generate_attr(original = (not standardise))]))
+    def generate_bed(self, standardise = False):
         return list(map(str, [self.seqid, self.start, self.end, self.attributes.get("ID", fmt = str),
                               self.score, self.strand, self.source, self.type, self.phase,
-                              self.generate_attr()]))
+                              self.generate_attr(original = (not standardise))]))
     def get(self, *fields):
         return [self.f_dict[field] for field in fields]
     
@@ -679,7 +680,7 @@ class Attributes:
         self._sep_intra = field_sep_intra
         self._data = self._parse()
     def __eq__(self, other):
-        return (self.standardise_fields() == other.standardise_fields())
+        return (self.standardise_fields(return_str = False) == other.standardise_fields(return_str = False))
     def __repr__(self):
         return self._raw
     def __str__(self):
@@ -718,12 +719,15 @@ class Attributes:
         Checks if at least 1 value in 'vals' is also a value of attribute 'a'
         '''
         return (set(self.get(a)) & set(vals)) ## checks intersection != empty set
-    def standardise_fields(self):
+    def standardise_fields(self, return_str = True):
         def get_mod(field):
             feature_mod = get_recursively(self._gff._attr_fields_inv, field, self._entry.feature, field)
             if feature_mod != field: return feature_mod
             else: return get_recursively(self._gff._attr_fields_inv, field, "all", field)
-        return ';'.join([f"{get_mod(k)}={'.'.join(v)}" for k, v in self._data.items()])
+        if return_str:
+            return ';'.join([f"{get_mod(k)}={'.'.join(v)}" for k, v in self._data.items()])
+        else:
+            return {get_mod(k): v for k, v in self._data.items()}
 
 
 # #############################
