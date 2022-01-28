@@ -1164,16 +1164,14 @@ class MINORg (PathHandler):
             seqid_template (str): optional, template for output sequence name.
                 Template will be parsed by strings.Template.
                 The default template is "Reference|$source|$gene|$isoform|$feature|$n".
-                    $source: reference genome alias
-        
-                    $gene: gene/isoform ID
-        
-                    $isoform: isoform ID if by_gene = False, else same as $gene
-        
-                    $feature: GFF3 feature type
-        
-                    $n: if multiple domains are present, they will be numbered according to 
-                    proximity to 5' of sense strand
+                
+                    - $source: reference genome alias
+                    - $gene: gene/isoform ID
+                    - $isoform: isoform ID if by_gene = False, else same as $gene
+                    - $feature: GFF3 feature type
+                    - $n: if multiple domains are present, they will be numbered according to 
+                      proximity to 5' of sense strand
+            
             adj_dir (bool): output sense strand
             by_gene (bool): merge sequences from all isoforms of a gene
             translate (bool): translate sequence. Should be used with adj_dir.

@@ -719,7 +719,7 @@ class AnnotatedFasta(IndexedFasta):
         Subset GFF3 annotations by feature ID (including subfeatures) 
         and generate new file of subsetted features.
         
-        Aguments:
+        Arguments:
             *ids (str): required, list or tuple of feature IDs
             fout (str): optional, path to output file.
                 If not provided, ``tempfile.mkstemp`` will be used to generate a temporary file.
