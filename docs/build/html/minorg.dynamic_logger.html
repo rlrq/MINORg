@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.dynamic_logger module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="minorg.exceptions module" href="minorg.exceptions.html" />
+    <link rel="prev" title="minorg.display module" href="minorg.display.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORg.html">minorg.MINORg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORgCLI.html">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.grna.html">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.dynamic_logger module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.dynamic_logger.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.dynamic_logger">
+<span id="minorg-dynamic-logger-module"></span><h1>minorg.dynamic_logger module<a class="headerlink" href="#module-minorg.dynamic_logger" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.CustomFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt_msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.CustomFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.CustomFormatter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.CustomFormatter.format" title="Permalink to this definition"></a></dt>
+<dd><p>Format the specified record as text.</p>
+<p>The record’s attribute dictionary is used as the operand to a
+string formatting operation which yields the returned string.
+Before formatting the dictionary, a couple of preparatory steps
+are carried out. The message attribute of the record is computed
+using LogRecord.getMessage(). If the formatting string uses the
+time (as determined by a call to usesTime(), formatTime() is
+called to format the event time. If there is exception information,
+it is formatted using formatException() and appended to the message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DuplicateName">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DuplicateName</span></span><a class="headerlink" href="#minorg.dynamic_logger.DuplicateName" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.InvalidName" title="minorg.dynamic_logger.InvalidName"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.InvalidName</span></code></a>, <a class="reference internal" href="#minorg.dynamic_logger.DuplicateObject" title="minorg.dynamic_logger.DuplicateObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.DuplicateObject</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DuplicateObject">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DuplicateObject</span></span><a class="headerlink" href="#minorg.dynamic_logger.DuplicateObject" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DynamicFileHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.FileHandler</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileHandler.update_filename">
+<span class="sig-name descname"><span class="pre">update_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileHandler.update_filename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DynamicFileLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">config_defaults</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.DynamicFileLoggerBase" title="minorg.dynamic_logger.DynamicFileLoggerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.DynamicFileLoggerBase</span></code></a></p>
+<p>User specifies a group when passing message
+(E.g. DynamicFileLogger.cmdname(‘minimumset’) and the relevant handlers will do their job)
+(Note that this works by creating a Logger called ‘cmdname’ and handlers linked to that Logger</p>
+<blockquote>
+<div><p>will do their job. Maybe a StreamHandler will not print it cuz it’s not relevant,
+but the FileHandler may wish to do so for thoroughness. There may be different formatting.)</p>
+</div></blockquote>
+<p>User may also change log file location whenever desired
+(E.g. DynamicFileLogger.update_filename(‘/mnt/chaelab/rachelle/logs/loggertest.log’))</p>
+<p>Groups are effectively Logger objects</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLogger.handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLogger.handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLoggerBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DynamicFileLoggerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">config_defaults</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLoggerBase" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.GroupLogger" title="minorg.dynamic_logger.GroupLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.GroupLogger</span></code></a></p>
+<p>User specifies a group when passing message
+(E.g. DynamicFileLoggerBase.cmdname(‘minimumset’) and the relevant handlers will do their job)
+(Note that this works by creating a Logger called ‘cmdname’ and handlers linked to that Logger</p>
+<blockquote>
+<div><p>will do their job. Maybe a StreamHandler will not print it cuz it’s not relevant,
+but the FileHandler may wish to do so for thoroughness. There may be different formatting.)</p>
+</div></blockquote>
+<p>User may also change log file location whenever desired
+(E.g. DynamicFileLoggerBase.update_filename(‘/mnt/chaelab/rachelle/logs/loggertest.log’))</p>
+<p>Groups are effectively Logger objects</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLoggerBase.filename">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLoggerBase.filename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLoggerBase.is_enabled_for">
+<span class="sig-name descname"><span class="pre">is_enabled_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLoggerBase.is_enabled_for" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLoggerBase.level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">level</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLoggerBase.level" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLoggerBase.set_level">
+<span class="sig-name descname"><span class="pre">set_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLoggerBase.set_level" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileLoggerBase.update_filename">
+<span class="sig-name descname"><span class="pre">update_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileLoggerBase.update_filename" title="Permalink to this definition"></a></dt>
+<dd><p>Closes connections from DynamicFileHandler to current logfile,
+replaces DynamicFileHandler.baseFilename, copies closed logfile to new location,
+and opens connection between all DynamicFileHandler objects to new location</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DynamicFileParasiticSingleLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">config_defaults</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.DynamicFileLoggerBase" title="minorg.dynamic_logger.DynamicFileLoggerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.DynamicFileLoggerBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.addHandler">
+<span class="sig-name descname"><span class="pre">addHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.addHandler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_file_handler">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_file_handler</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_file_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_group">
+<span class="sig-name descname"><span class="pre">add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">groups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_group" title="Permalink to this definition"></a></dt>
+<dd><p>Positional ‘handlers’ for Handlers already added to DynamicFileLogger object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_handler">
+<span class="sig-name descname"><span class="pre">add_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">handlers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_handler" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Accepts both group names/obj and handler names/obj</dt><dd><ul class="simple">
+<li><p>if group name/obj is received, handlers will be added to file but group will NOT be</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_logger</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_stream_handler">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_stream_handler</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.add_stream_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.group_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.group_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.groups">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">groups</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.groups" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.handler_group_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_group_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.handler_group_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.handler_groups">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_groups</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.handler_groups" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.is_enabled_for">
+<span class="sig-name descname"><span class="pre">is_enabled_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.is_enabled_for" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">level</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.level" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.removeHandler">
+<span class="sig-name descname"><span class="pre">removeHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.removeHandler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.remove_group">
+<span class="sig-name descname"><span class="pre">remove_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">groups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.remove_group" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.remove_handler">
+<span class="sig-name descname"><span class="pre">remove_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">handlers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.remove_handler" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Accepts both group names/obj and handler names/obj</dt><dd><ul class="simple">
+<li><p>if group name/obj is received, handlers will be removed from file but group will NOT be</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>that is, if a handler already added to file is then added to group, group.emit will cause that
+newly added handler to write to this file</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.remove_logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_logger</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.remove_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.set_level">
+<span class="sig-name descname"><span class="pre">set_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.set_level" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update" title="Permalink to this definition"></a></dt>
+<dd><p>Both ‘add’ and ‘remove’ accept groups, not just handlers? Maybe? TODO
+If a name (provided to ‘add’ or ‘remove’ refers to both a handler and a group, handler is prioritised</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_filename">
+<span class="sig-name descname"><span class="pre">update_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_filename" title="Permalink to this definition"></a></dt>
+<dd><p>Replaces DynamicMultiFileHandler records for current file with new location</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_group">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_group</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_group" title="Permalink to this definition"></a></dt>
+<dd><p>Add or remove handlers from group</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_handlers">
+<span class="sig-name descname"><span class="pre">update_handlers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_level">
+<span class="sig-name descname"><span class="pre">update_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicFileParasiticSingleLogger.update_level" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DynamicMultiFileHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">filenames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.FileHandler</span></code></p>
+<p>Writes to multple files</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileHandler.add_file">
+<span class="sig-name descname"><span class="pre">add_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileHandler.add_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileHandler.emit" title="Permalink to this definition"></a></dt>
+<dd><p>Call FileHandler’s emit method for each filename</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileHandler.remove_file">
+<span class="sig-name descname"><span class="pre">remove_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileHandler.remove_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileHandler.update_filename">
+<span class="sig-name descname"><span class="pre">update_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileHandler.update_filename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">DynamicMultiFileLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crosstalk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.GroupLogger" title="minorg.dynamic_logger.GroupLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.GroupLogger</span></code></a></p>
+<p>Allows writing to multiple files simultaneously, while sharing group names and Formatters
+Possibly only really useful for reusing headers such as “–Initiating &lt;subcmd&gt;–”</p>
+<p>dmflogger = DynamicMultiFileLogger() ## instantiate w/ dummy log location, close immediately &amp; remove file
+dmflogger.add_file(“log1”, “/mnt/chaelab/rachelle/tmp/log1.log”) ## check &amp; store filename in dict
+dmflogger.add_file(“log2”, “/mnt/chaelab/rachelle/tmp/log2.log”) ## check &amp; store filename in dict
+dmflogger.add_format(“cmd”, “command: %(message)s”)
+dmflogger.add_format(“full”, “%(asctime)s - %(name)s - %(levelname)s:%(message)s”)
+dmflogger.add_stream_handler(“cheader”, level = logging.INFO, format = “cmd”)
+dmflogger.add_file_handler(“fheader”, level = logging.INFO, format = “cmd”) ## mk template DynamicFileHandler
+dmflogger.add_stream_handler(“cfull”, level = logging.INFO, format = “full”)
+dmflogger.add_file_handler(“ffull”, level = logging.INFO, format = “full”) ## mk template DynamicFileHandler
+dmflogger.add_group(“header”, “cheader”, “fheader”)
+dmflogger.add_group(“full”, “cfull”, “ffull”)
+dmflogger.add_group(“all”, <a href="#id1"><span class="problematic" id="id2">*</span></a>dmflogger.handlers) ## perhaps have a built-in ‘all’ group?
+# dmflogger.log1.add_handler(“header”) ## duplicate fheader’s DynamicFileHandler
+# dmflogger.log2.add_handler(“header”, “full”) ## duplicate ffull AND fheader’s DynamicFileHandlers
+dmflogger.header.info(“executing minimumset”)
+dmflogger.full.debug(“we’re doing something”)
+dmflogger.log2.update_filename(“/mnt/chaelab/rachelle/log3.log”)</p>
+<dl class="simple">
+<dt>IMPT: ensure no duplicate calls of StreamHandlers for groups w/ StreamHandler that are</dt><dd><p>associated with multiple files</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>each ‘file’ is represented by a DynamicFileLogger (allows file-specific logging)
+- ensure all changes to DynamicMultiFileLogger groups are propagated to each file’s DynamicFileLogger</p></li>
+<li><p>if logging directly from DynamicMultiFileLogger, DON”T call each file’s DynamicFileLogger.error…</p></li>
+<li><p>file handlers (DynamicFileHandlers) to be handled distinctly from StreamHandlers
+- when new file handlers are added, create template file handler w/ dummy log location, close, then rm
+- when file handlers are assigned to a file, duplicate handler template, update log location w/ filename, then add duplicated handler to group’s MultiLogger and file’s DynamicFileLogger
+- ensure that groups are also propagated to each file’s DynamicFileLogger</p></li>
+<li><p>when removing handlers from groups, ensure that this is propagated to group’s MultiLogger AND file’s DynamicFileLogger</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.add_file">
+<span class="sig-name descname"><span class="pre">add_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">handlers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.add_file" title="Permalink to this definition"></a></dt>
+<dd><p>Positional ‘handlers’ for Handlers already added to DynamicFileLogger object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.add_file_handler">
+<span class="sig-name descname"><span class="pre">add_file_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%(asctime)s</span> <span class="pre">%(message)s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.add_file_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.crosstalk">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">crosstalk</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.crosstalk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.update_file">
+<span class="sig-name descname"><span class="pre">update_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.update_file" title="Permalink to this definition"></a></dt>
+<dd><p>Both ‘add’ and ‘remove’ accept groups, not just handlers
+If a name (provided to ‘add’ or ‘remove’ refers to both a handler and a group, handler is prioritised</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.update_filename">
+<span class="sig-name descname"><span class="pre">update_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.update_filename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.DynamicMultiFileLogger.update_group">
+<span class="sig-name descname"><span class="pre">update_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.DynamicMultiFileLogger.update_group" title="Permalink to this definition"></a></dt>
+<dd><p>Add or remove handlers from group</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">GroupLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.MultiLogger" title="minorg.dynamic_logger.MultiLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.MultiLogger</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.active_handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">active_handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.active_handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.active_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">active_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.active_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.add_file_handler">
+<span class="sig-name descname"><span class="pre">add_file_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%(asctime)s</span> <span class="pre">%(message)s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.add_file_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.add_format">
+<span class="sig-name descname"><span class="pre">add_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.add_format" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.add_group">
+<span class="sig-name descname"><span class="pre">add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*handlers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_log_level=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_msg=&lt;function</span> <span class="pre">GroupLogger.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.add_group" title="Permalink to this definition"></a></dt>
+<dd><p>Positional ‘handlers’ for Handlers already added to DynamicFileLogger object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.add_stream_handler">
+<span class="sig-name descname"><span class="pre">add_stream_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%(asctime)s</span> <span class="pre">%(message)s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.add_stream_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.all_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.all_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.file_handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.file_handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.file_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.file_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.format">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.format" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.format_children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format_children</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.format_children" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.format_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.format_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.format_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.format_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.formats">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">formats</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.formats" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.get_handler">
+<span class="sig-name descname"><span class="pre">get_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.get_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.group_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.group_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.groups" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.handler">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.handler_children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_children</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.handler_children" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.handler_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.handler_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.orphan_handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">orphan_handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.orphan_handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.orphan_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">orphan_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.orphan_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.remove_group">
+<span class="sig-name descname"><span class="pre">remove_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.remove_group" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.stream_handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.stream_handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.stream_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.stream_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.GroupLogger.update_group">
+<span class="sig-name descname"><span class="pre">update_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.GroupLogger.update_group" title="Permalink to this definition"></a></dt>
+<dd><p>Add or remove handlers from group</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.HiddenAttribute">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">HiddenAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribute_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_bound_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.HiddenAttribute" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Used to hide superclass attributes by throwing error upon attempted access to specific method names
+Used in conjuction with <a class="reference external" href="mailto:'&#37;&#52;&#48;property">‘<span>&#64;</span>property</a>’ decorator, e.g.:</p>
+<blockquote>
+<div><p>&#64;property
+def method_to_hide: raise HiddenMethod(super().method_to_hide)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>When the method to be hidden is already a property, use:</dt><dd><p>&#64;property
+def method_to_hide: raise HiddenMethod(super(self.__class__, self.__class__).method_to_hide.fget, self)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.HiddenMethod">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">HiddenMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_bound_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.HiddenMethod" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.HiddenAttribute" title="minorg.dynamic_logger.HiddenAttribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.HiddenAttribute</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.HiddenProperty">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">HiddenProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_bound_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.HiddenProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.HiddenAttribute" title="minorg.dynamic_logger.HiddenAttribute"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.HiddenAttribute</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.InvalidArgs">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">InvalidArgs</span></span><a class="headerlink" href="#minorg.dynamic_logger.InvalidArgs" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.InvalidName">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">InvalidName</span></span><a class="headerlink" href="#minorg.dynamic_logger.InvalidName" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.InvalidType">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">InvalidType</span></span><a class="headerlink" href="#minorg.dynamic_logger.InvalidType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">MultiChild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child_adj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'child'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Child'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_alias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Child'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args_for_instantiating_children_upon_creation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.add_child">
+<span class="sig-name descname"><span class="pre">add_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.add_child" title="Permalink to this definition"></a></dt>
+<dd><p>accepts Child obj or child_name (str)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.children" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.children_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.children_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.children_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.children_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.filter_children">
+<span class="sig-name descname"><span class="pre">filter_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.filter_children" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.filter_children_map">
+<span class="sig-name descname"><span class="pre">filter_children_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f=&lt;function</span> <span class="pre">MultiChild.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.filter_children_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.filter_children_names">
+<span class="sig-name descname"><span class="pre">filter_children_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.filter_children_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.get_child">
+<span class="sig-name descname"><span class="pre">get_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.get_child" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.get_child_name">
+<span class="sig-name descname"><span class="pre">get_child_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.get_child_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.is_child">
+<span class="sig-name descname"><span class="pre">is_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.is_child" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.is_child_class">
+<span class="sig-name descname"><span class="pre">is_child_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.is_child_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.name_available">
+<span class="sig-name descname"><span class="pre">name_available</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.name_available" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiChild.remove_child">
+<span class="sig-name descname"><span class="pre">remove_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiChild.remove_child" title="Permalink to this definition"></a></dt>
+<dd><p>accepts both child_name (str) and Child obj</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">MultiHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.MultiHandlerBase" title="minorg.dynamic_logger.MultiHandlerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.MultiHandlerBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandler.handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandler.handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">MultiHandlerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.MultiChild" title="minorg.dynamic_logger.MultiChild"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.MultiChild</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.add_handler">
+<span class="sig-name descname"><span class="pre">add_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_duplicate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.add_handler" title="Permalink to this definition"></a></dt>
+<dd><p>Accepts a Handler object (e.g. StreamHandler, FileHandler, DynamicFileHandler)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.all_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.all_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.file_handler_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_handler_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.file_handler_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.file_handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.file_handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.file_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.file_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.handler_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.handler_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.remove_handler">
+<span class="sig-name descname"><span class="pre">remove_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.remove_handler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.stream_handler_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_handler_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.stream_handler_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.stream_handler_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_handler_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.stream_handler_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiHandlerBase.stream_handlers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_handlers</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiHandlerBase.stream_handlers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">MultiLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger_class=&lt;class</span> <span class="pre">'minorg.dynamic_logger.PublicLogger'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_logger=&lt;function</span> <span class="pre">MultiLogger.&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_log_level=20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.MultiChild" title="minorg.dynamic_logger.MultiChild"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.MultiChild</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.add_logger">
+<span class="sig-name descname"><span class="pre">add_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.add_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.get_logger">
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.get_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.is_logger">
+<span class="sig-name descname"><span class="pre">is_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.is_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.logger_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger_map</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.logger_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.logger_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger_names</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.logger_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.loggers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loggers</span></span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.loggers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.MultiLogger.remove_logger">
+<span class="sig-name descname"><span class="pre">remove_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.MultiLogger.remove_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.PublicAwareLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">PublicAwareLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crosstalk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.PublicAwareLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.PublicLogger" title="minorg.dynamic_logger.PublicLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.PublicLogger</span></code></a></p>
+<p>Handles crosstalk and logging level</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.PublicAwareLogger.crosstalk">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">crosstalk</span></span><a class="headerlink" href="#minorg.dynamic_logger.PublicAwareLogger.crosstalk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.PublicLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">PublicLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_log_level=20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_msg=&lt;function</span> <span class="pre">PublicLogger.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.PublicLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Logger</span></code>, <a class="reference internal" href="#minorg.dynamic_logger.MultiHandlerBase" title="minorg.dynamic_logger.MultiHandlerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.MultiHandlerBase</span></code></a></p>
+<p>Logger object, but it adds Handler objects as attributes for easy access</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.PublicLogger.addHandler">
+<span class="sig-name descname"><span class="pre">addHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handler_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_duplicate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.PublicLogger.addHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Add the specified handler to this logger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.PublicLogger.removeHandler">
+<span class="sig-name descname"><span class="pre">removeHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.PublicLogger.removeHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the specified handler from this logger.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.ReservedName">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">ReservedName</span></span><a class="headerlink" href="#minorg.dynamic_logger.ReservedName" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.dynamic_logger.InvalidName" title="minorg.dynamic_logger.InvalidName"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.dynamic_logger.InvalidName</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.UnknownChild">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">UnknownChild</span></span><a class="headerlink" href="#minorg.dynamic_logger.UnknownChild" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.UnknownInitialiser">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">UnknownInitialiser</span></span><a class="headerlink" href="#minorg.dynamic_logger.UnknownInitialiser" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.UnknownReferenceWarning">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">UnknownReferenceWarning</span></span><a class="headerlink" href="#minorg.dynamic_logger.UnknownReferenceWarning" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.append_time">
+<span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">append_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.append_time" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.check_path_and_return">
+<span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">check_path_and_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.check_path_and_return" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.file_in_use">
+<span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">file_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.file_in_use" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.dynamic_logger.test_logger">
+<span class="sig-prename descclassname"><span class="pre">minorg.dynamic_logger.</span></span><span class="sig-name descname"><span class="pre">test_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dmfl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_getters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.dynamic_logger.test_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.display.html" class="btn btn-neutral float-left" title="minorg.display module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="minorg.exceptions.html" class="btn btn-neutral float-right" title="minorg.exceptions module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.reference module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="minorg.parse_config module" href="minorg.parse_config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORg.html">minorg.MINORg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORgCLI.html">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.grna.html">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.reference module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.reference.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.reference">
+<span id="minorg-reference-module"></span><h1>minorg.reference module<a class="headerlink" href="#module-minorg.reference" title="Permalink to this headline"></a></h1>
+<p>Classes that integrate FASTA and GFF3 files for retrieval of feature sequences</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.reference.</span></span><span class="sig-name descname"><span class="pre">AnnotatedFasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reference'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genetic_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.reference.AnnotatedFasta" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="minorg.index.html#minorg.index.IndexedFasta" title="minorg.index.IndexedFasta"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.index.IndexedFasta</span></code></a></p>
+<p>Representation of FASTA file with GFF3 annotations</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.name" title="Permalink to this definition"></a></dt>
+<dd><p>name/alias of reference genome</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.fasta">
+<span class="sig-name descname"><span class="pre">fasta</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.fasta" title="Permalink to this definition"></a></dt>
+<dd><p>path to genome FASTA file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta._gff">
+<span class="sig-name descname"><span class="pre">_gff</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta._gff" title="Permalink to this definition"></a></dt>
+<dd><p>path to GFF3 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.gff">
+<span class="sig-name descname"><span class="pre">gff</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.gff" title="Permalink to this definition"></a></dt>
+<dd><p>path to GFF3 file.
+If <a class="reference internal" href="#minorg.reference.AnnotatedFasta.subset_annotation" title="minorg.reference.AnnotatedFasta.subset_annotation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">subset_annotation()</span></code></a> has been called,
+this points to the file of subsetted annotations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.genetic_code">
+<span class="sig-name descname"><span class="pre">genetic_code</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.genetic_code" title="Permalink to this definition"></a></dt>
+<dd><p>NCBI genetic code</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.attr_mod">
+<span class="sig-name descname"><span class="pre">attr_mod</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.attr_mod" title="Permalink to this definition"></a></dt>
+<dd><p>attribute modification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.memsave">
+<span class="sig-name descname"><span class="pre">memsave</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.memsave" title="Permalink to this definition"></a></dt>
+<dd><p>whether to index GFF3 file instead of reading to memory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.assembly">
+<span class="sig-name descname"><span class="pre">assembly</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.assembly" title="Permalink to this definition"></a></dt>
+<dd><p>self, stores parsed sequence data.
+As this class inherits from IndexedFasta,
+<code class="docutils literal notranslate"><span class="pre">self.assembly</span></code> provides an analogous way of retrieving sequence data
+as <code class="docutils literal notranslate"><span class="pre">self.annotation</span></code> retrieves annotation data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.reference.AnnotatedFasta" title="minorg.reference.AnnotatedFasta"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotatedFasta</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.annotation">
+<span class="sig-name descname"><span class="pre">annotation</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.annotation" title="Permalink to this definition"></a></dt>
+<dd><p>GFF object, stores parsed annotation data.
+If <a class="reference internal" href="#minorg.reference.AnnotatedFasta.subset_annotation" title="minorg.reference.AnnotatedFasta.subset_annotation"><code class="xref py py-meth docutils literal notranslate"><span class="pre">subset_annotation()</span></code></a> has been called,
+this stores data of subsetted annotations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="minorg.annotation.html#minorg.annotation.GFF" title="minorg.annotation.GFF"><code class="xref py py-class docutils literal notranslate"><span class="pre">GFF</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta._annotated_features">
+<span class="sig-name descname"><span class="pre">_annotated_features</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta._annotated_features" title="Permalink to this definition"></a></dt>
+<dd><p>stores recently retrieved AnnotatedFeature objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'reference'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genetic_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create an AnnotatedFasta object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fasta</strong> (<em>str</em>) – path to FASTA file of genome assembly</p></li>
+<li><p><strong>gff</strong> (<em>str</em>) – path to GFF3 file of genome annotation</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of genome (default=’refrence’)</p></li>
+<li><p><strong>attr_mod</strong> (<em>dict</em>) – attribute modifications (default={})
+(fmt:{‘&lt;feature&gt;’:{‘&lt;standard attribute field name&gt;’:’&lt;nonstandard attribute field name used&gt;’}})
+(e.g.: {‘mRNA’: {‘Parent’: ‘Locus_id’}})</p></li>
+<li><p><strong>genetic_code</strong> (<em>int</em><em> or </em><em>str</em>) – NCBI genetic code (default=1)
+(see: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a>)
+(1 –&gt; Standard Code; 2 –&gt; Vertebrate Mitochondrial Code; etc.)</p></li>
+<li><p><strong>memsave</strong> (<em>bool</em>) – index GFF3 file instead of reading data to memory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.annotated_feature">
+<span class="sig-name descname"><span class="pre">annotated_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="minorg.annotation.html#minorg.annotation.Annotation" title="minorg.annotation.Annotation"><span class="pre">minorg.annotation.Annotation</span></a></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.annotated_feature" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve annotated feature.</p>
+<p>Also store feature’s annotation in <code class="docutils literal notranslate"><span class="pre">self._annotated_features</span></code> for future quick retrieval.
+If this method has been called before with the same feature ID,
+output will be retrieved from <code class="docutils literal notranslate"><span class="pre">self._annotated_features</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Annotation object of feature</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="minorg.annotation.html#minorg.annotation.Annotation" title="minorg.annotation.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.Annotation</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.feature_pos">
+<span class="sig-name descname"><span class="pre">feature_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.feature_pos" title="Permalink to this definition"></a></dt>
+<dd><p>Get range of feature and convert to set of positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feature_id</strong> (<em>str</em>) – feature ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of integer value coordinates within feature range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.feature_range">
+<span class="sig-name descname"><span class="pre">feature_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.feature_range" title="Permalink to this definition"></a></dt>
+<dd><p>Get range of feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feature_id</strong> (<em>str</em>) – feature ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of range. E.g (&lt;start&gt;, &lt;end&gt;)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.get_feature_seq">
+<span class="sig-name descname"><span class="pre">get_feature_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">feature_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_gene</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pssm_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpsblast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rpsblast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rps_hits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mktmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_gff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqid_template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_template_to_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.get_feature_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Get sequences of multiple features.
+Except for <code class="docutils literal notranslate"><span class="pre">feature_ids</span></code>, all arguments are strictly speaking optional.
+If no arguments are specified, the sense strand of the specified features will be returned.
+For more complicated queries,
+in addition to modifying flags <code class="docutils literal notranslate"><span class="pre">adj_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">complete</span></code>, and/or <code class="docutils literal notranslate"><span class="pre">translate</span></code>,
+users may optionally specify a feature type and/or Pssm-Id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fout</strong> (<em>str</em>) – path to output file; if not provided, dictionary of seqs will be returned</p></li>
+<li><p><strong>feature_type</strong> (<em>str</em>) – GFF feature type (e.g. “CDS”)</p></li>
+<li><p><strong>adj_dir</strong> (<em>bool</em>) – output sense strand</p></li>
+<li><p><strong>complete</strong> (<em>bool</em>) – merge output range(s) together into single range.
+Output will stll be a list of tuple. (e.g. [(&lt;smallest start&gt;, &lt;largest end&gt;)])</p></li>
+<li><p><strong>translate</strong> (<em>bool</em>) – translate sequence.
+For biologically sound results, <code class="docutils literal notranslate"><span class="pre">translate=True</span></code> only be used with
+<code class="docutils literal notranslate"><span class="pre">feature_type=&quot;CDS&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">adj_dir=True</span></code>, and <code class="docutils literal notranslate"><span class="pre">complete=False</span></code>.</p></li>
+<li><p><strong>pssm_id</strong> (<em>str</em><em> or </em><em>list</em>) – Pssm-Id of domain(s) to restrict output sequence range to.
+If provided and <code class="docutils literal notranslate"><span class="pre">rps_hits=None</span></code>,
+RPS-BLAST will be conducted on concatenated CDS to search for domain(s).</p></li>
+<li><p><strong>by_gene</strong> (<em>bool</em>) – merge overlapping domain ranges from different isoforms</p></li>
+<li><p><strong>db</strong> (<em>str</em>) – path to RPS-BLAST database</p></li>
+<li><p><strong>rpsblast</strong> (<em>str</em>) – path to rpsblast or rpsblast+ executable
+(or name of command, if available at command line)</p></li>
+<li><p><strong>rps_hits</strong> (<em>str</em>) – path to RPS-BLAST output, outfmt 6, with header.
+If provided, <code class="docutils literal notranslate"><span class="pre">db</span></code> and <code class="docutils literal notranslate"><span class="pre">rpsblast</span></code> are not required.</p></li>
+<li><p><strong>thread</strong> (<em>int</em>) – number of threads for RPS-BLAST</p></li>
+<li><p><strong>mktmp</strong> (<em>func</em>) – function that takes a file name and generates an absolute path,
+used for temporary files.
+<code class="docutils literal notranslate"><span class="pre">tempfile.mkstemp</span></code> will be used if not provided.</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – print only essential messages</p></li>
+<li><p><strong>fout_gff</strong> (<em>str</em>) – path to output GFF3 file in which to write domain features, entirely optional</p></li>
+<li><p><strong>seqid_template</strong> (<em>str</em>) – <p>optional, template for output sequence name.
+Template will be parsed by strings.Template.
+The default template is “$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense”.</p>
+<blockquote>
+<div><ul>
+<li><p>$source: reference genome alias</p></li>
+<li><p>$gene: gene/isoform ID</p></li>
+<li><p>$feature: GFF3 feature type</p></li>
+<li><p>$isoform: isoform ID if by_gene = False, else same as $gene</p></li>
+<li><p>$domain: Pssm-Id</p></li>
+<li><p>$n: if multiple domains are present, they will be numbered according to
+proximity to 5’ of sense strand</p></li>
+<li><p>$complete: ‘complete’ if <code class="docutils literal notranslate"><span class="pre">complete=True</span></code> else ‘stitched’</p></li>
+<li><p>$strand: ‘minus’ if <code class="docutils literal notranslate"><span class="pre">adj_dir=False</span></code> and not self.plus else ‘plus’</p></li>
+<li><p>$sense: ‘NA’ if self.strand is not set
+else ‘antisense’ if <code class="docutils literal notranslate"><span class="pre">adj_dir=False</span></code> and not self.plus else ‘sense’</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>apply_template_to_dict</strong> (<em>bool</em>) – flatten output dict and assign sequence names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>dict of dict of Bio.Seq.Seq</em> – If <code class="docutils literal notranslate"><span class="pre">apply_template_to_dict=False</span></code>.
+Format if <code class="docutils literal notranslate"><span class="pre">pssm_id=None</span></code>: {self.id: {(0, self.length): &lt;sequence&gt;}}
+Format if pssm_id is provided:
+{&lt;isoform_id&gt;: {(start pos of domain in self, end pos of domain in self): &lt;sequence&gt;}}</p></li>
+<li><p><em>dict of Bio.Seq.Seq</em> – If <code class="docutils literal notranslate"><span class="pre">apply_template_to_dict=True</span></code></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.parse_gff">
+<span class="sig-name descname"><span class="pre">parse_gff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.parse_gff" title="Permalink to this definition"></a></dt>
+<dd><p>Parse GFF3 file stored <a class="reference internal" href="#minorg.reference.AnnotatedFasta.gff" title="minorg.reference.AnnotatedFasta.gff"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gff</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.reduce_annotation">
+<span class="sig-name descname"><span class="pre">reduce_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.reduce_annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">self.subset_annotation</span></code> so functions written before the renaming won’t break.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFasta.subset_annotation">
+<span class="sig-name descname"><span class="pre">subset_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFasta.subset_annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Subset GFF3 annotations by feature ID (including subfeatures)
+and generate new file of subsetted features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*ids</strong> (<em>str</em>) – required, list or tuple of feature IDs</p></li>
+<li><p><strong>fout</strong> (<em>str</em>) – optional, path to output file.
+If not provided, <code class="docutils literal notranslate"><span class="pre">tempfile.mkstemp</span></code> will be used to generate a temporary file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.reference.</span></span><span class="sig-name descname"><span class="pre">AnnotatedFeature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotated_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rps_hits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.reference.AnnotatedFeature" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="minorg.annotation.html#minorg.annotation.Annotation" title="minorg.annotation.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.Annotation</span></code></a></p>
+<p>Representation of GFF3 feature annotation, including its subfeatures.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.annotated_fasta">
+<span class="sig-name descname"><span class="pre">annotated_fasta</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.annotated_fasta" title="Permalink to this definition"></a></dt>
+<dd><p>parent <a class="reference internal" href="#minorg.reference.AnnotatedFasta" title="minorg.reference.AnnotatedFasta"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotatedFasta</span></code></a> object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.reference.AnnotatedFasta" title="minorg.reference.AnnotatedFasta"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotatedFasta</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.annotation">
+<span class="sig-name descname"><span class="pre">annotation</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.annotation" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="minorg.annotation.html#minorg.annotation.GFF" title="minorg.annotation.GFF"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.GFF</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotated_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rps_hits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create an AnnotatedFeature object.</p>
+<p>Annotation data for feature and its subfeatures will be extracted from
+either <code class="docutils literal notranslate"><span class="pre">gff</span></code> or <code class="docutils literal notranslate"><span class="pre">annotated_fasta</span></code> ‘s <a class="reference internal" href="#minorg.reference.AnnotatedFasta.annotation" title="minorg.reference.AnnotatedFasta.annotation"><code class="xref py py-attr docutils literal notranslate"><span class="pre">minorg.reference.AnnotatedFasta.annotation</span></code></a> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – required, ID of feature (typically gene name or isoform name)</p></li>
+<li><p><strong>annotated_fasta</strong> (<a class="reference internal" href="#minorg.reference.AnnotatedFasta" title="minorg.reference.AnnotatedFasta"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotatedFasta</span></code></a>) – required, <a class="reference internal" href="#minorg.reference.AnnotatedFasta" title="minorg.reference.AnnotatedFasta"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnnotatedFasta</span></code></a> object</p></li>
+<li><p><strong>gff</strong> (str or <a class="reference internal" href="minorg.annotation.html#minorg.annotation.GFF" title="minorg.annotation.GFF"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.GFF</span></code></a>) – optional,
+path to GFF file or <a class="reference internal" href="minorg.annotation.html#minorg.annotation.GFF" title="minorg.annotation.GFF"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.GFF</span></code></a> object</p></li>
+<li><p><strong>rps_hits</strong> (<em>str</em>) – optional, path to RPS-BLAST output (outfmt 6, with header)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.adj_feature_range">
+<span class="sig-name descname"><span class="pre">adj_feature_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">feature_range_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.adj_feature_range" title="Permalink to this definition"></a></dt>
+<dd><p>Convert range in subfeatures of feature type to range in current feature.
+(For example, convert the range of a domain in a concatenated CDS sequence to position in mRNA.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature_type</strong> (<em>str</em>) – feature type</p></li>
+<li><p><strong>ranges</strong> (<em>list of tuple</em>) – ranges relative to subfeatures of feature type</p></li>
+<li><p><strong>complete</strong> (<em>bool</em>) – merge output range(s) together into single range.
+Output will stll be a list of tuple. (e.g. [(&lt;smallest start&gt;, &lt;largest end&gt;)])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.adj_subfeature_range">
+<span class="sig-name descname"><span class="pre">adj_subfeature_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subfeature_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">subfeature_range_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.adj_subfeature_range" title="Permalink to this definition"></a></dt>
+<dd><p>Convert range in a subfeature to range in current feature.
+(For example, convert the range in mRNA to position in gene.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subfeature_id</strong> (<em>str</em>) – subfeature ID</p></li>
+<li><p><strong>ranges</strong> (<em>list of tuple</em>) – ranges relative to sub-subfeatures of feature type in subfeature</p></li>
+<li><p><strong>complete</strong> (<em>bool</em>) – merge output range(s) together into single range.
+Output will stll be a list of tuple. (e.g. [(&lt;smallest start&gt;, &lt;largest end&gt;)])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.convert_range">
+<span class="sig-name descname"><span class="pre">convert_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_incl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_incl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.convert_range" title="Permalink to this definition"></a></dt>
+<dd><p>Convert range(s) from 0-index [start, end).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – output range index</p></li>
+<li><p><strong>start_incl</strong> (<em>bool</em>) – whether output range is start-inclusive</p></li>
+<li><p><strong>end_incl</strong> (<em>bool</em>) – whether output range is end-inclusive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>In same structure as input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple or list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.copy_annotation">
+<span class="sig-name descname"><span class="pre">copy_annotation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="minorg.annotation.html#minorg.annotation.Annotation" title="minorg.annotation.Annotation"><span class="pre">minorg.annotation.Annotation</span></a></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.copy_annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Generate new <a class="reference internal" href="minorg.annotation.html#minorg.annotation.Annotation" title="minorg.annotation.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.Annotation</span></code></a> object with self’s annotation data.</p>
+<p>Used to make new Annotation for domains that will be modified with domain range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="minorg.annotation.html#minorg.annotation.Annotation" title="minorg.annotation.Annotation"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.annotation.Annotation</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.feature_range">
+<span class="sig-name descname"><span class="pre">feature_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genomic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.feature_range" title="Permalink to this definition"></a></dt>
+<dd><p>Return ranges of entries of a given feature type (e.g. “CDS”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature_type</strong> (<em>str</em>) – GFF3 feature type</p></li>
+<li><p><strong>genomic</strong> (<em>bool</em>) – output range in genome instead of relative to sense strand of current feature</p></li>
+<li><p><strong>union</strong> (<em>bool</em>) – merge overlapping ranges</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.get_seq">
+<span class="sig-name descname"><span class="pre">get_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pssm_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_gene</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpsblast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rpsblast'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rps_hits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mktmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_gff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqid_template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_template_to_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.get_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Get sequence of feature or subfeature.
+All arguments are strictly speaking optional.
+If no arguments are specified, self’s sense strand sequence will be returned.
+For more complicated queries,
+in addition to modifying flags <code class="docutils literal notranslate"><span class="pre">adj_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">complete</span></code>, and/or <code class="docutils literal notranslate"><span class="pre">translate</span></code>,
+users may optionally specify a feature type, Pssm-Id, and/or
+restrict range relative to self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fout</strong> (<em>str</em>) – path to output file; if not provided, dictionary of seqs will be returned</p></li>
+<li><p><strong>feature_type</strong> (<em>str</em>) – GFF feature type (e.g. “CDS”)</p></li>
+<li><p><strong>adj_dir</strong> (<em>bool</em>) – output sense strand</p></li>
+<li><p><strong>complete</strong> (<em>bool</em>) – merge output range(s) together into single range.
+Output will stll be a list of tuple. (e.g. [(&lt;smallest start&gt;, &lt;largest end&gt;)])</p></li>
+<li><p><strong>translate</strong> (<em>bool</em>) – translate sequence.
+For biologically sound results, <code class="docutils literal notranslate"><span class="pre">translate=True</span></code> only be used with
+<code class="docutils literal notranslate"><span class="pre">feature_type=&quot;CDS&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">adj_dir=True</span></code>, and <code class="docutils literal notranslate"><span class="pre">complete=False</span></code>.</p></li>
+<li><p><strong>ranges</strong> (<em>list of tuple</em>) – 0-indexed ranges, relative to sense strand of self</p></li>
+<li><p><strong>pssm_id</strong> (<em>str</em><em> or </em><em>list</em>) – Pssm-Id of domain(s) to restrict output sequence range to.
+If provided and <code class="docutils literal notranslate"><span class="pre">rps_hits=None</span></code>,
+RPS-BLAST will be conducted on concatenated CDS to search for domain(s).</p></li>
+<li><p><strong>by_gene</strong> (<em>bool</em>) – merge overlapping domain ranges from different isoforms</p></li>
+<li><p><strong>db</strong> (<em>str</em>) – path to RPS-BLAST database</p></li>
+<li><p><strong>rpsblast</strong> (<em>str</em>) – path to rpsblast or rpsblast+ executable
+(or name of command, if available at command line)</p></li>
+<li><p><strong>rps_hits</strong> (<em>str</em>) – path to RPS-BLAST output, outfmt 6, with header.
+If provided, <code class="docutils literal notranslate"><span class="pre">db</span></code> and <code class="docutils literal notranslate"><span class="pre">rpsblast</span></code> are not required.</p></li>
+<li><p><strong>thread</strong> (<em>int</em>) – number of threads for RPS-BLAST</p></li>
+<li><p><strong>mktmp</strong> (<em>func</em>) – function that takes a file name and generates an absolute path,
+used for temporary files.
+<code class="docutils literal notranslate"><span class="pre">tempfile.mkstemp</span></code> will be used if not provided.</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – print only essential messages</p></li>
+<li><p><strong>fout_gff</strong> (<em>str</em>) – path to output GFF3 file in which to write domain features, entirely optional</p></li>
+<li><p><strong>seqid_template</strong> (<em>str</em>) – <p>optional, template for output sequence name.
+Template will be parsed by strings.Template.
+The default template is “$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense”.</p>
+<blockquote>
+<div><ul>
+<li><p>$source: reference genome alias</p></li>
+<li><p>$gene: gene/isoform ID</p></li>
+<li><p>$feature: GFF3 feature type</p></li>
+<li><p>$isoform: isoform ID if by_gene = False, else same as $gene</p></li>
+<li><p>$domain: Pssm-Id</p></li>
+<li><p>$n: if multiple domains are present, they will be numbered according to
+proximity to 5’ of sense strand</p></li>
+<li><p>$complete: ‘complete’ if <code class="docutils literal notranslate"><span class="pre">complete=True</span></code> else ‘stitched’</p></li>
+<li><p>$strand: ‘minus’ if <code class="docutils literal notranslate"><span class="pre">adj_dir=False</span></code> and not self.plus else ‘plus’</p></li>
+<li><p>$sense: ‘NA’ if self.strand is not set
+else ‘antisense’ if <code class="docutils literal notranslate"><span class="pre">adj_dir=False</span></code> and not self.plus else ‘sense’</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>apply_template_to_dict</strong> (<em>bool</em>) – flatten output dict and assign sequence names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>dict of dict of Bio.Seq.Seq</em> – If <code class="docutils literal notranslate"><span class="pre">apply_template_to_dict=False</span></code>.
+Format if <code class="docutils literal notranslate"><span class="pre">pssm_id=None</span></code>: {self.id: {(0, self.length): &lt;sequence&gt;}}
+Format if pssm_id is provided:
+{&lt;isoform_id&gt;: {(start pos of domain in self, end pos of domain in self): &lt;sequence&gt;}}</p></li>
+<li><p><em>dict of Bio.Seq.Seq</em> – If <code class="docutils literal notranslate"><span class="pre">apply_template_to_dict=True</span></code></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.length" title="Permalink to this definition"></a></dt>
+<dd><p>Length of feature</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.range_from_genomic">
+<span class="sig-name descname"><span class="pre">range_from_genomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">conversion_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.range_from_genomic" title="Permalink to this definition"></a></dt>
+<dd><p>Output ranges relative to sense strand of self, where first base on sense strand of feature is 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ranges</strong> (<em>list</em>) – genomic range(s), 0-indexed, start-inclusive, end-exclusive
+(e.g. [(start1, end1), (start2, end2), …])</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – output range index</p></li>
+<li><p><strong>start_incl</strong> (<em>bool</em>) – whether output range is start-inclusive</p></li>
+<li><p><strong>end_incl</strong> (<em>bool</em>) – whether output range is end-inclusive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.range_in_genomic_coords">
+<span class="sig-name descname"><span class="pre">range_in_genomic_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_incl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_incl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.range_in_genomic_coords" title="Permalink to this definition"></a></dt>
+<dd><p>Convert range in feature to genomic coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ranges</strong> (<em>list of tuple</em>) – [(start1, end1), (start2, end2), …]
+- relative to sense strand of feature, where first base on sense strand of feature is 0
+- 0-indexed; start-inclusive, end-exclusive</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – output index</p></li>
+<li><p><strong>start_incl</strong> (<em>bool</em>) – start inclusive output ranges</p></li>
+<li><p><strong>end_incl</strong> (<em>bool</em>) – end inclusive output ranges</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.range_to_genomic">
+<span class="sig-name descname"><span class="pre">range_to_genomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">conversion_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.range_to_genomic" title="Permalink to this definition"></a></dt>
+<dd><p>Convert ranges relative to sense strand of feature to their genomic positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ranges</strong> (<em>list</em>) – range(s) relative to sense strand of self, 0-indexed, start-inclusive, end-exclusive
+(e.g. [(start1, end1), (start2, end2), …])</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – output range index</p></li>
+<li><p><strong>start_incl</strong> (<em>bool</em>) – whether output range is start-inclusive</p></li>
+<li><p><strong>end_incl</strong> (<em>bool</em>) – whether output range is end-inclusive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.subfeature_range">
+<span class="sig-name descname"><span class="pre">subfeature_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subfeature_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genomic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.subfeature_range" title="Permalink to this definition"></a></dt>
+<dd><p>Return range of given feature type (e.g. “CDS”) of a sub-feature.
+(e.g. If self.type == “gene”, self.subfeature_range(“&lt;mRNA isoform ID&gt;”, “CDS”)
+will return CDS range(s) of the specified mRNA isoform)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subfeature_id</strong> (<em>str</em>) – subfeature_id</p></li>
+<li><p><strong>feature_type</strong> (<em>str</em>) – GFF3 feature type</p></li>
+<li><p><strong>genomic</strong> (<em>bool</em>) – output range in genome instead of relative to sense strand of current feature</p></li>
+<li><p><strong>union</strong> (<em>bool</em>) – merge overlapping ranges</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of ranges</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuples</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.AnnotatedFeature.subset">
+<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#minorg.reference.AnnotatedFeature" title="minorg.reference.AnnotatedFeature"><span class="pre">minorg.reference.AnnotatedFeature</span></a></span></span><a class="headerlink" href="#minorg.reference.AnnotatedFeature.subset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.reference.InvalidFeatureID">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.reference.</span></span><span class="sig-name descname"><span class="pre">InvalidFeatureID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.reference.InvalidFeatureID" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.MessageError" title="minorg.exceptions.MessageError"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.exceptions.MessageError</span></code></a></p>
+<p>Raised when feature_id does not exist.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.reference.InvalidFeatureID.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.reference.InvalidFeatureID.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.parse_config.html" class="btn btn-neutral float-left" title="minorg.parse_config module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

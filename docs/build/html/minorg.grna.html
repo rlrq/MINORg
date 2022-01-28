@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.grna module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="minorg.index module" href="minorg.index.html" />
+    <link rel="prev" title="minorg.generate_grna module" href="minorg.generate_grna.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORg.html">minorg.MINORg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORgCLI.html">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.grna module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.grna.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.grna">
+<span id="minorg-grna-module"></span><h1>minorg.grna module<a class="headerlink" href="#module-minorg.grna" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.grna.</span></span><span class="sig-name descname"><span class="pre">CheckObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.CheckObj" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object with checks that can be set.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj._checks">
+<span class="sig-name descname"><span class="pre">_checks</span></span><a class="headerlink" href="#minorg.grna.CheckObj._checks" title="Permalink to this definition"></a></dt>
+<dd><p>stores check values (format: {‘&lt;check name&gt;’: &lt;check value (True, False, or None)&gt;}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.CheckObj.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.all_checks_passed">
+<span class="sig-name descname"><span class="pre">all_checks_passed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.all_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Whether self passes all checks.</p>
+<p>Return True only if the values of all checks are True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.all_valid_checks_passed">
+<span class="sig-name descname"><span class="pre">all_valid_checks_passed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.all_valid_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Whether self passes all valid checks.</p>
+<p>Return True if the values of all checks are True OR None BUT NOT False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bool'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.check" title="Permalink to this definition"></a></dt>
+<dd><p>Get check status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>check_name</strong> (<em>str</em>) – check name</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – return type (valid values: “bool”, “str”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – If <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'str'</span></code>.
+If check status is True, returns ‘pass’.
+If check status is False, returns ‘fail’.
+If check status is None, returns ‘NA’.</p></li>
+<li><p><em>bool</em> – If <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'bool'</span></code> AND check status is not None</p></li>
+<li><p><em>None</em> – If <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'bool'</span></code> AND check status is None</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.check_exists">
+<span class="sig-name descname"><span class="pre">check_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.check_exists" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether <code class="docutils literal notranslate"><span class="pre">check_name</span></code> is a valid check name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.check_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#minorg.grna.CheckObj.check_names" title="Permalink to this definition"></a></dt>
+<dd><p>Get all check names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Of check names</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.clear_checks">
+<span class="sig-name descname"><span class="pre">clear_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.clear_checks" title="Permalink to this definition"></a></dt>
+<dd><p>Set values of all checks to None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.set_check">
+<span class="sig-name descname"><span class="pre">set_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.set_check" title="Permalink to this definition"></a></dt>
+<dd><p>Set check value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>check_name</strong> (<em>str</em>) – check name</p></li>
+<li><p><strong>status</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – check status</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Check value will be set to:</dt><dd><ul class="simple">
+<li><p>True: If status = “pass” OR status = True</p></li>
+<li><p>False: If status = “fail” OR status = False</p></li>
+<li><p>None: If status is any other value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.some_checks_passed">
+<span class="sig-name descname"><span class="pre">some_checks_passed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.CheckObj.some_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Whether self passes all of some combination of checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*check_names</strong> (<em>str</em>) – check names</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether self passed all of the specified checks</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.CheckObj.some_valid_checks_passed">
+<span class="sig-name descname"><span class="pre">some_valid_checks_passed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.CheckObj.some_valid_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Whether self passes all of the valid checks in some combination of checks.</p>
+<p>Only returns True if none of the values of the specified checks is False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*check_names</strong> (<em>str</em>) – check names</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether self’s values for all specified checks are True OR None BUT NOT False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.grna.Target">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.grna.</span></span><span class="sig-name descname"><span class="pre">Target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.Target" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.grna.CheckObj" title="minorg.grna.CheckObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.grna.CheckObj</span></code></a></p>
+<p>gRNA target sequence.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.Target._seq">
+<span class="sig-name descname"><span class="pre">_seq</span></span><a class="headerlink" href="#minorg.grna.Target._seq" title="Permalink to this definition"></a></dt>
+<dd><p>sequence, in uppercase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.Target._id">
+<span class="sig-name descname"><span class="pre">_id</span></span><a class="headerlink" href="#minorg.grna.Target._id" title="Permalink to this definition"></a></dt>
+<dd><p>sequence name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.Target._strand">
+<span class="sig-name descname"><span class="pre">_strand</span></span><a class="headerlink" href="#minorg.grna.Target._strand" title="Permalink to this definition"></a></dt>
+<dd><p>strand (possible values: None, ‘+’, ‘-‘)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.Target._sense">
+<span class="sig-name descname"><span class="pre">_sense</span></span><a class="headerlink" href="#minorg.grna.Target._sense" title="Permalink to this definition"></a></dt>
+<dd><p>sense
+(possible values: None, ‘+’, ‘-’; where ‘+’ means sense and ‘-’ means antisense)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.Target.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.Target.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a Target object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – sequence</p></li>
+<li><p><strong>id</strong> (<em>str</em>) – sequence name</p></li>
+<li><p><strong>strand</strong> (<em>str</em>) – sequence strand (values: ‘+’, ‘-‘)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.Target.id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.Target.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.Target.parent_sense">
+<span class="sig-name descname"><span class="pre">parent_sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'raw'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.grna.Target.parent_sense" title="Permalink to this definition"></a></dt>
+<dd><p>Return parent sequence’s sense status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>str</em>) – return string format (valid values: “raw”, “str”)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – If <code class="docutils literal notranslate"><span class="pre">mode='str'</span></code> (‘sense’, ‘antisense’, ‘NA’) OR parent sense has been set (‘+’, ‘-‘)</p></li>
+<li><p><em>None</em> – If <code class="docutils literal notranslate"><span class="pre">mode='raw'</span></code> AND parent sense has not been set</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.Target.sense">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sense</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.Target.sense" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.Target.seq">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seq</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.Target.seq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.Target.set_sense">
+<span class="sig-name descname"><span class="pre">set_sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sense</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.Target.set_sense" title="Permalink to this definition"></a></dt>
+<dd><p>Set sense.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sense</strong> (<em>str</em>) – sense of sequence. Valid values: ‘+’, ‘sense’, ‘-’, ‘antisense’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.Target.set_sense_by_parent">
+<span class="sig-name descname"><span class="pre">set_sense_by_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_sense</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.Target.set_sense_by_parent" title="Permalink to this definition"></a></dt>
+<dd><p>Set sense using parent sequence’s sense AND self’s strand.</p>
+<dl class="simple">
+<dt>Sense if</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parent_sense='+'</span></code> AND self’s strand is ‘+’</p></li>
+<li><p>OR <code class="docutils literal notranslate"><span class="pre">parent_sense='-'</span></code> AND self’s strand is ‘-’</p></li>
+</ul>
+</dd>
+</dl>
+<p>Else antisense.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parent_sense</strong> (<em>str</em>) – sense of parent sequence. Valid values: ‘+’, ‘sense’, ‘-’, ‘antisense’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.Target.strand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">strand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.Target.strand" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.Target.valid_len">
+<span class="sig-name descname"><span class="pre">valid_len</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.Target.valid_len" title="Permalink to this definition"></a></dt>
+<dd><p>Whether length of sequence is equal to or greater than 1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.grna.</span></span><span class="sig-name descname"><span class="pre">gRNAHit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hit_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.grna.CheckObj" title="minorg.grna.CheckObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.grna.CheckObj</span></code></a></p>
+<p>gRNA hit</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit._target">
+<span class="sig-name descname"><span class="pre">_target</span></span><a class="headerlink" href="#minorg.grna.gRNAHit._target" title="Permalink to this definition"></a></dt>
+<dd><p>Target object of sequence that gRNA targets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.grna.Target" title="minorg.grna.Target"><code class="xref py py-class docutils literal notranslate"><span class="pre">Target</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit._range">
+<span class="sig-name descname"><span class="pre">_range</span></span><a class="headerlink" href="#minorg.grna.gRNAHit._range" title="Permalink to this definition"></a></dt>
+<dd><p>position of gRNA in target</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit._strand">
+<span class="sig-name descname"><span class="pre">_strand</span></span><a class="headerlink" href="#minorg.grna.gRNAHit._strand" title="Permalink to this definition"></a></dt>
+<dd><p>strand of gRNA in target</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit._hit_id">
+<span class="sig-name descname"><span class="pre">_hit_id</span></span><a class="headerlink" href="#minorg.grna.gRNAHit._hit_id" title="Permalink to this definition"></a></dt>
+<dd><p>unique hit identifier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hit_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a gRNAHit object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<a class="reference internal" href="#minorg.grna.Target" title="minorg.grna.Target"><code class="xref py py-class docutils literal notranslate"><span class="pre">Target</span></code></a>) – Target object of sequence that gRNA targets</p></li>
+<li><p><strong>start</strong> (<em>int</em>) – start position of gRNA in target (relative to parent sequence of target)</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – end position of gRNA in target (relative to parent sequence of target)</p></li>
+<li><p><strong>hit_id</strong> – unique hit identifier</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.adj_range">
+<span class="sig-name descname"><span class="pre">adj_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'strand'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHit.adj_range" title="Permalink to this definition"></a></dt>
+<dd><p>Return range based on strand, target, or gene.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mode='strand'</span></code>:
+- Return range relative to plus strand. Uses self.strand.
+<code class="docutils literal notranslate"><span class="pre">mode='target'</span></code>:
+- Return range relative to target sequence. Uses self.strand == self.target_strand.
+<code class="docutils literal notranslate"><span class="pre">mode='gene'</span></code>:
+- Return range relative to sense strand. Uses self.target.sense == self.strand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>str</em>) – reference for range. Valid values: ‘strand’, ‘target’, ‘gene’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>tuple</em> – Of (start, end)</p></li>
+<li><p><em>tuple</em> – Of (float(‘nan’), float(‘nan’)) if the reference cannot be determined.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.end">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">end</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.end" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.flank">
+<span class="sig-name descname"><span class="pre">flank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.flank" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.hit_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hit_id</span></span><a class="headerlink" href="#minorg.grna.gRNAHit.hit_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.parent_sense">
+<span class="sig-name descname"><span class="pre">parent_sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'raw'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.parent_sense" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.range" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.reverse_range">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reverse_range</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.reverse_range" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.set_bg_check">
+<span class="sig-name descname"><span class="pre">set_bg_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.set_bg_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.set_exclude_check">
+<span class="sig-name descname"><span class="pre">set_exclude_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.set_exclude_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.set_feature_check">
+<span class="sig-name descname"><span class="pre">set_feature_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.set_feature_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.set_flank_check">
+<span class="sig-name descname"><span class="pre">set_flank_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.set_flank_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.set_gc_check">
+<span class="sig-name descname"><span class="pre">set_gc_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHit.set_gc_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.set_parent_sense">
+<span class="sig-name descname"><span class="pre">set_parent_sense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strand</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHit.set_parent_sense" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.start">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.start" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.strand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">strand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.strand" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.target">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#minorg.grna.Target" title="minorg.grna.Target"><span class="pre">minorg.grna.Target</span></a></em><a class="headerlink" href="#minorg.grna.gRNAHit.target" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.target_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.target_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.target_len">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target_len</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.target_len" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHit.target_strand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target_strand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.gRNAHit.target_strand" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.grna.</span></span><span class="sig-name descname"><span class="pre">gRNAHits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracks multiple gRNASeq and gRNAHit objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits._gRNAseqs">
+<span class="sig-name descname"><span class="pre">_gRNAseqs</span></span><a class="headerlink" href="#minorg.grna.gRNAHits._gRNAseqs" title="Permalink to this definition"></a></dt>
+<dd><p>stores gRNASeq objects by sequence (format: {‘&lt;seq&gt;’: &lt;gRNASeq object&gt;})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits._hits">
+<span class="sig-name descname"><span class="pre">_hits</span></span><a class="headerlink" href="#minorg.grna.gRNAHits._hits" title="Permalink to this definition"></a></dt>
+<dd><p>stores gRNAHit objects by sequence (format: {‘&lt;seq&gt;’: [&lt;gRNAHit objects&gt;]})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a gRNAHits object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>dict</em>) – dictionary of gRNAHit objects in same format as <a class="reference internal" href="#minorg.grna.gRNAHits._hits" title="minorg.grna.gRNAHits._hits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_hits</span></code></a>.
+If provided, overrides <code class="docutils literal notranslate"><span class="pre">gRNA_seqs</span></code> and <code class="docutils literal notranslate"><span class="pre">gRNA_hits</span></code>.</p></li>
+<li><p><strong>gRNA_seqs</strong> (<em>dict</em>) – dictionary of gRNASeq objects in same format as <a class="reference internal" href="#minorg.grna.gRNAHits._gRNAseqs" title="minorg.grna.gRNAHits._gRNAseqs"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_gRNAseqs</span></code></a></p></li>
+<li><p><strong>gRNA_hits</strong> (<em>dict</em>) – dictionary of gRNAHit objects in same format as <a class="reference internal" href="#minorg.grna.gRNAHits._hits" title="minorg.grna.gRNAHits._hits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_hits</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.add_hit">
+<span class="sig-name descname"><span class="pre">add_hit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_hit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.add_hit" title="Permalink to this definition"></a></dt>
+<dd><p>Add gRNA hit.</p>
+<p>If entry for the gRNA’s sequence does not exist in self._gRNAseqs,
+call <a class="reference internal" href="#minorg.grna.gRNAHits.add_seq" title="minorg.grna.gRNAHits.add_seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_seq()</span></code></a> to add it too.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – gRNA sequence</p></li>
+<li><p><strong>gRNA_hit</strong> (<a class="reference internal" href="#minorg.grna.gRNAHit" title="minorg.grna.gRNAHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">gRNAHit</span></code></a>) – gRNAHit object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.add_seq">
+<span class="sig-name descname"><span class="pre">add_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.add_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Add gRNA sequence if it doesn’t already in self._gRNAseqs
+and create empty entry for it in self._hits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – gRNA sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.all_target_len_valid">
+<span class="sig-name descname"><span class="pre">all_target_len_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.all_target_len_valid" title="Permalink to this definition"></a></dt>
+<dd><p>Whether all targets of gRNA have valid length (i.e. is greater than 0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.assign_gRNAseq_id">
+<span class="sig-name descname"><span class="pre">assign_gRNAseq_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.assign_gRNAseq_id" title="Permalink to this definition"></a></dt>
+<dd><p>(Re)name gRNA according to FASTA file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fasta</strong> (<em>str</em>) – required, path to FASTA file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.assign_seqid">
+<span class="sig-name descname"><span class="pre">assign_seqid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gRNA_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zfill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assign_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.assign_seqid" title="Permalink to this definition"></a></dt>
+<dd><p>Assign sequence ID to gRNA sequences using format &lt;prefix&gt;&lt;unique gRNA number&gt;.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<em>str</em>) – prefix for gRNA ID (default=’gRNA_’)</p></li>
+<li><p><strong>zfill</strong> (<em>int</em>) – number of leading zeroes (default=3)</p></li>
+<li><p><strong>assign_all</strong> (<em>bool</em>) – assign new sequence IDs to all gRNA sequences
+regardless of whether they already have a sequence ID</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.clear_checks">
+<span class="sig-name descname"><span class="pre">clear_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.clear_checks" title="Permalink to this definition"></a></dt>
+<dd><p>Clear checks for both gRNA sequences and hits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#minorg.grna.gRNAHits" title="minorg.grna.gRNAHits"><span class="pre">minorg.grna.gRNAHits</span></a></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Deepcopy self to new <a class="reference internal" href="#minorg.grna.gRNAHits" title="minorg.grna.gRNAHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">gRNAHits</span></code></a> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#minorg.grna.gRNAHits" title="minorg.grna.gRNAHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">gRNAHits</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.filter_hits">
+<span class="sig-name descname"><span class="pre">filter_hits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_empty_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_invalid_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.filter_hits" title="Permalink to this definition"></a></dt>
+<dd><p>Filter gRNA hits by checks and return new gRNAHits object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*check_names</strong> (<em>str</em>) – check name(s) (not required if <code class="docutils literal notranslate"><span class="pre">all_checks=True</span></code>)</p></li>
+<li><p><strong>exclude_empty_seqs</strong> (<em>bool</em>) – exclude gRNA sequences from new gRNAHits object
+if none of their hits pass the filter(s)</p></li>
+<li><p><strong>accept_invalid</strong> (<em>bool</em>) – score unset checks as pass</p></li>
+<li><p><strong>accept_invalid_field</strong> (<em>bool</em>) – score unset checks as pass if a given check is not set for ALL hits</p></li>
+<li><p><strong>all_checks</strong> (<em>bool</em>) – filter using all checks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.grna.gRNAHits" title="minorg.grna.gRNAHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">gRNAHits</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.filter_hits_all_checks_passed">
+<span class="sig-name descname"><span class="pre">filter_hits_all_checks_passed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.filter_hits_all_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for <a class="reference internal" href="#minorg.grna.gRNAHits.filter_hits" title="minorg.grna.gRNAHits.filter_hits"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_hits()</span></code></a>.
+Filter hits by ALL checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – other arguments passed to <a class="reference internal" href="#minorg.grna.gRNAHits.filter_hits" title="minorg.grna.gRNAHits.filter_hits"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_hits()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.filter_hits_some_checks_passed">
+<span class="sig-name descname"><span class="pre">filter_hits_some_checks_passed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.filter_hits_some_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for <a class="reference internal" href="#minorg.grna.gRNAHits.filter_hits" title="minorg.grna.gRNAHits.filter_hits"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_hits()</span></code></a>.
+Filter hits by some checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*check_names</strong> (<em>str</em>) – required, check_names</p></li>
+<li><p><strong>**kwargs</strong> – other arguments passed to <a class="reference internal" href="#minorg.grna.gRNAHits.filter_hits" title="minorg.grna.gRNAHits.filter_hits"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_hits()</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.filter_seqs">
+<span class="sig-name descname"><span class="pre">filter_seqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_invalid_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.filter_seqs" title="Permalink to this definition"></a></dt>
+<dd><p>Filter gRNA sequences by checks and return new gRNAHits object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*check_names</strong> (<em>str</em>) – check name(s) (not required if <code class="docutils literal notranslate"><span class="pre">all_checks=True</span></code>)</p></li>
+<li><p><strong>accept_invalid</strong> (<em>bool</em>) – score unset checks as pass</p></li>
+<li><p><strong>accept_invalid_field</strong> (<em>bool</em>) – score unset checks as pass if a given check is not set for ALL hits</p></li>
+<li><p><strong>all_checks</strong> (<em>bool</em>) – filter using all checks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.grna.gRNAHits" title="minorg.grna.gRNAHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">gRNAHits</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.filter_seqs_all_checks_passed">
+<span class="sig-name descname"><span class="pre">filter_seqs_all_checks_passed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.filter_seqs_all_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for <a class="reference internal" href="#minorg.grna.gRNAHits.filter_seqs" title="minorg.grna.gRNAHits.filter_seqs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_seqs()</span></code></a>.
+Filter hits by ALL checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – other arguments passed to <a class="reference internal" href="#minorg.grna.gRNAHits.filter_seqs" title="minorg.grna.gRNAHits.filter_seqs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_seqs()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.filter_seqs_some_checks_passed">
+<span class="sig-name descname"><span class="pre">filter_seqs_some_checks_passed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">check_names</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.filter_seqs_some_checks_passed" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for <a class="reference internal" href="#minorg.grna.gRNAHits.filter_seqs" title="minorg.grna.gRNAHits.filter_seqs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_seqs()</span></code></a>.
+Filter gRNA sequences by some checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*check_names</strong> (<em>str</em>) – required, check_names</p></li>
+<li><p><strong>**kwargs</strong> – other arguments passed to <a class="reference internal" href="#minorg.grna.gRNAHits.filter_seqs" title="minorg.grna.gRNAHits.filter_seqs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_seqs()</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.flatten_gRNAseqs">
+<span class="sig-name descname"><span class="pre">flatten_gRNAseqs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.flatten_gRNAseqs" title="Permalink to this definition"></a></dt>
+<dd><p>Get list of gRNASeq objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.flatten_hits">
+<span class="sig-name descname"><span class="pre">flatten_hits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.flatten_hits" title="Permalink to this definition"></a></dt>
+<dd><p>Get list of gRNAHit objects.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.gRNAseqs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gRNAseqs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#minorg.grna.gRNAHits.gRNAseqs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.get_gRNAseq_by_id">
+<span class="sig-name descname"><span class="pre">get_gRNAseq_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#minorg.grna.gRNASeq" title="minorg.grna.gRNASeq"><span class="pre">minorg.grna.gRNASeq</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.get_gRNAseq_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get gRNASeq object with given sequence ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em>) – gRNA sequence ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>gRNASeq</em> – If exists</p></li>
+<li><p><em>None</em> – If doesnt exist</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.get_gRNAseq_by_seq">
+<span class="sig-name descname"><span class="pre">get_gRNAseq_by_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#minorg.grna.gRNASeq" title="minorg.grna.gRNASeq"><span class="pre">minorg.grna.gRNASeq</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.get_gRNAseq_by_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Get gRNASeq object with given sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – gRNA sequence</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>gRNASeq</em> – If exists</p></li>
+<li><p><em>None</em> – If doesn’t exist</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.get_gRNAseqs_by_id">
+<span class="sig-name descname"><span class="pre">get_gRNAseqs_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.get_gRNAseqs_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get multiple gRNASeq objects by sequence ID.
+Sequence IDs without associated gRNASeq objects will be skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*ids</strong> (<em>str</em>) – gRNA sequence ID(s)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of gRNASeq objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.get_gRNAseqs_by_seq">
+<span class="sig-name descname"><span class="pre">get_gRNAseqs_by_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">seqs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.get_gRNAseqs_by_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Get multiple gRNASeq objects by sequence.
+Sequences without associated gRNASeq objects will be skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*seqs</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – gRNA sequence(s)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of gRNASeq objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.get_hits">
+<span class="sig-name descname"><span class="pre">get_hits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.get_hits" title="Permalink to this definition"></a></dt>
+<dd><p>Get hits of gRNA with given sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – gRNA sequence</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of gRNAHit objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.hit_check_exists">
+<span class="sig-name descname"><span class="pre">hit_check_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.hit_check_exists" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check exists for all gRNA hits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.hits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#minorg.grna.gRNAHits.hits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.parse_from_dict">
+<span class="sig-name descname"><span class="pre">parse_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.parse_from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Read data from dictionary of gRNAHit objects and deep copy it to self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>dict</em>) – dictionary of gRNAHit objects in same format as <a class="reference internal" href="#minorg.grna.gRNAHits._hits" title="minorg.grna.gRNAHits._hits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_hits</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.parse_from_mapping">
+<span class="sig-name descname"><span class="pre">parse_from_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.parse_from_mapping" title="Permalink to this definition"></a></dt>
+<dd><p>Read gRNA data from MINORg .map file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – required, path to file</p></li>
+<li><p><strong>targets</strong> (<em>str</em>) – optional, path to file containing target sequences.
+Used to get target sequence length for tie breaking by favouring gRNA hits closer to 5’ end.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.remove_seqs">
+<span class="sig-name descname"><span class="pre">remove_seqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">seqs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.remove_seqs" title="Permalink to this definition"></a></dt>
+<dd><p>Remove gRNA sequence and associated hits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*seqs</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – gRNA sequence to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.rename_seqs">
+<span class="sig-name descname"><span class="pre">rename_seqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.rename_seqs" title="Permalink to this definition"></a></dt>
+<dd><p>Rename gRNA according to FASTA file.
+Functionally identical to <a class="reference internal" href="#minorg.grna.gRNAHits.assign_gRNAseq_id" title="minorg.grna.gRNAHits.assign_gRNAseq_id"><code class="xref py py-meth docutils literal notranslate"><span class="pre">assign_gRNAseq_id()</span></code></a>
+except it doesn’t check whether the FASTA file covers all gRNA sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fasta</strong> (<em>str</em>) – required, path to FASTA file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.seq_check_exists">
+<span class="sig-name descname"><span class="pre">seq_check_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNAHits.seq_check_exists" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check exists for all gRNA sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.seqs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seqs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#minorg.grna.gRNAHits.seqs" title="Permalink to this definition"></a></dt>
+<dd><p>List of gRNA sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.set_all_seqs_check_by_function">
+<span class="sig-name descname"><span class="pre">set_all_seqs_check_by_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.set_all_seqs_check_by_function" title="Permalink to this definition"></a></dt>
+<dd><p>Set a given check for all gRNA sequences using a function that accepts str of gRNA sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>check_name</strong> (<em>str</em>) – check name</p></li>
+<li><p><strong>func</strong> (<em>func</em>) – function that accepts str of gRNA sequence</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.set_seqs_check">
+<span class="sig-name descname"><span class="pre">set_seqs_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.set_seqs_check" title="Permalink to this definition"></a></dt>
+<dd><p>Set a given check to a given value for multiple gRNA sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>check_name</strong> (<em>str</em>) – check name</p></li>
+<li><p><strong>status</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – check status</p></li>
+<li><p><strong>seqs</strong> (<em>list of str</em>) – list of gRNA sequences for which to set the check</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.set_seqs_check_by_function">
+<span class="sig-name descname"><span class="pre">set_seqs_check_by_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.set_seqs_check_by_function" title="Permalink to this definition"></a></dt>
+<dd><p>Set a given check for multiple gRNA sequences using a function that accepts str of gRNA sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>check_name</strong> (<em>str</em>) – check name</p></li>
+<li><p><strong>func</strong> (<em>func</em>) – function that accepts str of gRNA sequence</p></li>
+<li><p><strong>seqs</strong> (<em>list of str</em>) – list of gRNA sequences for which to set the check</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.unused_hit_check">
+<span class="sig-name descname"><span class="pre">unused_hit_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.unused_hit_check" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check is NOT set for all gRNA hits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.unused_seq_check">
+<span class="sig-name descname"><span class="pre">unused_seq_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.unused_seq_check" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check is NOT set for all gRNA sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.update_records">
+<span class="sig-name descname"><span class="pre">update_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.update_records" title="Permalink to this definition"></a></dt>
+<dd><p>Remove gRNAseq objects from <a class="reference internal" href="#minorg.grna.gRNAHits._gRNAseqs" title="minorg.grna.gRNAHits._gRNAseqs"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_gRNAseqs</span></code></a>
+if their sequences are not also in <a class="reference internal" href="#minorg.grna.gRNAHits._hits" title="minorg.grna.gRNAHits._hits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_hits</span></code></a>.
+Also remove gRNAHit objects from <a class="reference internal" href="#minorg.grna.gRNAHits._hits" title="minorg.grna.gRNAHits._hits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_hits</span></code></a>
+if their sequences are not also in <a class="reference internal" href="#minorg.grna.gRNAHits._gRNAseqs" title="minorg.grna.gRNAHits._gRNAseqs"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_gRNAseqs</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.valid_hit_check">
+<span class="sig-name descname"><span class="pre">valid_hit_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.valid_hit_check" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check has been set for at least one gRNA hit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.valid_seq_check">
+<span class="sig-name descname"><span class="pre">valid_seq_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.valid_seq_check" title="Permalink to this definition"></a></dt>
+<dd><p>Whether a given check has been set for at least one gRNA sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>check_name</strong> (<em>str</em>) – check name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.write_fasta">
+<span class="sig-name descname"><span class="pre">write_fasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.write_fasta" title="Permalink to this definition"></a></dt>
+<dd><p>Write gRNA sequences to FASTA file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fout</strong> (<em>str</em>) – required, path to output file</p></li>
+<li><p><strong>ids</strong> (<em>list</em>) – list of IDs (str) of gRNA to write</p></li>
+<li><p><strong>seqs</strong> (<em>list</em>) – list of sequences (str) of gRNA to write, overrides <code class="docutils literal notranslate"><span class="pre">ids</span></code></p></li>
+<li><p><strong>write_all</strong> (<em>bool</em>) – write all gRNA seqences, overrides <code class="docutils literal notranslate"><span class="pre">seqs</span></code> and <code class="docutils literal notranslate"><span class="pre">ids</span></code></p></li>
+<li><p><strong>fasta</strong> (<em>str</em>) – optional, path to FASTA file, used for renaming gRNA</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNAHits.write_mapping">
+<span class="sig-name descname"><span class="pre">write_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['background',</span> <span class="pre">'GC',</span> <span class="pre">'feature']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_incl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_incl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNAHits.write_mapping" title="Permalink to this definition"></a></dt>
+<dd><p>Write MINORg .map file for gRNA mapping.</p>
+<p>A MINORg .map file is tab-delimited and includes a header line.
+In version 2, columns are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>gRNA id: gRNA sequence ID</p></li>
+<li><p>gRNA sequence: gRNA sequence</p></li>
+<li><p>target id: sequence ID of gRNA target</p></li>
+<li><p>target sense: sense of gRNA target (‘sense’ or ‘antisense’)</p></li>
+<li><p>gRNA strand: strand of gRNA (relative to target) (‘+’ or ‘-‘)</p></li>
+<li><p>start: position of start of gRNA in target</p></li>
+<li><p>end: position of end of gRNA in target</p></li>
+<li><p>group: gRNA group number (set to 1 for all gRNA if <code class="docutils literal notranslate"><span class="pre">write_all=True</span></code>)</p></li>
+</ul>
+</div></blockquote>
+<p>Any columns after ‘group’ are check statuses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fout</strong> (<em>str</em>) – required, path to output file</p></li>
+<li><p><strong>sets</strong> (<em>list</em>) – list of grouped gRNA sequences (e.g. [(‘&lt;seq1&gt;’, ‘&lt;seq2&gt;’), (‘&lt;seq3&gt;’,)]).
+If provided, only gRNA sequences included in <code class="docutils literal notranslate"><span class="pre">sets</span></code> will be written.
+All groups must be mutually exclusive.
+Used to assign group numbers in ‘group’ column.
+Overrides <code class="docutils literal notranslate"><span class="pre">write_all</span></code>.</p></li>
+<li><p><strong>write_all</strong> (<em>bool</em>) – write all gRNA sequences</p></li>
+<li><p><strong>write_checks</strong> (<em>bool</em>) – write check statuses</p></li>
+<li><p><strong>checks</strong> (<em>list</em>) – check names of checks to write (default=[‘background’, ‘GC’, ‘feature’])</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – index of written gRNA range (default=1)</p></li>
+<li><p><strong>start_incl</strong> (<em>bool</em>) – whether written gRNA range is start-inclusive (default=True)</p></li>
+<li><p><strong>end_incl</strong> (<em>bool</em>) – whether written gRNA range is end-inclusive (default=True)</p></li>
+<li><p><strong>fasta</strong> (<em>str</em>) – optional, path to FASTA file, used for renaming gRNA</p></li>
+<li><p><strong>version</strong> (<em>int</em>) – .map file version</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.grna.</span></span><span class="sig-name descname"><span class="pre">gRNASeq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNASeq" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.grna.CheckObj" title="minorg.grna.CheckObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.grna.CheckObj</span></code></a></p>
+<p>gRNA sequence.</p>
+<p>Tracks checks applicable to gRNA sequence: off-target (check name: background), GC content (check name: GC)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq._seq">
+<span class="sig-name descname"><span class="pre">_seq</span></span><a class="headerlink" href="#minorg.grna.gRNASeq._seq" title="Permalink to this definition"></a></dt>
+<dd><p>sequence, in uppercase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq._id">
+<span class="sig-name descname"><span class="pre">_id</span></span><a class="headerlink" href="#minorg.grna.gRNASeq._id" title="Permalink to this definition"></a></dt>
+<dd><p>sequence name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.grna.gRNASeq.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a gRNASeq object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em><em> or </em><em>Bio.Seq.Seq</em>) – sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq.id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.gRNASeq.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq.seq">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seq</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#minorg.grna.gRNASeq.seq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq.set_bg_check">
+<span class="sig-name descname"><span class="pre">set_bg_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNASeq.set_bg_check" title="Permalink to this definition"></a></dt>
+<dd><p>Set status for check name ‘background’ (False if gRNA has off-target effects).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>status</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – status of check.
+Valid values: ‘pass’, ‘fail’, ‘NA’, True, False, None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq.set_exclude_check">
+<span class="sig-name descname"><span class="pre">set_exclude_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNASeq.set_exclude_check" title="Permalink to this definition"></a></dt>
+<dd><p>Set status for check name ‘exclude’ (False if user wishes to exclude gRNA with this sequence).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>status</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – status of check (valid values: ‘pass’, ‘fail’, ‘NA’, True, False, None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.grna.gRNASeq.set_gc_check">
+<span class="sig-name descname"><span class="pre">set_gc_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gc_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gc_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#minorg.grna.gRNASeq.set_gc_check" title="Permalink to this definition"></a></dt>
+<dd><p>Set status for check name ‘GC’ (False if gRNA GC content is not within desired range).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>status</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – status of check (valid values: ‘pass’, ‘fail’, ‘NA’, True, False, None)
+If <code class="docutils literal notranslate"><span class="pre">status</span></code> is provided, <code class="docutils literal notranslate"><span class="pre">gc_min</span></code> and <code class="docutils literal notranslate"><span class="pre">gc_max</span></code> will be ignored.</p></li>
+<li><p><strong>gc_min</strong> (<em>float</em>) – minimum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)</p></li>
+<li><p><strong>gc_max</strong> (<em>float</em>) – maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.generate_grna.html" class="btn btn-neutral float-left" title="minorg.generate_grna module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="minorg.index.html" class="btn btn-neutral float-right" title="minorg.index module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

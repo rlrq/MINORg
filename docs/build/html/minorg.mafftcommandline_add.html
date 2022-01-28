@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.mafftcommandline_add module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="minorg.main module" href="minorg.main.html" />
+    <link rel="prev" title="minorg.log module" href="minorg.log.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORg.html">minorg.MINORg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORgCLI.html">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.grna.html">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.mafftcommandline_add module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.mafftcommandline_add.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.mafftcommandline_add">
+<span id="minorg-mafftcommandline-add-module"></span><h1>minorg.mafftcommandline_add module<a class="headerlink" href="#module-minorg.mafftcommandline_add" title="Permalink to this headline"></a></h1>
+<p>Command line wrapper for the multiple alignment programme MAFFT, modified to include <code class="docutils literal notranslate"><span class="pre">--add</span></code> option.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.mafftcommandline_add.MafftCommandline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.mafftcommandline_add.</span></span><span class="sig-name descname"><span class="pre">MafftCommandline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mafft'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.mafftcommandline_add.MafftCommandline" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.Application.AbstractCommandline</span></code></p>
+<p>Command line wrapper for the multiple alignment program MAFFT.
+<a class="reference external" href="http://align.bmr.kyushu-u.ac.jp/mafft/software/">http://align.bmr.kyushu-u.ac.jp/mafft/software/</a>
+.. rubric:: Notes</p>
+<p>Last checked against version: MAFFT v6.717b (2009/12/03)</p>
+<p class="rubric">References</p>
+<p>Katoh, Toh (BMC Bioinformatics 9:212, 2008) Improved accuracy of
+multiple ncRNA alignment by incorporating structural information into
+a MAFFT-based framework (describes RNA structural alignment methods)
+Katoh, Toh (Briefings in Bioinformatics 9:286-298, 2008) Recent
+developments in the MAFFT multiple sequence alignment program
+(outlines version 6)
+Katoh, Toh (Bioinformatics 23:372-374, 2007)  Errata PartTree: an
+algorithm to build an approximate tree from a large number of
+unaligned sequences (describes the PartTree algorithm)
+Katoh, Kuma, Toh, Miyata (Nucleic Acids Res. 33:511-518, 2005) MAFFT
+version 5: improvement in accuracy of multiple sequence alignment
+(describes [ancestral versions of] the G-INS-i, L-INS-i and E-INS-i
+strategies)
+Katoh, Misawa, Kuma, Miyata (Nucleic Acids Res. 30:3059-3066, 2002)</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MafftCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mafft_exe</span> <span class="o">=</span> <span class="s2">&quot;/opt/local/mafft&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">in_file</span> <span class="o">=</span> <span class="s2">&quot;../Doc/examples/opuntia.fasta&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mafft_cline</span> <span class="o">=</span> <span class="n">MafftCommandline</span><span class="p">(</span><span class="n">mafft_exe</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">in_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mafft_cline</span><span class="p">)</span>
+<span class="go">/opt/local/mafft ../Doc/examples/opuntia.fasta</span>
+<span class="go">If the mafft binary is on the path (typically the case on a Unix style</span>
+<span class="go">operating system) then you don&#39;t need to supply the executable location:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MafftCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">in_file</span> <span class="o">=</span> <span class="s2">&quot;../Doc/examples/opuntia.fasta&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mafft_cline</span> <span class="o">=</span> <span class="n">MafftCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">in_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mafft_cline</span><span class="p">)</span>
+<span class="go">mafft ../Doc/examples/opuntia.fasta</span>
+<span class="go">You would typically run the command line with mafft_cline() or via</span>
+<span class="go">the Python subprocess module, as described in the Biopython tutorial.</span>
+<span class="go">Note that MAFFT will write the alignment to stdout, which you may</span>
+<span class="go">want to save to a file and then parse, e.g.::</span>
+<span class="go">    stdout, stderr = mafft_cline()</span>
+<span class="go">    with open(&quot;aligned.fasta&quot;, &quot;w&quot;) as handle:</span>
+<span class="go">        handle.write(stdout)</span>
+<span class="go">    from Bio import AlignIO</span>
+<span class="go">    align = AlignIO.read(&quot;aligned.fasta&quot;, &quot;fasta&quot;)</span>
+<span class="go">Alternatively, to parse the output with AlignIO directly you can</span>
+<span class="go">use StringIO to turn the string into a handle::</span>
+<span class="go">    stdout, stderr = mafft_cline()</span>
+<span class="go">    from io import StringIO</span>
+<span class="go">    from Bio import AlignIO</span>
+<span class="go">    align = AlignIO.read(StringIO(stdout), &quot;fasta&quot;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.log.html" class="btn btn-neutral float-left" title="minorg.log module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="minorg.main.html" class="btn btn-neutral float-right" title="minorg.main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

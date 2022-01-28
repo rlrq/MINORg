@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.extract_homologue module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="minorg.fasta module" href="minorg.fasta.html" />
+    <link rel="prev" title="minorg.extend_reference module" href="minorg.extend_reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORg.html">minorg.MINORg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORgCLI.html">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.grna.html">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.extract_homologue module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.extract_homologue.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.extract_homologue">
+<span id="minorg-extract-homologue-module"></span><h1>minorg.extract_homologue module<a class="headerlink" href="#module-minorg.extract_homologue" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.filter_min_cds_len">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">filter_min_cds_len</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blast6cds_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merged</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cds_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('sseqid',</span> <span class="pre">'sstart',</span> <span class="pre">'send',</span> <span class="pre">'pident',</span> <span class="pre">'length')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.filter_min_cds_len" title="Permalink to this definition"></a></dt>
+<dd><p>Filter candidate homologues by minimum CDS length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>blast6cds_fname</strong> (<em>str</em>) – required, path to BLASTN output file (outfmt 6) prepended with header,
+where query was reference CDS sequences and subject was <code class="docutils literal notranslate"><span class="pre">fasta</span></code></p></li>
+<li><p><strong>merged</strong> (<em>list</em>) – list of candidate homologue data output by <a class="reference internal" href="#minorg.extract_homologue.merge_hits" title="minorg.extract_homologue.merge_hits"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_hits()</span></code></a></p></li>
+<li><p><strong>min_cds_len</strong> (<em>int</em>) – minimum CDS length in homologues (default=0)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of dict of merged hit data, where fields for each entry are: molecule, start, end, length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.find_homologue_imap">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">find_homologue_imap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indv_fout_query_dir_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.find_homologue_imap" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper of find_homologue_indv function for pickling.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.find_homologue_indv">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">find_homologue_indv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_complete</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_cds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blastn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">for_merge_hits_and_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.find_homologue_indv" title="Permalink to this definition"></a></dt>
+<dd><p>Find homologue in single FASTA file.</p>
+<ol class="arabic simple">
+<li><p>Execute BLASTN of reference sequences (<code class="docutils literal notranslate"><span class="pre">fasta_complete</span></code> and <code class="docutils literal notranslate"><span class="pre">fasta_cds</span></code>) against <code class="docutils literal notranslate"><span class="pre">fasta_query</span></code>.</p></li>
+<li><p><a class="reference internal" href="#minorg.extract_homologue.merge_hits_and_filter" title="minorg.extract_homologue.merge_hits_and_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_hits_and_filter()</span></code></a>: Merge hits based on proximity to each other, filtering by length and % identity, to generate candidate homologues.</p></li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#minorg.extract_homologue.recip_blast_multiref" title="minorg.extract_homologue.recip_blast_multiref"><code class="xref py py-func docutils literal notranslate"><span class="pre">recip_blast_multiref()</span></code></a>: If check_reciprocal=True, execute BLASTN of candidate homologues to reference genome.</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#minorg.extract_homologue.recip_blast_multiref" title="minorg.extract_homologue.recip_blast_multiref"><code class="xref py py-func docutils literal notranslate"><span class="pre">recip_blast_multiref()</span></code></a>: Remove candidate homolougues if the hit with the best bitscore is NOT to a gene in <code class="docutils literal notranslate"><span class="pre">gene</span></code>.</p></li>
+<li><p><a class="reference internal" href="#minorg.extract_homologue.recip_blast_multiref" title="minorg.extract_homologue.recip_blast_multiref"><code class="xref py py-func docutils literal notranslate"><span class="pre">recip_blast_multiref()</span></code></a>: If relax=False, candidate homologues which best bitscore hit overlaps with gene in <code class="docutils literal notranslate"><span class="pre">gene</span></code> AND ALSO a gene NOT IN <code class="docutils literal notranslate"><span class="pre">gene</span></code> will be removed.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fout</strong> (<em>str</em>) – required, path to output FASTA file in which to write homologues</p></li>
+<li><p><strong>directory</strong> (<em>path</em>) – required, directory in which to write temporary files</p></li>
+<li><p><strong>fasta_complete</strong> (<em>str</em>) – required, path to FASTA file containing genomic reference sequences</p></li>
+<li><p><strong>fasta_cds</strong> (<em>str</em>) – required, path to FASTA file containing CDS reference sequences</p></li>
+<li><p><strong>fasta_query</strong> (<em>str</em>) – required, path to FASTA file in which to search for homologues</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – print only essential messages</p></li>
+<li><p><strong>lvl</strong> (<em>int</em>) – optional, indentation level of printed messages</p></li>
+<li><p><strong>keep_tmp</strong> (<em>bool</em>) – keep temporary files (default=False)</p></li>
+<li><p><strong>check_reciprocal</strong> (<em>bool</em>) – execute reciprocal check</p></li>
+<li><p><strong>genes</strong> (<em>tuple</em>) – optional, required only if check_reciprocal=True, on-target gene IDs</p></li>
+<li><p><strong>blastn</strong> (<em>str</em>) – optional, required only if check_reciprocal=True,
+blastn command (e.g. ‘blastn’) if available at CLI else path to blastn executable</p></li>
+<li><p><strong>fasta_ref</strong> (<em>dict</em>) – optional, required only if check_reciprocal=True,
+dictionary of paths to reference genome FASTA files in format {‘&lt;alias&gt;’: ‘/path/to/FASTA’}.
+Each reference genome should have the same alias in <code class="docutils literal notranslate"><span class="pre">fasta_ref</span></code> and <code class="docutils literal notranslate"><span class="pre">gff</span></code>.</p></li>
+<li><p><strong>gff</strong> (<em>dict</em>) – optional, required only if check_reciprocal=True,
+dictionary of paths to reference genome GFF3 files in format {‘&lt;alias&gt;’: ‘/path/to/GFF3’}.
+Each reference genome should have the same alias in <code class="docutils literal notranslate"><span class="pre">fasta_ref</span></code> and <code class="docutils literal notranslate"><span class="pre">gff</span></code>.</p></li>
+<li><p><strong>attribute_mod</strong> (<em>dict</em>) – optional,
+required only if non-standard attriute field names are present in GFF3 files.
+Dictionary describing attribute modification.</p></li>
+<li><p><strong>**for_merge_hits_and_filter</strong> – additional arguments for
+<code class="xref py py-func docutils literal notranslate"><span class="pre">for_merge_hits_and_filter()</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.find_homologue_multiindv">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">find_homologue_multiindv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta_queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">for_find_homologue_indv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.find_homologue_multiindv" title="Permalink to this definition"></a></dt>
+<dd><p>Parallel discovery of homologues in multiple query FASTA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fasta_queries</strong> (<em>list</em>) – require, list of paths(s) to FASTA file(s) in which to find homologues</p></li>
+<li><p><strong>fout</strong> (<em>str</em>) – required, path to output FASTA file in which to write homologues</p></li>
+<li><p><strong>directory</strong> (<em>str</em>) – required, path in which to write temporary files</p></li>
+<li><p><strong>threads</strong> (<em>int</em>) – maximum number of parallel processes</p></li>
+<li><p><strong>**for_find_homologue_indv</strong> – additional arguments for find_homologue_indv</p></li>
+</ul>
+</dd>
+</dl>
+<p>Additional args:
+fasta_complete (path), fasta_cds (path), genes (tuple), check_reciprocal (bool), quiet (bool), lvl (int),
+relax (bool), fasta_ref (list of path), gff (list of path)
+Note that fasta_queries is an iterable like such [[&lt;indv_alias/index&gt;, &lt;path to indv’s FASTA file&gt;]…]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.get_merged_seqs">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">get_merged_seqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">merged_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indv_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.get_merged_seqs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.merge_hits">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">merge_hits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_within_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_id_before_merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('sseqid',</span> <span class="pre">'sstart',</span> <span class="pre">'send',</span> <span class="pre">'pident',</span> <span class="pre">'length')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.merge_hits" title="Permalink to this definition"></a></dt>
+<dd><p>Merge BLAST hits to generate candidate homologues.</p>
+<ol class="arabic simple">
+<li><p>[optional] If check_id_before_merge=True, discard hits with % identity &lt; <code class="docutils literal notranslate"><span class="pre">min_id</span></code></p></li>
+<li><dl class="simple">
+<dt>Merge hits within <code class="docutils literal notranslate"><span class="pre">merge_within_range</span></code> bp of each other</dt><dd><ul class="simple">
+<li><p>Discard if no hit included in the merge has a % identity &gt;= <code class="docutils literal notranslate"><span class="pre">min_id</span></code></p></li>
+<li><p>Discard if resultant merged range is shorter than <code class="docutils literal notranslate"><span class="pre">min_len</span></code> bp</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="minorg.functions.html#minorg.functions.BlastResult" title="minorg.functions.BlastResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.functions.BlastResult</span></code></a>) – BLASTN result</p></li>
+<li><p><strong>merge_within_range</strong> (<em>int</em>) – maximum number of bases between hits to be merged</p></li>
+<li><p><strong>min_id</strong> (<em>float</em>) – minimum hit % identity</p></li>
+<li><p><strong>min_len</strong> (<em>int</em>) – minimum candidate homologue length</p></li>
+<li><p><strong>check_id_before_merge</strong> (<em>bool</em>) – discard hits with % identity &lt; <code class="docutils literal notranslate"><span class="pre">min_id</span></code> before merging</p></li>
+<li><p><strong>colnames</strong> (<em>tuple</em>) – BLASTN fields to retain in output tsv of merged hits</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Of dict of merged hit data, where fields for each entry are: molecule, start, end, length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.merge_hits_and_filter">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">merge_hits_and_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blast6_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cds_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indv_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('molecule',</span> <span class="pre">'start',</span> <span class="pre">'end',</span> <span class="pre">'max_pident',</span> <span class="pre">'length')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blast6cds_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">for_merge_hits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.merge_hits_and_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Merge hits to generate homologues and filter by minimum inferred CDS length.</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#minorg.extract_homologue.merge_hits" title="minorg.extract_homologue.merge_hits"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge_hits()</span></code></a>: Merge hits in proximity to each other to generate candidate homologues.</p></li>
+<li><p>[optional] Filter candidate homologues by minimum CDS length (<code class="docutils literal notranslate"><span class="pre">min_cds_len</span></code>), as determined by how many bases in the candidate are covered by hits from reference CDS sequences.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>blast6_fname</strong> (<em>str</em>) – path to BLASTN output file (outfmt 6) prepended with header,
+where query was reference genomic sequences and subject was <code class="docutils literal notranslate"><span class="pre">fasta</span></code></p></li>
+<li><p><strong>fout</strong> (<em>str</em>) – path to output FASTA file in which to write homologues</p></li>
+<li><p><strong>fasta</strong> (<em>str</em>) – path to FASTA file in which to find homologues</p></li>
+<li><p><strong>quiet</strong> (<em>bool</em>) – print only essential messages</p></li>
+<li><p><strong>min_cds_len</strong> (<em>int</em>) – minimum CDS length in homologues (default=0)</p></li>
+<li><p><strong>indv_i</strong> (<em>str</em><em> or </em><em>int</em>) – alias for <code class="docutils literal notranslate"><span class="pre">fasta</span></code>, used for generating sequence names</p></li>
+<li><p><strong>colnames</strong> (<em>tuple</em><em> or </em><em>list</em>) – fields in <code class="docutils literal notranslate"><span class="pre">blast6_fname</span></code> and <code class="docutils literal notranslate"><span class="pre">blast6cds_fname</span></code></p></li>
+<li><p><strong>blast6cds_fname</strong> (<em>str</em>) – optional,
+if provided then candidate homologues will be filtere by minimum CDS length,
+path to BLASTN output file (outfmt 6) prepended with header,
+where query was reference CDS sequences and subject was <code class="docutils literal notranslate"><span class="pre">fasta</span></code></p></li>
+<li><p><strong>lvl</strong> (<em>int</em>) – optional, indentation level of printed messages</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.recip_blast">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">recip_blast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta_target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blastn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.recip_blast" title="Permalink to this definition"></a></dt>
+<dd><p>Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.recip_blast_multiref">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">recip_blast_multiref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta_target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blastn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.recip_blast_multiref" title="Permalink to this definition"></a></dt>
+<dd><p>Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
+gff and fasta_ref must be dictionaries of {&lt;alias&gt;: &lt;path to file&gt;}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.extract_homologue.remove_non_max_bitscore">
+<span class="sig-prename descclassname"><span class="pre">minorg.extract_homologue.</span></span><span class="sig-name descname"><span class="pre">remove_non_max_bitscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bedtool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colnames_blast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['chrom',</span> <span class="pre">'start',</span> <span class="pre">'end',</span> <span class="pre">'candidate',</span> <span class="pre">'cstart',</span> <span class="pre">'cend']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blast_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['bitscore']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colnames_bed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['bed_chrom',</span> <span class="pre">'bed_start',</span> <span class="pre">'bed_end',</span> <span class="pre">'id',</span> <span class="pre">'score',</span> <span class="pre">'strand',</span> <span class="pre">'source',</span> <span class="pre">'feature',</span> <span class="pre">'phase',</span> <span class="pre">'attributes',</span> <span class="pre">'overlap']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colnames_gff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['bed_chrom',</span> <span class="pre">'source',</span> <span class="pre">'feature',</span> <span class="pre">'bed_start',</span> <span class="pre">'bed_end',</span> <span class="pre">'score',</span> <span class="pre">'strand',</span> <span class="pre">'phase',</span> <span class="pre">'attributes',</span> <span class="pre">'overlap']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.extract_homologue.remove_non_max_bitscore" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.extend_reference.html" class="btn btn-neutral float-left" title="minorg.extend_reference module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="minorg.fasta.html" class="btn btn-neutral float-right" title="minorg.fasta module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

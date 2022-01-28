@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.MINORgCLI module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="minorg.annotation module" href="minorg.annotation.html" />
+    <link rel="prev" title="minorg.MINORg module" href="minorg.MINORg.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORg.html">minorg.MINORg module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.grna.html">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.MINORgCLI module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.MINORgCLI.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.MINORgCLI">
+<span id="minorg-minorgcli-module"></span><h1>minorg.MINORgCLI module<a class="headerlink" href="#module-minorg.MINORgCLI" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.MINORgCLI.</span></span><span class="sig-name descname"><span class="pre">MINORgCLI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_on_crash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a></p>
+<p>Parses CLI arguments and reformats them for parent MINORg object</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.keep_on_crash">
+<span class="sig-name descname"><span class="pre">keep_on_crash</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.keep_on_crash" title="Permalink to this definition"></a></dt>
+<dd><p>keep files/directories on crash</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI._raw_args">
+<span class="sig-name descname"><span class="pre">_raw_args</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI._raw_args" title="Permalink to this definition"></a></dt>
+<dd><p>arguments parsed only by Typer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Namespace</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI._args">
+<span class="sig-name descname"><span class="pre">_args</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI._args" title="Permalink to this definition"></a></dt>
+<dd><p>arguments parsed by Typer and MINORgCLI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Namespace</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.config" title="Permalink to this definition"></a></dt>
+<dd><p>path to config.ini file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.master_prefix">
+<span class="sig-name descname"><span class="pre">master_prefix</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.master_prefix" title="Permalink to this definition"></a></dt>
+<dd><p>prefix for permanent files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.reference_set">
+<span class="sig-name descname"><span class="pre">reference_set</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reference_set" title="Permalink to this definition"></a></dt>
+<dd><p>path to file containing reference genome
+alias-FASTA-GFF3-genetic code-attribute modification mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.cluster_set">
+<span class="sig-name descname"><span class="pre">cluster_set</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.cluster_set" title="Permalink to this definition"></a></dt>
+<dd><p>path to file containing cluster alias-members mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.genome_set">
+<span class="sig-name descname"><span class="pre">genome_set</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genome_set" title="Permalink to this definition"></a></dt>
+<dd><p>path to file containing query alias-FASTA mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.reference_aliases">
+<span class="sig-name descname"><span class="pre">reference_aliases</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reference_aliases" title="Permalink to this definition"></a></dt>
+<dd><p>reference genome mapping
+({‘&lt;alias&gt;’: (‘/path/to/FASTA’, ‘/path/to/GFF3’, ‘&lt;genetic code&gt;’, ‘&lt;attribute modification&gt;’)})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.cluster_aliases">
+<span class="sig-name descname"><span class="pre">cluster_aliases</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.cluster_aliases" title="Permalink to this definition"></a></dt>
+<dd><p>cluster mapping ({‘&lt;cluster alias&gt;’: (‘geneA’, ‘geneB’)})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.genome_aliases">
+<span class="sig-name descname"><span class="pre">genome_aliases</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genome_aliases" title="Permalink to this definition"></a></dt>
+<dd><p>query genome mapping ({‘&lt;alias&gt;’: ‘/path/to/FASTA’})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.gene_sets">
+<span class="sig-name descname"><span class="pre">gene_sets</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.gene_sets" title="Permalink to this definition"></a></dt>
+<dd><p>grouping of genes into separately processed sets.
+Used for separately processing each cluster if multiple are provided.
+(e.g. {‘clusterA’: (‘geneA’, ‘geneB’), ‘clusterB’: (‘geneC’, geneD’)})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.mask_gene_sets">
+<span class="sig-name descname"><span class="pre">mask_gene_sets</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.mask_gene_sets" title="Permalink to this definition"></a></dt>
+<dd><p>genes to be masked/unmasked during reference genome screening.
+({‘mask’: (‘geneA’, ‘geneB’), ‘unmask’: (‘geneC’,)})</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.background_check">
+<span class="sig-name descname"><span class="pre">background_check</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.background_check" title="Permalink to this definition"></a></dt>
+<dd><p>conduct screening for off-targets in background during filtering step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.feature_check">
+<span class="sig-name descname"><span class="pre">feature_check</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.feature_check" title="Permalink to this definition"></a></dt>
+<dd><p>conduct screening for gRNA within feature during filtering step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.gc_check">
+<span class="sig-name descname"><span class="pre">gc_check</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.gc_check" title="Permalink to this definition"></a></dt>
+<dd><p>conduct screening for gRNA with acceptable GC content during filtering step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_on_crash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a MINORgCLI object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>str</em>) – path to config.ini file</p></li>
+<li><p><strong>keep_tmp</strong> (<em>bool</em>) – retain temporary files</p></li>
+<li><p><strong>keep_on_crash</strong> (<em>bool</em>) – override default behaiour of deleting files generated during
+execution upon unexpected termination of programme; files will be moved to self.out_dir
+if specified, else will remain in temporary directory for user to retrieve manually</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a MINORgCLI object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI" title="minorg.MINORgCLI.MINORgCLI"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORgCLI</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.args">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.args" title="Permalink to this definition"></a></dt>
+<dd><p>MINORg CLI arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns arguments parsed by MINORgCLI</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Stores a copy of args at self._raw_args and sets self._args
+to be acted upon by MINORgCLI parsing functions</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Namespace</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.attr_mod_callback">
+<span class="sig-name descname"><span class="pre">attr_mod_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.attr_mod_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> to parse attribute modifications from string to dictionary.</p>
+<p>Attribute modification string should be in format
+‘&lt;feature type&gt;:&lt;standard attribute field name&gt;=&lt;nonstandard attribute field name&gt;,&lt;standard attribute field name&gt;=&lt;nonstandard attribute field name&gt;;&lt;feature type&gt;:&lt;standard attribute field name&gt;=&lt;nonstandard attribute field name&gt;’. (e.g. ‘mRNA:Parent=Locus_id’)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Feature separator: ‘;’</p></li>
+<li><p>Feature-attribute separator: ‘:’</p></li>
+<li><p>Attribute-attribute separator: ‘,’</p></li>
+<li><p>Standard name-nonstandard name separator: ‘=’</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – required, string of attribute modifications in format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>parsed attribute modifications in format</dt><dd><p>{&lt;feature&gt;: {&lt;standard attribute field name&gt;: &lt;nonstandard attribute field name&gt;}}</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_filter_args">
+<span class="sig-name descname"><span class="pre">check_filter_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_filter_args" title="Permalink to this definition"></a></dt>
+<dd><p>Check arguments for subcommand ‘filter’ and parse &amp; reformat args for
+parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>standalone</strong> (<em>bool</em>) – raise this flag when using subcommand ‘filter’ as standalone
+and not as part of the full programme.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>click.UsageError</strong> – If mutually exclusive arguments or only some of mutually inclusive arguments are used</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_grna_args">
+<span class="sig-name descname"><span class="pre">check_grna_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_grna_args" title="Permalink to this definition"></a></dt>
+<dd><p>Check arguments for subcommand ‘grna’ and parse &amp; reformat args for parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>standalone</strong> (<em>bool</em>) – raise this flag when using subcommand ‘grna’ as standalone
+and not as part of the full programme.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>click.UsageError</strong> – If mutually exclusive arguments or only some of mutually inclusive arguments are used</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_reference_args">
+<span class="sig-name descname"><span class="pre">check_reference_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">require</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_reference_args" title="Permalink to this definition"></a></dt>
+<dd><p>Check reference genome arguments and parse &amp; reformat them for parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
+<p>Priority given to <code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">&lt;FASTA&gt;</span> <span class="pre">--annotation</span> <span class="pre">&lt;GFF3&gt;</span></code> over <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">&lt;alias&gt;</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">--ext-gene</span> <span class="pre">&lt;FASTA&gt;</span> <span class="pre">--ext-cds</span> <span class="pre">&lt;FASTA&gt;</span></code> are provided,
+parse them as well and add them to self.reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>require</strong> (<em>bool</em>) – raise this flag when using self.target.
+Raises error if <code class="docutils literal notranslate"><span class="pre">--target</span></code> is NOT used AND there are NO reference genomes.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>click.UsageError</strong> – If <code class="docutils literal notranslate"><span class="pre">--target</span></code> is NOT used <code class="docutils literal notranslate"><span class="pre">require</span></code> is raised AND there are NO reference genomes.</p></li>
+<li><p><strong>click.UsageError</strong> – If <code class="docutils literal notranslate"><span class="pre">--ext-gene</span></code> OR <code class="docutils literal notranslate"><span class="pre">--ext-cds</span></code> but NOT BOTH is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_seq_args">
+<span class="sig-name descname"><span class="pre">check_seq_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_seq_args" title="Permalink to this definition"></a></dt>
+<dd><p>Check arguments for subcommand ‘seq’ and parse &amp; reformat args for parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>standalone</strong> (<em>bool</em>) – raise this flag when using subcommand ‘seq’ as standalone
+and not as part of the full programme.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>click.UsageError</strong> – If mutually exclusive arguments or only some of mutually inclusive arguments are used</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.cleanup">
+<span class="sig-name descname"><span class="pre">cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="Permalink to this definition"></a></dt>
+<dd><p>Resolve/delete files upon unexpected termination (e.g. mid-execution termination, crash etc.)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.cluster_set_callback">
+<span class="sig-name descname"><span class="pre">cluster_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.cluster_set_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--cluster-set</span> <span class="pre">&lt;alias</span> <span class="pre">or</span> <span class="pre">path&gt;</span></code>.</p>
+<p>Sets self.cluster_set and self.cluster_aliases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – required; lookup file alias or path to lookup file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path to lookup file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidPath" title="minorg.exceptions.InvalidPath"><strong>InvalidPath</strong></a> – If path does not exist</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidFile" title="minorg.exceptions.InvalidFile"><strong>InvalidFile</strong></a> – If path does not point to a file</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.UnreadableFile" title="minorg.exceptions.UnreadableFile"><strong>UnreadableFile</strong></a> – If file is not readable</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InputFormatError" title="minorg.exceptions.InputFormatError"><strong>InputFormatError</strong></a> – If format of lookup file is incorrect</p></li>
+<li><p><strong>typer.BadParameter</strong> – If argument <code class="docutils literal notranslate"><span class="pre">val</span></code> does not point to a valid file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.clusters_callback">
+<span class="sig-name descname"><span class="pre">clusters_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.clusters_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for printing cluster-members lookup mapping to terminal.
+Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
+and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>bool</em>) – print mapping</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.copy_args">
+<span class="sig-name descname"><span class="pre">copy_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">argnames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.copy_args" title="Permalink to this definition"></a></dt>
+<dd><p>Copy args values to self as attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*argnames</strong> (<em>str</em>) – name(s) of argument(s) to copy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.db_callback">
+<span class="sig-name descname"><span class="pre">db_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.db_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--db</span></code> to parse RPS-BLAST database alias or path into absolute path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – database alias or path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path to RPS-BLAST database</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.domain_callback">
+<span class="sig-name descname"><span class="pre">domain_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.domain_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--domain</span></code> to parse domain alias or Pssm-Id into Pssm-Id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – domain alias or Pssm-Id</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pssm-Id</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.genetic_code_callback">
+<span class="sig-name descname"><span class="pre">genetic_code_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genetic_code_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--genetic-code</span></code> to parse genetic code as number or name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> – genetic code number or name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>int</em> – if <code class="docutils literal notranslate"><span class="pre">val</span></code> is genetic code number</p></li>
+<li><p><em>str</em> – if <code class="docutils literal notranslate"><span class="pre">val</span></code> is genetic code name</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.genome_set_callback">
+<span class="sig-name descname"><span class="pre">genome_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genome_set_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--genome-set</span> <span class="pre">&lt;alias</span> <span class="pre">or</span> <span class="pre">path&gt;</span></code>.</p>
+<p>Sets self.genome_set and self.genome_aliases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – required; lookup file alias or path to lookup file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path to lookup file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidPath" title="minorg.exceptions.InvalidPath"><strong>InvalidPath</strong></a> – If path does not exist</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidFile" title="minorg.exceptions.InvalidFile"><strong>InvalidFile</strong></a> – If path does not point to a file</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.UnreadableFile" title="minorg.exceptions.UnreadableFile"><strong>UnreadableFile</strong></a> – If file is not readable</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InputFormatError" title="minorg.exceptions.InputFormatError"><strong>InputFormatError</strong></a> – If format of lookup file is incorrect</p></li>
+<li><p><strong>typer.BadParameter</strong> – If argument <code class="docutils literal notranslate"><span class="pre">val</span></code> does not point to a valid file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.get_cluster_genes">
+<span class="sig-name descname"><span class="pre">get_cluster_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.get_cluster_genes" title="Permalink to this definition"></a></dt>
+<dd><p>Get gene members of a cluster.</p>
+<p>Uses dictionary self.cluster_aliases for lookup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – alias of cluster</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of strings, e.g. (‘geneA’, ‘geneB’)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>click.UsageError</strong> – If <code class="docutils literal notranslate"><span class="pre">val</span></code> is not a valid cluster alias</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.make_genomes_callback">
+<span class="sig-name descname"><span class="pre">make_genomes_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'independent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.make_genomes_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Function to make callback for printing query genome lookup mapping to terminal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>str</em>) – valid modes: ‘independent’, ‘dependent’. ‘.’ (all) and ‘-’ (none) in mode ‘dependent’ are described as referecing <code class="docutils literal notranslate"><span class="pre">-g</span></code> input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.members_callback">
+<span class="sig-name descname"><span class="pre">members_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.members_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for printing gene members of a cluster to terminal.
+Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
+and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – cluster alias</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_PAM">
+<span class="sig-name descname"><span class="pre">parse_PAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_PAM" title="Permalink to this definition"></a></dt>
+<dd><p>Create PAM object from self.args.pam and self.args.length and store object at self.pam.</p>
+<dl class="simple">
+<dt>To be called after <code class="docutils literal notranslate"><span class="pre">--pam</span></code> and <code class="docutils literal notranslate"><span class="pre">--length</span></code> have passed check_grna_args checks OR</dt><dd><p>after <code class="docutils literal notranslate"><span class="pre">--pam</span></code> has passed check_filter_args (standalone) checks</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_args">
+<span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subcmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse and check arguments pre-parsed by Typer by calling the appropriate parsers based on subcommand.</p>
+<p>After parsing, write parsed args to logfile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>Namespace</em>) – required, arguments</p></li>
+<li><p><strong>subcmd</strong> (<em>str</em>) – required, subcommand name.
+Valid subcmd: seq, (homologue, homolog, target,) grna, filter, (check,) minimumset, full</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_cluster">
+<span class="sig-name descname"><span class="pre">parse_cluster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_cluster" title="Permalink to this definition"></a></dt>
+<dd><p>Map self.args.cluster aliases to genes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>{&lt;prefix&gt;: (&lt;genes&gt;,)}</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_filter_args">
+<span class="sig-name descname"><span class="pre">parse_filter_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_filter_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse and check arguments for subcommand filter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_full_args">
+<span class="sig-name descname"><span class="pre">parse_full_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_full_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse and check arguments for full programme.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_genes">
+<span class="sig-name descname"><span class="pre">parse_genes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_genes" title="Permalink to this definition"></a></dt>
+<dd><p>Set self.gene_sets.</p>
+<p>To be called after <code class="docutils literal notranslate"><span class="pre">--gene</span></code> or <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> have passed check_seq_args checks.
+self.gene_sets = {} if <code class="docutils literal notranslate"><span class="pre">--target</span></code> is used.
+Else self.gene_sets = {‘&lt;prefix&gt;_&lt;cluster&gt;’: (‘gene1’, ‘gene2’, ‘gene3’)} if <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used
+else self.gene_sets = {‘&lt;prefix&gt;’: (‘gene1’, ‘gene2’, ‘gene3’)} if <code class="docutils literal notranslate"><span class="pre">--gene</span></code> is used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_genes_for_filter">
+<span class="sig-name descname"><span class="pre">parse_genes_for_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_genes_for_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Set self.mask_gene_sets.</p>
+<p>To be called after <code class="docutils literal notranslate"><span class="pre">--mask</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask</span></code>, <code class="docutils literal notranslate"><span class="pre">--mask-cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask-cluster</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">--gene</span></code> have passed check_filter_args checks.</p>
+<p>self.mask_gene_sets = {‘mask’: (‘gene1’, ‘gene2’), ‘unmask’: (‘gene3’,)}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_grna_args">
+<span class="sig-name descname"><span class="pre">parse_grna_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_grna_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse and check arguments for subcommand grna.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_minimumset_args">
+<span class="sig-name descname"><span class="pre">parse_minimumset_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_minimumset_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse and check arguments for subcommand minimumset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_seq_args">
+<span class="sig-name descname"><span class="pre">parse_seq_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_seq_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse and check arguments for subcommand seq.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.reference_required">
+<span class="sig-name descname"><span class="pre">reference_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reference_required" title="Permalink to this definition"></a></dt>
+<dd><p>Check if at least one reference genome has been provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – message to append to printed message if there are no referene genomes</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>click.UsageError</strong> – If no reference genomes are provided</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.reference_set_callback">
+<span class="sig-name descname"><span class="pre">reference_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reference_set_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--reference-set</span> <span class="pre">&lt;alias</span> <span class="pre">or</span> <span class="pre">path&gt;</span></code>.</p>
+<p>Sets self.reference_set and self.reference_aliases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>str</em>) – required; lookup file alias or path to lookup file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path to lookup file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidPath" title="minorg.exceptions.InvalidPath"><strong>InvalidPath</strong></a> – If path does not exist</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidFile" title="minorg.exceptions.InvalidFile"><strong>InvalidFile</strong></a> – If path does not point to a file</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.UnreadableFile" title="minorg.exceptions.UnreadableFile"><strong>UnreadableFile</strong></a> – If file is not readable</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InputFormatError" title="minorg.exceptions.InputFormatError"><strong>InputFormatError</strong></a> – If format of lookup file is incorrect</p></li>
+<li><p><strong>typer.BadParameter</strong> – If argument <code class="docutils literal notranslate"><span class="pre">val</span></code> does not point to a valid file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.references_callback">
+<span class="sig-name descname"><span class="pre">references_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.references_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for printing reference genome lookup mapping to terminal.
+Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
+and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>bool</em>) – print mapping</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.set_genes">
+<span class="sig-name descname"><span class="pre">set_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene_set_prefix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.set_genes" title="Permalink to this definition"></a></dt>
+<dd><p>Specify a gene set to be processed by parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
+<p>As <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> only processes genes in <code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code>,
+this method sets <code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code> as the genes mapped to by <code class="docutils literal notranslate"><span class="pre">gene_set_prefix</span></code>
+so that they can be acted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gene_set_prefix</strong> (<em>str</em>) – required, gene set alias (valid aliases: self.gene_sets.keys())</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_filter">
+<span class="sig-name descname"><span class="pre">subcmd_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Subcommand filter.</p>
+<p>Executes background, feature, and GC check.
+Writes .map file detailing check statuses of each gRNA-target combination.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_full">
+<span class="sig-name descname"><span class="pre">subcmd_full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_full" title="Permalink to this definition"></a></dt>
+<dd><p>Full MINORg programme.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_grna">
+<span class="sig-name descname"><span class="pre">subcmd_grna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_grna" title="Permalink to this definition"></a></dt>
+<dd><p>Subcommand grna.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used, processes each cluster’s set of genes separately.
+Writes all possible gRNA to FASTA file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_minimumset">
+<span class="sig-name descname"><span class="pre">subcmd_minimumset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_minimumset" title="Permalink to this definition"></a></dt>
+<dd><p>Subcommand minimumset.</p>
+<p>Generates minimumset of gRNA required to cover all targets.
+Writes FASTA file of final set of gRNA and .map file detailing targets of each gRNA.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_seq">
+<span class="sig-name descname"><span class="pre">subcmd_seq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Subcommand seq.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used, processes each cluster’s set of genes separately.
+Writes target sequences to FASTA file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subset_annotation">
+<span class="sig-name descname"><span class="pre">subset_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subset_annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Subset annotations of all reference genomes according to self.gene_sets and self.mask_gene_sets.</p>
+<p>Reduces annotation lookup time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quiet</strong> (<em>bool</em>) – silence printing of non-essential messages</p></li>
+<li><p><strong>sort</strong> (<em>bool</em>) – sort subset data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.version_callback">
+<span class="sig-name descname"><span class="pre">version_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.version_callback" title="Permalink to this definition"></a></dt>
+<dd><p>Callback for printing version to terminal.
+Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
+and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.valid_aliases">
+<span class="sig-prename descclassname"><span class="pre">minorg.MINORgCLI.</span></span><span class="sig-name descname"><span class="pre">valid_aliases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aliases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">none_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_cmd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORgCLI.valid_aliases" title="Permalink to this definition"></a></dt>
+<dd><p>Check if alias(es) is/are valid and prints appropriate message to terminal if alias(es) is/are invalid.</p>
+<p>Also generates and raises error for invalid alias(es) if requested (i.e. raise_error=True).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aliases</strong> (<em>str</em><em> or </em><em>list</em>) – requird, single alias (str) or multiple aliases (list)</p></li>
+<li><p><strong>lookup</strong> (<em>dict</em>) – required, lookup dictionary (fmt: {&lt;alias&gt;: &lt;value associated w/ alias&gt;})</p></li>
+<li><p><strong>raise_error</strong> (<em>bool</em>) – throw error if alias(es) is/are invalid</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – optional, message to print if alias(es) is/are invalid.
+Autogenerated if not provided.</p></li>
+<li><p><strong>param</strong> (<a class="reference internal" href="minorg.parse_config.html#minorg.parse_config.Param" title="minorg.parse_config.Param"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.parse_config.Param</span></code></a>) – optional, used for autogeneration of message</p></li>
+<li><p><strong>none_value</strong> – optional, special alias value to indicate NO alias(es) are to be looked up.
+(I.e. valid_aliases(‘none’, {‘genomeA’: ‘/path/to/FASTA’, ‘genomeB’: ‘/path/to/FASTA’},
+none_value = ‘none’) will not flag the alias (‘none’) as invalid
+despite it not being in the lookup dictionary.)</p></li>
+<li><p><strong>all_value</strong> – optional, special alias value to indicate ALL alias(es).
+(I.e. valid_aliases(‘all’, {‘genomeA’: ‘/path/to/FASTA’, ‘genomeB’: ‘/path/to/FASTA’},
+all_value = ‘all’) will not flag the alias (‘all’) as invalid
+despite it not being in the lookup dictionary.)</p></li>
+<li><p><strong>display_cmd</strong> (<em>str</em>) – optional, CLI keyword argument for printing lookup alias-value mapping to terminal,
+used for autogeneration of message</p></li>
+<li><p><strong>additional_message</strong> (<em>str</em>) – optional,
+additional message to append to printed message if alias(es) is/are invalid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>typer.BadParameter</strong> – If alias(es) is/are invalid AND raise_error=True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.MINORgCLI.valid_readable_file">
+<span class="sig-prename descclassname"><span class="pre">minorg.MINORgCLI.</span></span><span class="sig-name descname"><span class="pre">valid_readable_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#minorg.MINORgCLI.valid_readable_file" title="Permalink to this definition"></a></dt>
+<dd><p>Check if file path is valid AND is file AND is readable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pathname</strong> (<em>str</em>) – path to file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pathname if it points to a valid readable file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidPath" title="minorg.exceptions.InvalidPath"><strong>InvalidPath</strong></a> – If path does not exist</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.InvalidFile" title="minorg.exceptions.InvalidFile"><strong>InvalidFile</strong></a> – If path does not point to a file</p></li>
+<li><p><a class="reference internal" href="minorg.exceptions.html#minorg.exceptions.UnreadableFile" title="minorg.exceptions.UnreadableFile"><strong>UnreadableFile</strong></a> – If file is not readable</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.MINORg.html" class="btn btn-neutral float-left" title="minorg.MINORg module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="minorg.annotation.html" class="btn btn-neutral float-right" title="minorg.annotation module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

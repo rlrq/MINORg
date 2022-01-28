@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minorg.MINORg module &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="minorg.MINORgCLI module" href="minorg.MINORgCLI.html" />
+    <link rel="prev" title="minorg package" href="minorg.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="minorg.html">minorg package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="minorg.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">minorg.MINORg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.MINORgCLI.html">minorg.MINORgCLI module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.annotation.html">minorg.annotation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.filter_grna.html">minorg.filter_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.functions.html">minorg.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.generate_grna.html">minorg.generate_grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.grna.html">minorg.grna module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.index.html">minorg.index module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.log.html">minorg.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.html#module-minorg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="minorg.html">minorg package</a> &raquo;</li>
+      <li>minorg.MINORg module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/minorg.MINORg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-minorg.MINORg">
+<span id="minorg-minorg-module"></span><h1>minorg.MINORg module<a class="headerlink" href="#module-minorg.MINORg" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.MINORg.parse_lookup">
+<span class="sig-prename descclassname"><span class="pre">minorg.MINORg.</span></span><span class="sig-name descname"><span class="pre">parse_lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.parse_lookup" title="Permalink to this definition"></a></dt>
+<dd><p>commas not allowed in values</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.MINORg.valid_readable_file">
+<span class="sig-prename descclassname"><span class="pre">minorg.MINORg.</span></span><span class="sig-name descname"><span class="pre">valid_readable_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pathname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.valid_readable_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.MINORg.valid_aliases">
+<span class="sig-prename descclassname"><span class="pre">minorg.MINORg.</span></span><span class="sig-name descname"><span class="pre">valid_aliases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aliases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="minorg.parse_config.html#minorg.parse_config.Param" title="minorg.parse_config.Param"><span class="pre">minorg.parse_config.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">none_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_cmd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.valid_aliases" title="Permalink to this definition"></a></dt>
+<dd><p>Generates appropriate error + message if alias(es) is/are invalid.
+Throws the error generated if requested (i.e. raise_error = True).
+Requires alias(es) (str of single alias or iterable of multiple aliases) + set lookup dictionary</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.MINORg.</span></span><span class="sig-name descname"><span class="pre">PathHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracks new files/directories and temporary files.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.tmp">
+<span class="sig-name descname"><span class="pre">tmp</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.tmp" title="Permalink to this definition"></a></dt>
+<dd><p>whether temporary directory is used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.keep_tmp">
+<span class="sig-name descname"><span class="pre">keep_tmp</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.keep_tmp" title="Permalink to this definition"></a></dt>
+<dd><p>whether to retain temporary files/directories</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.out_dir">
+<span class="sig-name descname"><span class="pre">out_dir</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.out_dir" title="Permalink to this definition"></a></dt>
+<dd><p>absolute path to final output directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.new_dirs">
+<span class="sig-name descname"><span class="pre">new_dirs</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.new_dirs" title="Permalink to this definition"></a></dt>
+<dd><p>paths of newly created directories</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.tmp_files">
+<span class="sig-name descname"><span class="pre">tmp_files</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.tmp_files" title="Permalink to this definition"></a></dt>
+<dd><p>paths of temporary files/directories</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.tmp_dir">
+<span class="sig-name descname"><span class="pre">tmp_dir</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.tmp_dir" title="Permalink to this definition"></a></dt>
+<dd><p>path of temporary directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.directory" title="Permalink to this definition"></a></dt>
+<dd><p>path of directory being written into.
+If tmp=True, this will point to a temporary directory.
+Else, this will be the output directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a PathHandler object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tmp</strong> (<em>bool</em>) – write files to temporary directory
+(to be deleted or moved to final output directory using resolve)</p></li>
+<li><p><strong>keep_tmp</strong> (<em>bool</em>) – retain temporary files/directories</p></li>
+<li><p><strong>directory</strong> (<em>str</em>) – final output directory (will be directly written into if tmp=False)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.tracebacklimit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tracebacklimit</span></span><a class="headerlink" href="#minorg.MINORg.PathHandler.tracebacklimit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.mv">
+<span class="sig-name descname"><span class="pre">mv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.mv" title="Permalink to this definition"></a></dt>
+<dd><p>Update output directory.</p>
+<p>Contents of the current output directory will also be moved to the new directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>str</em>) – required, path to new output directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.mkdir">
+<span class="sig-name descname"><span class="pre">mkdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">directories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.mkdir" title="Permalink to this definition"></a></dt>
+<dd><p>Create directory/directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*directories</strong> (<em>str</em>) – path</p></li>
+<li><p><strong>tmp</strong> (<em>bool</em>) – mark directory as temporary (for deletion when self.rm_tmpfiles is called)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.mkfname">
+<span class="sig-name descname"><span class="pre">mkfname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.mkfname" title="Permalink to this definition"></a></dt>
+<dd><p>Generate path.</p>
+<p>If path provided is not absolute, self.directory is assumed to be the root directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*path</strong> (<em>str</em>) – required, path to output file
+(e.g. self.mkfname(‘tmp’, ‘tmp.fasta’) –&gt; &lt;self.directory&gt;/tmp/tmp.fasta)</p></li>
+<li><p><strong>tmp</strong> (<em>bool</em>) – mark file as temporary (for deletion when self.rm_tmpfiles is called)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.reserve_fname">
+<span class="sig-name descname"><span class="pre">reserve_fname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.reserve_fname" title="Permalink to this definition"></a></dt>
+<dd><p>Generate new file.</p>
+<p>Operates exactly as <a class="reference internal" href="#minorg.MINORg.PathHandler.mkfname" title="minorg.MINORg.PathHandler.mkfname"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PathHandler.mkfname()</span></code></a>, with the additional options of creating an empty file or clearing an existing file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*path</strong> (<em>str</em>) – path to output file</p></li>
+<li><p><strong>tmp</strong> (<em>bool</em>) – mark file as temporary (for deletion when self.rm_tmpfiles is called)</p></li>
+<li><p><strong>newfile</strong> (<em>bool</em>) – clear an existing file at destination if it already exists</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.rm_tmpfiles">
+<span class="sig-name descname"><span class="pre">rm_tmpfiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fnames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.rm_tmpfiles" title="Permalink to this definition"></a></dt>
+<dd><p>Delete all files and directories marked as temporary (in self.tmp_files).</p>
+<p>Directories will only be deleted if they are empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*fnames</strong> (<em>str</em>) – optional, path. If provided, only the specified files/directories will be deleted if they are also marked as temporary. Otherwise, all temporary files and directories are deleted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.PathHandler.resolve">
+<span class="sig-name descname"><span class="pre">resolve</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.PathHandler.resolve" title="Permalink to this definition"></a></dt>
+<dd><p>If self.tmp, move output files to final output directory.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.MINORg.</span></span><span class="sig-name descname"><span class="pre">MINORg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.MINORg.PathHandler" title="minorg.MINORg.PathHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.PathHandler</span></code></a></p>
+<p>Tracks parameters, intermediate files, and output file for reuse.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/my/output/directory&quot;</span><span class="p">,</span>
+<span class="go">                       prefix = &quot;test&quot;, tmp = False, keep_tmp = True, thread = 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s2">&quot;TAIR10&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/TAIR10_Chr.all.fasta&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/TAIR10_GFF3.genes.gff&quot;</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s2">&quot;araly2&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/Alyrata_384_v1.fa&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/Alyrata_384_v2.1.gene.gff3&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AT5G66900&quot;</span><span class="p">,</span> <span class="s2">&quot;AL8G44500.v2.1&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">subset_annotation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">my_minorg</span><span class="o">.</span><span class="n">reference</span><span class="p">[</span><span class="s2">&quot;TAIR10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">get_subfeatures</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">genes</span><span class="p">)]</span>
+<span class="go">[[&#39;AT5G66900.1&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">my_minorg</span><span class="o">.</span><span class="n">reference</span><span class="p">[</span><span class="s2">&quot;TAIR10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">get_subfeatures</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">genes</span><span class="p">)]</span>
+<span class="go">[[&#39;AL8G44500.t1.v2.1&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">query_reference</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">seq</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">grna</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">screen_reference</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">filter_background</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">grna_hits</span><span class="o">.</span><span class="n">filter_seqs</span><span class="p">(</span><span class="s2">&quot;background&quot;</span><span class="p">)</span>
+<span class="go">gRNAHits(len = 352)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">filter_gc</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">grna_hits</span><span class="o">.</span><span class="n">filter_seqs</span><span class="p">(</span><span class="s2">&quot;GC&quot;</span><span class="p">)</span>
+<span class="go">gRNAHits(len = 370)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">grna_hits</span><span class="o">.</span><span class="n">filter_seqs</span><span class="p">(</span><span class="s2">&quot;background&quot;</span><span class="p">,</span> <span class="s2">&quot;GC&quot;</span><span class="p">)</span>
+<span class="go">gRNAHits(len = 321)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">filter_feature</span><span class="p">()</span> <span class="c1">## by default, MINORg only retains gRNA in CDS</span>
+<span class="go">Max acceptable insertion length: 15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">grna_hits</span><span class="o">.</span><span class="n">filter_hits</span><span class="p">(</span><span class="s2">&quot;feature&quot;</span><span class="p">)</span>
+<span class="go">gRNAHits(len = 344)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">passed_grna</span>
+<span class="go">gRNAHits(len = 278)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">minimumset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.prefix" title="Permalink to this definition"></a></dt>
+<dd><p>[general] prefix for output directories and files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.thread">
+<span class="sig-name descname"><span class="pre">thread</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.thread" title="Permalink to this definition"></a></dt>
+<dd><p>[general] maximum number of threads for parallel processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.blastn">
+<span class="sig-name descname"><span class="pre">blastn</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.blastn" title="Permalink to this definition"></a></dt>
+<dd><p>[executable] path to blastn executable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.rpsblast">
+<span class="sig-name descname"><span class="pre">rpsblast</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.rpsblast" title="Permalink to this definition"></a></dt>
+<dd><p>[executable] path to rpsblast or rpsblast+ executable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.mafft">
+<span class="sig-name descname"><span class="pre">mafft</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.mafft" title="Permalink to this definition"></a></dt>
+<dd><p>[executable] path to mafft executable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.db">
+<span class="sig-name descname"><span class="pre">db</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.db" title="Permalink to this definition"></a></dt>
+<dd><p>[RPS-BLAST option] path to local RPS-BLAST database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.remote_rps">
+<span class="sig-name descname"><span class="pre">remote_rps</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.remote_rps" title="Permalink to this definition"></a></dt>
+<dd><p>[RPS-BLAST option] use remote database instead of local database for RPS-BLAST</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.pssm_ids">
+<span class="sig-name descname"><span class="pre">pssm_ids</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.pssm_ids" title="Permalink to this definition"></a></dt>
+<dd><p>[seq] list of Pssm-Ids of domain(s) for homologue search.
+If multiple Pssm-Ids are provided, overlapping domains will be merged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.domain_name">
+<span class="sig-name descname"><span class="pre">domain_name</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.domain_name" title="Permalink to this definition"></a></dt>
+<dd><p>human-readable domain name used in sequence and file names in place of Pssm-Ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.genes">
+<span class="sig-name descname"><span class="pre">genes</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.genes" title="Permalink to this definition"></a></dt>
+<dd><p>[seq] list of target gene IDs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list or str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.query_reference">
+<span class="sig-name descname"><span class="pre">query_reference</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.query_reference" title="Permalink to this definition"></a></dt>
+<dd><p>[seq] include reference genes as targets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.minlen">
+<span class="sig-name descname"><span class="pre">minlen</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.minlen" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] minimum homologue length (bp)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.minid">
+<span class="sig-name descname"><span class="pre">minid</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.minid" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] minimum hit % identity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.mincdslen">
+<span class="sig-name descname"><span class="pre">mincdslen</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.mincdslen" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] minimum number of bases in homologue aligned with reference gene CDS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.merge_within">
+<span class="sig-name descname"><span class="pre">merge_within</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.merge_within" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] maximum distance (bp) between hits for merging</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.check_recip">
+<span class="sig-name descname"><span class="pre">check_recip</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.check_recip" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] execute reciprocal check</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.relax_recip">
+<span class="sig-name descname"><span class="pre">relax_recip</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.relax_recip" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] execute relaxed reciprocal check</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.check_id_before_merge">
+<span class="sig-name descname"><span class="pre">check_id_before_merge</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.check_id_before_merge" title="Permalink to this definition"></a></dt>
+<dd><p>[seq: homologue] filter out hits by % identity before merging into potential homologues</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.length">
+<span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.length" title="Permalink to this definition"></a></dt>
+<dd><p>[grna] gRNA length (bp)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.pam">
+<span class="sig-name descname"><span class="pre">pam</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.pam" title="Permalink to this definition"></a></dt>
+<dd><p>[grna] PAM pattern</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.screen_reference">
+<span class="sig-name descname"><span class="pre">screen_reference</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.screen_reference" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: background] include reference genome for screening</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.ot_pamless">
+<span class="sig-name descname"><span class="pre">ot_pamless</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.ot_pamless" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: background] ignore absence of PAM when assessing off-target gRNA hits</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.offtarget">
+<span class="sig-name descname"><span class="pre">offtarget</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.offtarget" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: background] function that accepts Biopython’s HSP and QueryResult objects and determines whether an off-target gRNA hit is problematic.
+If not set by user, ot_mismatch and ot_gap will be used
+## TODO!!! integrate this somehow?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>func</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.ot_mismatch">
+<span class="sig-name descname"><span class="pre">ot_mismatch</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.ot_mismatch" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: background] minimum number of mismatches allowed for off-target gRNA hits</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.ot_gap">
+<span class="sig-name descname"><span class="pre">ot_gap</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.ot_gap" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: background] minimum number of gaps allowed for off-target gRNA hits</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.gc_min">
+<span class="sig-name descname"><span class="pre">gc_min</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.gc_min" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: GC] minimum GC content (between 0 and 1, where 0 is no GC content and 1 is all GC)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.gc_max">
+<span class="sig-name descname"><span class="pre">gc_max</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.gc_max" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: GC] maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.feature">
+<span class="sig-name descname"><span class="pre">feature</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.feature" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: feature] GFF3 feature within which gRNA are to be designed (default=”CDS”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.max_insertion">
+<span class="sig-name descname"><span class="pre">max_insertion</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.max_insertion" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: feature] maximum allowable insertion size in feature (bp)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.min_within_n">
+<span class="sig-name descname"><span class="pre">min_within_n</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.min_within_n" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: feature] minimum number of reference genes which feature a gRNA must align within</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.min_within_fraction">
+<span class="sig-name descname"><span class="pre">min_within_fraction</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.min_within_fraction" title="Permalink to this definition"></a></dt>
+<dd><p>[filter: feature] minimum fraction of reference genes which feature a gRNA must align within
+(between 0 and 1, where 0 is none and 1 is all; if 0, min_within_n will be set to 1)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.sets">
+<span class="sig-name descname"><span class="pre">sets</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.sets" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] number of sets to generate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.auto">
+<span class="sig-name descname"><span class="pre">auto</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.auto" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] generate sets without requiring manual user confirmation for each set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.accept_invalid">
+<span class="sig-name descname"><span class="pre">accept_invalid</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.accept_invalid" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] score ‘NA’ as ‘pass’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.accept_feature_unknown">
+<span class="sig-name descname"><span class="pre">accept_feature_unknown</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.accept_feature_unknown" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] score ‘NA’ as ‘pass’ for feature check</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.accept_invalid_field">
+<span class="sig-name descname"><span class="pre">accept_invalid_field</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.accept_invalid_field" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] score ‘NA’ as ‘pass’ if all entries for a check are ‘NA’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.pass_map">
+<span class="sig-name descname"><span class="pre">pass_map</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.pass_map" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] path to output .map file for gRNA that pass all valid checks
+(autogenerated by MINORg if not provided)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.pass_fasta">
+<span class="sig-name descname"><span class="pre">pass_fasta</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.pass_fasta" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] path to output .fasta file for gRNA that pass all valid checks
+(autogenerated by MINORg if not provided)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.final_map">
+<span class="sig-name descname"><span class="pre">final_map</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.final_map" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] path to output .map file for final gRNA set(s)
+(autogenerated by MINORg if not provided)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.final_fasta">
+<span class="sig-name descname"><span class="pre">final_fasta</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.final_fasta" title="Permalink to this definition"></a></dt>
+<dd><p>[minimumset] path to output .fasta file for final gRNA set(s)
+(autogenerated by MINORg if not provided)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a MINORg object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – path to output directory</p></li>
+<li><p><strong>config</strong> (<em>str</em>) – path to config.ini file</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – prefix for output directories and files</p></li>
+<li><p><strong>thread</strong> (<em>int</em>) – maximum number of threads for parallel processing</p></li>
+<li><p><strong>keep_tmp</strong> (<em>bool</em>) – retain temporary files</p></li>
+<li><p><strong>**kwargs</strong> – other arguments supplied to parent class <a class="reference internal" href="#minorg.MINORg.PathHandler" title="minorg.MINORg.PathHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathHandler</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a MINORg object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.query_map">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query_map</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.query_map" title="Permalink to this definition"></a></dt>
+<dd><p>Mapping of alias to FASTA for queries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns list of (&lt;alias&gt;, &lt;/path/to/FASTA&gt;)</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.assemblies">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assemblies</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.assemblies" title="Permalink to this definition"></a></dt>
+<dd><p>Reference assemblies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns {&lt;alias&gt;: &lt;/path/to/FASTA&gt;}</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.annotations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">annotations</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.annotations" title="Permalink to this definition"></a></dt>
+<dd><p>Reference annotations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns {&lt;alias&gt;: &lt;/path/to/GFF3&gt;}</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.attr_mods">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attr_mods</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.attr_mods" title="Permalink to this definition"></a></dt>
+<dd><p>Attribute modifications</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns {&lt;reference alias&gt;: &lt;dict of attribute modifications&gt;}</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.features">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">features</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.features" title="Permalink to this definition"></a></dt>
+<dd><p>Target features</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns list of target feature(s)</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.passed_grna">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">passed_grna</span></span><a class="headerlink" href="#minorg.MINORg.MINORg.passed_grna" title="Permalink to this definition"></a></dt>
+<dd><p>gRNA that have passed background, GC, and feature checks</p>
+<p>Relevant attributes: accept_invalid, accept_invalid_field</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns gRNA that have passed checks</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><a class="reference internal" href="minorg.grna.html#minorg.grna.gRNAHits" title="minorg.grna.gRNAHits">gRNAHits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain_name</span></span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>Domain name for use in sequence IDs and file names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns domain name if set, else ‘gene’ if not <a class="reference internal" href="#minorg.MINORg.MINORg.pssm_ids" title="minorg.MINORg.MINORg.pssm_ids"><code class="xref py py-attr docutils literal notranslate"><span class="pre">MINORg.pssm_ids</span></code></a>, else dash-separated <a class="reference internal" href="#minorg.MINORg.MINORg.pssm_ids" title="minorg.MINORg.MINORg.pssm_ids"><code class="xref py py-attr docutils literal notranslate"><span class="pre">MINORg.pssm_ids</span></code></a></p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets domain name</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id1">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offtarget</span></span><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
+<dd><p>Function to assess off-target goodness of alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns function that accepts HSP and QueryResult</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>func</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pam</span></span><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
+<dd><p>PAM pattern</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns expanded PAM pattern (includes explicit position of gRNA; e.g. ‘.NGG’)</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets PAM pattern and parses it into expanded PAM pattern</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id3">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#id3" title="Permalink to this definition"></a></dt>
+<dd><p>gRNA length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns gRNA length (bp)</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets gRNA length and updates MINORg.PAM</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">feature</span></span><a class="headerlink" href="#id4" title="Permalink to this definition"></a></dt>
+<dd><p>Target feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns first feature if multiple have been provided</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets target feature</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_recip</span></span><a class="headerlink" href="#id5" title="Permalink to this definition"></a></dt>
+<dd><p>Whether to execute reciprocal check</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns True if MINORg.check_recip=True OR MINORg.relax_recip=True</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets this check</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.mv">
+<span class="sig-name descname"><span class="pre">mv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.mv" title="Permalink to this definition"></a></dt>
+<dd><p>Update output directory.</p>
+<p>Contents of the current output directory will also be moved to the new directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>str</em>) – required, path to new output directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.mkfname">
+<span class="sig-name descname"><span class="pre">mkfname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.mkfname" title="Permalink to this definition"></a></dt>
+<dd><p>Generate new file name.</p>
+<p>If path provided is not absolute, self.directory is assumed to be the root directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*path</strong> (<em>str</em>) – required, path to output file (e.g. self.mkfname(‘tmp’, ‘tmp.fasta’))</p></li>
+<li><p><strong>tmp</strong> (<em>bool</em>) – mark file as temporary (for deletion when self.rm_tmpfiles is called)</p></li>
+<li><p><strong>prefix</strong> (<em>bool</em>) – prefix self.prefix to basename</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.results_fname">
+<span class="sig-name descname"><span class="pre">results_fname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reserve</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.results_fname" title="Permalink to this definition"></a></dt>
+<dd><p>Generate new file name in results directory (&lt;self.directory&gt;/&lt;self.prefix&gt;).</p>
+<p>Operates exactly as <a class="reference internal" href="#minorg.MINORg.MINORg.mkfname" title="minorg.MINORg.MINORg.mkfname"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORg.mkfname()</span></code></a>, with the additional options of creating an empty file or clearing an existing file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*path</strong> (<em>str</em>) – path to output file</p></li>
+<li><p><strong>reserve</strong> (<em>bool</em>) – create empty file at destination if it does not exist</p></li>
+<li><p><strong>newfile</strong> (<em>bool</em>) – clear an existing file at destination if it already exists</p></li>
+<li><p><strong>**kwargs</strong> – other arguments supplied to <a class="reference internal" href="#minorg.MINORg.MINORg.mkfname" title="minorg.MINORg.MINORg.mkfname"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORg.mkfname()</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.get_ref_seqid">
+<span class="sig-name descname"><span class="pre">get_ref_seqid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.get_ref_seqid" title="Permalink to this definition"></a></dt>
+<dd><p>Extract attribute of sequence from sequence name (for sequences generated by self.target)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seqid</strong> (<em>str</em>) – required, sequence name</p></li>
+<li><p><strong>attr</strong> (<em>str</em>) – required, attribute to return.
+Valid attributes: ‘gene’, ‘feature’, ‘source’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.add_background">
+<span class="sig-name descname"><span class="pre">add_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.add_background" title="Permalink to this definition"></a></dt>
+<dd><p>Add file for background filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>str</em>) – required, path to file</p></li>
+<li><p><strong>alias</strong> (<em>str</em>) – optional, alias for background file.
+Used when writing mask report and for removing background.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.remove_background">
+<span class="sig-name descname"><span class="pre">remove_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.remove_background" title="Permalink to this definition"></a></dt>
+<dd><p>Remove file for background filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alias</strong> (<em>str</em>) – required, alias of background file to remove</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.parse_grna_map_from_file">
+<span class="sig-name descname"><span class="pre">parse_grna_map_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.parse_grna_map_from_file" title="Permalink to this definition"></a></dt>
+<dd><p>Read candidate gRNA from .map file output by MINORg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – required, path to MINORg .map file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.rename_grna">
+<span class="sig-name descname"><span class="pre">rename_grna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.rename_grna" title="Permalink to this definition"></a></dt>
+<dd><p>Rename candidate gRNA according to FASTA file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fasta</strong> (<em>str</em>) – required, path to FASTA file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.write_all_grna_fasta">
+<span class="sig-name descname"><span class="pre">write_all_grna_fasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.write_all_grna_fasta" title="Permalink to this definition"></a></dt>
+<dd><p>Write FASTA file of all candidate gRNA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fout</strong> (<em>str</em>) – optional, absolute path to output file.
+Autogenerated using self.prefix and self.directory if not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.write_all_grna_map">
+<span class="sig-name descname"><span class="pre">write_all_grna_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.write_all_grna_map" title="Permalink to this definition"></a></dt>
+<dd><p>Write .map file of all candidate gRNA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fout</strong> (<em>str</em>) – optional, absolute path to output file.
+Autogenerated using self.prefix and self.directory if not provided.</p></li>
+<li><p><strong>write_checks</strong> (<em>bool</em>) – write all check statuses</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.write_pass_grna_fasta">
+<span class="sig-name descname"><span class="pre">write_pass_grna_fasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.write_pass_grna_fasta" title="Permalink to this definition"></a></dt>
+<dd><p>Write FASTA file of gRNA that pass all valid checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fout</strong> (<em>str</em>) – optional, absolute path to output file.
+Autogenerated using self.prefix and self.directory if not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.write_pass_grna_map">
+<span class="sig-name descname"><span class="pre">write_pass_grna_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.write_pass_grna_map" title="Permalink to this definition"></a></dt>
+<dd><p>Write .map file of gRNA that pass all valid checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fout</strong> (<em>str</em>) – optional, absolute path to output file.
+Autogenerated using self.prefix and self.directory if not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.add_reference">
+<span class="sig-name descname"><span class="pre">add_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genetic_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_mod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.add_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Add reference genome.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alias</strong> (<em>str</em>) – required, name of fasta-annotation combo</p></li>
+<li><p><strong>fasta</strong> (<em>str</em>) – required, path to fasta file</p></li>
+<li><p><strong>annotation</strong> (<em>str</em>) – required path to GFF3 file</p></li>
+<li><p><strong>genetic_code</strong> (<em>str</em><em> or </em><em>int</em>) – NCBI genetic code (default=1)</p></li>
+<li><p><strong>attr_mod</strong> (<em>dict</em>) – mapping for non-standard attribute field names in GFF3 file (default={})</p></li>
+<li><p><strong>replace</strong> (<em>bool</em>) – replace any existing reference with same alias (default=False)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.remove_reference">
+<span class="sig-name descname"><span class="pre">remove_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.remove_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Remove reference genome.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alias</strong> (<em>str</em>) – required, alias of reference genome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.clear_reference">
+<span class="sig-name descname"><span class="pre">clear_reference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.clear_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Remove all reference genomes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.subset_annotation">
+<span class="sig-name descname"><span class="pre">subset_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.subset_annotation" title="Permalink to this definition"></a></dt>
+<dd><p>Subset annotations of all reference genomes according to self.genes.</p>
+<p>Reduces annotation lookup time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quiet</strong> (<em>bool</em>) – silence printing of non-essential messages</p></li>
+<li><p><strong>sort</strong> (<em>bool</em>) – sort subset data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.extend_reference">
+<span class="sig-name descname"><span class="pre">extend_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext_gene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_cds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.extend_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Extend reference genomes from FASTA files of gene and CDS sequences.</p>
+<p>Sequence IDs of gene sequences in ext_gene file(s) should not be repeated and should not contain ‘|’. Sequences in ext_cds file(s) should be named &lt;sequence ID in ext_gene file(s)&gt;.&lt;int&gt; to indicate their parent gene. Corresponding gene and CDS sequences will be aligned with mafft for inference of CDS range in genes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ext_gene</strong> (<em>str</em><em> or </em><em>list</em>) – required, path to file or list of paths to files of gene sequences</p></li>
+<li><p><strong>ext_cds</strong> (<em>str</em><em> or </em><em>list</em>) – required, path to file or list of paths to files of CDS sequences</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.get_reference_seq">
+<span class="sig-name descname"><span class="pre">get_reference_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_gene</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqid_template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Reference|$source|$gene|$isoform|$feature|$n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isoform_lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fouts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.get_reference_seq" title="Permalink to this definition"></a></dt>
+<dd><p>Get sequence(s) of reference genes or isoforms.</p>
+<p>If self.pssm_ids is provided, sequences are restricted to the relevant domain(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*features</strong> (<em>str</em>) – optional, GFF3 feature type(s) to retrieve
+If not specified, sequence of the gene or isoform will be retrieved directly.</p></li>
+<li><p><strong>ref</strong> (<em>str</em>) – optional, alias of reference genome from which to extract sequences.
+If not specified, all reference genomes will be searched for genes.</p></li>
+<li><p><strong>seqid_template</strong> (<em>str</em>) – <p>optional, template for output sequence name.
+Template will be parsed by strings.Template.
+The default template is “Reference|$source|$gene|$isoform|$feature|$n”.</p>
+<blockquote>
+<div><ul>
+<li><p>$source: reference genome alias</p></li>
+<li><p>$gene: gene/isoform ID</p></li>
+<li><p>$isoform: isoform ID if by_gene = False, else same as $gene</p></li>
+<li><p>$feature: GFF3 feature type</p></li>
+<li><p>$n: if multiple domains are present, they will be numbered according to
+proximity to 5’ of sense strand</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>adj_dir</strong> (<em>bool</em>) – output sense strand</p></li>
+<li><p><strong>by_gene</strong> (<em>bool</em>) – merge sequences from all isoforms of a gene</p></li>
+<li><p><strong>translate</strong> (<em>bool</em>) – translate sequence. Should be used with adj_dir.</p></li>
+<li><p><strong>fout</strong> (<em>str</em>) – optional, path to output file if features is not specified.</p></li>
+<li><p><strong>**fouts</strong> (<em>str</em>) – optional, path to output files for each feature if features is specified.
+Example: self.get_reference_seq(“CDS”, CDS = &lt;path to file&gt;) returns dict AND writes to file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sequence(s) of reference genes or isoforms (specified in self.genes), grouped by feature.
+Format: {&lt;feature&gt;: {&lt;seqid&gt;: &lt;seq&gt;}}</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.seq">
+<span class="sig-name descname"><span class="pre">seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mincdslen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relax_recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_id_before_merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.seq" title="Permalink to this definition"></a></dt>
+<dd><p>Identify targets and generate self.target file based on self’s attributes.</p>
+<p>All arguments are optional. If not provided, the corresponding value stored in self’s attributes will be used.</p>
+<p>If self.pssm_ids has been provided, either 1) self.rps_hits
+OR 2) self.db AND self.rpsblast are required.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/my/output/directory&quot;</span><span class="p">,</span>
+<span class="go">                       prefix = &quot;test&quot;, tmp = False, keep_tmp = True, thread = 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s2">&quot;TAIR10&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/TAIR10_Chr.all.fasta&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/TAIR10_GFF3.genes.gff&quot;</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AT5G66900&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">subset_annotation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">pssm_ids</span> <span class="o">=</span> <span class="s2">&quot;366375&quot;</span> <span class="c1"># NB-ARC domain</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">query_reference</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">seq</span><span class="p">()</span>
+<span class="go">Exception: If self.pssm_ids has been provided, self.db (path to RPS-BLAST database) AND self.rpsblast (path to rpsblast or rpsblast+ executable OR command name if available at command line) are required</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="s2">&quot;/path/to/rpsblast/database&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">rpslast</span> <span class="o">=</span> <span class="s2">&quot;rpsblast+&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">seq</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">target</span>
+<span class="go">&#39;/my/output/directory/test/test_3663775_targets.fasta&#39;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minlen</strong> (<em>int</em>) – optional. See attributes.</p></li>
+<li><p><strong>minid</strong> (<em>float</em>) – optional. See attributes.</p></li>
+<li><p><strong>mincdslen</strong> (<em>in</em>) – optional. See attributes.</p></li>
+<li><p><strong>check_recip</strong> (<em>bool</em>) – optional. See attributes.</p></li>
+<li><p><strong>relax_recip</strong> (<em>bool</em>) – optional. See attributes.</p></li>
+<li><p><strong>check_id_before_merge</strong> (<em>bool</em>) – optional. See attributes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.grna">
+<span class="sig-name descname"><span class="pre">grna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.grna" title="Permalink to this definition"></a></dt>
+<dd><p>Generate all possible gRNA from self.target file based on self’s attributes: pam, length.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.write_mask_report">
+<span class="sig-name descname"><span class="pre">write_mask_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.write_mask_report" title="Permalink to this definition"></a></dt>
+<dd><p>Write mask report to file.</p>
+<p>Details masked regions as well as which sequence each region is identical to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fout</strong> (<em>str</em>) – required, path to output file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.is_offtarget_pos">
+<span class="sig-name descname"><span class="pre">is_offtarget_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifasta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.is_offtarget_pos" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether gRNA hit is outside masked target regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hsp</strong> (<em>Biopython HSP</em>) – required</p></li>
+<li><p><strong>ifasta</strong> (<a class="reference internal" href="minorg.index.html#minorg.index.IndexedFasta" title="minorg.index.IndexedFasta"><em>IndexedFasta</em></a>) – required, subject of BLAST search</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether a HSP hit is outside of a masked region</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.is_offtarget_aln">
+<span class="sig-name descname"><span class="pre">is_offtarget_aln</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_result</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.is_offtarget_aln" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether (potentially off-target) gRNA hit aligns too well.</p>
+<p>Used in combination with is_offtarget_pos to determine if an off-target gRNA hit could be problematic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hsp</strong> (<em>Biopython HSP</em>) – required</p></li>
+<li><p><strong>query_result</strong> (<em>Biopython QueryResult</em>) – required</p></li>
+<li><p><strong>**kwargs</strong> – other arguments supplied passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORg._is_offtarget_aln()</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether a HSP hit meets the threshold for problematic off-target gRNA hit</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.is_offtarget_pam">
+<span class="sig-name descname"><span class="pre">is_offtarget_pam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifasta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.is_offtarget_pam" title="Permalink to this definition"></a></dt>
+<dd><p>Check for presence of PAM in close proximity and correct orientation to gRNA hit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hsp</strong> (<em>Biopython HSP</em>) – required</p></li>
+<li><p><strong>query_result</strong> (<em>Biopython QueryResult</em>) – required</p></li>
+<li><p><strong>ifasta</strong> (<a class="reference internal" href="minorg.index.html#minorg.index.IndexedFasta" title="minorg.index.IndexedFasta"><em>IndexedFasta</em></a>) – required</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether a HSP hit is in close proximity and correct orientation to a PAM site</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.is_offtarget_hit">
+<span class="sig-name descname"><span class="pre">is_offtarget_hit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifasta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.is_offtarget_hit" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether a gRNA hit aligns too well outside of masked target regions.</p>
+<p>Determined by is_offtarget_pos AND is_offtarget_aln AND is_offtarget_pam for a given HSP, QueryResult, and FASTA file combination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hsp</strong> (<em>Biopython HSP</em>) – required</p></li>
+<li><p><strong>query_result</strong> (<em>Biopython QueryResult</em>) – required</p></li>
+<li><p><strong>ifasta</strong> (<a class="reference internal" href="minorg.index.html#minorg.index.IndexedFasta" title="minorg.index.IndexedFasta"><em>IndexedFasta</em></a>) – required</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether a gRNA hit is off-target and problematic</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.filter_background">
+<span class="sig-name descname"><span class="pre">filter_background</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keep_blast_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other_mask_fnames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.filter_background" title="Permalink to this definition"></a></dt>
+<dd><p>Set background filter check for candidate gRNAs.</p>
+<p>Masks target sequences in all FASTA files to be screened for off-target, BLASTs all candidate gRNAs to those FASTA files, and assesses each BLAST hit individually for whether they could potentially be problematic.</p>
+<p>Relevant attributes: screen_reference, ot_pamless, ot_mismatch, ot_gap</p>
+<p>Relevant methods: add_background, remove_background</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keep_blast_output</strong> (<em>bool</em>) – retain BLAST output file. Default behaviour deletes it.</p></li>
+<li><p><strong>mask_reference</strong> (<em>bool</em>) – mask reference genes (default=True)</p></li>
+<li><p><strong>*other_mask_fnames</strong> (<em>str</em>) – optional, paths to other FASTA files not in self.background that are also to be screened for off-target</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.filter_gc">
+<span class="sig-name descname"><span class="pre">filter_gc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gc_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gc_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.filter_gc" title="Permalink to this definition"></a></dt>
+<dd><p>Set GC check for candidate gRNA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gc_min</strong> (<em>float</em>) – optional. See attributes.</p></li>
+<li><p><strong>gc_max</strong> (<em>float</em>) – optional. See attributes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.align_reference">
+<span class="sig-name descname"><span class="pre">align_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.align_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Align reference genes.</p>
+<p>CDS are first aligned. Full genes are then added to the alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fout</strong> (<em>str</em>) – required, path to output FASTA file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.align_reference_and_targets">
+<span class="sig-name descname"><span class="pre">align_reference_and_targets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.align_reference_and_targets" title="Permalink to this definition"></a></dt>
+<dd><p>Align reference genes and targets. Path to FASTA file generated will be stored in self.alignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>domain_name</strong> (<em>str</em>) – optional, domain name to be used when naming output file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.filter_feature">
+<span class="sig-name descname"><span class="pre">filter_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_insertion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_within_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_within_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment_rvs_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'^_R_$seqid$$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.filter_feature" title="Permalink to this definition"></a></dt>
+<dd><p>Set feature check for candidate gRNAs.</p>
+<p>Range(s) for desired feature of inferred homologue targets discoverd by MINORg will be inferred based on alignment with reference genes based on self’s attributes: max_insertion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_insertion</strong> (<em>int</em>) – optional. See attributes.</p></li>
+<li><p><strong>min_within_n</strong> (<em>int</em>) – optional. See attributes.</p></li>
+<li><p><strong>min_within_fraction</strong> (<em>float</em>) – optional. See attributes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORg.MINORg.minimumset">
+<span class="sig-name descname"><span class="pre">minimumset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_full_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minorg.MINORg.MINORg.minimumset" title="Permalink to this definition"></a></dt>
+<dd><p>Generate minimum set(s) of gRNA required to cover all targets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sets</strong> (<em>int</em>) – optional. See attributes.</p></li>
+<li><p><strong>manual</strong> (<em>bool</em>) – manually approve all gRNA sets. Defaults to NOT self.auto if not provided.</p></li>
+<li><p><strong>fasta</strong> (<em>str</em>) – optional, path to FASTA file. Used for renaming gRNA.</p></li>
+<li><p><strong>fout_fasta</strong> (<em>str</em>) – optional, path to output FASTA file.
+Autogenerated using self.prefix and self.directory if not provided.</p></li>
+<li><p><strong>fout_map</strong> (<em>str</em>) – optional, path to output .map file.
+Autogenerated using self.prefix and self.directory if not provided.</p></li>
+<li><p><strong>report_full_path</strong> (<em>bool</em>) – print full path to output files upon successful writing</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="minorg.html" class="btn btn-neutral float-left" title="minorg package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="minorg.MINORgCLI.html" class="btn btn-neutral float-right" title="minorg.MINORgCLI module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
