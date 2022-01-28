@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h1>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h2>
+<p>Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to comfortable with generating their own preset parameter combinations.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Category</p></td>
+<td><p>CLI arguments</p></td>
+<td><p>Python attributes</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>General</p></td>
+<td><p>directory</p></td>
+<td><p>directory</p></td>
+<td><p>output directory</p></td>
+</tr>
+<tr class="row-odd"><td><p>prefix</p></td>
+<td><p>prefix</p></td>
+<td><p>output file/directory
+prefix</p></td>
+</tr>
+<tr class="row-even"><td><p>thread</p></td>
+<td><p>thread</p></td>
+<td><p>threads</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p>Executable</p></td>
+<td><p>blastn</p></td>
+<td><p>blastn</p></td>
+<td><p>local BLAST’s blastn</p></td>
+</tr>
+<tr class="row-even"><td><p>rpsblast</p></td>
+<td><p>rpsblast</p></td>
+<td><p>local BLAST’s
+rpsblast/rpsblast+</p></td>
+</tr>
+<tr class="row-odd"><td><p>mafft</p></td>
+<td><p>mafft</p></td>
+<td><p>MAFFT</p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>Reference
+genomes
+(CLI:
+seq, full;
+Python: seq,
+filter)</p></td>
+<td><p>reference &lt;alias&gt;</p></td>
+<td><p>reference &lt;Reference
+object&gt;</p></td>
+<td><p>reference genome</p></td>
+</tr>
+<tr class="row-odd"><td><p>assembly</p></td>
+<td></td>
+<td><p>reference genome FASTA</p></td>
+</tr>
+<tr class="row-even"><td><p>annotation</p></td>
+<td></td>
+<td><p>reference genome GFF</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="7"><p>[seq]
+target
+definition</p></td>
+<td><p>gene</p></td>
+<td><p>genes</p></td>
+<td><p>gene IDs</p></td>
+</tr>
+<tr class="row-even"><td><p>cluster</p></td>
+<td></td>
+<td><p>cluster aliases</p></td>
+</tr>
+<tr class="row-odd"><td><p>indv</p></td>
+<td></td>
+<td><p>individuals to discover
+targets in</p></td>
+</tr>
+<tr class="row-even"><td><p>target</p></td>
+<td><p>target</p></td>
+<td><p>FASTA file of sequences
+to find gRNA in</p></td>
+</tr>
+<tr class="row-odd"><td><p>query</p></td>
+<td><p>query</p></td>
+<td><p>FASTA file(s) to discover
+targets in</p></td>
+</tr>
+<tr class="row-even"><td><p>domain &lt;alias&gt;</p></td>
+<td></td>
+<td><p>aliases of domains to
+find gRNA in</p></td>
+</tr>
+<tr class="row-odd"><td><p>domain &lt;Pssm-Id&gt;</p></td>
+<td><p>pssm_ids</p></td>
+<td><p>Pssm-Id(s) of domains to
+find gRNA in</p></td>
+</tr>
+<tr class="row-even"><td rowspan="7"><p>[seq]
+inferring
+homologues from
+BLASTN hits</p></td>
+<td><p>minid</p></td>
+<td><p>minid</p></td>
+<td><p>minimum hit % identity</p></td>
+</tr>
+<tr class="row-odd"><td><p>minlen</p></td>
+<td><p>minlen</p></td>
+<td><p>minimum merged hits
+length</p></td>
+</tr>
+<tr class="row-even"><td><p>mincdslen</p></td>
+<td><p>mincdslen</p></td>
+<td><p>minimum CDS length of
+merged hits</p></td>
+</tr>
+<tr class="row-odd"><td><p>check_recip</p></td>
+<td><p>check_recip</p></td>
+<td><p>execute reciprocal check</p></td>
+</tr>
+<tr class="row-even"><td><p>relax_recip</p></td>
+<td><p>relax_recip</p></td>
+<td><p>execute relaxed
+reciprocal check</p></td>
+</tr>
+<tr class="row-odd"><td><p>merge_within</p></td>
+<td><p>merge_within</p></td>
+<td><p>maximum distance between
+hits for merging</p></td>
+</tr>
+<tr class="row-even"><td><p>check_id_before_merge</p></td>
+<td><p>check_id_before_merge</p></td>
+<td><p>filter hits by % identity
+before merging</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,8 +1,5 @@
-minorg package
-==============
-
-Submodules
-----------
+API documentation
+=================
 
 .. toctree::
    :maxdepth: 4
@@ -29,9 +26,6 @@ Submodules
    minorg.pam
    minorg.parse_config
    minorg.reference
-
-Module contents
----------------
 
 .. automodule:: minorg
    :members:

@@ -31,6 +31,7 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ["sphinx.ext.autodoc",
+              "sphinx.ext.linkcode",
               "sphinxcontrib.napoleon"]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -72,3 +73,35 @@ def setup(app):
 # ## -- Autodoc options ----------------------------------------------------
 
 # autodoc_member_order = "bysource"
+
+## -- linkcode options ---------------------------------------------------
+
+# def linkcode_resolve(domain, info):
+#     if domain != "py":
+#         return None
+#     if not info["module"]:
+#         return None
+#     filename = info["module"].replace('.', '/')
+#     return "https://github.com/rlrq/MINORg/tree/master/%s.py" % filename
+
+import sys
+def linkcode_resolve(domain, info):
+    def find_source():
+        ## try to fin the file and line number
+        obj = sys.modules[info["module"]]
+        for part in info["fullname"].split('.'):
+            obj = getattr(obj, part)
+        import inspect
+        import os
+        fn = inspect.getsourcefile(obj)
+        fn = os.path.relpath(fn, start=os.path.abspath('..'))
+        source, lineno = inspect.getsourcelines(obj)
+        return fn, lineno, lineno + len(source) - 1
+    if domain != "py" or not info["module"]:
+        return None
+    try:
+        filename = "%s#L%d-L%d" % find_source()
+    except Exception:
+        filename = info["module"].replace('.', '/') + ".py"
+    # return "ohno"
+    return "https://github.com/rlrq/MINORg/blob/master/%s" % (filename)
