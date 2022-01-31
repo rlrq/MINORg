@@ -4,6 +4,7 @@ Overview
 MINORg (**MI**\ nimum **NO**\ n-**R**\ eference **g**\ RNA) is a 4-part programme created to design a minimum number of gRNA to cover multiple non-reference targets. Nevertheless, MINORg is also capable of designing gRNA for one target as well as for reference genes. It is available as both a command line programme as well as a Python package.
 
 The 4 broad steps of MINORg are as follows:
+
 * seq: generation of target sequences
 * grna: generation of all potential gRNA from target sequences
 * filter: filtering of potential gRNA by GC, off-target, and/or within-feature
