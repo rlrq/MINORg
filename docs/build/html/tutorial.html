@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples" href="examples.html" />
-    <link rel="prev" title="Overview" href="overview.html" /> 
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,9 +40,10 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#python-package">Python package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-package">Python package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
@@ -77,13 +78,49 @@
              
   <section id="tutorial">
 <h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline"></a></h1>
-<section id="python-package">
-<h2>Python package<a class="headerlink" href="#python-package" title="Permalink to this headline"></a></h2>
-<p>TODO</p>
-</section>
 <section id="command-line">
 <h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
+<p>Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your operating system.</p>
 <p>TODO</p>
+</section>
+<section id="python-package">
+<h2>Python package<a class="headerlink" href="#python-package" title="Permalink to this headline"></a></h2>
+<p>To begin, import the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a> class.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
+</pre></div>
+</div>
+<p>To create a MINORg object:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/path/to/output/directory&#39;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both <code class="docutils literal notranslate"><span class="pre">directory</span></code> and <code class="docutils literal notranslate"><span class="pre">prefix</span></code> are optional. If not provided, they will default to the current directory and ‘minorg’ respectively.</p>
+<p>If you wish to use the default values specified in a config file, use this instead:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">config</span> <span class="o">=</span> <span class="s1">&#39;/path/to/config.ini&#39;</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/path/to/output/directory&#39;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You may now set your parameters using the attributes of your <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a> object. For table listing the equivalent CLI arguments and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a> attributes, see <a class="reference internal" href="overview.html#parameters"><span class="std std-ref">Parameters</span></a>. For example, you can specify executables as such:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/path/to/blastn/executable&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">rpsblast</span> <span class="o">=</span> <span class="s1">&#39;/path/to/rpsblast/executable&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">mafft</span> <span class="o">=</span> <span class="s1">&#39;/path/to/mafft/executable&#39;</span>
+</pre></div>
+</div>
+<p>Note that, unlike the command line, the Python package does not support aliases even if the config file has been set up appropriately for command line executions. Therefore, there are no true equivalents to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, or <code class="docutils literal notranslate"><span class="pre">--reference</span></code>.</p>
+<p>To specify cluster genes (analogous to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> and <code class="docutils literal notranslate"><span class="pre">--gene</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="s1">&#39;RPS6&#39;</span> <span class="c1">## incorrect; this attribute does not exist; does not throw error now but will cause problems later</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AT5G46260&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46270&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46450&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46470&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46490&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46510&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46520&#39;</span><span class="p">]</span> <span class="c1">## correct</span>
+</pre></div>
+</div>
+<p>To specify query FASTA files (analogous to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> and <code class="docutils literal notranslate"><span class="pre">--query</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">indv</span> <span class="o">=</span> <span class="s1">&#39;9654,9655&#39;</span> <span class="c1">## incorrect; this attribute does not exist; does not throw error now but will cause problems later</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;9654&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/subset_9654.fasta&#39;</span><span class="p">,</span> <span class="s1">&#39;9655&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/subset_9655.fasta&#39;</span><span class="p">}</span> <span class="c1">## correct</span>
+</pre></div>
+</div>
+<p>To specify reference genomes (analogous to <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--assembly</span></code>, <code class="docutils literal notranslate"><span class="pre">--annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>, and <code class="docutils literal notranslate"><span class="pre">--genetic-code</span></code>; note that <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> and <code class="docutils literal notranslate"><span class="pre">genetic_code</span></code> are optional if the annotation uses standard attribute field names and the standard genetic code, which the example below does):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="s1">&#39;TAIR10&#39;</span> <span class="c1">## incorrect</span>
+<span class="go">AttributeError: can&#39;t set attribute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s1">&#39;TAIR10&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/TAIR10.fasta&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/TARI10.gff3&#39;</span><span class="p">,</span> <span class="n">genetic_code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">atr_mod</span> <span class="o">=</span> <span class="p">{})</span> <span class="c1">## correct</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -91,7 +128,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

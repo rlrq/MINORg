@@ -1,6 +1,8 @@
 Overview
 ========
 
+(Note that all command line code snippets in the following tutorial are for **bash terminal**. You may have to adapt them according to your operating system.)
+
 MINORg (**MI**\ nimum **NO**\ n-**R**\ eference **g**\ RNA) is a 4-part programme created to design a minimum number of gRNA to cover multiple non-reference targets. Nevertheless, MINORg is also capable of designing gRNA for one target as well as for reference genes. It is available as both a command line programme as well as a Python package.
 
 The 4 broad steps of MINORg are as follows:
@@ -14,6 +16,12 @@ The 4 broad steps of MINORg are as follows:
 Command line
 ------------
 
+The command line interface is a wrapper for the Python package and is built using Typer (https://github.com/tiangolo/typer).
+
+
+Subcommands
+~~~~~~~~~~~
+
 Each of the subcommands (``seq``, ``grna``, ``filter``, and ``minimumset``) can be separately executed at the command line using:
 
 .. code-block:: bash
@@ -25,6 +33,9 @@ If no subcommand is specified, MINORg will default to the full programme.
 .. code-block:: bash
    
    $ minorg <arguments>
+
+Help page
+~~~~~~~~~
 
 To view the help page for each subcommand (which describes the subcommand and its parameters), use:
 
@@ -44,9 +55,11 @@ Using the following will print a help page that lists common parameters and vali
    
    $ minorg --help
 
-Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, ``--reference TAIR10`` can be used in place of ``--assembly /path/to/TAIR10/genome.fasta --annotation /path/to/TAIR10/genome.gff3``, and ``--indv ler1`` can be used in place of ``--query /path/to/ler1.fasta``. For details on how to set up a config.ini file, see :ref:`Tutorial:Command line` in the :ref:`Tutorial:Tutorial` section.
+Aliases
+~~~~~~~
 
-The command line interface is a wrapper for the Python package and is built using Typer (https://github.com/tiangolo/typer).
+Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, ``--reference TAIR10`` can be used in place of ``--assembly /path/to/TAIR10/genome.fasta --annotation /path/to/TAIR10/genome.gff3``, and ``--indv ler1`` can be used in place of ``--query /path/to/ler1.fasta``. For details on how to set up a config.ini file, see :ref:`Configuration:Configuration` in the :ref:`Tutorial:Tutorial` section.
+
 
 
 Python package
@@ -60,7 +73,7 @@ Parameters
 
 Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to be comfortable with generating their own preset parameter combinations.
 
-The table below lists the major similarities and differences between CLI arguments and the Python package's MINORg class attributes (note that some attriutes are in fact properties, but they setting them should be no different from setting attributes).
+The table below lists the major similarities and differences between CLI arguments and the Python package's MINORg class attributes (note that some attriutes are in fact properties, but with the exception of ``reference``, setting them should be no different from setting attributes).
 
 +---------------+----------------------+----------------------+-------------------------+
 |Category       |CLI arguments         |Python attributes     |Description              |
@@ -79,8 +92,8 @@ The table below lists the major similarities and differences between CLI argumen
 |               +----------------------+----------------------+-------------------------+
 |               |mafft                 |mafft                 |MAFFT                    |
 +---------------+----------------------+----------------------+-------------------------+
-|Reference      |reference <alias>     |reference <Reference  |reference genome         |
-|genomes        |                      |object>               |                         |
+|Reference      |reference <alias>     |reference <dict of    |reference genome         |
+|genomes        |                      |Reference object>     |                         |
 |               +----------------------+----------------------+-------------------------+
 |(CLI: seq,     |assembly              |                      |reference genome FASTA   |
 |full;          +----------------------+----------------------+-------------------------+

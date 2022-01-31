@@ -566,7 +566,8 @@ class MINORg (PathHandler):
         self.remote_rps = self.params.remote_rps.default
         ## data/annotation
         ## (sets and aliases not supported for MINORg object beyond retrieval of default reference)
-        self.reference = {} ## use MINORg.clear_reference(), MINORg.add_reference(), and MINORg.remove_reference() to update this attribute
+        # self.reference = {} ## use MINORg.clear_reference(), MINORg.add_reference(), and MINORg.remove_reference() to update this attribute
+        self._reference = {}
         self._parse_reference()
         ## annotation format options
         ## seqid template stuff
@@ -664,6 +665,9 @@ class MINORg (PathHandler):
         """
         ## return True if self.relax_recip is raised
         return self.relax_recip or self._check_recip
+    @property
+    def reference(self):
+        return self._reference
     @property
     def assemblies(self):
         """
@@ -1020,8 +1024,8 @@ class MINORg (PathHandler):
         """
         if alias in self.reference and not replace:
             raise Exception(f"ID '{alias}' is already in use.")
-        self.reference[alias] = AnnotatedFasta(fasta, annotation, attr_mod = attr_mod,
-                                               genetic_code = genetic_code, name = alias, memsave = memsave)
+        self._reference[alias] = AnnotatedFasta(fasta, annotation, attr_mod = attr_mod,
+                                                genetic_code = genetic_code, name = alias, memsave = memsave)
         return
     def remove_reference(self, alias):
         """
@@ -1031,13 +1035,13 @@ class MINORg (PathHandler):
             alias (str): required, alias of reference genome
         """
         if alias in self.reference:
-            del self.reference[alias]
+            del self._reference[alias]
         return
     def clear_reference(self):
         """
         Remove all reference genomes.
         """
-        self.reference = {}
+        self._reference = {}
         return
     def _subset_annotation(self, *ids, quiet = True, preserve_order = True):
         if ids:

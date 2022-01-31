@@ -14,6 +14,7 @@ Module contents
 
    install
    overview
+   configuration
    tutorial
    examples
 

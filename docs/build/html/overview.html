@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="next" title="Configuration" href="configuration.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
 </head>
 
@@ -40,11 +40,17 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subcommands">Subcommands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#help-page">Help page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aliases">Aliases</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#python-package">Python package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
@@ -78,6 +84,7 @@
              
   <section id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h1>
+<p>(Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your operating system.)</p>
 <p>MINORg (<strong>MI</strong>nimum <strong>NO</strong>n-<strong>R</strong>eference <strong>g</strong>RNA) is a 4-part programme created to design a minimum number of gRNA to cover multiple non-reference targets. Nevertheless, MINORg is also capable of designing gRNA for one target as well as for reference genes. It is available as both a command line programme as well as a Python package.</p>
 <p>The 4 broad steps of MINORg are as follows:</p>
 <ul class="simple">
@@ -88,6 +95,9 @@
 </ul>
 <section id="command-line">
 <h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
+<p>The command line interface is a wrapper for the Python package and is built using Typer (<a class="reference external" href="https://github.com/tiangolo/typer">https://github.com/tiangolo/typer</a>).</p>
+<section id="subcommands">
+<h3>Subcommands<a class="headerlink" href="#subcommands" title="Permalink to this headline"></a></h3>
 <p>Each of the subcommands (<code class="docutils literal notranslate"><span class="pre">seq</span></code>, <code class="docutils literal notranslate"><span class="pre">grna</span></code>, <code class="docutils literal notranslate"><span class="pre">filter</span></code>, and <code class="docutils literal notranslate"><span class="pre">minimumset</span></code>) can be separately executed at the command line using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;subcommmand&gt; &lt;arguments&gt;
 </pre></div>
@@ -96,6 +106,9 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;arguments&gt;
 </pre></div>
 </div>
+</section>
+<section id="help-page">
+<h3>Help page<a class="headerlink" href="#help-page" title="Permalink to this headline"></a></h3>
 <p>To view the help page for each subcommand (which describes the subcommand and its parameters), use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;subcommand&gt; --help
 </pre></div>
@@ -108,8 +121,11 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --help
 </pre></div>
 </div>
-<p>Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">TAIR10</span></code> can be used in place of <code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">/path/to/TAIR10/genome.fasta</span> <span class="pre">--annotation</span> <span class="pre">/path/to/TAIR10/genome.gff3</span></code>, and <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ler1</span></code> can be used in place of <code class="docutils literal notranslate"><span class="pre">--query</span> <span class="pre">/path/to/ler1.fasta</span></code>. For details on how to set up a config.ini file, see <a class="reference internal" href="tutorial.html#command-line"><span class="std std-ref">Command line</span></a> in the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
-<p>The command line interface is a wrapper for the Python package and is built using Typer (<a class="reference external" href="https://github.com/tiangolo/typer">https://github.com/tiangolo/typer</a>).</p>
+</section>
+<section id="aliases">
+<h3>Aliases<a class="headerlink" href="#aliases" title="Permalink to this headline"></a></h3>
+<p>Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">TAIR10</span></code> can be used in place of <code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">/path/to/TAIR10/genome.fasta</span> <span class="pre">--annotation</span> <span class="pre">/path/to/TAIR10/genome.gff3</span></code>, and <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ler1</span></code> can be used in place of <code class="docutils literal notranslate"><span class="pre">--query</span> <span class="pre">/path/to/ler1.fasta</span></code>. For details on how to set up a config.ini file, see <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> in the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
+</section>
 </section>
 <section id="python-package">
 <h2>Python package<a class="headerlink" href="#python-package" title="Permalink to this headline"></a></h2>
@@ -118,7 +134,7 @@
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h2>
 <p>Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to be comfortable with generating their own preset parameter combinations.</p>
-<p>The table below lists the major similarities and differences between CLI arguments and the Python package’s MINORg class attributes (note that some attriutes are in fact properties, but they setting them should be no different from setting attributes).</p>
+<p>The table below lists the major similarities and differences between CLI arguments and the Python package’s MINORg class attributes (note that some attriutes are in fact properties, but with the exception of <code class="docutils literal notranslate"><span class="pre">reference</span></code>, setting them should be no different from setting attributes).</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 18%" />
@@ -168,8 +184,8 @@ full;</p>
 filter)</p>
 </td>
 <td><p>reference &lt;alias&gt;</p></td>
-<td><p>reference &lt;Reference
-object&gt;</p></td>
+<td><p>reference &lt;dict of
+Reference object&gt;</p></td>
 <td><p>reference genome</p></td>
 </tr>
 <tr class="row-odd"><td><p>assembly</p></td>
@@ -449,7 +465,7 @@ confirmation for each set</p></td>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
