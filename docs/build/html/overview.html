@@ -40,6 +40,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-package">Python package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
 </ul>
 </li>
@@ -76,9 +78,45 @@
              
   <section id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h1>
+<p>MINORg (<strong>MI</strong>nimum <strong>NO</strong>n-<strong>R</strong>eference <strong>g</strong>RNA) is a 4-part programme created to design a minimum number of gRNA to cover multiple non-reference targets. Nevertheless, MINORg is also capable of designing gRNA for one target as well as for reference genes. It is available as both a command line programme as well as a Python package.</p>
+<p>The 4 broad steps of MINORg are as follows:
+* seq: generation of target sequences
+* grna: generation of all potential gRNA from target sequences
+* filter: filtering of potential gRNA by GC, off-target, and/or within-feature
+* minimumset: generation of minimum set(s) of gRNA that cover all target sequences</p>
+<section id="command-line">
+<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
+<p>Each of the subcommands (<code class="docutils literal notranslate"><span class="pre">seq</span></code>, <code class="docutils literal notranslate"><span class="pre">grna</span></code>, <code class="docutils literal notranslate"><span class="pre">filter</span></code>, and <code class="docutils literal notranslate"><span class="pre">minimumset</span></code>) can be separately executed at the command line using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;subcommmand&gt; &lt;arguments&gt;
+</pre></div>
+</div>
+<p>If no subcommand is specified, MINORg will default to the full programme.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;arguments&gt;
+</pre></div>
+</div>
+<p>To view the help page for each subcommand (which describes the subcommand and its parameters), use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;subcommand&gt; --help
+</pre></div>
+</div>
+<p>To view the help page for the full programme, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg full --help
+</pre></div>
+</div>
+<p>Using the following will print a help page that lists common parameters and valid subcommand names:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --help
+</pre></div>
+</div>
+<p>Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">TAIR10</span></code> can be used in place of <code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">/path/to/TAIR10/genome.fasta</span> <span class="pre">--annotation</span> <span class="pre">/path/to/TAIR10/genome.gff3</span></code>, and <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ler1</span></code> can be used in place of <code class="docutils literal notranslate"><span class="pre">--query</span> <span class="pre">/path/to/ler1.fasta</span></code>. For details on how to set up a config.ini file, see <a class="reference internal" href="tutorial.html#command-line"><span class="std std-ref">Command line</span></a> in the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
+<p>The command line interface is a wrapper for the Python package and is built using Typer (<a class="reference external" href="https://github.com/tiangolo/typer">https://github.com/tiangolo/typer</a>).</p>
+</section>
+<section id="python-package">
+<h2>Python package<a class="headerlink" href="#python-package" title="Permalink to this headline"></a></h2>
+<p>Unlike the command line version, the Python package does not support aliases or preset parameter combinations beyond optionally reading default values from a config.ini file. Nevertheless, most arguments at the command line have equivalents as attributes in the class <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a>. For a more comprehensive list of the similarities and differences, please refer to the <a class="reference internal" href="#parameters"><span class="std std-ref">Parameters</span></a> section below.</p>
+</section>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h2>
-<p>Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to comfortable with generating their own preset parameter combinations.</p>
+<p>Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to be comfortable with generating their own preset parameter combinations.</p>
+<p>The table below lists the major similarities and differences between CLI arguments and the Python package’s MINORg class attributes (note that some attriutes are in fact properties, but they setting them should be no different from setting attributes).</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 18%" />
@@ -120,12 +158,13 @@ rpsblast/rpsblast+</p></td>
 <td><p>mafft</p></td>
 <td><p>MAFFT</p></td>
 </tr>
-<tr class="row-even"><td rowspan="3"><p>Reference
-genomes
-(CLI:
-seq, full;
-Python: seq,
-filter)</p></td>
+<tr class="row-even"><td rowspan="7"><p>Reference
+genomes</p>
+<p>(CLI: seq,
+full;</p>
+<p>Python: seq,
+filter)</p>
+</td>
 <td><p>reference &lt;alias&gt;</p></td>
 <td><p>reference &lt;Reference
 object&gt;</p></td>
@@ -139,11 +178,33 @@ object&gt;</p></td>
 <td></td>
 <td><p>reference genome GFF</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="7"><p>[seq]
-target
-definition</p></td>
+<tr class="row-odd"><td><p>attr_mod</p></td>
+<td></td>
+<td><p>mapping for non-standard
+GFF attribute field names</p></td>
+</tr>
+<tr class="row-even"><td><p>genetic_code</p></td>
+<td></td>
+<td><p>NCBI genetic code number
+or name</p></td>
+</tr>
+<tr class="row-odd"><td><p>ext_gene</p></td>
+<td></td>
+<td><p>FASTA file of genes to
+add to reference genome</p></td>
+</tr>
+<tr class="row-even"><td><p>ext_cds</p></td>
+<td></td>
+<td><p>FASTA file of CDS of
+genes to add to reference
+genome</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="8"><p>[seq]</p>
+<p>target
+definition</p>
+</td>
 <td><p>gene</p></td>
-<td><p>genes</p></td>
+<td><p>gene<strong>s</strong></p></td>
 <td><p>gene IDs</p></td>
 </tr>
 <tr class="row-even"><td><p>cluster</p></td>
@@ -175,67 +236,206 @@ find gRNA in</p></td>
 <td><p>Pssm-Id(s) of domains to
 find gRNA in</p></td>
 </tr>
-<tr class="row-even"><td rowspan="7"><p>[seq]
-inferring
-homologues from
-BLASTN hits</p></td>
+<tr class="row-even"><td></td>
+<td><p>domain_name</p></td>
+<td><p>human-readable domain
+name used in sequence and
+file names in place of
+Pssm-Ids</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="7"><p>[seq]</p>
+<p>inferring
+homologues</p>
+<p>from BLASTN
+hits</p>
+</td>
 <td><p>minid</p></td>
 <td><p>minid</p></td>
 <td><p>minimum hit % identity</p></td>
 </tr>
-<tr class="row-odd"><td><p>minlen</p></td>
+<tr class="row-even"><td><p>minlen</p></td>
 <td><p>minlen</p></td>
 <td><p>minimum merged hits
 length</p></td>
 </tr>
-<tr class="row-even"><td><p>mincdslen</p></td>
+<tr class="row-odd"><td><p>mincdslen</p></td>
 <td><p>mincdslen</p></td>
 <td><p>minimum CDS length of
 merged hits</p></td>
 </tr>
-<tr class="row-odd"><td><p>check_recip</p></td>
+<tr class="row-even"><td><p>check_recip</p></td>
 <td><p>check_recip</p></td>
 <td><p>execute reciprocal check</p></td>
 </tr>
-<tr class="row-even"><td><p>relax_recip</p></td>
+<tr class="row-odd"><td><p>relax_recip</p></td>
 <td><p>relax_recip</p></td>
 <td><p>execute relaxed
 reciprocal check</p></td>
 </tr>
-<tr class="row-odd"><td><p>merge_within</p></td>
+<tr class="row-even"><td><p>merge_within</p></td>
 <td><p>merge_within</p></td>
 <td><p>maximum distance between
 hits for merging</p></td>
 </tr>
-<tr class="row-even"><td><p>check_id_before_merge</p></td>
+<tr class="row-odd"><td><p>check_id_before_merge</p></td>
 <td><p>check_id_before_merge</p></td>
 <td><p>filter hits by % identity
 before merging</p></td>
 </tr>
-<tr class="row-odd"><td></td>
-<td></td>
-<td></td>
-<td></td>
+<tr class="row-even"><td rowspan="2"><p>[seq]</p>
+<p>RPS-BLAST
+options</p>
+</td>
+<td><p>db</p></td>
+<td><p>db</p></td>
+<td><p>path to local RPS-BLAST
+database</p></td>
+</tr>
+<tr class="row-odd"><td><p>remote_rps</p></td>
+<td><p>remote_rps</p></td>
+<td><p>use remote RPS-BLAST
+database (currently
+non-functional)</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>[grna]</p></td>
+<td><p>pam</p></td>
+<td><p>pam</p></td>
+<td><p>PAM pattern</p></td>
+</tr>
+<tr class="row-odd"><td><p>length</p></td>
+<td><p>length</p></td>
+<td><p>gRNA length</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>[filter]</p>
+<p>GC</p>
+</td>
+<td><p>gc_min</p></td>
+<td><p>gc_min</p></td>
+<td><p>minimum GC content</p></td>
+</tr>
+<tr class="row-odd"><td><p>gc_max</p></td>
+<td><p>gc_max</p></td>
+<td><p>maximum GC content</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>[filter]</p>
+<p>feature</p>
+</td>
+<td><p>feature</p></td>
+<td><p>feature</p></td>
+<td><p>GFF3 feature type</p></td>
+</tr>
+<tr class="row-odd"><td><p>max_insertion</p></td>
+<td><p>max_insertion</p></td>
+<td><p>maximum allowable
+insertion in feature</p></td>
+</tr>
+<tr class="row-even"><td><p>min_within_n</p></td>
+<td><p>min_within_n</p></td>
+<td><p>minimum number of
+reference genes which
+features overlap with
+gRNA range in alignment</p></td>
+</tr>
+<tr class="row-odd"><td><p>min_within_fraction</p></td>
+<td><p>min_within_fraction</p></td>
+<td><p>minimum fraction of
+reference genes which
+features overlap with
+gRNA range in alignment</p></td>
+</tr>
+<tr class="row-even"><td rowspan="12"><p>[filter]</p>
+<p>background</p>
+</td>
+<td><p>background</p></td>
+<td><p>background</p></td>
+<td><p>FASTA files in which to
+search for potential
+off-targets</p></td>
+</tr>
+<tr class="row-odd"><td><p>screen_reference</p></td>
+<td><p>screen_reference</p></td>
+<td><p>include reference genomes
+in search for potential
+off-targets</p></td>
 </tr>
 <tr class="row-even"><td></td>
+<td><p>mask</p></td>
+<td><p>FASTA files of additional
+sequences to mask</p></td>
+</tr>
+<tr class="row-odd"><td><p>unmask_ref</p></td>
 <td></td>
+<td><p>unmask reference genes</p></td>
+</tr>
+<tr class="row-even"><td><p>mask_gene</p></td>
 <td></td>
+<td><p>additional genes to mask</p></td>
+</tr>
+<tr class="row-odd"><td><p>unmask_gene</p></td>
 <td></td>
+<td><p>genes to unmask</p></td>
+</tr>
+<tr class="row-even"><td><p>mask_cluster</p></td>
+<td></td>
+<td><p>additional clusters to
+mask</p></td>
+</tr>
+<tr class="row-odd"><td><p>unmask_cluster</p></td>
+<td></td>
+<td><p>clusters to unmask</p></td>
+</tr>
+<tr class="row-even"><td><p>ot_pamless</p></td>
+<td><p>ot_pamless</p></td>
+<td><p>ignore absense of PAM for
+potential off-targets</p></td>
+</tr>
+<tr class="row-odd"><td><p>ot_mismatch</p></td>
+<td><p>ot_mismatch</p></td>
+<td><p>minimum acceptable
+mismatches for
+off-targets</p></td>
+</tr>
+<tr class="row-even"><td><p>ot_gap</p></td>
+<td><p>ot_gap</p></td>
+<td><p>minimum acceptable gaps
+for off-targets</p></td>
+</tr>
+<tr class="row-odd"><td><p>skip_bg_check</p></td>
+<td></td>
+<td><p>skip off-target check</p></td>
+</tr>
+<tr class="row-even"><td><p>[filter]
+exclude</p></td>
+<td><p>exclude</p></td>
+<td><p>exclude</p></td>
+<td><p>FASTA file of gRNA
+sequences to exclude</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>[minimumset]</p></td>
+<td><p>accept_invalid</p></td>
+<td><p>accept_invalid</p></td>
+<td><p>score ‘NA’ as ‘pass’</p></td>
+</tr>
+<tr class="row-even"><td><p>accept_feature_unknown</p></td>
+<td><p>accept_feature_unknown</p></td>
+<td><p>score ‘NA’ as ‘pass’ for
+feature check</p></td>
 </tr>
 <tr class="row-odd"><td></td>
-<td></td>
-<td></td>
-<td></td>
+<td><p>accept_invalid_field</p></td>
+<td><p>score ‘NA’ as ‘pass’ if
+all entries for a check
+are ‘NA’</p></td>
 </tr>
-<tr class="row-even"><td></td>
-<td></td>
-<td></td>
-<td></td>
+<tr class="row-even"><td><p>sets</p></td>
+<td><p>sets</p></td>
+<td><p>number of gRNA sets</p></td>
 </tr>
-<tr class="row-odd"><td></td>
-<td></td>
-<td></td>
-<td></td>
+<tr class="row-odd"><td><p>auto</p></td>
+<td><p>auto</p></td>
+<td><p>generate sets without
+require manual user
+confirmation for each set</p></td>
 </tr>
 </tbody>
 </table>

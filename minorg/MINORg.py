@@ -502,6 +502,8 @@ class MINORg (PathHandler):
         min_within_fraction (float): 
             [filter: feature] minimum fraction of reference genes which feature a gRNA must align within
             (between 0 and 1, where 0 is none and 1 is all; if 0, min_within_n will be set to 1)
+        
+        exclude (str): [filter: exclude] path to FASTA file containing gRNA sequences to exclude
 
         sets (int): [minimumset] number of sets to generate
         auto (bool): [minimumset] generate sets without requiring manual user confirmation for each set
@@ -613,6 +615,7 @@ class MINORg (PathHandler):
         self.min_within_n = self.params.min_within_n.default
         self.min_within_fraction = self.params.min_within_fraction.default
         self._feature = self.params.feature.default
+        self.exclude = None
         ## minimum set
         self.sets = 1
         self.auto = True
@@ -756,11 +759,11 @@ class MINORg (PathHandler):
         :getter: Returns gRNA that have passed checks
         :type: gRNAHits
         """
-        filtered = self.grna_hits.filter_seqs("background", "GC",
+        filtered = self.grna_hits.filter_seqs("background", "GC", "exclude",
                                               accept_invalid = self.accept_invalid,
                                               accept_invalid_field = self.accept_invalid_field)
         filtered = filtered.filter_hits("CDS", "feature",
-                                        accept_invalid = self.accept_invalid,
+                                        accept_invalid = (self.accept_invalid or self.accept_feature_unknown),
                                         accept_invalid_field = self.accept_invalid_field,
                                         exclude_empty_seqs=True)
         return filtered
@@ -1778,6 +1781,18 @@ class MINORg (PathHandler):
                     gRNA_hit.set_feature_check(False)
         return
     
+    def filter_exclude(self):
+        """
+        Set exclude check for candidate gRNAs.
+        
+        If self.exclude is set, gRNA which sequences appear in the file at self.exclude will fail this check.
+        """
+        if self.exclude is not None:
+            to_exclude = set(str(x).upper() for x in fasta_to_dict(self.exclude).values())
+            self.grna_hits.set_all_seqs_check_by_functon("exclude",
+                                                         lambda grna_seq: str(grna_seq) not in to_exclude)
+        return
+    
     ##########################
     ##  SUBCMD: MINIMUMSET  ##
     ##########################
@@ -1832,7 +1847,10 @@ class MINORg (PathHandler):
         if sets is None: sets = self.sets
         ## assume all targets in self.grna_hits are to be, well, targeted
         targets = set(hit.target_id for hit in self.grna_hits.flatten_hits())
+        ## set exclude check
+        self.filter_exclude()
         ## check if statuses has been set. If not, warn user.
+        self._check_valid_status("exclude", "seq", "exclude")
         self._check_valid_status("GC", "seq", "%GC")
         self._check_valid_status("background", "seq", "off-target")
         self._check_valid_status("feature", "hit", "within-feature")

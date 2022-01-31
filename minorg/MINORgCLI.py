@@ -37,7 +37,8 @@ from minorg.grna import gRNAHits
 from minorg.pam import PAM
 from minorg.functions import (
     get_count_dict,
-    fasta_to_dict
+    fasta_to_dict,
+    non_string_iter
 )
 
 LOGGING_LEVEL = logging.DEBUG
@@ -413,10 +414,11 @@ class MINORgCLI (MINORg):
                                        parse_multiline_multikey_sdict(f.read(),
                                                                       kv_sep = '\t').items()}
                         if num_fields is not None:
-                            set_aliases = {k: ((list(v) if non_string_iter(v) else [v]) +
-                                               (num_fields - len(v))*[''])
+                            set_aliases = {k: ((list(v) + (num_fields - len(v))*[''])
+                                               if non_string_iter(v)
+                                               else [v] + (num_fields - 1)*[''])
                                            for k, v in set_aliases.items()}
-                except:
+                except Exception as e:
                     raise InputFormatError(error_src = "file", hint = f"File: {set_fname}")
             else:
                 raise typer.BadParameter( ( f"Unrecognised {description} set lookup file alias or"
