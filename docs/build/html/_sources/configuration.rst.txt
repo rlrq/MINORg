@@ -37,7 +37,7 @@ This is a tab-separated file where:
 * column 4: NCBI genetic code number or name (optional if standard genetic code)
 * column 5: mapping of nonstandard GFF3 attribute field names to standard field names (optional if standard)
 
-By using ``--reference-set athaliana`` in the command line execution, we can use ``--reference tair10`` (or ``--rference TAIR10``) to tell MINORg to use '/path/to/subset_ref_TAIR10.fasta' and '/path/to/subset_ref_TAIR10.gff' as reference assembly and annotation files respectively without having to type their paths out. In fact, we can even specify multiple reference genomes using ``--reference tair10,araport11`` and making sure to use a comma to separate reference genome aliases.
+By using ``--reference-set athaliana`` in the command line execution, we can use ``--reference tair10`` (or ``--reference TAIR10``) to tell MINORg to use '/path/to/subset_ref_TAIR10.fasta' and '/path/to/subset_ref_TAIR10.gff' as reference assembly and annotation files respectively without having to type their paths out. In fact, we can even specify multiple reference genomes using ``--reference tair10,araport11`` and making sure to use a comma to separate reference genome aliases.
 
 But there's more! We can set 'athaliana' as the default reference set AND 'tair10' as the default reference in the ``[data]`` section of the config file::
 
@@ -51,13 +51,46 @@ You can view the reference genomes available using:
 .. code-block:: bash
    
    $ minorg --references ## prints contents of default reference set file
-   $ minorg --reference-set <reference set alias> --references ## prints contents of specified reference set file
+   
+   Valid genome aliases (defined in /path/to/athaliana_genomes.txt):
+   
+   <semicolon-separated genome alias(es)>	<FASTA file>	<GFF3 file>	<NCBI genetic code>	<attribute name mapping>
+   tair10;TAIR10	/path/to/subset_ref_Araport11.fasta	/path/to/subset_ref_Araport11.gff
+   araport11	/path/to/subset_ref_TAIR10.fasta	/path/to/subset_ref_TAIR10.gff
+   
+   $ minorg --reference-set arabidopsis --references ## prints contents of arabidopsis_genomes.txt instead
+   
+   Valid genome aliases (defined in /path/to/arabidopsis_genomes.txt):
+   
+   <semicolon-separated genome alias(es)>	<FASTA file>	<GFF3 file>	<NCBI genetic code>	<attribute name mapping>
+   tair10;TAIR10	/path/to/subset_ref_Araport11.fasta	/path/to/subset_ref_Araport11.gff
+   araport11	/path/to/subset_ref_TAIR10.fasta	/path/to/subset_ref_TAIR10.gff
+   araly2;alyrata2	/path/to/subset_ref_Araly2.fasta	/path/to/subset_ref_Araly2.gff
+   araha1;ahalleri1	/path/to/subset_ref_Araha1.fasta	/path/to/subset_ref_Araha1.gff
 
-The same logic applies as well to ``cluster sets``\ -``cluster set`` and ``genome sets``\ -``genome set``, with the caveat that there is no option to set default clusters or query genomes.
+
+The same logic applies as well to ``cluster sets``\ -``cluster set`` (``--cluster-set``\ -``--cluster``\ -``--clusters``) and ``genome sets``\ -``genome set`` (``--genome-set``\ -``--indv``\ -``--genomes``), with the caveat that there is no option to set default clusters or query genomes.
+
++----------------+--------------+-------------+---------------------------------------------+
+|**reference**   |**cluster**   |**genome**   |**description**                              |
++----------------+--------------+-------------+---------------------------------------------+
+|reference sets  |cluster sets  |genome sets  |[config] assign alias to lookup files        |
++----------------+--------------+-------------+---------------------------------------------+
+|reference set   |cluster set   |genome set   |[config] set default lookup file             |
++----------------+--------------+-------------+---------------------------------------------+
+|reference       |              |             |[config] set default value                   |
++----------------+--------------+-------------+---------------------------------------------+
+|-\-reference-set|-\-cluster-set|-\-genome-set|[CLI] specify lookup file (alias or path)    |
++----------------+--------------+-------------+---------------------------------------------+
+|-\-reference    |-\-cluster    |-\-indv      |[CLI] specify reference/cluster/indv (alias) |
++----------------+--------------+-------------+---------------------------------------------+
+|-\-references   |-\-clusters   |-\-genomes   |[CLI] print contents of lookup file to screen|
++----------------+--------------+-------------+---------------------------------------------+
 
 
-Lookup files formats
-~~~~~~~~~~~~~~~~~~~~
+
+Lookup file formats
+~~~~~~~~~~~~~~~~~~~
 
 cluster
 +++++++

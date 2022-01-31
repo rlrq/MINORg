@@ -598,7 +598,7 @@ class MINORgCLI (MINORg):
                              " to specify genome sequences and annotations respectively." ))
             else:
                 typer.echo(f"\nValid genome aliases (defined in {self.reference_set}):\n")
-                typer.echo("<semicolon-separated genome alias(es)>\t<FASTA file>\t<GFF3 file>\t<NCBI genetic code>")
+                typer.echo("<semicolon-separated genome alias(es)>\t<FASTA file>\t<GFF3 file>\t<NCBI genetic code>\t<attribute name mapping>")
                 with open(self.reference_set, 'r') as f:
                     aliases = [f.read()]
                 typer.echo('\n'.join(aliases) + '\n')

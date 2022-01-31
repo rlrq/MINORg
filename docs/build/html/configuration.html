@@ -43,7 +43,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#config-file">config file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#alias-lookups">Alias lookups</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lookup-files-formats">Lookup files formats</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lookup-file-formats">Lookup file formats</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cluster">cluster</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#genome">genome</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#reference">reference</a></li>
@@ -115,7 +115,7 @@
 <li><p>column 4: NCBI genetic code number or name (optional if standard genetic code)</p></li>
 <li><p>column 5: mapping of nonstandard GFF3 attribute field names to standard field names (optional if standard)</p></li>
 </ul>
-<p>By using <code class="docutils literal notranslate"><span class="pre">--reference-set</span> <span class="pre">athaliana</span></code> in the command line execution, we can use <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">tair10</span></code> (or <code class="docutils literal notranslate"><span class="pre">--rference</span> <span class="pre">TAIR10</span></code>) to tell MINORg to use ‘/path/to/subset_ref_TAIR10.fasta’ and ‘/path/to/subset_ref_TAIR10.gff’ as reference assembly and annotation files respectively without having to type their paths out. In fact, we can even specify multiple reference genomes using <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">tair10,araport11</span></code> and making sure to use a comma to separate reference genome aliases.</p>
+<p>By using <code class="docutils literal notranslate"><span class="pre">--reference-set</span> <span class="pre">athaliana</span></code> in the command line execution, we can use <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">tair10</span></code> (or <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">TAIR10</span></code>) to tell MINORg to use ‘/path/to/subset_ref_TAIR10.fasta’ and ‘/path/to/subset_ref_TAIR10.gff’ as reference assembly and annotation files respectively without having to type their paths out. In fact, we can even specify multiple reference genomes using <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">tair10,araport11</span></code> and making sure to use a comma to separate reference genome aliases.</p>
 <p>But there’s more! We can set ‘athaliana’ as the default reference set AND ‘tair10’ as the default reference in the <code class="docutils literal notranslate"><span class="pre">[data]</span></code> section of the config file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reference</span> <span class="o">=</span> <span class="n">TAIR10</span>
 <span class="n">reference</span> <span class="nb">set</span> <span class="o">=</span> <span class="n">athaliana</span>
@@ -124,12 +124,72 @@
 <p>This way, unless you wish to use a different reference genome from the default, you won’t have to type <code class="docutils literal notranslate"><span class="pre">--reference-set</span> <span class="pre">athaliana</span> <span class="pre">--reference</span> <span class="pre">tair10</span></code> either! This is particularly useful if you primarily design gRNA for only a single species. Of course, if you wish, you can combine all reference set files into a single massive file containing the mapping information for all possible reference genomes instead of having multiple files. However, I personally find it easier to maintain smaller files with descriptive names.</p>
 <p>You can view the reference genomes available using:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --references <span class="c1">## prints contents of default reference set file</span>
-$ minorg --reference-set &lt;reference <span class="nb">set</span> alias&gt; --references <span class="c1">## prints contents of specified reference set file</span>
+
+Valid genome aliases <span class="o">(</span>defined <span class="k">in</span> /path/to/athaliana_genomes.txt<span class="o">)</span>:
+
+&lt;semicolon-separated genome alias<span class="o">(</span>es<span class="o">)</span>&gt;       &lt;FASTA file&gt;    &lt;GFF3 file&gt;     &lt;NCBI genetic code&gt;     &lt;attribute name mapping&gt;
+tair10<span class="p">;</span>TAIR10        /path/to/subset_ref_Araport11.fasta     /path/to/subset_ref_Araport11.gff
+araport11    /path/to/subset_ref_TAIR10.fasta        /path/to/subset_ref_TAIR10.gff
+
+$ minorg --reference-set arabidopsis --references <span class="c1">## prints contents of arabidopsis_genomes.txt instead</span>
+
+Valid genome aliases <span class="o">(</span>defined <span class="k">in</span> /path/to/arabidopsis_genomes.txt<span class="o">)</span>:
+
+&lt;semicolon-separated genome alias<span class="o">(</span>es<span class="o">)</span>&gt;       &lt;FASTA file&gt;    &lt;GFF3 file&gt;     &lt;NCBI genetic code&gt;     &lt;attribute name mapping&gt;
+tair10<span class="p">;</span>TAIR10        /path/to/subset_ref_Araport11.fasta     /path/to/subset_ref_Araport11.gff
+araport11    /path/to/subset_ref_TAIR10.fasta        /path/to/subset_ref_TAIR10.gff
+araly2<span class="p">;</span>alyrata2      /path/to/subset_ref_Araly2.fasta        /path/to/subset_ref_Araly2.gff
+araha1<span class="p">;</span>ahalleri1     /path/to/subset_ref_Araha1.fasta        /path/to/subset_ref_Araha1.gff
 </pre></div>
 </div>
-<p>The same logic applies as well to <code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">set</span></code> and <code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">set</span></code>, with the caveat that there is no option to set default clusters or query genomes.</p>
-<section id="lookup-files-formats">
-<h3>Lookup files formats<a class="headerlink" href="#lookup-files-formats" title="Permalink to this headline"></a></h3>
+<p>The same logic applies as well to <code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">set</span></code> (<code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code>-<code class="docutils literal notranslate"><span class="pre">--cluster</span></code>-<code class="docutils literal notranslate"><span class="pre">--clusters</span></code>) and <code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">set</span></code> (<code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>-<code class="docutils literal notranslate"><span class="pre">--indv</span></code>-<code class="docutils literal notranslate"><span class="pre">--genomes</span></code>), with the caveat that there is no option to set default clusters or query genomes.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 51%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>reference</strong></p></td>
+<td><p><strong>cluster</strong></p></td>
+<td><p><strong>genome</strong></p></td>
+<td><p><strong>description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>reference sets</p></td>
+<td><p>cluster sets</p></td>
+<td><p>genome sets</p></td>
+<td><p>[config] assign alias to lookup files</p></td>
+</tr>
+<tr class="row-odd"><td><p>reference set</p></td>
+<td><p>cluster set</p></td>
+<td><p>genome set</p></td>
+<td><p>[config] set default lookup file</p></td>
+</tr>
+<tr class="row-even"><td><p>reference</p></td>
+<td></td>
+<td></td>
+<td><p>[config] set default value</p></td>
+</tr>
+<tr class="row-odd"><td><p>--reference-set</p></td>
+<td><p>--cluster-set</p></td>
+<td><p>--genome-set</p></td>
+<td><p>[CLI] specify lookup file (alias or path)</p></td>
+</tr>
+<tr class="row-even"><td><p>--reference</p></td>
+<td><p>--cluster</p></td>
+<td><p>--indv</p></td>
+<td><p>[CLI] specify reference/cluster/indv (alias)</p></td>
+</tr>
+<tr class="row-odd"><td><p>--references</p></td>
+<td><p>--clusters</p></td>
+<td><p>--genomes</p></td>
+<td><p>[CLI] print contents of lookup file to screen</p></td>
+</tr>
+</tbody>
+</table>
+<section id="lookup-file-formats">
+<h3>Lookup file formats<a class="headerlink" href="#lookup-file-formats" title="Permalink to this headline"></a></h3>
 <section id="cluster">
 <h4>cluster<a class="headerlink" href="#cluster" title="Permalink to this headline"></a></h4>
 <p>The lookup files specified in <code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">sets</span></code> should look like this:</p>
