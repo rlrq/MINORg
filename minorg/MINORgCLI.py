@@ -272,11 +272,11 @@ class MINORgCLI (MINORg):
             sort (bool): sort subset data
         """
         if self.gene_sets or self.mask_gene_sets:
-            self._subset_annotation(ids = tuple(itertools.chain(*([x for x in self.gene_sets.values()
-                                                                   if x is not None] +
-                                                                  [x for x in self.mask_gene_sets.values()
-                                                                   if x is not None]))),
-                                    quiet = quiet, sort = sort)
+            self._subset_annotation(*itertools.chain(*([x for x in self.gene_sets.values()
+                                                        if x is not None] +
+                                                       [x for x in self.mask_gene_sets.values()
+                                                        if x is not None])),
+                                    quiet = quiet, preserve_order = True)
         return
     
     #####################
@@ -1440,7 +1440,7 @@ class MINORgCLI (MINORg):
         Full MINORg programme.
         """
         ## generate sequences to mask
-        if background_check and self.mask_gene_sets["mask"]:
+        if self.background_check and self.mask_gene_sets["mask"]:
             self._get_reference_seq(*self.mask_gene_sets["mask"], adj_dir = True,
                                     fout = self.mkfname("to_mask.fasta", tmp = True))
         ## execute MINORg
@@ -1457,11 +1457,11 @@ class MINORgCLI (MINORg):
             if len(self.grna_hits) == 0:
                 raise MessageError("No gRNA found. Aborting programme.")
             ## filter
-            if background_check:
+            if self.background_check:
                 super().filter_background()
-            if feature_check:
+            if self.feature_check:
                 super().filter_feature()
-            if gc_check:
+            if self.gc_check:
                 super().filter_gc()
             ## minimumset
             super().minimumset()
