@@ -211,6 +211,10 @@ class MINORgCLI (MINORg):
         ## others
         self.gene_sets = {}
         self.mask_gene_sets = {}
+        self.exclude_check = False
+        self.background_check = True
+        self.feature_check = True
+        self.gc_check = True
     
     @property
     def args(self):
@@ -1464,6 +1468,7 @@ class MINORgCLI (MINORg):
             if len(fasta_to_dict(self.target)) == 0:
                 raise MessageError("No targets found. Aborting programme.")
             super().grna()
+            self.write_all_grna_map()
             ## abort if no gRNA
             if len(self.grna_hits) == 0:
                 raise MessageError("No gRNA found. Aborting programme.")
