@@ -211,9 +211,6 @@ class MINORgCLI (MINORg):
         ## others
         self.gene_sets = {}
         self.mask_gene_sets = {}
-        self.background_check = True
-        self.feature_check = True
-        self.gc_check = True
     
     @property
     def args(self):
@@ -1372,6 +1369,20 @@ class MINORgCLI (MINORg):
             print(f"{gene_set_prefix} not in gene_sets ({', '.join(self.gene_sets.keys())}).")
         self.genes = self.gene_sets[gene_set_prefix]
         self.prefix = gene_set_prefix
+    
+    ################
+    ##  WRAPPERS  ##
+    ################
+    
+    def minimumset(self, *args, **kwargs):
+        """
+        Wrapper for MINORg.minimumset that excludes checks based on self.XX_check.
+        """
+        super().minimumset(*args, **kwargs,
+                           exclude_check = (self.exclude is not None),
+                           gc_check = self.gc_check,
+                           background_check = self.background_check,
+                           feature_check = self.feature_check)
         
     ##############
     ##  SUBCMD  ##
@@ -1432,7 +1443,7 @@ class MINORgCLI (MINORg):
         Generates minimumset of gRNA required to cover all targets.
         Writes FASTA file of final set of gRNA and .map file detailing targets of each gRNA.
         """
-        super().minimumset(report_full_path = False)
+        self.minimumset(report_full_path = False)
         return
     
     def subcmd_full(self):
@@ -1464,6 +1475,6 @@ class MINORgCLI (MINORg):
             if self.gc_check:
                 super().filter_gc()
             ## minimumset
-            super().minimumset()
+            self.minimumset()
         return
             

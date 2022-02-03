@@ -742,7 +742,7 @@ class gRNAHits:
     ######################
     ## filter gRNAHit objects for certain criteria and return new gRNAHits object
     def filter_hits(self, *check_names, exclude_empty_seqs = True, accept_invalid = False,
-                    accept_invalid_field = True, all_checks = False):
+                    accept_invalid_field = True, all_checks = False, quiet = False):
         """
         Filter gRNA hits by checks and return new gRNAHits object.
         
@@ -753,6 +753,7 @@ class gRNAHits:
             accept_invalid (bool): score unset checks as pass
             accept_invalid_field (bool): score unset checks as pass if a given check is not set for ALL hits
             all_checks (bool): filter using all checks
+            quiet (bool): print only essential messages
         
         Returns
         -------
@@ -770,7 +771,8 @@ class gRNAHits:
         if accept_invalid_field:
             check_names = [check_name for check_name in check_names if self.valid_hit_check(check_name)]
         if not check_names:
-            print("No valid check names remaining. Returning new gRNAHits object with all hits.")
+            if not quiet:
+                print("No valid hit check names remaining. Returning new gRNAHits object with all hits.")
             filtered_hits = {seq: hits for seq, hits in self.hits.items()}
         else:
             filtered_hits = {seq: [hit for hit in hits
@@ -807,7 +809,7 @@ class gRNAHits:
         return self.filter_hits(all_checks = True, **kwargs)
     ## filter gRNASeq objects for certain criteria and return new gRNAHits object
     def filter_seqs(self, *check_names, accept_invalid = True, accept_invalid_field = True,
-                    all_checks = False):
+                    all_checks = False, quiet = False):
         """
         Filter gRNA sequences by checks and return new gRNAHits object.
         
@@ -816,6 +818,7 @@ class gRNAHits:
             accept_invalid (bool): score unset checks as pass
             accept_invalid_field (bool): score unset checks as pass if a given check is not set for ALL hits
             all_checks (bool): filter using all checks
+            quiet (bool): print only essential messages
         
         Returns
         -------
@@ -833,7 +836,8 @@ class gRNAHits:
         if accept_invalid_field:
             check_names = [check_name for check_name in check_names if self.valid_seq_check(check_name)]
         if not check_names:
-            print("No valid check names remaining. Returning new gRNAHits object with all sequences.")
+            if not quiet:
+                print("No valid seq check names remaining. Returning new gRNAHits object with all sequences.")
             filtered_hits = {seq: hits for seq, hits in self.hits.items()}
         else:
             filtered_hits = {seq: hits for seq, hits in self.hits.items()
