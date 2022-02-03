@@ -3,7 +3,7 @@ Overview
 
 (Note that all command line code snippets in the following tutorial are for **bash terminal**. You may have to adapt them according to your operating system.)
 
-MINORg (**MI**\ nimum **NO**\ n-**R**\ eference **g**\ RNA) is a 4-part programme created to design a minimum number of gRNA to cover multiple non-reference targets. Nevertheless, MINORg is also capable of designing gRNA for one target as well as for reference genes. It is available as both a command line programme as well as a Python package.
+MINORg (**MI**\ nimum **NO**\ n-**R**\ eference **g**\ RNA) is a 4-part programme created to design a minimum number of gRNA to cover multiple non-reference targets. Nevertheless, MINORg is also capable of designing gRNA for one target as well as for reference genes or from user-provided targets. It is available as both a command line programme as well as a Python package.
 
 The 4 broad steps of MINORg are as follows:
 
@@ -58,7 +58,7 @@ Using the following will print a help page that lists common parameters and vali
 Aliases
 ~~~~~~~
 
-Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, ``--reference TAIR10`` can be used in place of ``--assembly /path/to/TAIR10/genome.fasta --annotation /path/to/TAIR10/genome.gff3``, and ``--indv ler1`` can be used in place of ``--query /path/to/ler1.fasta``. For details on how to set up a config.ini file, see :ref:`Configuration:Configuration` in the :ref:`Tutorial:Tutorial` section.
+Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, ``--reference TAIR10`` can be used in place of ``--assembly /path/to/TAIR10.fasta --annotation /path/to/TAIR10.gff3``, and ``--indv ler1`` can be used in place of ``--query /path/to/ler1.fasta``. For details on how to set up a config.ini file, see :ref:`Configuration:Configuration` in the :ref:`Tutorial:Tutorial` section.
 
 
 
@@ -73,7 +73,7 @@ Parameters
 
 Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to be comfortable with generating their own preset parameter combinations.
 
-The table below lists the major similarities and differences between CLI arguments and the Python package's MINORg class attributes (note that some attriutes are in fact properties, but with the exception of ``reference``, setting them should be no different from setting attributes).
+The table below lists the major similarities and differences between CLI arguments and the Python package's MINORg class attributes (note that some attributes are in fact properties, but with the exception of ``reference``, setting them should be no different from setting attributes).
 
 +---------------+----------------------+----------------------+-------------------------+
 |Category       |CLI arguments         |Python attributes     |Description              |

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parameters &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cli-vs-python">CLI vs Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attribute-modification">Attribute modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pam">PAM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ambiguous-bases-and-repeats">Ambiguous bases and repeats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spacers-and-3-or-5-pam">Spacers and 3’ or 5’ PAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preset-pam-patterns">Preset PAM patterns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/parameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h1>
+<p>In addition to a brief overview of the equivalent parameters between CLI and Python versions of MINORg, this section provides additional information about the input format and utility of some of the more cryptic parameters.</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#cli-vs-python" id="id1">CLI vs Python</a></p></li>
+<li><p><a class="reference internal" href="#attribute-modification" id="id2">Attribute modification</a></p></li>
+<li><p><a class="reference internal" href="#pam" id="id3">PAM</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id4">Ambiguous bases and repeats</a></p></li>
+<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id5">Spacers and 3’ or 5’ PAM</a></p></li>
+<li><p><a class="reference internal" href="#preset-pam-patterns" id="id6">Preset PAM patterns</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="cli-vs-python">
+<h2><a class="toc-backref" href="#id1">CLI vs Python</a><a class="headerlink" href="#cli-vs-python" title="Permalink to this headline"></a></h2>
+<p>Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to be comfortable with generating their own preset parameter combinations.</p>
+<p>The table below lists the major similarities and differences between CLI arguments and the Python package’s MINORg class attributes (note that some attributes are in fact properties, but with the exception of <code class="docutils literal notranslate"><span class="pre">reference</span></code>, setting them should be no different from setting attributes).</p>
+<p>Note: Some parameters only apply to specific subcommands (in addition to, of course, the full programme). The relevant subcommands will be indicated in square brackets in the ‘Category’ column.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 29%" />
+<col style="width: 29%" />
+<col style="width: 27%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Category</p></td>
+<td><p>CLI arguments</p></td>
+<td><p>Python attributes</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>General</p></td>
+<td><p>directory</p></td>
+<td><p>directory</p></td>
+<td><p>output directory</p></td>
+</tr>
+<tr class="row-odd"><td><p>prefix</p></td>
+<td><p>prefix</p></td>
+<td><p>output file/directory
+prefix</p></td>
+</tr>
+<tr class="row-even"><td><p>thread</p></td>
+<td><p>thread</p></td>
+<td><p>threads</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p>Executable</p>
+<p>(path to
+executable</p>
+<p>OR name of
+command if</p>
+<p>accessible at
+terminal)</p>
+</td>
+<td><p>blastn</p></td>
+<td><p>blastn</p></td>
+<td><p>local BLAST’s blastn</p></td>
+</tr>
+<tr class="row-even"><td><p>rpsblast</p></td>
+<td><p>rpsblast</p></td>
+<td><p>local BLAST’s
+rpsblast/rpsblast+</p></td>
+</tr>
+<tr class="row-odd"><td><p>mafft</p></td>
+<td><p>mafft</p></td>
+<td><p>MAFFT</p></td>
+</tr>
+<tr class="row-even"><td rowspan="7"><p>Reference
+genomes</p>
+<p>(CLI: seq,
+full;</p>
+<p>Python: seq,
+filter)</p>
+</td>
+<td><p>reference &lt;alias&gt;</p></td>
+<td><p>reference &lt;dict of
+Reference object&gt;</p></td>
+<td><p>reference genome</p></td>
+</tr>
+<tr class="row-odd"><td><p>assembly</p></td>
+<td></td>
+<td><p>reference genome FASTA</p></td>
+</tr>
+<tr class="row-even"><td><p>annotation</p></td>
+<td></td>
+<td><p>reference genome GFF</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#attribute-modification"><span class="std std-ref">attr_mod</span></a></p></td>
+<td></td>
+<td><p>mapping for non-standard
+GFF attribute field names</p></td>
+</tr>
+<tr class="row-even"><td><p>genetic_code</p></td>
+<td></td>
+<td><p>NCBI genetic code number
+or name</p></td>
+</tr>
+<tr class="row-odd"><td><p>ext_gene</p></td>
+<td></td>
+<td><p>FASTA file of genes to
+add to reference genome</p></td>
+</tr>
+<tr class="row-even"><td><p>ext_cds</p></td>
+<td></td>
+<td><p>FASTA file of CDS of
+genes to add to reference
+genome</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="8"><p>[seq]</p>
+<p>target
+definition</p>
+</td>
+<td><p>gene</p></td>
+<td><p>gene<strong>s</strong></p></td>
+<td><p>gene IDs</p></td>
+</tr>
+<tr class="row-even"><td><p>cluster</p></td>
+<td></td>
+<td><p>cluster aliases</p></td>
+</tr>
+<tr class="row-odd"><td><p>indv</p></td>
+<td></td>
+<td><p>individuals to discover
+targets in</p></td>
+</tr>
+<tr class="row-even"><td><p>target</p></td>
+<td><p>target</p></td>
+<td><p>FASTA file of sequences
+to find gRNA in</p></td>
+</tr>
+<tr class="row-odd"><td><p>query</p></td>
+<td><p>query</p></td>
+<td><p>FASTA file(s) to discover
+targets in</p></td>
+</tr>
+<tr class="row-even"><td><p>domain &lt;alias&gt;</p></td>
+<td></td>
+<td><p>aliases of domains to
+find gRNA in</p></td>
+</tr>
+<tr class="row-odd"><td><p>domain &lt;Pssm-Id&gt;</p></td>
+<td><p>pssm_ids</p></td>
+<td><p>Pssm-Id(s) of domains to
+find gRNA in</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>domain_name</p></td>
+<td><p>human-readable domain
+name used in sequence and
+file names in place of
+Pssm-Ids</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="7"><p>[seq]</p>
+<p>inferring
+homologues</p>
+<p>from BLASTN
+hits</p>
+</td>
+<td><p>minid</p></td>
+<td><p>minid</p></td>
+<td><p>minimum hit % identity</p></td>
+</tr>
+<tr class="row-even"><td><p>minlen</p></td>
+<td><p>minlen</p></td>
+<td><p>minimum merged hits
+length</p></td>
+</tr>
+<tr class="row-odd"><td><p>mincdslen</p></td>
+<td><p>mincdslen</p></td>
+<td><p>minimum CDS length of
+merged hits</p></td>
+</tr>
+<tr class="row-even"><td><p>check_recip</p></td>
+<td><p>check_recip</p></td>
+<td><p>execute reciprocal check</p></td>
+</tr>
+<tr class="row-odd"><td><p>relax_recip</p></td>
+<td><p>relax_recip</p></td>
+<td><p>execute relaxed
+reciprocal check</p></td>
+</tr>
+<tr class="row-even"><td><p>merge_within</p></td>
+<td><p>merge_within</p></td>
+<td><p>maximum distance between
+hits for merging</p></td>
+</tr>
+<tr class="row-odd"><td><p>check_id_before_merge</p></td>
+<td><p>check_id_before_merge</p></td>
+<td><p>filter hits by % identity
+before merging</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>[seq]</p>
+<p>RPS-BLAST
+options</p>
+</td>
+<td><p>db</p></td>
+<td><p>db</p></td>
+<td><p>path to local RPS-BLAST
+database</p></td>
+</tr>
+<tr class="row-odd"><td><p>remote_rps</p></td>
+<td><p>remote_rps</p></td>
+<td><p>use remote RPS-BLAST
+database (currently
+non-functional)</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>[grna]</p></td>
+<td><p><a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
+<td><p><a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
+<td><p>PAM pattern</p></td>
+</tr>
+<tr class="row-odd"><td><p>length</p></td>
+<td><p>length</p></td>
+<td><p>gRNA length</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>[filter]</p>
+<p>GC</p>
+</td>
+<td><p>gc_min</p></td>
+<td><p>gc_min</p></td>
+<td><p>minimum GC content</p></td>
+</tr>
+<tr class="row-odd"><td><p>gc_max</p></td>
+<td><p>gc_max</p></td>
+<td><p>maximum GC content</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>[filter]</p>
+<p>feature</p>
+</td>
+<td><p>feature</p></td>
+<td><p>feature</p></td>
+<td><p>GFF3 feature type</p></td>
+</tr>
+<tr class="row-odd"><td><p>max_insertion</p></td>
+<td><p>max_insertion</p></td>
+<td><p>maximum allowable
+insertion in feature</p></td>
+</tr>
+<tr class="row-even"><td><p>min_within_n</p></td>
+<td><p>min_within_n</p></td>
+<td><p>minimum number of
+reference genes which
+features overlap with
+gRNA range in alignment</p></td>
+</tr>
+<tr class="row-odd"><td><p>min_within_fraction</p></td>
+<td><p>min_within_fraction</p></td>
+<td><p>minimum fraction of
+reference genes which
+features overlap with
+gRNA range in alignment</p></td>
+</tr>
+<tr class="row-even"><td rowspan="12"><p>[filter]</p>
+<p>background</p>
+</td>
+<td><p>background</p></td>
+<td><p>background</p></td>
+<td><p>FASTA files in which to
+search for potential
+off-targets</p></td>
+</tr>
+<tr class="row-odd"><td><p>screen_reference</p></td>
+<td><p>screen_reference</p></td>
+<td><p>include reference genomes
+in search for potential
+off-targets</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>mask</p></td>
+<td><p>FASTA files of additional
+sequences to mask</p></td>
+</tr>
+<tr class="row-odd"><td><p>unmask_ref</p></td>
+<td></td>
+<td><p>unmask reference genes</p></td>
+</tr>
+<tr class="row-even"><td><p>mask_gene</p></td>
+<td></td>
+<td><p>additional genes to mask</p></td>
+</tr>
+<tr class="row-odd"><td><p>unmask_gene</p></td>
+<td></td>
+<td><p>genes to unmask</p></td>
+</tr>
+<tr class="row-even"><td><p>mask_cluster</p></td>
+<td></td>
+<td><p>additional clusters to
+mask</p></td>
+</tr>
+<tr class="row-odd"><td><p>unmask_cluster</p></td>
+<td></td>
+<td><p>clusters to unmask</p></td>
+</tr>
+<tr class="row-even"><td><p>ot_pamless</p></td>
+<td><p>ot_pamless</p></td>
+<td><p>ignore absense of PAM for
+potential off-targets</p></td>
+</tr>
+<tr class="row-odd"><td><p>ot_mismatch</p></td>
+<td><p>ot_mismatch</p></td>
+<td><p>minimum acceptable
+mismatches for
+off-targets</p></td>
+</tr>
+<tr class="row-even"><td><p>ot_gap</p></td>
+<td><p>ot_gap</p></td>
+<td><p>minimum acceptable gaps
+for off-targets</p></td>
+</tr>
+<tr class="row-odd"><td><p>skip_bg_check</p></td>
+<td></td>
+<td><p>skip off-target check</p></td>
+</tr>
+<tr class="row-even"><td><p>[filter]
+exclude</p></td>
+<td><p>exclude</p></td>
+<td><p>exclude</p></td>
+<td><p>FASTA file of gRNA
+sequences to exclude</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>[minimumset]</p></td>
+<td><p>accept_invalid</p></td>
+<td><p>accept_invalid</p></td>
+<td><p>score ‘NA’ as ‘pass’</p></td>
+</tr>
+<tr class="row-even"><td><p>accept_feature_unknown</p></td>
+<td><p>accept_feature_unknown</p></td>
+<td><p>score ‘NA’ as ‘pass’ for
+feature check</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>accept_invalid_field</p></td>
+<td><p>score ‘NA’ as ‘pass’ if
+all entries for a check
+are ‘NA’</p></td>
+</tr>
+<tr class="row-even"><td><p>sets</p></td>
+<td><p>sets</p></td>
+<td><p>number of gRNA sets</p></td>
+</tr>
+<tr class="row-odd"><td><p>auto</p></td>
+<td><p>auto</p></td>
+<td><p>generate sets without
+require manual user
+confirmation for each set</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attribute-modification">
+<h2><a class="toc-backref" href="#id2">Attribute modification</a><a class="headerlink" href="#attribute-modification" title="Permalink to this headline"></a></h2>
+<div class="line-block">
+<div class="line">CLI argument: <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code></div>
+<div class="line">Python attribute: NA (see argument <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> of <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a> instead)</div>
+</div>
+<div class="line-block">
+<div class="line">config file (set default): <code class="docutils literal notranslate"><span class="pre">gff</span> <span class="pre">attribute</span> <span class="pre">modification</span></code> (section <code class="docutils literal notranslate"><span class="pre">[data]</span></code>)</div>
+<div class="line">config file (assign aliases): <code class="docutils literal notranslate"><span class="pre">gff</span> <span class="pre">attribute</span> <span class="pre">modification</span> <span class="pre">presets</span></code> (section <code class="docutils literal notranslate"><span class="pre">[lookup]</span></code>)</div>
+</div>
+<p>This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally created when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (<em>Oryza sativa</em> subsp. Nipponbare) and discovered that it uses ‘Locus_id’ instead of ‘Parent’ for mRNA annotations.</p>
+<p>The input given to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> should follow this format (with quotes):</p>
+<blockquote>
+<div><p>‘&lt;feature&gt;:&lt;standard&gt;=&lt;nonstandard&gt;,&lt;standard&gt;=&lt;nonstandard&gt;;&lt;feature&gt;:&lt;standard&gt;=&lt;nonstandard&gt;’</p>
+</div></blockquote>
+<p>Examples:</p>
+<blockquote>
+<div><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">--attr-mod</span> <span class="pre">'mRNA:Parent=Locus_id,ID=transcript_id;CDS:Parent=transcript_id'</span></code></dt><dd><p>‘Locus_id’ and ‘transcript_id’ are non-standard field names for
+fields ‘Parent’ and ‘ID’ respectively for the feature type ‘mRNA’,
+and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for the feature type ‘CDS’.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--attr-mod</span> <span class="pre">'all:ID=id'</span></code></dt><dd><p>‘id’ is the non-standard field name for the field ‘ID’ for all feature types.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>See <a class="reference external" href="http://gmod.org/wiki/GFF3">http://gmod.org/wiki/GFF3</a> for standard attribute field names (see section titled ‘Column 9: “attributes”’).</p>
+</section>
+<section id="pam">
+<h2><a class="toc-backref" href="#id3">PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h2>
+<div class="line-block">
+<div class="line">CLI argument: <code class="docutils literal notranslate"><span class="pre">--pam</span></code></div>
+<div class="line">Python attribute: <code class="docutils literal notranslate"><span class="pre">pam</span></code></div>
+</div>
+<div class="line-block">
+<div class="line">config file (set default): <code class="docutils literal notranslate"><span class="pre">pam</span></code> (section <code class="docutils literal notranslate"><span class="pre">[grna]</span></code>)</div>
+<div class="line">config file (assign aliases): <code class="docutils literal notranslate"><span class="pre">pam</span> <span class="pre">alias</span></code> (section <code class="docutils literal notranslate"><span class="pre">[lookup]</span></code>) (not yet implemented)</div>
+</div>
+<p>By default, MINORg designs gRNA for SpCas9 systems (i.e. 3’ NGG PAM). You may specify other PAM patterns for non-SpCas9 systems using <code class="docutils literal notranslate"><span class="pre">--pam</span></code>. It is recommended that any PAM pattern that uses special characters be enclosed in quotes, as it may lead to unexpected behaviour otherwise at the terminal.</p>
+<p>Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. Howver, do take care to avoid using  <code class="docutils literal notranslate"><span class="pre">.</span></code> as a wildcard, as MINORg uses it to determine where gRNA is relative to a PAM pattern.</p>
+<section id="ambiguous-bases-and-repeats">
+<h3><a class="toc-backref" href="#id4">Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h3>
+<p>Unlike many gRNA designers, MINORg accepts ambiguous bases (see: <a class="reference external" href="https://genome.ucsc.edu/goldenPath/help/iupac.html">https://genome.ucsc.edu/goldenPath/help/iupac.html</a> for IUPAC codes) as well as variable number of repeats.</p>
+<blockquote>
+<div><p>Example: The pattern ‘R{1,2}T’ (where ‘R’ means ‘A’ or ‘G’, and {1,2} means either 1 to 2 repetitions
+of the character right before it) will match ‘AT’, ‘GT’, ‘AAT’, ‘AGT’, ‘GAT’, and ‘GGT’.</p>
+</div></blockquote>
+</section>
+<section id="spacers-and-3-or-5-pam">
+<h3><a class="toc-backref" href="#id5">Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h3>
+<p>In the absence of ‘N’ in the PAM pattern, MINORg will assume 3’ PAM with 1 spacer base (such as in the 3’ ‘NGG’ of SpCas9). If a pattern includes an ‘N’ at either end, MINORg will assume that the gRNA is directly adjacent to the ‘N’ base of the pattern. To specify a 5’ PAM in the absence of ‘N’ in the PAM pattern, ‘.’ should be inserted where the gRNA is.</p>
+<blockquote>
+<div><p>Example 1: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">GG</span></code> are functionally identical.
+The latter two will be expanded to the most explicit pattern: <code class="docutils literal notranslate"><span class="pre">.NGG</span></code>.</p>
+<p>Example 2: If a CRISPR system uses ‘GG’ PAM with NO spacer ‘N’ base, the PAM pattern has to be
+specified to MINORg as <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.GG</span></code>. Otherwise, MINORg will insert a spacer ‘N’ base, giving rise
+to the incorrect explicit pattern of <code class="docutils literal notranslate"><span class="pre">.NGG</span></code> instead.</p>
+<p>Example 3: AacCas12b uses a 5’ PAM with the pattern ‘TTN’, which can be specified to MINORg as
+<code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">TTN</span></code> or <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">TTN.</span></code>, where <code class="docutils literal notranslate"><span class="pre">.</span></code> indicates where the gRNA is.
+<code class="docutils literal notranslate"><span class="pre">.</span></code> is optional as this PAM pattern (TTN) includes ‘N’ at the end.
+Therefore, MINORg will infer a 5’ PAM.</p>
+<p>Example 4: Cas12a uses a 5’ PAM with the pattern ‘TTTV’, which can be specified to MINORg as
+<code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">TTTV.</span></code> or <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">'T{3}V.'</span></code>, where <code class="docutils literal notranslate"><span class="pre">.</span></code> indicates where the gRNA is.
+As the PAM pattern does not include ‘N’, the gRNA position MUST be explicitly indicated using <code class="docutils literal notranslate"><span class="pre">.</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">TTTV</span></code> is (incorrectly) used, MINORg will default to a 3’ PAM AND add a spacer base,
+expanding it to the undesired explicit pattern <code class="docutils literal notranslate"><span class="pre">.NTTTV</span></code> .</p>
+</div></blockquote>
+<p>For a PAM-less search, use: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">'.'</span></code>.</p>
+</section>
+<section id="preset-pam-patterns">
+<h3><a class="toc-backref" href="#id6">Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h3>
+<p>MINORg comes with several preset PAM patterns for different CRISPR systems.</p>
+<blockquote>
+<div><p>For example: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">SpCas9</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> are functionally identical.</p>
+</div></blockquote>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 24%" />
+<col style="width: 57%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>alias(es)</strong></p></td>
+<td><p><strong>PAM sequence</strong>
+(explicit)</p></td>
+<td><p><strong>Notes</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>SpCas9 OR
+spcas9</p></td>
+<td><p>.NGG</p></td>
+<td><p>default</p></td>
+</tr>
+<tr class="row-odd"><td><p>SaCas9T OR
+sacas9t</p></td>
+<td><p>.NGRRT</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>SaCas9N OR
+sacas9n</p></td>
+<td><p>.NGRRN</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>NmeCas9 OR
+nmecas9</p></td>
+<td><p>.NNNNGATT</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>CjCas9 OR
+cjcas9</p></td>
+<td><p>.NNNNRYAC</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>StCas9 OR
+stcas9</p></td>
+<td><p>.NNAGAAW</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Cas12a OR
+cas12a</p></td>
+<td><p>TTTV.</p></td>
+<td><p>5’ PAM</p></td>
+</tr>
+<tr class="row-odd"><td><p>AacCas12b OR
+aaccas12b</p></td>
+<td><p>TTN.</p></td>
+<td><p>5’ PAM</p></td>
+</tr>
+<tr class="row-even"><td><p>BhCas12b OR
+bhcas12b</p></td>
+<td><p>DTTN.</p></td>
+<td><p>5’ PAM</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorial.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

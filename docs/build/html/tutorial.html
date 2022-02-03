@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="next" title="Parameters" href="parameters.html" />
     <link rel="prev" title="Configuration" href="configuration.html" /> 
 </head>
 
@@ -42,10 +42,14 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-started">Getting started</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#python-package">Python package</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 <ul>
@@ -78,14 +82,27 @@
              
   <section id="tutorial">
 <h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline"></a></h1>
+<p>In all the following tutorial, the current directory/working directory is presumed to contain all files in <a class="reference external" href="https://github.com/rlrq/MINORg/tree/master/examples">https://github.com/rlrq/MINORg/tree/master/examples</a>. If you have not downloaded the files, please do so and navigate to the directory that contains them.</p>
 <section id="command-line">
 <h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
 <p>Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your operating system.</p>
-<p>TODO</p>
+<section id="getting-started">
+<h3>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h3>
+<p>Let us begin with the simplest MINORg execution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --target ./sample_CDS.fasta --directory ./example00
+Final gRNA sequence<span class="o">(</span>s<span class="o">)</span> have been written to /tmp/tmptrr0sca_/minorg/minorg_gRNA_final.fasta
+Final gRNA sequence ID<span class="o">(</span>s<span class="o">)</span>, gRNA sequence<span class="o">(</span>s<span class="o">)</span>, and target<span class="o">(</span>s<span class="o">)</span> have been written to /tmp/tmptrr0sca_/minorg/minorg_gRNA_final.map
+
+<span class="m">1</span> mutually exclusive gRNA set<span class="o">(</span>s<span class="o">)</span> requested. <span class="m">1</span> set<span class="o">(</span>s<span class="o">)</span> found.
+Output files have been generated <span class="k">in</span> /path/to/current/directory/example00
+</pre></div>
+</div>
+<p>The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (<code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">./sample_CDS.fasta</span></code>) and to output files into directory <code class="docutils literal notranslate"><span class="pre">--directory</span> <span class="pre">./example00</span></code>. By default, MINORg generates 20 bp gRNA using NGG PAM.</p>
+</section>
 </section>
 <section id="python-package">
 <h2>Python package<a class="headerlink" href="#python-package" title="Permalink to this headline"></a></h2>
-<p>To begin, import the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a> class.</p>
+<p>To begin, import the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> class.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 </pre></div>
 </div>
@@ -98,7 +115,7 @@
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">config</span> <span class="o">=</span> <span class="s1">&#39;/path/to/config.ini&#39;</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/path/to/output/directory&#39;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You may now set your parameters using the attributes of your <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a> object. For table listing the equivalent CLI arguments and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a> attributes, see <a class="reference internal" href="overview.html#parameters"><span class="std std-ref">Parameters</span></a>. For example, you can specify executables as such:</p>
+<p>You may now set your parameters using the attributes of your <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object. For a table listing the equivalent CLI arguments and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> attributes, see <a class="reference internal" href="overview.html#parameters"><span class="std std-ref">Parameters</span></a>. For example, you can specify executables as such:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/path/to/blastn/executable&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">rpsblast</span> <span class="o">=</span> <span class="s1">&#39;/path/to/rpsblast/executable&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">mafft</span> <span class="o">=</span> <span class="s1">&#39;/path/to/mafft/executable&#39;</span>
@@ -129,7 +146,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="parameters.html" class="btn btn-neutral float-right" title="Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

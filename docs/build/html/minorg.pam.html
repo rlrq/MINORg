@@ -40,7 +40,9 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 <ul class="current">
@@ -100,55 +102,55 @@
 <span id="minorg-pam-module"></span><h1>minorg.pam module<a class="headerlink" href="#module-minorg.pam" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.pam.PAM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.pam.</span></span><span class="sig-name descname"><span class="pre">PAM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NGG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L10-L106"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.pam.</span></span><span class="sig-name descname"><span class="pre">PAM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NGG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L11-L109"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NGG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L11-L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NGG'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L12-L29"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>pam: PAM object or str of PAM pattern (if PAM object provided, attributes are copied)
 gRNA_length: int length of gRNA (bp)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.expand_ambiguous">
-<span class="sig-name descname"><span class="pre">expand_ambiguous</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L45-L57"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.expand_ambiguous" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">expand_ambiguous</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L48-L60"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.expand_ambiguous" title="Permalink to this definition"></a></dt>
 <dd><p>Map ambiguous bases</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.five_prime">
-<span class="sig-name descname"><span class="pre">five_prime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L97-L99"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.five_prime" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">five_prime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L100-L102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.five_prime" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.five_prime_maxlen">
-<span class="sig-name descname"><span class="pre">five_prime_maxlen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L103-L104"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.five_prime_maxlen" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">five_prime_maxlen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L106-L107"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.five_prime_maxlen" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.infer_full">
-<span class="sig-name descname"><span class="pre">infer_full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L32-L43"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.infer_full" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">infer_full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L35-L46"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.infer_full" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.parse">
-<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L59-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.parse" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L62-L67"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.parse" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.regex">
-<span class="sig-name descname"><span class="pre">regex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L67-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.regex" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">regex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L70-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.regex" title="Permalink to this definition"></a></dt>
 <dd><p>Square brackets not allowed in PAM pattern unless they contain only A, T, G, C, or U.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.three_prime">
-<span class="sig-name descname"><span class="pre">three_prime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L100-L102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.three_prime" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">three_prime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L103-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.three_prime" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.pam.PAM.three_prime_maxlen">
-<span class="sig-name descname"><span class="pre">three_prime_maxlen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L105-L106"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.three_prime_maxlen" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">three_prime_maxlen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/pam.py#L108-L109"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.pam.PAM.three_prime_maxlen" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
