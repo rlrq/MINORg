@@ -38,8 +38,8 @@ Note: Some parameters only apply to specific subcommands (in addition to, of cou
 |accessible at  |                           |                           |                         |
 |terminal)      |                           |                           |                         |
 +---------------+---------------------------+---------------------------+-------------------------+
-|Reference      |reference <alias>          |reference <dict of         |reference genome         |
-|genomes        |                           |Reference object>          |                         |
+|Reference      |:ref:`reference            |:ref:`reference            |reference genome         |
+|genomes        |<parameters:Reference>`    |<parameters:Reference>`    |                         |
 |               +---------------------------+---------------------------+-------------------------+
 |(CLI: seq,     |assembly                   |                           |reference genome FASTA   |
 |full;          +---------------------------+---------------------------+-------------------------+
@@ -187,6 +187,14 @@ Note: Some parameters only apply to specific subcommands (in addition to, of cou
 |               |                           |                           |confirmation for each set|
 +---------------+---------------------------+---------------------------+-------------------------+
 
+
+Reference
+---------
+
+| CLI argument: ``--reference``
+| Python attribute: ``reference``
+
+TODO: also link to attribute modification section below when describing setting reference for Python
 
 
 Attribute modification
