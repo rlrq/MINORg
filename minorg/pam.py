@@ -3,6 +3,7 @@
 ###########
 
 import regex as re
+from minorg.constants import PAM_PATTERNS
 
 DEFAULT_gRNA_LENGTH = 20
 DEFAULT_PAM = "NGG"
@@ -20,6 +21,8 @@ class PAM():
                                 else gRNA_length if gRNA_length != DEFAULT_gRNA_LENGTH
                                 else pam.gRNA_length)
         else:
+            if pam in PAM_PATTERNS:
+                pam = PAM_PATTERNS[pam]
             self.raw_pam = pam
             self.pam = pam
             self.gRNA_length = gRNA_length
