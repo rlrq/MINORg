@@ -819,7 +819,6 @@ def main(ctx: typer.Context,
 if __name__ == "__main__":
     
     try:
-        minor_g.logfile = MINORgLogger(level = logging_level)
         minor_g.logfile.update_filename(minor_g.mkfname(os.path.basename(minor_g.logfile.filename)))
         minor_g.logfile.devsplain(minor_g.logfile.filename)
         minor_g.logfile.args(["raw", sys.argv])
