@@ -22,6 +22,7 @@ from minorg.functions import (
     extract_ranges,
     imap_progress,
     BlastResult,
+    blast,
     blast6,
     blast6multi,
     make_local_print,
@@ -146,9 +147,11 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     tsv_blast_cds = os.path.join(directory, f"{fout}_tmp_blastn_cds.tsv")
     from Bio.Blast.Applications import NcbiblastnCommandline
     blast(blastf = NcbiblastnCommandline, cmd = blastn,
+          header = None, ## default fields
           # header = "qseqid,sseqid,pident,length,sstart,send",
           fout = tsv_blast_ref, query = fasta_complete, subject = fasta_query)
     blast(blastf = NcbiblastnCommandline, cmd = blastn,
+          header = None, ## default fields
           # header = "qseqid,sseqid,pident,length,sstart,send",
           fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
     ## check for hits
@@ -214,7 +217,7 @@ def merge_hits_and_filter(blast6_fname, fout, fasta, quiet = True, min_cds_len =
         if blast6cds_fname is not None:
             merged = filter_min_cds_len(blast6cds_fname = blast6cds_fname, merged = merged,
                                         min_cds_len = min_cds_len, colnames = colnames)
-            colnames = list(colnames) + ["cds_overlap"]
+            colnames = list(colnames) + ["overlap"]
         ## use fout as temporary file to store merged ranges
         write_table([tuple(x[colname] for colname in colnames) for x in merged], fout, header = list(colnames))
         ## get domain seqs
@@ -247,7 +250,7 @@ def merge_hits(data, merge_within_range = 100, min_id = 90, min_len = 100,
     list
         Of dict of merged hit data, where fields for each entry are: molecule, start, end, length
     """
-    dat = [x for x in dat if x.hsp.ident_pct >= min_id]
+    dat = [x for x in data if x.hsp.ident_pct >= min_id]
     dat.sort(key = lambda x: (x.subject.id, x.hsp.hit_start))
     output = []
     if len(dat) <= 0:
