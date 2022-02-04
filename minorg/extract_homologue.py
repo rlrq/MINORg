@@ -348,7 +348,7 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
         seq = seqs[get(entry, "molecule")][get(entry, "start"):get(entry, "end")]
         key = '|'.join([str(x) for x in \
                         ([get(entry, "molecule"), i + 1,
-                          f"{get(entry, 'start')}-{get(entry, 'end')}", indv_i])])
+                          f"{get(entry, 'start') + 1}-{get(entry, 'end')}", indv_i])])
         output[key] = seq
     dict_to_fasta(output, fout)
     return
