@@ -1886,14 +1886,13 @@ class MINORg (PathHandler):
         if len(grna_hits) < sets:
             # warnings.warn(f"The gRNA sequences cannot cover all target sequences the desired number of times ({len(grna_hits)} valid gRNA, {sets} set(s) requested).\n")
             self.logfile.warning(f"The gRNA sequences cannot cover all target sequences the desired number of times ({len(grna_hits)} valid gRNA, {sets} set(s) requested).\n")
-            return
         ## start generating sets
         grna_sets = []
         while len(grna_sets) < sets:
             ## get a (minimum) set of gRNA sequences
             seq_set = get_minimum_set(grna_hits, set_num = len(grna_sets) + 1,
                                       manual_check = (manual if manual is not None else not self.auto),
-                                      targets = targets)
+                                      targets = targets, suppress_warning = True)
             ## if valid set returned
             if seq_set:
                 grna_sets.append(seq_set) ## add to existing list of sets
