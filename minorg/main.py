@@ -245,7 +245,7 @@ def generate_grna(
         
         ## gRNA options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
-        length: str = typer.Option(*params.length(), **params.length.options),
+        length: int = typer.Option(*params.length(), **params.length.options),
         span_junction: bool = typer.Option(*params.span_junction(), **params.span_junction.options),
         
         ## target definition options
@@ -614,7 +614,7 @@ def full(
         
         ## gRNA generation options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
-        length: str = typer.Option(*params.length(), **params.length.options),
+        length: int = typer.Option(*params.length(), **params.length.options),
         
         ## filter gRNA options (GC)
         gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
