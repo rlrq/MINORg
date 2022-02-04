@@ -812,8 +812,9 @@ class MINORgCLI (MINORg):
             raise click.UsageError( ("'-r <reference genome alias>' OR"
                                      " '--assembly <reference assembly alias or path to FASTA file>"
                                      " --annotation <reference annotation alias or GFF3 file or"
-                                     " BED file converted from GFF3 using gff2bed>'is required if using"
-                                     f" {msg}.") )
+                                     " BED file converted from GFF3 using gff2bed>'OR"
+                                     " '--ext-gene <FASTA file of gene(s)> --ext-cds <FASTA file of CDS>'"
+                                     f" is required if using {msg}.") )
     
     def check_reference_args(self, require = False):
         """
@@ -1468,7 +1469,6 @@ class MINORgCLI (MINORg):
             if len(fasta_to_dict(self.target)) == 0:
                 raise MessageError("No targets found. Aborting programme.")
             super().grna()
-            self.write_all_grna_map()
             ## abort if no gRNA
             if len(self.grna_hits) == 0:
                 raise MessageError("No gRNA found. Aborting programme.")
@@ -1479,7 +1479,8 @@ class MINORgCLI (MINORg):
                 super().filter_feature()
             if self.gc_check:
                 super().filter_gc()
+            self.write_all_grna_map()
             ## minimumset
-            self.minimumset()
+            self.minimumset(report_full_path = False)
         return
             
