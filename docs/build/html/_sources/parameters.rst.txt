@@ -17,8 +17,10 @@ The table below lists the major similarities and differences between CLI argumen
 
 Note: Some parameters only apply to specific subcommands (in addition to, of course, the full programme). The relevant subcommands will be indicated in square brackets in the 'Category' column.
 
+Python attributes in the table below indicated with an asterisk (*) should be set using a dedicated method.
+
 +---------------+---------------------------+---------------------------+-------------------------+
-|Category       |CLI arguments              |Python attributes          |Description              |
+|**Category**   |**CLI arguments**          |**Python attributes**      |**Description**          |
 +---------------+---------------------------+---------------------------+-------------------------+
 |General        |directory                  |directory                  |output directory         |
 |               +---------------------------+---------------------------+-------------------------+
@@ -39,7 +41,7 @@ Note: Some parameters only apply to specific subcommands (in addition to, of cou
 |terminal)      |                           |                           |                         |
 +---------------+---------------------------+---------------------------+-------------------------+
 |Reference      |:ref:`reference            |:ref:`reference            |reference genome         |
-|genomes        |<parameters:Reference>`    |<parameters:Reference>`    |                         |
+|genomes        |<parameters:Reference>`    |<parameters:Reference>`\ * |                         |
 |               +---------------------------+---------------------------+-------------------------+
 |(CLI: seq,     |assembly                   |                           |reference genome FASTA   |
 |full;          +---------------------------+---------------------------+-------------------------+
@@ -188,26 +190,144 @@ Note: Some parameters only apply to specific subcommands (in addition to, of cou
 +---------------+---------------------------+---------------------------+-------------------------+
 
 
-Reference
----------
+Parameter types
+---------------
 
-| CLI argument: ``--reference``
-| Python attribute: ``reference``
+Flags and arguments
+~~~~~~~~~~~~~~~~~~~
+
+Flags
++++++
+
+Flags are parameters that do not take values.
+
+**CLI**: ``--auto``
+
+For example:
+
+.. code-block:: bash
+
+   $ minorg <other arguments> --auto
+
+Simply using ``--auto`` tells MINORg to automate set generation.
+
+
+**Python**: ``auto``
+
+In Python, flags are raised by setting the value of their attributes to ``True`` or ``False``. For example:
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg()
+>>> my_minorg.auto = True ## raise flag for parameter 'auto'
+
+
+Arguments
++++++++++
+
+These parameters take values.
+
+**CLI**: all parameters that are not flags
+
+.. code-block:: bash
+   
+   $ minorg <other arguments> --prefix my_minorg
+
+``--prefix my_minorg`` tells MINORg to use 'my_minorg' as a prefix for output files and directories.
+
+**Python**: all parameters that are not flags
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg()
+>>> my_minorg.prefix = 'my_minorg' ## tells MINORg to use 'my_minorg' as prefix for output files and directories
+
+
+Alias lookup
+~~~~~~~~~~~~
+
+1-level lookup
+++++++++++++++
+
+See also: :ref:`configuration:1-level lookup`
+
+1-level lookup parameters have preset values mapped to aliases defined in a configuration file. Users may use either the alias(es) or provide raw values.
+
+| **CLI**: ``--assembly``, ``--annotation``, ``--db``, ``attr-mod``, ``--domain``
+| **Python**: Does not support aliases. Raw values only.
+
+
+2-level lookup
+++++++++++++++
+
+See also: :ref:`configuration:2-level lookup`
+
+2-level lookup parameters use a combination of 2 parameters. The first parameter (suffixed with `set`) specifies a file containing alias mapping information for the second parameter (not suffixed). Aliases for the first parameter are defined in a configuration file, and functions effectively the same way a 1-level lookup parameter does. The second parameter reads alias mapping information from the file specified by the first parameter. Unlike the first parameters, users may only use alias(es)--raw values are not allowed. To specify raw values, different parameters must be used (see :ref:`configuration:Alternative parameters` for which).
+
+| **CLI**: ``--reference-set``\ -``reference``, ``--cluster-set``\ -``--cluster``, ``--genome-set``\ -``--indv``
+| **Python**: Does not support aliases. Raw values only.
+
+
+Predefined lookup
++++++++++++++++++
+
+Predefined lookup parameters are built into the programme. Users may use either the alias(es) or raw values.
+
+| **CLI**: ``--pam``
+| **Python**: ``pam``
+
+
+Raw values
+++++++++++
+
+All other parameters are raw values only.
+
+
+Multiple values
+~~~~~~~~~~~~~~~
+
+Comma-separated
++++++++++++++++
+
+**CLI**: ``--reference``, ``--cluster``, ``--gene``, ``--indv``
+
+Comma-separated multiple value arguments accept multiple values for a single argument so long as the values are comma-separated. For example, multiple genes can be specified using ``--gene 'geneA,geneB,geneC'``.
+
+
+Parameter descriptions
+----------------------
+
+Reference
+~~~~~~~~~
+
+**Type**: :ref:`Parameters:Arguments`, :ref:`Parameters:2-level lookup`
+
+| **CLI**: ``--reference``
+| **Python**: ``reference``
+| **Config file**:
+
+  | set default: ``reference`` (section ``[data]``)
+  | set default set: ``reference set`` (section ``[data]``)
+  | assign aliases to sets: ``reference sets`` (section ``[lookup]``)
+
+
+
 
 TODO: also link to attribute modification section below when describing setting reference for Python
 
 
 Attribute modification
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
-| CLI argument: ``--attr-mod``
-| Python attribute: NA (see argument ``attr_mod`` of :meth:`~minorg.MINORg.MINORg.add_reference` instead)
+**Type**: :ref:`Parameters:Arguments`, :ref:`Parameters:1-level lookup`
 
-| config file (set default): ``gff attribute modification`` (section ``[data]``)
-| config file (assign aliases): ``gff attribute modification presets`` (section ``[lookup]``)
+| **CLI**: ``--attr-mod``
+| **Python**: NA (see argument ``attr_mod`` of :meth:`~minorg.MINORg.MINORg.add_reference` instead)
+| **Config file**:
+
+  | set default: ``gff attribute modification`` (section ``[data]``)
+  | assign aliases: ``gff attribute modification presets`` (section ``[lookup]``)
 
 
-This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally created when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (*Oryza sativa* subsp. Nipponbare) and discovered that it uses 'Locus_id' instead of 'Parent' for mRNA annotations.
+This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally developed when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (*Oryza sativa* subsp. Nipponbare) and discovered that it uses 'Locus_id' instead of 'Parent' for mRNA annotations.
 
 The input given to ``--attr-mod`` should follow this format (with quotes):
 
@@ -227,13 +347,16 @@ See http://gmod.org/wiki/GFF3 for standard attribute field names (see section ti
 
 
 PAM
----
+~~~
 
-| CLI argument: ``--pam``
-| Python attribute: ``pam``
+**Type**: :ref:`Parameters:Arguments`, :ref:`Parameters:Predefined lookup`
 
-| config file (set default): ``pam`` (section ``[grna]``)
-| config file (assign aliases): ``pam alias`` (section ``[lookup]``) (not yet implemented)
+| **CLI**: ``--pam``
+| **Python**: ``pam``
+| **Config file**:
+
+  | set default: ``pam`` (section ``[grna]``)
+  | assign aliases: ``pam alias`` (section ``[lookup]``) (not yet implemented)
 
 
 By default, MINORg designs gRNA for SpCas9 systems (i.e. 3' NGG PAM). You may specify other PAM patterns for non-SpCas9 systems using ``--pam``. It is recommended that any PAM pattern that uses special characters be enclosed in quotes, as it may lead to unexpected behaviour otherwise at the terminal.
@@ -242,7 +365,7 @@ Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory
 
 
 Ambiguous bases and repeats
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++++++
 
 Unlike many gRNA designers, MINORg accepts ambiguous bases (see: https://genome.ucsc.edu/goldenPath/help/iupac.html for IUPAC codes) as well as variable number of repeats.
 
@@ -251,7 +374,7 @@ Unlike many gRNA designers, MINORg accepts ambiguous bases (see: https://genome.
 
 
 Spacers and 3' or 5' PAM
-~~~~~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++++++
 
 In the absence of 'N' in the PAM pattern, MINORg will assume 3' PAM with 1 spacer base (such as in the 3' 'NGG' of SpCas9). If a pattern includes an 'N' at either end, MINORg will assume that the gRNA is directly adjacent to the 'N' base of the pattern. To specify a 5' PAM in the absence of 'N' in the PAM pattern, '.' should be inserted where the gRNA is.
 
@@ -277,7 +400,7 @@ For a PAM-less search, use: ``--pam .`` or ``--pam '.'``.
 
 
 Preset PAM patterns
-~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++
 
 MINORg comes with several preset PAM patterns for different CRISPR systems.
 

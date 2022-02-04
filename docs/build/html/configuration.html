@@ -44,7 +44,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#config-file">config file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#alias-lookups">Alias lookups</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#level-lookup">1-level lookup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">2-level lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2-level lookup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alternative-parameters">Alternative parameters</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#level-lookup-file-formats">2-level lookup file formats</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cluster">cluster</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#genome">genome</a></li>
@@ -56,6 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 <ul>
@@ -215,6 +220,8 @@ araha1<span class="p">;</span>ahalleri1     /path/to/subset_ref_Araha1.fasta    
 </pre></div>
 </div>
 <p>Note that you can also provide an alias mapping file that is not in the config file to MINORg by specifying the path to the file instead of using a non-existent alias (e.g. <code class="docutils literal notranslate"><span class="pre">--reference-set</span> <span class="pre">/path/to/arabidopsis_genomes.txt</span></code>).</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h4>
 <p>The same logic applies as well to <code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">set</span></code> (<code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code>-<code class="docutils literal notranslate"><span class="pre">--cluster</span></code>-<code class="docutils literal notranslate"><span class="pre">--clusters</span></code>) and <code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">set</span></code> (<code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>-<code class="docutils literal notranslate"><span class="pre">--indv</span></code>-<code class="docutils literal notranslate"><span class="pre">--genomes</span></code>), with the caveat that there is no option to set default clusters or query genomes.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -262,6 +269,9 @@ araha1<span class="p">;</span>ahalleri1     /path/to/subset_ref_Araha1.fasta    
 </tr>
 </tbody>
 </table>
+</section>
+<section id="alternative-parameters">
+<h4>Alternative parameters<a class="headerlink" href="#alternative-parameters" title="Permalink to this headline"></a></h4>
 <p>Do note that, because of the nature of these lookups, you cannot simply provide the value(s) mapped to an alias to <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>. If the desired files/genes are not specified in any mapping file, you will have to use the following alternatives:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -295,6 +305,7 @@ modiication&gt;*</p></td>
 <p>* <code class="docutils literal notranslate"><span class="pre">genetic-code</span></code> and <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> are optional if the reference genome uses the standard genetic code and standard GFF attribute field names respectively. Do note that you CANNOT SPECIFY MULTIPLE reference genomes if not usng aliases.</p>
 <p>** If not using aliases, each cluster must be processed separately (i.e. a different MINORg execution for each cluster), as MINORg has no way of knowing which gene belongs to which cluster if you use <code class="docutils literal notranslate"><span class="pre">--gene</span></code>.</p>
 <p>*** You may specify multiple query FASTA files by using <code class="docutils literal notranslate"><span class="pre">--query</span> <span class="pre">&lt;FASTA&gt;</span></code> as many times as needed (e.g. <code class="docutils literal notranslate"><span class="pre">--query</span> <span class="pre">&lt;FASTA</span> <span class="pre">1&gt;</span> <span class="pre">--query</span> <span class="pre">&lt;FASTA</span> <span class="pre">2&gt;</span> <span class="pre">--query</span> <span class="pre">&lt;FASTA</span> <span class="pre">3&gt;</span></code>).</p>
+</section>
 </section>
 <section id="level-lookup-file-formats">
 <h3>2-level lookup file formats<a class="headerlink" href="#level-lookup-file-formats" title="Permalink to this headline"></a></h3>

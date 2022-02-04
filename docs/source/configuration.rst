@@ -124,6 +124,9 @@ To view the reference genomes in a non-default reference set, use:
 
 Note that you can also provide an alias mapping file that is not in the config file to MINORg by specifying the path to the file instead of using a non-existent alias (e.g. ``--reference-set /path/to/arabidopsis_genomes.txt``).
 
+Parameters
+++++++++++
+
 The same logic applies as well to ``cluster sets``\ -``cluster set`` (``--cluster-set``\ -``--cluster``\ -``--clusters``) and ``genome sets``\ -``genome set`` (``--genome-set``\ -``--indv``\ -``--genomes``), with the caveat that there is no option to set default clusters or query genomes.
 
 +----------------+--------------+-------------+---------------------------------------------+
@@ -142,6 +145,9 @@ The same logic applies as well to ``cluster sets``\ -``cluster set`` (``--cluste
 +----------------+--------------+-------------+---------------------------------------------+
 |-\-references   |-\-clusters   |-\-genomes   |[CLI] print contents of lookup file to screen|
 +----------------+--------------+-------------+---------------------------------------------+
+
+Alternative parameters
+++++++++++++++++++++++
 
 Do note that, because of the nature of these lookups, you cannot simply provide the value(s) mapped to an alias to ``--reference``, ``--cluster``, or ``--indv``. If the desired files/genes are not specified in any mapping file, you will have to use the following alternatives:
 
