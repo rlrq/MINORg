@@ -370,7 +370,7 @@ class GFF:
                    ((not feature_types or entry.type in feature_types) and
                     entry.has_attr("Parent", feature_ids))]
         if index: return indices
-        else: return self.get_i(*indices)
+        else: return self.get_i(*indices, output_list = True)
     
     def get_subfeatures_full(self, *feature_ids, feature_types = [], index = False, preserve_order = True):
         """
@@ -415,7 +415,7 @@ class GFF:
             output_indices = [i for i in output_indices if self.get_i(i).type in feature_types]
         ## prepare output
         if index: return sorted(output_indices)
-        else: return self.get_i(*output_indices, sort = preserve_order)
+        else: return self.get_i(*output_indices, sort = preserve_order, output_list = True)
     
     def get_features_and_subfeatures(self, *feature_ids, index = False, full = True,
                                      preserve_order = True):
@@ -443,6 +443,7 @@ class GFF:
         final_features = sorted(features_indices + subfeatures_indices)
         if index: return final_features
         else: return self.get_i(*final_features,
+                                output_list = True,
                                 sort = preserve_order) ## it's already sorted by it won't hurt to raise it
     
     def get_i_raw(self, *indices, strip_newline = True, output_list = True,
