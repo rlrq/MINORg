@@ -1602,8 +1602,7 @@ class MINORg (PathHandler):
     def _adjust_feature_range(self, seq, gene, ref_alias, feature, domain = False, **kwargs):
         gene_ann = self.reference[ref_alias].annotation.get_id(gene, output_list = False)
         feature_ranges = ranges_union([[(x.start, x.end)] for x in
-                                        self.reference[ref_alias].annotation.get_subfeatures_full(gene,
-                                                                                                  feature_types = feature)])
+                                        self.reference[ref_alias].annotation.get_subfeatures_full(gene, feature_types = feature)])
         if domain and self.gff_domain:
             domain_anns = GFF(fname = self.gff_domain, quiet = True, fmt = "GFF")
             domain_ann = [entry for entry in domain_anns.get_id(gene, output_list = True)
