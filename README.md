@@ -13,6 +13,7 @@ The code in this repository is not complete. Only sections of it are viable. Thi
 - mafft
 
 ## Links
+- Tutorial, example, and documentation: https://rlrq.github.io/MINORg
 - Detailed overview of steps in the programme: https://tinyurl.com/sr84ae9e (Google slides)
 - Flowchart to select & use appropriate input parameters: https://tinyurl.com/jyke76b8 (PDF)
 
