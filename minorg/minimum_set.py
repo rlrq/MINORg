@@ -64,7 +64,8 @@ def get_minimum_sets_and_write(gRNA_hits, num_sets = 1, targets = None, exclude_
                                                                   exclude_empty_seqs = True)
     filtered_gRNA_hits = filtered_gRNA_hits.filter_seqs_all_checks_passed(accept_invalid = True)
     if len(filtered_gRNA_hits) < num_sets:
-        print(f"\nWARNING: The gRNA sequences cannot cover all target sequences the desired number of times ({len(filtered_gRNA_hits)} valid gRNA, {num_sets} set(s) requested).\n")
+        if not suppress_warning:
+            print(f"\nWARNING: The gRNA sequences cannot cover all target sequences the desired number of times ({len(filtered_gRNA_hits)} valid gRNA, {num_sets} set(s) requested).\n")
         return
     ## start generating sets
     print(f"Generating gRNA sets from {len(filtered_gRNA_hits)} possible gRNA")
@@ -97,7 +98,7 @@ def get_minimum_sets_and_write(gRNA_hits, num_sets = 1, targets = None, exclude_
 ## gets a single minimum set
 def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), targets = None,
                     target_len_provided = False, sc_algorithm = "LAR", set_num = 1,
-                    impossible_set_message = impossible_set_message_default):
+                    impossible_set_message = impossible_set_message_default, suppress_warning = False):
     while True:
         ## solve set_cover
         ## note: If antisense, tie break by minimum -end. Else, tie break by minimum start.
@@ -110,7 +111,8 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
                                                         key = lambda y: sum((-z.range[1] if
                                                                              z.target.sense == '-' else
                                                                              z.range[0])
-                                                                            for z in y[1])/len(y[1])))
+                                                                            for z in y[1])/len(y[1])),
+                            suppress_warning = suppress_warning)
         ## if empty set, print message and break out of loop to exit and return the empty set
         if set(seq_set) == set():
             print(impossible_set_message)
@@ -145,14 +147,16 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
 ##################
 
 ## note that tie_breaker function should work on dictionaries of {gRNA_seq: {gRNAHit objects}} and return a tuple or list of two values: (gRNA_seq, {gRNAHit objects})
-def set_cover(gRNA_hits, target_ids, algorithm = "LAR", id_key = lambda x: x, **kwargs):
+def set_cover(gRNA_hits, target_ids, algorithm = "LAR", id_key = lambda x: x, suppress_warning = False,
+              **kwargs):
     exclude_seqs = set(map(lambda s: str(s).upper(), kwargs["exclude_seqs"]))
     gRNA_coverage = {seq: hits for seq, hits in gRNA_hits.hits.items()
                      if str(seq).upper() not in exclude_seqs}
     ## check if set cover is possible before attempting to solve set cover
     try:
         if ( set(id_key(y) for x in gRNA_coverage.values() for y in x) & set(target_ids) ) < set(target_ids):
-            print("\nWARNING: The provided gRNA sequences cannot cover all target sequences.\n")
+            if not suppress_warning:
+                print("\nWARNING: The provided gRNA sequences cannot cover all target sequences.\n")
         elif algorithm == "LAR":
             return set_cover_LAR(gRNA_coverage, target_ids, id_key = id_key,
                                  **{k: v for k, v in kwargs.items() if k in ["tie_breaker"]})
