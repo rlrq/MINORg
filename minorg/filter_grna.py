@@ -383,7 +383,7 @@ def mask_identical(to_mask_fname, fasta_fname, fout_fname, **kwargs):
     seqs_to_mask = fasta_to_dict(to_mask_fname)
     ## separate sequences with ambiguous bases (not compatible with BLAST) and those without
     ##  - ambiguous bases typically present in scaffold-level assemblies as runs of 'N's
-    standard_bases = {'A','T','G','C','U'}
+    standard_bases = {'A','T','G','C','U', 'a', 't', 'g', 'c', 'u'}
     unambig_to_mask = {seqid: seq for seqid, seq in seqs_to_mask.items()
                        if set(seq).issubset(standard_bases)}
     ambig_to_mask = {seqid: seq for seqid, seq in seqs_to_mask.items()
