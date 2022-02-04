@@ -143,7 +143,7 @@ def blast(blastf, header, fout, append = False, dir = None, outfmt = 6, **kwargs
     ## parse header
     if isinstance(header, str):
         header = header.split(',')
-    blast_outfmt = f"'{outfmt}{(' ' + ' '.join(header)) if outfmt in [6,7,10] else ''}'"
+    blast_outfmt = f"'{outfmt}{'' if (not header or outfmt not in [6,7,10]) else (' ' + ' '.join(header))}'"
     ## execute blast
     if append and os.path.exists(fout):
         import tempfile
