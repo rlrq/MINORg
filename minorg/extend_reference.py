@@ -58,7 +58,7 @@ def extract_annotation(fa_aln, sep = '.', attr_mod = {}):
     seqid_cds = [seqid for seqid in seqs if seqid != seqid_ref]
     ## make gene annotation
     gene_annotation = UserAnnotation(seqid_ref, seqid_ref, "gene", attr_mod = attr_mod)
-    gene_annotation.set_range(1, len([c for c in seqs[seqid_ref] if c != '-']))
+    gene_annotation.set_range(0, len([c for c in seqs[seqid_ref] if c != '-']))
     features = [gene_annotation]
     ## make mRNA and CDS annotations
     for seqid in seqid_cds:
