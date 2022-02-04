@@ -1,3 +1,4 @@
+import tempfile
 import itertools
 
 ###################
@@ -76,7 +77,7 @@ def find_identical_in_fasta(query, subject):
     query_rvs = {seqid: seq.reverse_complement() for seqid, seq in query_fwd.items()}
     output = []
     ## find all identical seqs (even overlapping ones)
-    def find_overlapping_multi(query, subject, query_id):
+    def find_overlapping(query, subject, query_id):
         ## Bio.Seq.Seq.find only returns first match. loop until no matches left.
         pos = subject.seq.find(query)
         while pos >= 0:
@@ -89,15 +90,15 @@ def find_identical_in_fasta(query, subject):
             find_overlapping(query_rvs[query_id], subject_seq, query_id)
     ## write to file and parse with SearchIO into generator
     import tempfile
-    tmp_f = mkstemp(suffix = ".tsv")[1]
+    tmp_f = tempfile.mkstemp(suffix = ".tsv")[1]
     with open(tmp_f, 'w') as f:
         for entry in output:
             f.write('\t'.join(map(str, entry)) + '\n')
     from Bio import SearchIO
-    searchio = SearchIO.parse(tmp_f, "blast-tab", fields = "qseqid sseqid sstart send")
+    searchio = list(SearchIO.parse(tmp_f, "blast-tab", fields = "qseqid sseqid sstart send"))
     import os
     os.remove(tmp_f)
-    return list(searchio)
+    return searchio
 
 ## collapses identical sequences (arbitrarily selects a seqid to represent each set)
 ## writes collapsed fasta file and a tsv file mapping identical sequences
