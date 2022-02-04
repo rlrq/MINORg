@@ -196,8 +196,8 @@ Parameter types
 Flags and arguments
 ~~~~~~~~~~~~~~~~~~~
 
-Flags
-+++++
+Flag
+++++
 
 Flags are parameters that do not take values.
 
@@ -221,8 +221,8 @@ In Python, flags are raised by setting the value of their attributes to ``True``
 >>> my_minorg.auto = True ## raise flag for parameter 'auto'
 
 
-Arguments
-+++++++++
+Argument
+++++++++
 
 These parameters take values.
 
@@ -284,12 +284,44 @@ All other parameters are raw values only.
 Multiple values
 ~~~~~~~~~~~~~~~
 
-Comma-separated
-+++++++++++++++
+Comma-separated (CLI)
++++++++++++++++++++++
 
 **CLI**: ``--reference``, ``--cluster``, ``--gene``, ``--indv``
 
 Comma-separated multiple value arguments accept multiple values for a single argument so long as the values are comma-separated. For example, multiple genes can be specified using ``--gene 'geneA,geneB,geneC'``.
+
+
+Multi-argument (CLI)
+++++++++++++++++++++
+
+**CLI**: ``--reference``, ``--cluster``, ``--gene``, ``--indv``, ``--query``, ``--feature``, ``--ext-gene``, ``--ext-cds``, ``--mask-gene``, ``--unmask-gene``, ``--mask-cluster``, ``--unmask-cluster``
+.. , ``--ot-indv`` (not implemented)
+
+Multi-argument parameters accept multiple values by re-using a parameter. For example, multiple genes can be specified using ``--gene geneA --gene geneB --gene geneC``.
+
+(Note that some parameters can be both comma-separated AND multi-argument, and that these features can be combined. For examle, ``--gene geneA --gene geneB,geneC`` is also valid.)
+
+
+Multi-value list (Python)
++++++++++++++++++++++++++
+
+**Python**: ``genes``
+
+Multiple values for a single parameter may be provided to MINORg in a list. For example:
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg()
+>>> my_minorg.genes = ['geneA'] ## specify a single value
+>>> my_minorg.genes = ['geneA', 'geneB', 'geneC'] ## specify multiple values
+
+
+Multi-value dictionary (Python)
++++++++++++++++++++++++++++++++
+
+**Python**: ``query``, ``background``
+
+
 
 
 Parameter descriptions
@@ -298,7 +330,7 @@ Parameter descriptions
 Reference
 ~~~~~~~~~
 
-**Type**: :ref:`Parameters:Arguments`, :ref:`Parameters:2-level lookup`
+**Type**: :ref:`Parameters:Argument`, :ref:`Parameters:2-level lookup`
 
 | **CLI**: ``--reference``
 | **Python**: ``reference``
@@ -317,7 +349,7 @@ TODO: also link to attribute modification section below when describing setting 
 Attribute modification
 ~~~~~~~~~~~~~~~~~~~~~~
 
-**Type**: :ref:`Parameters:Arguments`, :ref:`Parameters:1-level lookup`
+**Type**: :ref:`Parameters:Argument`, :ref:`Parameters:1-level lookup`
 
 | **CLI**: ``--attr-mod``
 | **Python**: NA (see argument ``attr_mod`` of :meth:`~minorg.MINORg.MINORg.add_reference` instead)
@@ -349,7 +381,7 @@ See http://gmod.org/wiki/GFF3 for standard attribute field names (see section ti
 PAM
 ~~~
 
-**Type**: :ref:`Parameters:Arguments`, :ref:`Parameters:Predefined lookup`
+**Type**: :ref:`Parameters:Argument`, :ref:`Parameters:Predefined lookup`
 
 | **CLI**: ``--pam``
 | **Python**: ``pam``

@@ -44,7 +44,7 @@ If you wish to use the default values specified in a config file, use this inste
 
 >>> my_minorg = MINORg(config = '/path/to/config.ini', directory = '/path/to/output/directory', prefix = 'prefix')
 
-You may now set your parameters using the attributes of your :class:`~minorg.MINORg.MINORg` object. For a table listing the equivalent CLI arguments and :class:`~minorg.MINORg.MINORg` attributes, see :ref:`Overview:Parameters`. For example, you can specify executables as such:
+You may now set your parameters using the attributes of your :class:`~minorg.MINORg.MINORg` object. For a table listing the equivalent CLI arguments and :class:`~minorg.MINORg.MINORg` attributes, see :ref:`Parameters:CLI vs Python`. For example, you can specify executables as such:
 
 >>> my_minorg.blastn = '/path/to/blastn/executable'
 >>> my_minorg.rpsblast = '/path/to/rpsblast/executable'
