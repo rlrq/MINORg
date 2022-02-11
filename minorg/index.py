@@ -126,6 +126,8 @@ class IndexedFasta(Fasta):
             super().__init__(fasta, *args, **kwargs)
     def __repr__(self):
         return f"IndexedFasta({self.filename})"
+    def __str__(self):
+        return self.filename
     def get_seq(self, *args, **kwargs) -> Bio.Seq.Seq:
         pyfaidx_seq = super().get_seq(*args, **kwargs)
         return Seq.Seq(pyfaidx_seq.seq)

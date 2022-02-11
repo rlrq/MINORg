@@ -374,6 +374,11 @@ class Masked:
     def start(self): return self.hsp.hit_start
     @property
     def end(self): return self.hsp.hit_end
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__) and other.masked == self.masked and
+                other.molecule == self.molecule and other.start == self.start and other.end == self.end)
+    def __hash__(self):
+        return hash((self.masked, self.molecule, self.start, self.end))
     def within(self, r, index = 0, end_incl = False):
         return within(r, convert_range((self.start, self.end), index_in = 0, index_out = index,
                                        start_incl_in = True, start_incl_out = True,

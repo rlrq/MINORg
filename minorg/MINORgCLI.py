@@ -1044,7 +1044,8 @@ class MINORgCLI (MINORg):
         click.UsageError
             If mutually exclusive arguments or only some of mutually inclusive arguments are used
         """
-        if self.args.screen_reference or self.args.background: self.args.background_check = True
+        if self.args.screen_reference or self.args.background or self.args.ot_indv:
+            self.args.background_check = True
         if standalone:
             if self.args.check_all:
                 self.args.gc_check = self.args.feature_check = self.args.background_check = True
@@ -1112,7 +1113,12 @@ class MINORgCLI (MINORg):
                     self.args.pam = PAM(pam = self.args.pam, gRNA_length = 1)
                 else:
                     self.args.pam = PAM(pam = self.args.pam)
-    
+            if self.args.background:
+                for i, fname in enumerate(self.args.background):
+                    self.add_background(fname, alias = f"bg_{str(i+1).zfill(3)}")
+            if self.args.ot_indv:
+                for indv in self.args.ot_indv:
+                    self.add_background(self.genome_aliases[str(indv)], alias = str(indv))
     
     ##########################
     ##  MULTI-ARGS PARSERS  ##
@@ -1302,7 +1308,7 @@ class MINORgCLI (MINORg):
         self.copy_args("pam", "blastn", "mafft", "thread",
                        "mask",
                        "gc_min", "gc_max",
-                       "background", "ot_mismatch", "ot_gap", "ot_pamless", "screen_reference",
+                       "ot_mismatch", "ot_gap", "ot_pamless", "screen_reference",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
@@ -1350,7 +1356,7 @@ class MINORgCLI (MINORg):
                        "minid", "mincdslen", "check_id_before_merge", "merge_within",
                        "pam", "target", "length", ## gRNA generation
                        "gc_min", "gc_max", ## filtering options
-                       "background", "ot_mismatch", "ot_gap", "ot_pamless", "screen_reference",
+                       "ot_mismatch", "ot_gap", "ot_pamless", "screen_reference",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction",
                        "sets", "auto") ## minimum set options
         return

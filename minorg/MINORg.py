@@ -1357,9 +1357,9 @@ class MINORg (PathHandler):
         ## mask function
         def _mask_identical(alias_subject):
             fnames = [IndexedFasta(subject).filename for subject in assign_alias(alias_subject).values()]
-            return {subject: tuple(itertools.chain(*[mask_identical(str(mask_fname), subject, tmp_f,
-                                                                    blastn = self.blastn)
-                                                     for mask_fname in mask_fnames if mask_fname]))
+            return {subject: tuple(set(itertools.chain(*[mask_identical(str(mask_fname), subject, tmp_f,
+                                                                        blastn = self.blastn)
+                                                         for mask_fname in mask_fnames if mask_fname])))
                     for subject in fnames}
         ## mask in reference
         ## (we don't use ranges of self.genes directly because some genes may be identical
@@ -1381,7 +1381,7 @@ class MINORg (PathHandler):
             fout (str): required, path to output file
         """
         with open(fout, 'w') as f:
-            inv_fnames = {fname: alias for alias, fname in
+            inv_fnames = {str(fname): alias for alias, fname in
                           {**{alias: ref.fasta for alias, ref in self.reference.items()},
                            **self.query,
                            **assign_alias(self.background)}.items()}
@@ -1561,6 +1561,7 @@ class MINORg (PathHandler):
                              *([self.ref_gene] if mask_reference and self.genes else []),
                              *self.mask,
                              *other_mask_fnames)
+        self.write_mask_report(self.results_fname("masked.txt"))
         excl_seqid = set()
         def get_excl_seqids(alias_ifasta, descr = None):
             output = set()
