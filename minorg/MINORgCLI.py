@@ -1129,6 +1129,8 @@ class MINORgCLI (MINORg):
                     if INDV_GENOMES_REF in expanded_indv:
                         expanded_indv -= {INDV_GENOMES_REF}
                         self.screen_reference = True
+                    if INDV_GENOMES_NONE in expanded_indv:
+                        expanded_indv -= {INDV_GENOMES_NONE}
                 elif REFERENCED_NONE in self.args.ot_indv:
                     expanded_indv -= {REFERENCED_NONE}
                     expanded_indv -= set(self.args.indv)

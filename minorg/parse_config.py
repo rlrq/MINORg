@@ -384,7 +384,7 @@ class Params():
         self.cluster = Param(None, "-c", "--cluster",
                              description = "comma-separated cluster alias(es)",
                              alias_value_description = "cluster members")
-        self.indv = Param(["none"], "-i", "--indv",
+        self.indv = Param([INDV_GENOMES_NONE], "-i", "--indv",
                           # "-a", "--acc",
                           autocompletion = generate_autocompletion("indv",
                                                                    [(INDV_GENOMES_REF, "<reference genome>")] +
