@@ -4,10 +4,8 @@ import sys
 import itertools
 from Bio.Seq import Seq
 
-from minorg.functions import (
-    splitlines,
-    fasta_to_dict, dict_to_fasta
-)
+from minorg.functions import splitlines
+from minorg.fasta import fasta_to_dict, dict_to_fasta
 
 from minorg.grna import gRNAHits
 

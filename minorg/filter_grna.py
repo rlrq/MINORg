@@ -2,17 +2,19 @@ import os
 import itertools
 import regex as re
 
-from Bio import SeqIO, SearchIO
+from Bio import SeqIO
 from pathlib import Path
 
 from minorg.functions import (
-    assign_alias, blast,
+    assign_alias,
     within_any, gc_content,
-    fasta_to_dict, dict_to_fasta, find_identical_in_fasta,
     tsv_entries_as_dict, prepend,
     ranges_union, ranges_to_pos, ranges_subtract, ranges_intersect, within, convert_range,
     adjusted_feature_ranges, adjusted_pos
 )
+
+from minorg.fasta import fasta_to_dict, dict_to_fasta, find_identical_in_fasta
+from minorg.blast import blast, searchio_parse
 
 from minorg.index import IndexedFasta
 from minorg.annotation import GFF
@@ -166,7 +168,7 @@ def filter_background_gen(gRNA_hits, fasta_grna, fasta_target, fasta_background 
         blast(NcbiblastnCommandline, header = blast_output_header, fout = fout_fname, outfmt = 5,
               query = fasta_query, subject = fasta_subject, cmd = blastn, task = "blastn-short")
         return set(hsp.query_id
-                   for query_result in SearchIO.parse(fout_fname, "blast-xml")
+                   for query_result in searchio_parse(fout_fname, "blast-xml")
                    for hit in query_result for hsp in hit.hsps
                    if exclude(query_result, hsp))
     ## run blast to identify gRNA hits in background
@@ -432,9 +434,8 @@ def blast_mask(to_mask_fname, fasta_fname, fout_fname, blastn = "blastn",
     blast(NcbiblastnCommandline, cmd = blastn, header = header, fout = fout_fname, task = "megablast",
           query = to_mask_fname, subject = fasta_fname)
     ## get perfect matches
-    from Bio import SearchIO
     masked = [Masked(hsp)
-              for query_result in SearchIO.parse(fout_fname, "blast-tab", fields = ' '.join(header))
+              for query_result in searchio_parse(fout_fname, "blast-tab", fields = ' '.join(header))
               for hit in query_result for hsp in hit.hsps
               if is_to_mask(query_result, hsp)]
     return masked

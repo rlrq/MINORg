@@ -3,10 +3,13 @@ import itertools
 from typing import Union
 
 from minorg.functions import (
-    fasta_to_dict,
-    dict_to_fasta,
     gc_content,
     splitlines
+)
+
+from minorg.fasta import (
+    fasta_to_dict,
+    dict_to_fasta
 )
 
 ####################

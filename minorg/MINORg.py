@@ -19,7 +19,7 @@ import warnings
 import itertools
 import tempfile
 import regex as re
-from Bio import SearchIO, Seq
+from Bio import Seq
 
 from minorg.log import MINORgLogger
 
@@ -53,11 +53,14 @@ from minorg.functions import (
     cat_files,
     non_string_iter,
     assign_alias,
-    blast,
     adjusted_feature_ranges,
     ranges_union,
     ranges_intersect,
     ranges_subtract
+)
+from minorg.blast import (
+    blast,
+    searchio_parse
 )
 from minorg.generate_grna import find_multi_gRNA
 from minorg.fasta import dict_to_fasta, fasta_to_dict
@@ -68,6 +71,7 @@ from minorg.pam import PAM
 from typing import Optional, Type, Dict
 
 LOGGING_LEVEL = logging.DEBUG
+
 
 #######################
 ##  PARSE FUNCTIONS  ##
@@ -1526,7 +1530,7 @@ class MINORg (PathHandler):
               # mt_mode = (0 if self.thread == 1 else 1),
               num_threads = self.thread)
         offtarget = set(hsp.query_id
-                        for query_result in SearchIO.parse(fout, "blast-xml")
+                        for query_result in searchio_parse(fout, "blast-xml")
                         for hit in query_result for hsp in hit
                         if self.is_offtarget_hit(hsp, query_result, fasta_subject))
         if not keep_output: os.remove(fout)

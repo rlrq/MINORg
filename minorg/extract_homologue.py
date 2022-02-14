@@ -17,16 +17,22 @@ from minorg.functions import (
     write_table,
     splitlines,
     cat_files,
+    imap_progress,
+    make_local_print,
+    num_lines
+)
+
+from minorg.fasta import (
     fasta_to_dict,
     dict_to_fasta,
-    extract_ranges,
-    imap_progress,
+    extract_ranges
+)
+
+from minorg.blast import (
     BlastResult,
     blast,
     blast6,
-    blast6multi,
-    make_local_print,
-    num_lines
+    blast6multi
 )
 
 from minorg.annotation import (

@@ -1,6 +1,8 @@
 import tempfile
 import itertools
 
+from minorg.blast import searchio_parse
+
 ###################
 ##  FASTA_MANIP  ##
 ###################
@@ -94,8 +96,7 @@ def find_identical_in_fasta(query, subject):
     with open(tmp_f, 'w') as f:
         for entry in output:
             f.write('\t'.join(map(str, entry)) + '\n')
-    from Bio import SearchIO
-    searchio = list(SearchIO.parse(tmp_f, "blast-tab", fields = "qseqid sseqid sstart send"))
+    searchio = list(searchio_parse(tmp_f, "blast-tab", fields = "qseqid sseqid sstart send"))
     import os
     os.remove(tmp_f)
     return searchio

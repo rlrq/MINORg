@@ -35,9 +35,9 @@ from minorg.parse_config import (
 )
 from minorg.grna import gRNAHits
 from minorg.pam import PAM
+from minorg.fasta import fasta_to_dict
 from minorg.functions import (
     get_count_dict,
-    fasta_to_dict,
     non_string_iter
 )
 
@@ -1116,6 +1116,10 @@ class MINORgCLI (MINORg):
                     self.add_background(fname, alias = f"bg_{str(i+1).zfill(3)}")
             if self.args.ot_indv:
                 expanded_indv = set()
+                if standalone and (REFERENCED_ALL in self.args.ot_indv or REFERENCED_NONE in self.args.ot_indv):
+                    raise MessageError( (f"ERROR: '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                         " are not valid for --ot-indv if using subcommand filter"
+                                         " as standalone") )
                 if REFERENCED_ALL in self.args.ot_indv and REFERENCED_NONE in self.args.ot_indv:
                     raise MessageError( (f"ERROR: '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
                                          " are mutually exclusive for --ot-indv") )
@@ -1312,6 +1316,7 @@ class MINORgCLI (MINORg):
         """
         Parse and check arguments for subcommand filter.
         """
+        self.copy_args("screen_reference") ## may be modified by check_filter_args based on --ot-indv
         self.check_reference_args()
         self.check_filter_args(standalone = True)
         self.parse_genes_for_filter()
@@ -1321,7 +1326,7 @@ class MINORgCLI (MINORg):
         self.copy_args("pam", "blastn", "mafft", "thread",
                        "mask",
                        "gc_min", "gc_max",
-                       "ot_mismatch", "ot_gap", "ot_pamless", "screen_reference",
+                       "ot_mismatch", "ot_gap", "ot_pamless",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
@@ -1350,6 +1355,7 @@ class MINORgCLI (MINORg):
         """
         Parse and check arguments for full programme.
         """
+        self.copy_args("screen_reference") ## may be modified by check_filter_args based on --ot-indv
         self.check_reference_args()
         self.check_seq_args(standalone = False)
         self.check_grna_args(standalone = False)
@@ -1369,7 +1375,7 @@ class MINORgCLI (MINORg):
                        "minid", "mincdslen", "check_id_before_merge", "merge_within",
                        "pam", "target", "length", ## gRNA generation
                        "gc_min", "gc_max", ## filtering options
-                       "ot_mismatch", "ot_gap", "ot_pamless", "screen_reference",
+                       "ot_mismatch", "ot_gap", "ot_pamless",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction",
                        "sets", "auto") ## minimum set options
         return

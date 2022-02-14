@@ -2,7 +2,8 @@ import os
 import re
 import itertools
 from minorg.exceptions import InvalidPath
-from minorg.functions import fasta_to_dict, dict_to_fasta, non_string_iter
+from minorg.functions import non_string_iter
+from minorg.fasta import fasta_to_dict, dict_to_fasta
 from minorg.mafftcommandline_add import MafftCommandline
 
 def get_recursively(d, default, *keys):

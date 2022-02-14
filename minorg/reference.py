@@ -12,8 +12,6 @@ from Bio import Seq
 from minorg.exceptions import MessageError
 
 from minorg.functions import (
-    BlastNR,
-    filter_rpsblast_for_domain,
     is_range,
     convert_range,
     ranges_to_pos,
@@ -24,6 +22,11 @@ from minorg.functions import (
     empty_file,
     parse_get_data,
     write_tsv
+)
+
+from minorg.blast import (
+    BlastNR,
+    filter_rpsblast_for_domain
 )
 
 from minorg.fasta import (
