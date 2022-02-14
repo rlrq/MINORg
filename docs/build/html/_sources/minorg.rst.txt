@@ -7,6 +7,7 @@ API documentation
    minorg.MINORg
    minorg.MINORgCLI
    minorg.annotation
+   minorg.blast
    minorg.constants
    minorg.display
    minorg.dynamic_logger

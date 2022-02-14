@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration &mdash; MINORg 0.1 documentation</title>
+  <title>3. Configuration &mdash; MINORg 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="tutorial.html" />
-    <link rel="prev" title="Overview" href="overview.html" /> 
+    <link rel="next" title="4. Tutorial" href="tutorial.html" />
+    <link rel="prev" title="2. Overview" href="overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,30 +38,30 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#config-file">config file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#alias-lookups">Alias lookups</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#level-lookup">1-level lookup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">2-level lookup</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#alternative-parameters">Alternative parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#config-file">3.1. config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#alias-lookups">3.2. Alias lookups</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#level-lookup">3.2.1. 1-level lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">3.2.2. 2-level lookup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#parameters">3.2.2.1. Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alternative-parameters">3.2.2.2. Alternative parameters</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#level-lookup-file-formats">2-level lookup file formats</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cluster">cluster</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#genome">genome</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#reference">reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#level-lookup-file-formats">3.2.3. 2-level lookup file formats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cluster">3.2.3.1. cluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#genome">3.2.3.2. genome</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference">3.2.3.3. reference</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">4. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">5. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">6. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -81,7 +81,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Configuration</li>
+      <li><span class="section-number">3. </span>Configuration</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/configuration.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,10 +92,10 @@
            <div itemprop="articleBody">
              
   <section id="configuration">
-<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h1>
+<h1><span class="section-number">3. </span>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h1>
 <p>Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your operating system.</p>
 <section id="config-file">
-<h2>config file<a class="headerlink" href="#config-file" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">3.1. </span>config file<a class="headerlink" href="#config-file" title="Permalink to this headline"></a></h2>
 <p>The config.ini file is used for two main purposes: setting default values and assigning short aliases to long values. All entries in the config.ini file that end with ‘alias’ or ‘sets’ are used to assign aliases, while the rest are for setting default values. Use the following to export the config file location as an environment variable:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">MINORG_CONFIG</span><span class="o">=</span>/path/to/config.ini
 </pre></div>
@@ -103,10 +103,10 @@
 <p>If you’d like the config file to apply to all users, consider setting it globally.</p>
 </section>
 <section id="alias-lookups">
-<h2>Alias lookups<a class="headerlink" href="#alias-lookups" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">3.2. </span>Alias lookups<a class="headerlink" href="#alias-lookups" title="Permalink to this headline"></a></h2>
 <p>There are two types of alias lookups in MINORg: 1-level lookups and 2-level lookups.</p>
 <section id="level-lookup">
-<h3>1-level lookup<a class="headerlink" href="#level-lookup" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">3.2.1. </span>1-level lookup<a class="headerlink" href="#level-lookup" title="Permalink to this headline"></a></h3>
 <p>1-level lookups are defined directly in the config file. Parameters that use 1-level lookups are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--assembly</span></code></p></li>
@@ -165,7 +165,7 @@ presets</p></td>
 <p>As with the above parameters, you can use <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">TIR</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">366714</span></code> (although either way is acceptable). Do note, however, that if you use <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">TIR</span></code>, newly generate file and sequence names will use <code class="docutils literal notranslate"><span class="pre">TIR</span></code> instead of <code class="docutils literal notranslate"><span class="pre">366714</span></code> if the domain is to be included in the name.</p>
 </section>
 <section id="id1">
-<h3>2-level lookup<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">3.2.2. </span>2-level lookup<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
 <p>2-level lookups are defined using a file that maps aliases to values. This means that there is a first layer of lookup that maps aliases to those files, and then a second layer of lookup in those files that maps aliases to values. Parameters that use 2-level lookups are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--reference</span></code></p></li>
@@ -221,7 +221,7 @@ araha1<span class="p">;</span>ahalleri1     /path/to/subset_ref_Araha1.fasta    
 </div>
 <p>Note that you can also provide an alias mapping file that is not in the config file to MINORg by specifying the path to the file instead of using a non-existent alias (e.g. <code class="docutils literal notranslate"><span class="pre">--reference-set</span> <span class="pre">/path/to/arabidopsis_genomes.txt</span></code>).</p>
 <section id="parameters">
-<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">3.2.2.1. </span>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h4>
 <p>The same logic applies as well to <code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">set</span></code> (<code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code>-<code class="docutils literal notranslate"><span class="pre">--cluster</span></code>-<code class="docutils literal notranslate"><span class="pre">--clusters</span></code>) and <code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">sets</span></code>-<code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">set</span></code> (<code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>-<code class="docutils literal notranslate"><span class="pre">--indv</span></code>-<code class="docutils literal notranslate"><span class="pre">--genomes</span></code>), with the caveat that there is no option to set default clusters or query genomes.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -271,7 +271,7 @@ araha1<span class="p">;</span>ahalleri1     /path/to/subset_ref_Araha1.fasta    
 </table>
 </section>
 <section id="alternative-parameters">
-<h4>Alternative parameters<a class="headerlink" href="#alternative-parameters" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">3.2.2.2. </span>Alternative parameters<a class="headerlink" href="#alternative-parameters" title="Permalink to this headline"></a></h4>
 <p>Do note that, because of the nature of these lookups, you cannot simply provide the value(s) mapped to an alias to <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>. If the desired files/genes are not specified in any mapping file, you will have to use the following alternatives:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -308,9 +308,9 @@ modiication&gt;*</p></td>
 </section>
 </section>
 <section id="level-lookup-file-formats">
-<h3>2-level lookup file formats<a class="headerlink" href="#level-lookup-file-formats" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">3.2.3. </span>2-level lookup file formats<a class="headerlink" href="#level-lookup-file-formats" title="Permalink to this headline"></a></h3>
 <section id="cluster">
-<h4>cluster<a class="headerlink" href="#cluster" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">3.2.3.1. </span>cluster<a class="headerlink" href="#cluster" title="Permalink to this headline"></a></h4>
 <p>The lookup files specified in <code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">sets</span></code> should look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RPS4</span><span class="p">;</span><span class="n">TTR1</span><span class="p">;</span><span class="n">RPS4_TTR1</span>   <span class="n">AT5G45050</span><span class="p">,</span><span class="n">AT5G45060</span><span class="p">,</span><span class="n">AT5G45200</span><span class="p">,</span><span class="n">AT5G45210</span><span class="p">,</span><span class="n">AT5G45220</span><span class="p">,</span><span class="n">AT5G45230</span><span class="p">,</span><span class="n">AT5G45240</span><span class="p">,</span><span class="n">AT5G45250</span>
 <span class="n">RPS6</span>  <span class="n">AT5G46260</span><span class="p">,</span><span class="n">AT5G46270</span><span class="p">,</span><span class="n">AT5G46450</span><span class="p">,</span><span class="n">AT5G46470</span><span class="p">,</span><span class="n">AT5G46490</span><span class="p">,</span><span class="n">AT5G46510</span><span class="p">,</span><span class="n">AT5G46520</span>
@@ -323,7 +323,7 @@ modiication&gt;*</p></td>
 </ul>
 </section>
 <section id="genome">
-<h4>genome<a class="headerlink" href="#genome" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">3.2.3.2. </span>genome<a class="headerlink" href="#genome" title="Permalink to this headline"></a></h4>
 <p>The lookup files specified in <code class="docutils literal notranslate"><span class="pre">genome</span> <span class="pre">sets</span></code> should look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9654</span>  <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_9654</span><span class="o">.</span><span class="n">fasta</span>
 <span class="mi">9655</span>  <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_9655</span><span class="o">.</span><span class="n">fasta</span>
@@ -338,7 +338,7 @@ modiication&gt;*</p></td>
 </ul>
 </section>
 <section id="reference">
-<h4>reference<a class="headerlink" href="#reference" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">3.2.3.3. </span>reference<a class="headerlink" href="#reference" title="Permalink to this headline"></a></h4>
 <p>For ease of reference, the format for reference lookup files specified in <code class="docutils literal notranslate"><span class="pre">reference</span> <span class="pre">sets</span></code> is reproduced here:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tair10</span><span class="p">;</span><span class="n">TAIR10</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_ref_TAIR10</span><span class="o">.</span><span class="n">fasta</span>        <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_ref_TAIR10</span><span class="o">.</span><span class="n">gff</span>  <span class="mi">1</span>
 <span class="n">araport11</span>     <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_ref_Araport11</span><span class="o">.</span><span class="n">fasta</span>     <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_ref_Araport11</span><span class="o">.</span><span class="n">gff</span>       <span class="mi">1</span>
@@ -361,8 +361,8 @@ modiication&gt;*</p></td>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="overview.html" class="btn btn-neutral float-left" title="2. Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="4. Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

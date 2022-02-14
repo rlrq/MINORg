@@ -11,6 +11,7 @@ Module contents
 
 .. toctree::
    :maxdepth: 3
+   :numbered:
 
    install
    overview

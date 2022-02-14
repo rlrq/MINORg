@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 <ul class="current">
@@ -101,7 +102,7 @@
 <span id="minorg-index-module"></span><h1>minorg.index module<a class="headerlink" href="#module-minorg.index" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.index.IndexedFasta">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.index.</span></span><span class="sig-name descname"><span class="pre">IndexedFasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/index.py#L116-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.index.IndexedFasta" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.index.</span></span><span class="sig-name descname"><span class="pre">IndexedFasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fasta</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/index.py#L116-L136"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.index.IndexedFasta" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyfaidx.Fasta</span></code></p>
 <p>pyfaidx.Fasta class object wrapped to return Bio.Seq.Seq when sliced.</p>
 <dl class="py method">
@@ -113,7 +114,7 @@ filename: name of fasta file</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.index.IndexedFasta.get_seq">
-<span class="sig-name descname"><span class="pre">get_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Bio.Seq.Seq</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/index.py#L129-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.index.IndexedFasta.get_seq" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Bio.Seq.Seq</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/index.py#L131-L133"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.index.IndexedFasta.get_seq" title="Permalink to this definition"></a></dt>
 <dd><p>Return a sequence by record name and interval [start, end).</p>
 <p>Coordinates are 1-based, end-exclusive.
 If rc is set, reverse complement will be returned.</p>
@@ -121,7 +122,7 @@ If rc is set, reverse complement will be returned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.index.IndexedFasta.get_spliced_seq">
-<span class="sig-name descname"><span class="pre">get_spliced_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Bio.Seq.Seq</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/index.py#L132-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.index.IndexedFasta.get_spliced_seq" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_spliced_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Bio.Seq.Seq</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/index.py#L134-L136"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.index.IndexedFasta.get_spliced_seq" title="Permalink to this definition"></a></dt>
 <dd><p>Return a sequence by record name and list of intervals</p>
 <p>Interval list is an iterable of [start, end].
 Coordinates are 1-based, end-exclusive.

@@ -244,6 +244,8 @@ These parameters take values.
 Alias lookup
 ~~~~~~~~~~~~
 
+Note that aliases are **case-sensitive**.
+
 1-level lookup
 ++++++++++++++
 
@@ -376,6 +378,41 @@ Examples:
     'id' is the non-standard field name for the field 'ID' for all feature types.
 
 See http://gmod.org/wiki/GFF3 for standard attribute field names (see section titled ‘Column 9: “attributes”’).
+
+
+Extended genome
+~~~~~~~~~~~~~~~
+
+**Type**: :ref:`Parameters:Argument`, :ref:`Parameters:Raw values`, :ref:`Parameters:Multi-argument (CLI)`, :ref:`Parameters:Multi-value list (Python)`
+
+| **CLI**: ``--extend-gene``, ``--extend-cds``
+| **Python**: ``ext_gene``, ``ext_cds``
+
+These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (``--extend-gene``, ``ext_gene``) and CDS-only (``--extend-cds``, ``ext_cds``) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries, and these genes will be added to the reference genome **and you can use their gene IDs as you would reference gene IDs**. You may provide multiple files to each parameters--MINORg will process them all simultaneously.
+
+For MINORg to map the CDS-only sequences to the correct gene sequences, CDS-only sequences should be named according to the the format: '<gene ID>.<CDS ID>'
+
+For example, given the following CDS sequences::
+
+  >geneA.1
+  ATGATGATGATGATGATGATGATGTAA
+  >geneA.two
+  ATGATGATGATGATGATGATGTAA
+  >geneA.foo.bar
+  ATGATGATGATGATGATGTAA
+  >geneB.1
+  ATGAAAAAAAAAAAAAAAAAATAA
+
+And the following gene sequences::
+
+  >geneA
+  ATGATGATGATGATGATGATGATGTAA
+  >geneA.foo
+  ATGATGATGATGATGATGATGATGTAA
+  >geneB
+  ATGAAAAAAAAAAAAAAAAAAAAAAAATAA
+
+CDS sequences ``geneA.1`` and ``geneA.two`` will be mapped to gene sequence ``geneA``, ``geneA.foo.bar`` will be mapped to ``geneA.foo``, and ``geneB.1`` will be mapped to ``geneB``. Note that ``geneA.1`` and ``geneA.two`` will be treated as different isoforms of the gene ``geneA``. 
 
 
 PAM
