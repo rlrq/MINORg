@@ -1357,6 +1357,7 @@ class MINORg (PathHandler):
         ## mask function
         def _mask_identical(alias_subject):
             fnames = [IndexedFasta(subject).filename for subject in assign_alias(alias_subject).values()]
+            fnames = [fname for fname in fnames if fname not in self.masked] ## avoid repeats
             return {subject: tuple(set(itertools.chain(*[mask_identical(str(mask_fname), subject, tmp_f,
                                                                         blastn = self.blastn)
                                                          for mask_fname in mask_fnames if mask_fname])))

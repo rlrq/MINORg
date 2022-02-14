@@ -481,7 +481,7 @@ class Params():
                                                       " individuals passed to '-i'."
                                                       f" '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
                                                       " can be used in combination with genome aliases."
-                                                      f" (E.g. '--bg-indv {REFERENCED_NONE},HeLa')")})
+                                                      f" (E.g. '--ot-indv {REFERENCED_NONE},HeLa')")})
         self.exclude = Param(None, "-e", "--exclude") ## fname
         self.gc_min = Param(get_val_default(get_filter("GC minimum", type = float), 0.3), "--gc-min",
                             help = ( "minimum GC content (inclusive),"

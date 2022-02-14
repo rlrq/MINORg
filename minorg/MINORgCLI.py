@@ -840,10 +840,8 @@ class MINORgCLI (MINORg):
             if self.args.reference:
                 typer.echo("As --assembly and --annotation are used, --reference will be ignored.")
             self.clear_reference()
-            self.add_reference("Reference", os.path.abspath(assembly), os.path.abspath(ann_mapped),
+            self.add_reference("Reference", str(self.args.assembly), str(self.args.annotation),
                                genetic_code = self.args.genetic_code, attr_mod = self.args.attr_mod)
-            self.args.assembly = assembly_mapped
-            self.args.annotation = annotation_mapped
         elif self.args.reference:
             none_val = '-'
             valid_aliases(aliases = self.args.reference, lookup = self.reference_aliases,
@@ -1117,7 +1115,22 @@ class MINORgCLI (MINORg):
                 for i, fname in enumerate(self.args.background):
                     self.add_background(fname, alias = f"bg_{str(i+1).zfill(3)}")
             if self.args.ot_indv:
-                for indv in self.args.ot_indv:
+                expanded_indv = set()
+                if REFERENCED_ALL in self.args.ot_indv and REFERENCED_NONE in self.args.ot_indv:
+                    raise MessageError( (f"ERROR: '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                         " are mutually exclusive for --ot-indv") )
+                if REFERENCED_ALL in self.args.ot_indv:
+                    expanded_indv -= {REFERENCED_ALL}
+                    expanded_indv |= set(self.args.indv)
+                    if INDV_GENOMES_REF in expanded_indv:
+                        expanded_indv -= {INDV_GENOMES_REF}
+                        self.screen_reference = True
+                elif REFERENCED_NONE in self.args.ot_indv:
+                    expanded_indv -= {REFERENCED_NONE}
+                    expanded_indv -= set(self.args.indv)
+                for indv in expanded_indv:
+                    if str(indv) not in self.genome_aliases:
+                        raise MessageError(f"Unknown genome alias: '{indv}'")
                     self.add_background(self.genome_aliases[str(indv)], alias = str(indv))
     
     ##########################
