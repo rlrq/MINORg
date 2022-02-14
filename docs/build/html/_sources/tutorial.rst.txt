@@ -145,7 +145,7 @@ If you would like MINORg to infer homologues genes in non-reference genomes, you
 
 Using ``--indv``
 ****************
-See also: :ref:`Parameters:Reference`, :ref:`Configuration:2-level lookup`, :ref:`Parameters:Comma-separated (CLI)`, :ref:`Parameters:Multi-argument (CLI)`
+See also: :ref:`Configuration:2-level lookup`, :ref:`Parameters:Comma-separated (CLI)`, :ref:`Parameters:Multi-argument (CLI)`
 
 You can also use ``--indv`` to ask MINORg to infer homologues genes in non-reference genomes. Similar to ``--clusters``, MINORg accepts a lookup file for non-reference genomes using ``--genome-set`` (see :ref:`Configuration:genome` for format) and one or more non-reference genome alias using ``--indv``.
 
