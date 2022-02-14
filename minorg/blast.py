@@ -11,7 +11,8 @@ import warnings
 def searchio_parse(*args, **kwargs):
     def generator():
         with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", "Parsing BLAST plain text output file is not a well supported functionality anymore. Consider generating your BLAST output for parsing as XML or tabular format instead.")
+            if args[1] in {"blast-xml", "blast-tab"}:
+                warnings.filterwarnings("ignore", "Parsing BLAST plain text output file is not a well supported functionality anymore. Consider generating your BLAST output for parsing as XML or tabular format instead.")
             for x in SearchIO.parse(*args, **kwargs):
                 yield x
     return generator()
