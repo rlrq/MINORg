@@ -58,7 +58,7 @@ Using the following will print a help page that lists common parameters and vali
 Aliases
 ~~~~~~~
 
-Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, ``--reference TAIR10`` can be used in place of ``--assembly /path/to/TAIR10.fasta --annotation /path/to/TAIR10.gff3``, and ``--indv ler1`` can be used in place of ``--query /path/to/ler1.fasta``. For details on how to set up a config.ini file, see :ref:`Configuration:Configuration` in the :ref:`Tutorial:Tutorial` section.
+Using a config.ini file, the command line version of MINORg allows users to supply short aliases in place of file names and/or combinations of parameters, as well as set default values for some parameters (such as the reference genome). For example, with the appropriate config.ini setup and lookup files, ``--reference TAIR10`` can be used in place of ``--assembly /path/to/TAIR10.fasta --annotation /path/to/TAIR10.gff3``, and ``--indv ler1`` can be used in place of ``--query /path/to/ler1.fasta``. For details on how to set up a config.ini file, see :ref:`Configuration:Configuration`.
 
 
 

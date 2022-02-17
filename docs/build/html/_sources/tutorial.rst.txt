@@ -91,7 +91,7 @@ MINORg can also accept preset combinations of genes using ``--cluster`` and ``--
             --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
-is effectively identical to the examples in :ref:`Tutorial:Multiple genes`.
+The above code snippet is effectively identical to the examples in :ref:`Tutorial:Multiple genes`.
 
 Like ``--gene``, multiple combinations of genes can be specified to ``--cluster``. However, unlike ``--gene``, each combination will be processed separately (i.e. minimum sets will be separately generated for each combination).
 
@@ -168,10 +168,47 @@ Similar to ``--clusters`` and ``--indv``, MINORg accepts a lookup file for refer
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example07 --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 \
+   $ minorg --directory ./example07 \
+            --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 \
             --reference-set ./arabidosis_genomes.txt --reference tair10,araly2,araha1
 
 In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.
+
+Non-standard reference
+++++++++++++++++++++++
+
+Non-standard genetic code
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When using ``--domain``, users should ensure that the correct genetic code is specified, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi for genetic code numbers and names.
+
+.. code-block:: bash
+
+   $ minorgpy --directory ./example08 \
+              --indv ref --gene gene-Q0275 \
+              --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
+              --domain 366140 --genetic-code 3
+
+In the above example, the gene 'gene-Q0275' is a yeast mitochondrial gene, and ``--domain 366140`` specifies the PSSM-Id for the COX3 domain in the Cdd v3.18 RPS-BLAST database. The genetic code number for yeast mitochondrial code is '3'.
+
+As a failsafe, MINORg does not terminate translated peptide sequences at the first stop codon. This ensures that any codons after an incorrectly translated premature stop codon will still be translated. Typically, a handful of mistranslated codons can still result in the correct RPS-BLAST domain hits, although hit scores may be slightly lower. Nevertheless, to ensure maximum accuracy, the correct genetic code is preferred.
+
+
+Non-standard GFF3 attribute field names
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+See also: :ref:`Parameters:Attribute modification`
+
+MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene).
+
+.. code-block:: bash
+
+   $ minorgpy --directory ./example09 \
+              --indv ref --gene Os01t0100100 \
+              --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
+              --attr-mod 'mRNA:Parent=Locus_id'
+
+The IRGSP 1.0 reference genome for rice (*Oryza sativa* subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of 'Parent', which is the name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation uses 'Locus_id'. You may specify the non-standard name mappings using ``--attr-mod`` (for 'attribute modification'). See :ref:`Parameters:Attribute modification` for more details on how to format the input to ``--attr-mod``.
+
 
 Python package
 --------------

@@ -48,6 +48,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#reference-gene-s-as-targets">4.1.1.2. Reference gene(s) as targets</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#non-reference-genes-as-targets">4.1.1.3. Non-reference genes as targets</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiple-reference-genomes">4.1.1.4. Multiple reference genomes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-reference">4.1.1.5. Non-standard reference</a></li>
 </ul>
 </li>
 </ul>
@@ -158,7 +159,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 </pre></div>
 </div>
-<p>is effectively identical to the examples in <a class="reference internal" href="#multiple-genes"><span class="std std-ref">Multiple genes</span></a>.</p>
+<p>The above code snippet is effectively identical to the examples in <a class="reference internal" href="#multiple-genes"><span class="std std-ref">Multiple genes</span></a>.</p>
 <p>Like <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, multiple combinations of genes can be specified to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>. However, unlike <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, each combination will be processed separately (i.e. minimum sets will be separately generated for each combination).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_03 <span class="se">\</span>
          --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt
@@ -218,11 +219,39 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <h4><span class="section-number">4.1.1.4. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a>, <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a>, <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>Similar to <code class="docutils literal notranslate"><span class="pre">--clusters</span></code> and <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, MINORg accepts a lookup file for reference genomes using <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code> and one or more reference genome alias using <code class="docutils literal notranslate"><span class="pre">--reference</span></code>. See <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a> for a more comprehensive overview.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example07 --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example07 <span class="se">\</span>
+         --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 <span class="se">\</span>
          --reference-set ./arabidosis_genomes.txt --reference tair10,araly2,araha1
 </pre></div>
 </div>
 <p>In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.</p>
+</section>
+<section id="non-standard-reference">
+<h4><span class="section-number">4.1.1.5. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h4>
+<section id="non-standard-genetic-code">
+<h5><span class="section-number">4.1.1.5.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h5>
+<p>When using <code class="docutils literal notranslate"><span class="pre">--domain</span></code>, users should ensure that the correct genetic code is specified, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a> for genetic code numbers and names.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example08 <span class="se">\</span>
+           --indv ref --gene gene-Q0275 <span class="se">\</span>
+           --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff <span class="se">\</span>
+           --domain <span class="m">366140</span> --genetic-code <span class="m">3</span>
+</pre></div>
+</div>
+<p>In the above example, the gene ‘gene-Q0275’ is a yeast mitochondrial gene, and <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">366140</span></code> specifies the PSSM-Id for the COX3 domain in the Cdd v3.18 RPS-BLAST database. The genetic code number for yeast mitochondrial code is ‘3’.</p>
+<p>As a failsafe, MINORg does not terminate translated peptide sequences at the first stop codon. This ensures that any codons after an incorrectly translated premature stop codon will still be translated. Typically, a handful of mistranslated codons can still result in the correct RPS-BLAST domain hits, although hit scores may be slightly lower. Nevertheless, to ensure maximum accuracy, the correct genetic code is preferred.</p>
+</section>
+<section id="non-standard-gff3-attribute-field-names">
+<h5><span class="section-number">4.1.1.5.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h5>
+<p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
+<p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example09 <span class="se">\</span>
+           --indv ref --gene Os01t0100100 <span class="se">\</span>
+           --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff <span class="se">\</span>
+           --attr-mod <span class="s1">&#39;mRNA:Parent=Locus_id&#39;</span>
+</pre></div>
+</div>
+<p>The IRGSP 1.0 reference genome for rice (<em>Oryza sativa</em> subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of ‘Parent’, which is the name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation uses ‘Locus_id’. You may specify the non-standard name mappings using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’). See <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a> for more details on how to format the input to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>.</p>
+</section>
 </section>
 </section>
 </section>
