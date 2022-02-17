@@ -1,0 +1,28 @@
+chromA	irgsp1_rep	exon	83	368	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	five_prime_UTR	83	368	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_locus	gene	83	7915	.	+	.	ID=Os01g0100100;Name=Os01g0100100;Note=RabGAP/TBC	domain	containing	protein.	(Os01t0100100-01);Transcript	variants=Os01t0100100-01
+chromA	irgsp1_rep	mRNA	83	7915	.	+	.	ID=Os01t0100100-01;Name=Os01t0100100-01;Locus_id=Os01g0100100;Note=RabGAP/TBC	domain	containing	protein.;Transcript_evidence=AK242339	(DDBJ%2C	antisense	transcript);ORF_evidence=Q655M0	(UniProt);GO=Molecular	Function:	Rab	GTPase	activator	activity	(GO:0005097),Cellular	Component:	intracellular	(GO:0005622),Biological	Process:	regulation	of	Rab	GTPase	activity	(GO:0032313);InterPro=RabGAP/TBC	(IPR000195);NIAS_FLcDNA=J075199P03;TENOR=Os01t0100100-01;KEGG=Os01t0100100-01
+chromA	irgsp1_rep	five_prime_UTR	454	548	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	454	716	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	549	716	.	+	0	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	1457	1555	.	+	0	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	1457	1555	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	2557	2660	.	+	0	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	2557	2660	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	4236	5044	.	+	1	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	4236	5044	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	5128	5250	.	+	2	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	5128	5250	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	5332	5420	.	+	2	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	5332	5420	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	5508	5708	.	+	0	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	5508	5708	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	6310	6715	.	+	0	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	6310	6715	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	7202	7287	.	+	2	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	7202	7287	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	CDS	7374	7397	.	+	0	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	7374	7530	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	three_prime_UTR	7398	7530	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	exon	7604	7915	.	+	.	Parent=Os01t0100100-01
+chromA	irgsp1_rep	three_prime_UTR	7604	7915	.	+	.	Parent=Os01t0100100-01
