@@ -751,7 +751,7 @@ class MINORgCLI (MINORg):
             parsed_domain = self.params.parse_domain(val)
             if str(parsed_domain) == val and val != "gene":
                 typer.echo(f"Parsing input to --domain ({val}) as PSSM-Id")
-            self.pssm_id = parsed_domain
+            self.pssm_ids = [parsed_domain]
             self.domain_name = val
             return parsed_domain
     
@@ -842,6 +842,7 @@ class MINORgCLI (MINORg):
             self.clear_reference()
             self.add_reference("Reference", str(self.args.assembly), str(self.args.annotation),
                                genetic_code = self.args.genetic_code, attr_mod = self.args.attr_mod)
+            self.args.reference = None
         elif self.args.reference:
             none_val = '-'
             valid_aliases(aliases = self.args.reference, lookup = self.reference_aliases,
@@ -1267,7 +1268,7 @@ class MINORgCLI (MINORg):
         ## check the appropriate args are used for each subcmd
         ## (no checks for subcmd minimumset)
         if subcmd in ["homologue", "homolog", "target", "seq"]:
-            self.parse_target_args()
+            self.parse_seq_args()
         elif subcmd in ["grna"]:
             self.parse_grna_args()
         elif subcmd in ["filter", "check"]:
