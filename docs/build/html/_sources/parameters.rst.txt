@@ -388,7 +388,7 @@ Extended genome
 | **CLI**: ``--extend-gene``, ``--extend-cds``
 | **Python**: ``ext_gene``, ``ext_cds``
 
-These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (``--extend-gene``, ``ext_gene``) and CDS-only (``--extend-cds``, ``ext_cds``) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries, and these genes will be added to the reference genome **and you can use their gene IDs as you would reference gene IDs**. You may provide multiple files to each parameters--MINORg will process them all simultaneously.
+These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (``--extend-gene``, ``ext_gene``) and CDS-only (``--extend-cds``, ``ext_cds``) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries. These genes will then be added to the reference genome **and you can use their gene IDs as you would reference gene IDs**. You may provide multiple files to each parameter--MINORg will process them all simultaneously.
 
 For MINORg to map the CDS-only sequences to the correct gene sequences, CDS-only sequences should be named according to the the format: '<gene ID>.<CDS ID>'
 
