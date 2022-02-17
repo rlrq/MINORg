@@ -19,7 +19,7 @@ Let us begin with the simplest MINORg execution:
 
 .. code-block:: bash
    
-   $ minorg --directory ./example00 --target ./sample_CDS.fasta
+   $ minorg --directory ./example_00_target --target ./sample_CDS.fasta
    Final gRNA sequence(s) have been written to minorg_gRNA_final.fasta
    Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
    
@@ -39,7 +39,7 @@ Single gene
 
 .. code-block:: bash
    
-   $ minorg --directory ./example_01 \
+   $ minorg --directory ./example_01_singlegene \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
    Extracting reference sequences
@@ -65,7 +65,7 @@ To specify multiple genes, simply use ``--gene`` with comma-separated gene IDs, 
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_02 \
+   $ minorg --directory ./example_02_multigene \
             --indv ref --gene AT5G45050,AT5G45060,AT5G45200,AT5G45210,AT5G45220,AT5G45230,AT5G45240,AT5G45250 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -73,7 +73,7 @@ OR
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_02 \
+   $ minorg --directory ./example_02_multigene \
             --indv ref --gene AT5G45050 --gene AT5G45060 --gene AT5G45200 \
             --gene AT5G45210 --gene AT5G45220 --gene AT5G45230 --gene AT5G45240 --gene AT5G45250 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
@@ -87,7 +87,7 @@ MINORg can also accept preset combinations of genes using ``--cluster`` and ``--
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_03 \
+   $ minorg --directory ./example_03_cluster \
             --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -97,7 +97,7 @@ Like ``--gene``, multiple combinations of genes can be specified to ``--cluster`
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_03 \
+   $ minorg --directory ./example_03_cluster \
             --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -122,7 +122,7 @@ If you have both genomic and CDS-only sequences of your target genes but not a G
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_04 \
+   $ minorg --directory ./example_04_ext \
             --indv ref --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
 
@@ -136,7 +136,7 @@ If you would like MINORg to infer homologues genes in non-reference genomes, you
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_05 \
+   $ minorg --directory ./example_05_query \
             --query ./subset_9654.fasta --query ./subset_9655.fasta \
             --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
@@ -151,7 +151,7 @@ You can also use ``--indv`` to ask MINORg to infer homologues genes in non-refer
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_05 \
+   $ minorg --directory ./example_06_indv \
             --indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
             --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
@@ -168,7 +168,7 @@ Similar to ``--clusters`` and ``--indv``, MINORg accepts a lookup file for refer
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example07 \
+   $ minorg --directory ./example_07_multiref \
             --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 \
             --reference-set ./arabidopsis_genomes.txt --reference tair10,araly2,araha1
 
@@ -184,7 +184,7 @@ When using ``--domain``, users should ensure that the correct genetic code is sp
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example08 \
+   $ minorgpy --directory ./example_08_geneticcode \
               --indv ref --gene gene-Q0275 \
               --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
               --domain 366140 --genetic-code 3
@@ -202,7 +202,7 @@ MINORg requires standard attribute field names in GFF3 files in order to properl
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example09 \
+   $ minorgpy --directory ./example_09_attrmod \
               --indv ref --gene Os01t0100100 \
               --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
               --attr-mod 'mRNA:Parent=Locus_id'
