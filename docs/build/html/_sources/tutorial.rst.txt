@@ -170,7 +170,7 @@ Similar to ``--clusters`` and ``--indv``, MINORg accepts a lookup file for refer
                 
    $ minorg --directory ./example07 \
             --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 \
-            --reference-set ./arabidosis_genomes.txt --reference tair10,araly2,araha1
+            --reference-set ./arabidopsis_genomes.txt --reference tair10,araly2,araha1
 
 In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.
 

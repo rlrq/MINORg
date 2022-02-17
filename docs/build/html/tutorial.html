@@ -221,7 +221,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>Similar to <code class="docutils literal notranslate"><span class="pre">--clusters</span></code> and <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, MINORg accepts a lookup file for reference genomes using <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code> and one or more reference genome alias using <code class="docutils literal notranslate"><span class="pre">--reference</span></code>. See <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a> for a more comprehensive overview.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example07 <span class="se">\</span>
          --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 <span class="se">\</span>
-         --reference-set ./arabidosis_genomes.txt --reference tair10,araly2,araha1
+         --reference-set ./arabidopsis_genomes.txt --reference tair10,araly2,araha1
 </pre></div>
 </div>
 <p>In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.</p>
