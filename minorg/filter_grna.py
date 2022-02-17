@@ -14,7 +14,8 @@ from minorg.functions import (
 )
 
 from minorg.fasta import fasta_to_dict, dict_to_fasta, find_identical_in_fasta
-from minorg.blast import blast, searchio_parse
+from minorg.blast import blast
+from minorg.searchio import searchio_parse
 
 from minorg.index import IndexedFasta
 from minorg.annotation import GFF

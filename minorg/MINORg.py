@@ -58,10 +58,8 @@ from minorg.functions import (
     ranges_intersect,
     ranges_subtract
 )
-from minorg.blast import (
-    blast,
-    searchio_parse
-)
+from minorg.blast import blast
+from minorg.searchio import searchio_parse
 from minorg.generate_grna import find_multi_gRNA
 from minorg.fasta import dict_to_fasta, fasta_to_dict
 from minorg.filter_grna import mask_identical

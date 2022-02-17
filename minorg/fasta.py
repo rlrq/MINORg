@@ -1,7 +1,7 @@
 import tempfile
 import itertools
 
-from minorg.blast import searchio_parse
+from minorg.searchio import searchio_parse
 
 ###################
 ##  FASTA_MANIP  ##
