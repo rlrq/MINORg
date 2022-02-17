@@ -243,14 +243,14 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="non-standard-gff3-attribute-field-names">
 <h5><span class="section-number">4.1.1.5.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
-<p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene).</p>
+<p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example09 <span class="se">\</span>
            --indv ref --gene Os01t0100100 <span class="se">\</span>
            --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff <span class="se">\</span>
            --attr-mod <span class="s1">&#39;mRNA:Parent=Locus_id&#39;</span>
 </pre></div>
 </div>
-<p>The IRGSP 1.0 reference genome for rice (<em>Oryza sativa</em> subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of ‘Parent’, which is the name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation uses ‘Locus_id’. You may specify the non-standard name mappings using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’). See <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a> for more details on how to format the input to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>.</p>
+<p>The IRGSP 1.0 reference genome for rice (<em>Oryza sativa</em> subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of ‘Parent’, which is the standard name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation use ‘Locus_id’. See <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a> for more details on how to format the input to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>.</p>
 </section>
 </section>
 </section>

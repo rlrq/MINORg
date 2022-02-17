@@ -198,7 +198,7 @@ Non-standard GFF3 attribute field names
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 See also: :ref:`Parameters:Attribute modification`
 
-MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene).
+MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using ``--attr-mod`` (for 'attribute modification').
 
 .. code-block:: bash
 
@@ -207,7 +207,7 @@ MINORg requires standard attribute field names in GFF3 files in order to properl
               --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
               --attr-mod 'mRNA:Parent=Locus_id'
 
-The IRGSP 1.0 reference genome for rice (*Oryza sativa* subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of 'Parent', which is the name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation uses 'Locus_id'. You may specify the non-standard name mappings using ``--attr-mod`` (for 'attribute modification'). See :ref:`Parameters:Attribute modification` for more details on how to format the input to ``--attr-mod``.
+The IRGSP 1.0 reference genome for rice (*Oryza sativa* subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of 'Parent', which is the standard name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation use 'Locus_id'. See :ref:`Parameters:Attribute modification` for more details on how to format the input to ``--attr-mod``.
 
 
 Python package
