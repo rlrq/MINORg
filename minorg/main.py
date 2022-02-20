@@ -344,7 +344,7 @@ def filter_grna(
         ## input files
         map: Path = typer.Option(*params.map(), **params.map.options, **oparams.file_valid),
         grna: Path = typer.Option(*params.grna(), **params.grna.options, **oparams.file_valid),
-        alignment: Path = typer.Option(*params.alignment(), **params.alignment.options, **oparams.file_valid),
+        # alignment: Path = typer.Option(*params.alignment(), **params.alignment.options, **oparams.file_valid),
         target: Path = typer.Option(*params.target(), **params.target.options, **oparams.file_valid),
         reference: Optional[List[str]] = typer.Option(*params.reference(), **params.reference.options,
                                                       callback = split_callback_list),
@@ -372,6 +372,10 @@ def filter_grna(
                                      callback = zero_to_one_callback),
         
         ## within feature filter options
+        gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
+                                                 callback = split_callback_list),
+        cluster: Optional[List[str]] = typer.Option(*params.cluster(), **params.cluster.options,
+                                                    callback = split_callback_list),
         feature: Optional[List[str]] = typer.Option(*params.feature(), **params.feature.options,
                                                     callback = split_callback_list),
         max_insertion: int = typer.Option(*params.max_insertion(), **params.max_insertion.options,
@@ -390,7 +394,7 @@ def filter_grna(
         ## background filter options
         screen_reference: bool = typer.Option(*params.screen_reference(), **params.screen_reference.options),
         unmask_ref: bool = typer.Option(*params.unmask_ref(), **params.unmask_ref.options),
-        ot_indv: Optional[List[str]] = typer.Option(*params.ot_indv(), **params.ot_indv.options,
+        ot_indv: Optional[List[str]] = typer.Option(*params.ot_indv_filt(), **params.ot_indv_filt.options,
                                                     callback = split_callback_list),
         # by_indv: bool = typer.Option(*params.by_indv(), **params.by_indv.options),
         ## masking options
@@ -580,7 +584,7 @@ def full(
                                                     callback = split_callback_list),
         indv: Optional[List[str]] = typer.Option(*params.indv(), **params.indv.options,
                                                  callback = split_callback_list),
-        target: Path = typer.Option(*params.target(), **params.target.options),
+        target: Path = typer.Option(*params.target(), **params.target.options, **oparams.file_valid),
         query: Optional[List[Path]] = typer.Option(*params.query(), **params.query.options,
                                                    **oparams.file_valid),
         domain: str = typer.Option(*params.domain(), **params.domain.options,

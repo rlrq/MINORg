@@ -1,3 +1,4 @@
+import os
 import itertools
 from minorg.index import IndexedFile, IndexedFasta
 from minorg.fasta import (
@@ -90,6 +91,9 @@ def imap_progress(f, args, threads = 1, overwrite = True, overwrite_last = True,
 ##################
 ##  DATA_MANIP  ##
 ##################
+
+def is_empty_file(fname):
+    return os.stat(fname).st_size == 0
 
 def make_custom_get(header, parse_num = True):
     def get_col(colname, data):

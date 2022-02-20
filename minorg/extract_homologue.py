@@ -16,6 +16,7 @@ from minorg.functions import (
     make_custom_get,
     write_table,
     splitlines,
+    is_empty_file,
     cat_files,
     imap_progress,
     make_local_print,
@@ -161,7 +162,8 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
           # header = "qseqid,sseqid,pident,length,sstart,send",
           fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
     ## check for hits
-    if not parse_get_data(tsv_blast_ref)[1]:
+    # if not parse_get_data(tsv_blast_ref)[1]:
+    if is_empty_file(tsv_blast_ref):
         # raise MessageError("No blast hits during homologue search, exiting programme.")
         ## write empty file
         with open(fout, "w+") as f:

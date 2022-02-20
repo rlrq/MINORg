@@ -1,5 +1,6 @@
 from minorg.fasta import fasta_to_dict, dict_to_fasta
 from minorg.functions import prepend_line, parse_get_data, splitlines, write_tsv
+from minorg.searchio import searchio_parse
 
 ########################
 ##  BLAST FORMATTING  ##

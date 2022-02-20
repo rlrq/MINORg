@@ -178,7 +178,7 @@ class Target(CheckObj):
         self._sense = None ## possible values: None, '+', '-'
     def __str__(self): return self.seq
     def __repr__(self): return str(self)
-    def __len__(self): return len(str(self))
+    def __len__(self): return len(self._seq)
     @property
     def id(self) -> str: return self._id
     @property
@@ -467,7 +467,10 @@ class gRNAHits:
                 Used to get target sequence length for tie breaking by favouring gRNA hits closer to 5' end.
         """
         ## read data
-        seq_targets = {} if not targets else fasta_to_dict(targets)
+        seq_targets = ({} if not targets
+                       else {seqid: Target(seq, id = seqid, strand = '+')
+                             for seqid, seq in fasta_to_dict(targets).items()})
+        print("parse_from_mapping, seq_targets:", seq_targets)
         raw_mapping = [line.split('\t') for line in splitlines(fname)]
         header_mapping = raw_mapping[0]
         ## determine version where checks start
@@ -497,7 +500,7 @@ class gRNAHits:
                 gRNA_end = int(gRNA_end) ## "convert" to 0-indexed, end-exclusive
             try:
                 ## note: dummy target sequence is used if targets file not provided; target strand assumed '+'
-                target = Target(seq_targets.get(target_id, 'N' * int(target_len)), id = target_id, strand = '+')
+                target = seq_targets.get(target_id, Target('N' * int(target_len), id = target_id, strand = '+'))
             except Exception as e:
                 print(version, i, header_mapping, entry)
                 raise e

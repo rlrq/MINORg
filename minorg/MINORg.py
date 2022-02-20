@@ -909,7 +909,8 @@ class MINORg (PathHandler):
             fname (str): required, path to MINORg .map file
         """
         grna_hits = gRNAHits()
-        grna_hits.parse_from_mapping(fname, version = None)
+        # grna_hits.parse_from_mapping(fname, version = None)
+        grna_hits.parse_from_mapping(fname, targets = self.target)
         self.grna_hits = grna_hits
     
     def rename_grna(self, fasta):
@@ -1206,21 +1207,12 @@ class MINORg (PathHandler):
                                        translate = translate, isoform_lvl = isoform_lvl,
                                        # apply_template_to_dict=False,
                                        **fouts)
-    
-    #########################
-    ##  SUBCMD: HOMOLOGUE  ##
-    #########################
-    
-    def _homologue(self, ids, fout, ref_dir = "ref", quiet = True, domain_name = None,
-                   minlen = None, minid = None, mincdslen = None, merge_within = None,
-                   check_recip = None, relax_recip = None, check_id_before_merge = None):
+    def generate_ref_gene_cds(self, ref_dir = "ref", quiet = True, domain_name = None):
         """
-        Discovery homologues based on self's attributes
+        Get and store self.genes' gene and CDS sequences, and GFF data for domains.
         """
-        if ids is None:
-            raise Exception("Requires ids (list of gene IDs)")
-        if not all(map(lambda gid: gid in self.subset_gid, ids)):
-            self._subset_annotation(*ids)
+        if not all(map(lambda gid: gid in self.subset_gid, self.genes)):
+            self._subset_annotation(*self.genes)
         ## instantiate variables
         printi = ((lambda msg: None) if quiet else (print))
         seqid_template = "Reference|${source}|${domain}|${feature}|${complete}|${gene}|${isoform}"
@@ -1240,6 +1232,21 @@ class MINORg (PathHandler):
         self.ref_gene = fasta_gene
         self.ref_cds = fasta_cds
         self.gff_domain = gff_domain
+        self.logfile.devsplain(f"{self.genes}, {self.ref_gene}, {self.ref_cds}, {self.gff_domain}")
+        return
+    
+    #########################
+    ##  SUBCMD: HOMOLOGUE  ##
+    #########################
+    
+    def _homologue(self, fout, ref_dir = "ref", quiet = True, domain_name = None,
+                   minlen = None, minid = None, mincdslen = None, merge_within = None,
+                   check_recip = None, relax_recip = None, check_id_before_merge = None):
+        """
+        Discovery homologues based on self's attributes
+        """
+        ## get reference data
+        self.generate_ref_gene_cds(ref_dir = ref_dir, quiet = quiet, domain_name = domain_name)
         ## get homologues
         printi("Finding homologues")
         if self.query:
@@ -1252,7 +1259,7 @@ class MINORg (PathHandler):
                                      blastn = self.blastn,
                                      fasta_complete = self.ref_gene, fasta_cds = self.ref_cds,
                                      ## reciprocal blast options
-                                     genes = ids, 
+                                     genes = self.genes, 
                                      check_reciprocal = get_val_default(check_recip, self.check_recip),
                                      relax = get_val_default(relax_recip, self.relax_recip),
                                      ## reference options (for reciprocal blast)
@@ -1627,9 +1634,11 @@ class MINORg (PathHandler):
         Arguments:
             fout (str): required, path to output FASTA file
         """
-        if not self.ref_cds and self.ref_gene:
-            raise MessageError( ("MINORg.align_reference_and_targets requires"
-                                 " MINORg.ref_cds and MINORg.ref_gene.") )
+        if not (self.ref_cds and self.ref_gene):
+            print( ("MINORg.align_reference_and_targets requires"
+                    " MINORg.ref_cds and MINORg.ref_gene."
+                    " Generating required files.") )
+            self.generate_ref_gene_cds()
         tmp_f = self.results_fname("tmp_align_reference.fasta", tmp = True)
         ## align CDS
         with open(fout, 'w') as f:
@@ -1674,9 +1683,9 @@ class MINORg (PathHandler):
         Arguments:
             domain_name (str): optional, domain name to be used when naming output file
         """
-        if not self.ref_cds and self.ref_gene and self.target:
-            raise MessageError( ("MINORg.align_reference_and_targets requires"
-                                 " MINORg.ref_cds, MINORg.ref_gene, and MINORg.targets.") )
+        # if not self.ref_cds and self.ref_gene and self.target:
+        #     raise MessageError( ("MINORg.align_reference_and_targets requires"
+        #                          " MINORg.ref_cds, MINORg.ref_gene, and MINORg.targets.") )
         fasta_aln = self.results_fname(f"{get_val_default(domain_name, self.domain_name)}_mafft.fasta")
         tmp_f = self.results_fname("tmp_align_reference_and_targets.fasta", tmp = True)
         ## align reference
@@ -1758,8 +1767,13 @@ class MINORg (PathHandler):
                                                strand = gene_ann[gene].strand,
                                                **kwargs)
         from string import Template
+        # check = [0]
         def is_rvs(aln_seqid, seqid):
-            return re.search(Template(alignment_rvs_pattern).substitute(seqid = re.escape(seqid)), aln_seqid)
+            filled_rvs_template = Template(alignment_rvs_pattern).substitute(seqid = re.escape(seqid))
+            # if check[0] == 0 and '7273.tig' in aln_seqid:
+            #     print(aln_seqid, seqid, filled_rvs_template, re.escape(aln_seqid), re.search(filled_rvs_template, re.escape(aln_seqid)), re.search(filled_rvs_template, aln_seqid))
+            #     check[0] = 1
+            return re.search(filled_rvs_template, aln_seqid)
         feature_only_ranges = {seqid: adjust_feature_ranges(gene, seqid, subtract_gaps = True)
                                for gene, seqid in genes.items()}
         feature_gaps_ranges = {seqid: ranges_subtract(adjust_feature_ranges(gene, seqid, subtract_gaps = False),
@@ -1771,6 +1785,7 @@ class MINORg (PathHandler):
                                                                         max_insertion = max_insertion)
         targets_feature_ranges = {seqid: get_target_feature_ranges(alignment[seqid], seqid)
                                   for seqid in alignment}
+        self.logfile.devsplain(f"{targets_feature_ranges}, {len(self.grna_hits.hits.items())}")
         ## iterate through all gRNAs
         for gRNA_seq, coverage in self.grna_hits.hits.items():
             ## assess each hit
