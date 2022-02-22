@@ -308,6 +308,7 @@ class gRNAHits:
     Attributes:
         _gRNAseqs (dict): stores gRNASeq objects by sequence (format: {'<seq>': <gRNASeq object>})
         _hits (dict): stores gRNAHit objects by sequence (format: {'<seq>': [<gRNAHit objects>]})
+        check_names (list): stores check names
     """
     ## seqs are stored in uppercase
     def __init__(self, d = None, gRNA_seqs = None, gRNA_hits = None):
@@ -457,6 +458,12 @@ class gRNAHits:
         from copy import deepcopy
         self._gRNAseqs = {str(seq).upper(): gRNASeq(seq) for seq in d.keys()}
         self._hits = deepcopy(d)
+        check_names = set()
+        for hit in self.flatten_hits():
+            check_names |= set(hit.check_names)
+        for seq in self.flatten_gRNAseqs():
+            check_names |= set(hit.check_names)
+        self.check_names = list(check_names)
     def parse_from_mapping(self, fname, targets = None) -> None:
         """
         Read gRNA data from MINORg .map file.
@@ -513,10 +520,14 @@ class gRNAHits:
             ## log checks
             gRNA_checks = entry[check_col:]
             for i, check in enumerate(header_checks):
-                if check == "feature": ## this is the only one that's affected by hit location
-                    gRNA_hit.set_check(check, gRNA_checks[i])
-                else: ## all other checks apply to all hits with the same gRNA seq so set check to gRNASeq obj
+                ## these checks apply to all hits with the same gRNA seq so set check to gRNASeq obj
+                if check in {"background", "exclude", "GC"}:
                     self.get_gRNAseq_by_seq(gRNA_seq).set_check(check, gRNA_checks[i])
+                ## set all other checks by hit, including standard "feature" check
+                ##  checks in columns added by user are also set by hit since we don't know anything
+                else:
+                    gRNA_hit.set_check(check, gRNA_checks[i])
+            self.check_names = gRNA_checks
         return
     #################
     ##  MODIFIERS  ##
@@ -1032,7 +1043,8 @@ class gRNAHit(CheckObj):
             hit_id: unique hit identifier
         """
         ## note: unless something is weird, seq_strand is the same as strand
-        super().__init__("background", "GC", "feature", "exclude", "flank")
+        # super().__init__("background", "GC", "feature", "exclude", "flank")
+        super().__init__("background", "GC", "feature", "exclude")
         self._target = target ## previously self._seq
         self._range = (start, end) ## relative to original (parent) sequence from which _target was derived
         self._strand = '+' if (strand.lower() == "fwd" or strand == '+') else '-' ## gRNA strand relative to original (parent) sequence from which _target was derived (gRNA strand should be same as _target strand)
@@ -1067,7 +1079,7 @@ class gRNAHit(CheckObj):
     def set_gc_check(self, status): self.set_check("GC", status)
     def set_feature_check(self, status): self.set_check("feature", status)
     def set_exclude_check(self, status): self.set_check("exclude", status)
-    def set_flank_check(self, status): self.set_check("flank", status)
+    # def set_flank_check(self, status): self.set_check("flank", status)
     def parent_sense(self, mode = "raw"):
         parent_sense_value = self.target.sense
         if mode == "str":

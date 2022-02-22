@@ -1125,6 +1125,8 @@ class MINORgCLI (MINORg):
             if self.args.ot_gap is None: self.args.ot_mismatch = 0
             if not self.args.ot_pamless and self.args.pam is None:
                 raise click.UsageError("'--pam <PAM pattern>' is required if not using '--ot-pamless'.")
+            ## convert background filenames to str
+            self.args.background = [str(fname) for fname in self.args.background]
             if self.args.pam is not None:
                 if standalone:
                     ## set minimum length for least restrictive regex
@@ -1381,7 +1383,7 @@ class MINORgCLI (MINORg):
         self.check_grna_args(standalone = False)
         self.check_filter_args(standalone = False)
         self.parse_genes()
-        self.parse_genes_for_filter(priority = "mask", standalone = False)
+        self.parse_genes_for_filter(priority = "unmask", standalone = False)
         self.subset_annotation(quiet = True)
         ## PASS ARGS TO MINORg
         ## args handled by callbacks: domain

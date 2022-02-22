@@ -411,7 +411,7 @@ class PathHandler:
 # x.filter_feature()
 # x.grna_hits.filter_hits("feature")
 # ## 344 without domain, 104 in NB-ARC 366375
-# x.passed_grna
+# x.valid_grna()
 # ## 278 without domain, 89 in NB-aRC 366375
 # x.minimumset()
 
@@ -446,7 +446,7 @@ class MINORg (PathHandler):
     Max acceptable insertion length: 15
     >>> my_minorg.grna_hits.filter_hits("feature")
     gRNAHits(len = 344)
-    >>> my_minorg.passed_grna
+    >>> my_minorg.valid_grna()
     gRNAHits(len = 278)
     >>> my_minorg.minimumset()
     >>> my_minorg.resolve()
@@ -764,7 +764,7 @@ class MINORg (PathHandler):
         
         Relevant attributes: accept_invalid, accept_invalid_field
         
-        :getter: Returns gRNA that have passed checks
+        :getter: Returns gRNA that have passed standard checks
         :type: gRNAHits
         """
         filtered = self.grna_hits.filter_seqs("background", "GC", "exclude",
@@ -776,6 +776,34 @@ class MINORg (PathHandler):
                                         accept_invalid_field = self.accept_invalid_field,
                                         exclude_empty_seqs=True, quiet = True)
         return filtered
+    @property
+    def check_names(self):
+        """
+        gRNA check names
+        
+        :getter: Returns names of checks for gRNA hits
+        :type: list
+        """
+        return self.grna_hits.check_names
+    @property
+    def check_names_nonstandard(self):
+        """
+        Non-standard gRNA check names (i.e. user-defined checks)
+        
+        :getter: Returns names of non-standard checks for gRNA hits
+        :type: list
+        """
+        return [check_name for check_name in self.check_names
+                if check_name not in {"background", "GC", "exclude", "CDS", "feature"}]
+    @property
+    def check_names_standard(self):
+        """
+        Standard gRNA check names (background, GC, exclude, feature)
+        
+        :getter: Returns names of standard checks for gRNA hits
+        :type: list
+        """
+        return list({"background", "GC", "exclude", "CDS", "feature"}.intersection(set(self.check_names)))
     
     ## setters
     @domain_name.setter
@@ -873,6 +901,53 @@ class MINORg (PathHandler):
         elif attr == "source": return re.search(self.ref_seqid_source_pattern, seqid).group(0)
         else: raise MessageError(f"Unknown attribute: {attr}")
     
+    def valid_grna(self, *check_names, accept_invalid = None, accept_invalid_field = None):
+        """
+        gRNA that have passed background, GC, and feature checks, as well as any user-set checks
+        
+        Relevant attributes: accept_invalid, accept_invalid_field
+        
+        Arguments:
+            *check_names (str): optional, checks to include
+                If not specified, all checks, both standard and non-standard, will be used
+                If 'standard': only background, GC, and feature checks will be used
+                    Can be used in combination with non-standard check names
+                If 'nonstandard': only non-standard checks will be used
+                    Can be used in combination with standard check names
+        
+        Returns
+        -------
+        gRNAHits
+        """
+        accept_invalid = (accept_invalid if accept_invalid is not None
+                          else self.accept_invalid)
+        accept_invalid_field = (accept_invalid_field if accept_invalid_field is not None
+                                else self.accept_invalid_field)
+        ## expand check names
+        if not check_names:
+            check_names = self.check_names
+        else:
+            if "standard" in check_names:
+                check_names.remove("standard")
+                check_names.extend(self.check_names_standard)
+            if "nonstandard" in check_names:
+                check_names.remove("nonstandard")
+                check_names.extend(self.check_names_nonstandard)
+        ## filter
+        seqs_checks = set(check_names).intersection({"background", "GC", "exclude"})
+        hits_checks = set(check_names) - seqs_checks
+        filtered = self.grna_hits.filter_seqs(*seqs_checks,
+                                              accept_invalid = self.accept_invalid,
+                                              accept_invalid_field = self.accept_invalid_field,
+                                              quiet = True)
+        filtered = filtered.filter_hits(*hits_checks,
+                                        accept_invalid = (self.accept_invalid or self.accept_feature_unknown),
+                                        accept_invalid_field = self.accept_invalid_field,
+                                        exclude_empty_seqs=True, quiet = True)
+        return filtered
+    
+
+    
     ####################
     ##  ADD FUNCIONS  ##
     ####################
@@ -888,7 +963,7 @@ class MINORg (PathHandler):
         """
         if not alias:
             alias = f"bg_{str(len(self.background) + 1).zfill(3)}"
-        self.background[alias] = IndexedFasta(fname)
+        self.background[alias] = IndexedFasta(str(fname))
         return
     
     def remove_background(self, alias):
@@ -958,7 +1033,7 @@ class MINORg (PathHandler):
                 Autogenerated using self.prefix and self.directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_fasta, self.results_fname("gRNA_pass.fasta"))
-        self.passed_grna.write_fasta(fout, write_all = True)
+        self.valid_grna().write_fasta(fout, write_all = True)
     
     def write_pass_grna_map(self, fout = None):
         """
@@ -969,7 +1044,7 @@ class MINORg (PathHandler):
                 Autogenerated using self.prefix and self.directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_map, self.results_fname("gRNA_pass.map"))
-        self.passed_grna.write_mapping(fout, version = 2, write_all = True, write_checks = False)
+        self.valid_grna().write_mapping(fout, version = 2, write_all = True, write_checks = False)
     
     ##########################
     ##  PARSERS FOR CONFIG  ##
@@ -1583,7 +1658,7 @@ class MINORg (PathHandler):
                 output |= self._offtarget_hits(ifasta, fout = ot_hits,
                                                keep_output = keep_blast_output)
             return output
-        if self.screen_reference and self.reference:
+        if (self.screen_reference or self.query_reference) and self.reference:
             excl_seqid |= get_excl_seqids(self.reference, descr = "ref")
         if self.background:
             excl_seqid |= get_excl_seqids(self.background, descr = "bg")
@@ -1861,7 +1936,7 @@ class MINORg (PathHandler):
         return
     
     def minimumset(self, sets = None, manual = None, fasta = None, fout_fasta = None, fout_map = None,
-                   report_full_path = True,
+                   report_full_path = True, check_all = True, nonstandard_checks = [],
                    exclude_check = True, gc_check = True, background_check = True, feature_check = True):
         """
         Generate minimum set(s) of gRNA required to cover all targets.
@@ -1875,6 +1950,8 @@ class MINORg (PathHandler):
             fout_map (str): optional, path to output .map file.
                 Autogenerated using self.prefix and self.directory if not provided.
             report_full_path (bool): print full path to output files upon successful writing
+            check_all (bool): include all checks for filtering (including any in user-added columns)
+            nonstandard_checks (list): non-standard checks to include for filtering (subject to self.accept_invalid_field)
             exclude_check (bool): include 'exclude' field for filtering (subject to self.accept_invalid_field)
             gc_check (bool): include 'GC' field for filtering (subject to self.accept_invalid_field)
             background_check (bool): include 'background' field for filtering
@@ -1895,8 +1972,17 @@ class MINORg (PathHandler):
             self._check_valid_status("background", "seq", "off-target")
         if feature_check:
             self._check_valid_status("feature", "hit", "within-feature")
+        if check_all:
+            for check_name in self.grna_hits.check_names:
+                if check_name not in {"GC", "background", "feature", "exclude"}:
+                    self._check_valid_status(check_name, "hit", check_name)
         ## filter grna by checks
-        grna_hits = copy.deepcopy(self.passed_grna)
+        grna_hits = copy.deepcopy(self.valid_grna(*([] if check_all else
+                                                    ((["exclude"] if exclude_check else []) +
+                                                     (["GC"] if gc_check else []) +
+                                                     (["background"] if background_check else []) +
+                                                     (["feature"] if feature_check else []) +
+                                                     nonstandard_checks))))
         ## remove sequences not included in fasta file from grna_hits if fasta file provided
         if fasta:
             grna_hits.remove_seqs(*[seq for seq in grna_hits.seqs() if
