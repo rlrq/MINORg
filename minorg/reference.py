@@ -366,7 +366,8 @@ class AnnotatedFeature(Annotation):
                 ## _get_seq options
                 ranges=[],
                 ## _get_domain_seq options
-                pssm_id=None, by_gene=False, db=None, rpsblast="rpsblast", rps_hits=None, thread=None,
+                pssm_id=None, by_gene=False, db=None, remote_rps=False, rpsblast="rpsblast",
+                rps_hits=None, thread=None,
                 mktmp=None, quiet=False, fout_gff=None,
                 ## seqid options
                 seqid_template = "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense",
@@ -395,6 +396,7 @@ class AnnotatedFeature(Annotation):
                 RPS-BLAST will be conducted on concatenated CDS to search for domain(s).
             by_gene (bool): merge overlapping domain ranges from different isoforms
             db (str): path to RPS-BLAST database
+            remote_rps (bool): use remote RPS-BLAST; if True, ``db`` is not required
             rpsblast (str): path to rpsblast or rpsblast+ executable
                 (or name of command, if available at command line)
             rps_hits (str): path to RPS-BLAST output, outfmt 6, with header. 
@@ -442,7 +444,8 @@ class AnnotatedFeature(Annotation):
             else: pssm_ids = pssm_id
             seqs = self._get_domain_seq(*pssm_ids, by_gene = by_gene, feature_type = feature_type,
                                         adj_dir = adj_dir, complete = complete, translate = translate,
-                                        db = db, rpsblast = rpsblast, rps_hits = rps_hits, thread = thread,
+                                        db = db, remote_rps = remote_rps, rpsblast = rpsblast,
+                                        rps_hits = rps_hits, thread = thread,
                                         fout_gff = fout_gff, mktmp = mktmp, quiet = quiet)
         else:
             seq = self._get_seq(adj_dir = adj_dir, complete = complete, translate = translate,
@@ -481,7 +484,7 @@ class AnnotatedFeature(Annotation):
                         ## get_seq options
                         adj_dir=True, complete=False, translate=False,
                         ## get_domain_ranges options
-                        db=None, rpsblast="rpsblast", rps_hits=None, thread=None,
+                        db=None, remote_rps=False, rpsblast="rpsblast", rps_hits=None, thread=None,
                         mktmp=None, quiet=False, fout_gff=None) -> dict:
         """
         Get sequence of domain in feature or subfeature.
@@ -503,6 +506,7 @@ class AnnotatedFeature(Annotation):
                 For biologically sound results, ``translate=True`` only be used with
                 ``feature_type="CDS"``, ``adj_dir=True``, and ``complete=False``.
             db (str): path to RPS-BLAST database
+            remote_rps (bool): use remote RPS-BLAST database; if True, ``db`` is not required
             rpsblast (str): path to rpsblast or rpsblast+ executable
             rps_hits (str): path to RPS-BLAST ouput, fmt 6, with header
             thread (int): number of threads for RPS-BLAST
@@ -535,8 +539,8 @@ class AnnotatedFeature(Annotation):
             {<isoform_id>: {(start pos of domain in self, end pos of domain in self): <Bio.Seq.Seq sequence>}}
         """
         ## get domain ranges (complete) (relative to each isoform)
-        domain_ranges = self._get_domain_ranges(*pssm_ids, db = db, rpsblast = rpsblast,
-                                                rps_hits = rps_hits, thread = thread,
+        domain_ranges = self._get_domain_ranges(*pssm_ids, db = db, remote_rps = remote_rps,
+                                                rpsblast = rpsblast, rps_hits = rps_hits, thread = thread,
                                                 by_gene = by_gene, genomic = False,
                                                 mktmp = mktmp, quiet = quiet, fout_gff = fout_gff)
         ## get seqs; discontiguous domains are NOT concatenated
@@ -548,7 +552,8 @@ class AnnotatedFeature(Annotation):
                        for isoform, hit_ranges in domain_ranges.items()}
         return domain_seqs ## {isoform: {<range of first domain>: <seq>, <range of second domain>: <seq>}...}
     
-    def _get_domain_ranges(self, *pssm_ids, db=None, rpsblast="rpsblast", rps_hits=None, thread=None,
+    def _get_domain_ranges(self, *pssm_ids, db=None, remote_rps=False, rpsblast="rpsblast",
+                           rps_hits=None, thread=None,
                            genomic=False, by_gene=False, mktmp=None, quiet=False, fout_gff=None) -> dict:
         """
         Retrieve ranges of domain(s). Overlapping domain hits are merged.
@@ -568,6 +573,7 @@ class AnnotatedFeature(Annotation):
         Arguments:
             *pssm_ids (str): required, Pssm-Ids of desired domain(s)
             db (str): path to RPS-BLAST database, used with ``rpsblast``
+            remote_rps (bool): use remote RPS-BLAST, used with ``rpsblast``; if True, ``db`` is not required
             rpsblast (str): path to rpsblast or rpsblast+ executable, used with ``db``
                 (or name of command, if available at command line)
             rps_hits (str): path to RPS-BLAST output, outfmt 6, with header. 
@@ -613,7 +619,7 @@ class AnnotatedFeature(Annotation):
             BlastNR(query = tmp_pep, blastf = NcbirpsblastCommandline,
                     header = "qseqid,sseqid,pident,length,qstart,qend",
                     fout = tmp_rpsblast, keep_tmp = False,
-                    db = db, cmd = rpsblast,
+                    db = db, cmd = rpsblast, remote_rps = remote_rps,
                     # mt_mode = (1 if thread is not None else 0),
                     num_threads = (1 if thread is None else thread))
             ## store path to output
@@ -802,7 +808,8 @@ class AnnotatedFasta(IndexedFasta):
                          ## get_seq options
                          complete=False, adj_dir=False, translate=False, by_gene=False,
                          ## get_domain_seq options
-                         pssm_id=None, db=None, rpsblast="rpsblast", rps_hits=None, thread=None,
+                         pssm_id=None, db=None, remote_rps=False, rpsblast="rpsblast",
+                         rps_hits=None, thread=None,
                          mktmp=None, fout_gff=None, quiet=True,
                          seqid_template = "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense",
                          apply_template_to_dict = False) -> dict:
@@ -828,6 +835,7 @@ class AnnotatedFasta(IndexedFasta):
                 RPS-BLAST will be conducted on concatenated CDS to search for domain(s).
             by_gene (bool): merge overlapping domain ranges from different isoforms
             db (str): path to RPS-BLAST database
+            remote_rps (bool): use remote RPS-BLAST; if True, ``db`` is not required
             rpsblast (str): path to rpsblast or rpsblast+ executable
                 (or name of command, if available at command line)
             rps_hits (str): path to RPS-BLAST output, outfmt 6, with header. 
@@ -880,8 +888,8 @@ class AnnotatedFasta(IndexedFasta):
         ## get sequences
         seqs = ann.get_seq(adj_dir = adj_dir, complete = complete, translate = translate,
                            feature_type = feature_type,
-                           pssm_id = pssm_id, by_gene = by_gene, db = db, mktmp = mktmp,
-                           rpsblast = rpsblast, rps_hits = rps_hits, quiet = quiet,
+                           pssm_id = pssm_id, by_gene = by_gene, db = db, remote_rps = remote_rps,
+                           mktmp = mktmp, rpsblast = rpsblast, rps_hits = rps_hits, quiet = quiet,
                            fout_gff = fout_gff,
                            seqid_template = seqid_template,
                            apply_template_to_dict = (bool(fout) or apply_template_to_dict),
@@ -897,7 +905,7 @@ class AnnotatedFasta(IndexedFasta):
                         ## shared options
                         feature_type=None, complete=False, adj_dir=False, translate=False, by_gene=False,
                         ## get_domain options
-                        pssm_id=None, db=None, rpsblast="rpsblast", rps_hits=None, thread=None,
+                        pssm_id=None, db=None, remote_rps=False, rpsblast="rpsblast", rps_hits=None, thread=None,
                         mktmp=None, fout_gff=None, quiet=True,
                         seqid_template = "$source|$gene|$feature|$isoform|$domain|$n|$complete|$strand|$sense",
                         apply_template_to_dict = False) -> dict:
@@ -923,6 +931,7 @@ class AnnotatedFasta(IndexedFasta):
                 RPS-BLAST will be conducted on concatenated CDS to search for domain(s).
             by_gene (bool): merge overlapping domain ranges from different isoforms
             db (str): path to RPS-BLAST database
+            remote_rps (bool): use remote RPS-BLAST; if True, ``db`` is not required
             rpsblast (str): path to rpsblast or rpsblast+ executable
                 (or name of command, if available at command line)
             rps_hits (str): path to RPS-BLAST output, outfmt 6, with header. 
@@ -964,8 +973,8 @@ class AnnotatedFasta(IndexedFasta):
         ## get all seqs
         seqs = {feature_id: self._get_feature_seq(feature_id, feature_type = feature_type, pssm_id = pssm_id,
                                                   complete = complete, adj_dir = adj_dir, translate = translate,
-                                                  by_gene = by_gene, db = db, rpsblast = rpsblast,
-                                                  rps_hits = rps_hits, thread = thread,
+                                                  by_gene = by_gene, db = db, remote_rps = remote_rps,
+                                                  rpsblast = rpsblast, rps_hits = rps_hits, thread = thread,
                                                   mktmp = mktmp, fout_gff = fout_gff,
                                                   quiet = quiet,
                                                   seqid_template = seqid_template,
