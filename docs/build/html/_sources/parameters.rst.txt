@@ -245,13 +245,26 @@ These parameters take values.
 Paths
 ~~~~~
 
-As all paths will be resolved to absolute paths, relative paths are acceptable.
+**CLI**: As all paths will be resolved to absolute paths, relative paths are acceptable. Nevertheless, do be careful with relative paths and NEVER use them in the config file or in lookup files.
+
+**Python**: Paths are NOT resolved (except directory and config file). Absolute paths are STRONGLY RECOMMENDED. Be careful with relative paths.
 
 Executables
 +++++++++++
 
-If an executable is accessible at the command line, you may simply specify the command itself. If not, the path to the executable is required.
+**CLI**: ``--blastn``, ``--rpsblast``, ``--maff``
 
+.. code-block:: bash
+
+   $ minorg <other arguments> --blastn /usr/bin/blastn
+
+**Python**: ``blastn``, ``rpsblast``, ``mafft``
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg()
+>>> my_minorg.blastn = '/usr/bin/blastn' ## tells MINORg where the blastn executable is
+
+If an executable is accessible at the command line, you may simply specify the command itself (e.g. 'blastn' instead of '/usr/bin/blastn'). If not, the path to the executable is required.
 
 
 Alias lookup
