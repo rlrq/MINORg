@@ -144,7 +144,8 @@ def filter_rpsblast_for_domain(fname, *pssmids, fout = None):
     pssmids = set(str(pssmid) for pssmid in pssmids)
     pssmid_str = '|'.join(sorted(pssmids))
     get, dat = parse_get_data(fname, delim = '\t')
-    output = [list(x) + [pssmid_str] for x in dat if get(x, "sseqid").split('|')[-1] in pssmids]
+    output = [list(x) + [pssmid_str] for x in dat if (get(x, "sseqid").split('|')[-1] in pssmids or
+                                                      get(x, "sseqid").split(':')[-1] in pssmids)]
     if fout:
         write_tsv(fout, [get(get_cols = True) + ["domain"]] + output)
     else:
