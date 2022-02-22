@@ -577,6 +577,6 @@ RPS-BLAST remote database
 | **CLI**: ``--remote-rps``
 | **Python**: ``remote_rps``
 
-  | set default: ``remote rps`` (section ``[binary]``)
+  | set default: ``remote rps`` (section ``[data]``)
 
 While it is in theory possible to use the remote CDD database & servers instead of local ones, the ``--remote`` option for the 'rpsblast'/'rpsblast+' command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use ``--remote-rps`` instead of ``--db /path/to/rpsblast/db``.
