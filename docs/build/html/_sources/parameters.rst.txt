@@ -245,9 +245,8 @@ These parameters take values.
 Paths
 ~~~~~
 
-**CLI**: As all paths will be resolved to absolute paths, relative paths are acceptable. Nevertheless, do be careful with relative paths and NEVER use them in the config file or in lookup files.
-
-**Python**: Paths are NOT resolved (except directory and config file). Absolute paths are STRONGLY RECOMMENDED. Be careful with relative paths.
+| **CLI**: As all paths will be resolved to absolute paths, relative paths are acceptable. Nevertheless, do be careful with relative paths and NEVER use them in the config file or in lookup files.
+| **Python**: Paths are NOT resolved (except directory and config file). Absolute paths are STRONGLY RECOMMENDED. Be careful with relative paths.
 
 Executables
 +++++++++++
