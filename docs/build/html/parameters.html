@@ -81,8 +81,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#preset-pam-patterns">6.3.4.3. Preset PAM patterns</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#rps-blast">6.3.5. RPS-BLAST</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#rps-blast-local-database">6.3.6. RPS-BLAST local database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rps-blast-local-database">6.3.5. RPS-BLAST local database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rps-blast-remote-database">6.3.6. RPS-BLAST remote database</a></li>
 </ul>
 </li>
 </ul>
@@ -168,8 +168,8 @@
 <li><p><a class="reference internal" href="#preset-pam-patterns" id="id26">Preset PAM patterns</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#rps-blast" id="id27">RPS-BLAST</a></p></li>
-<li><p><a class="reference internal" href="#rps-blast-local-database" id="id28">RPS-BLAST local database</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-local-database" id="id27">RPS-BLAST local database</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-remote-database" id="id28">RPS-BLAST remote database</a></p></li>
 </ul>
 </li>
 </ul>
@@ -826,22 +826,8 @@ bhcas12b</p></td>
 </table>
 </section>
 </section>
-<section id="rps-blast">
-<h3><a class="toc-backref" href="#id27"><span class="section-number">6.3.5. </span>RPS-BLAST</a><a class="headerlink" href="#rps-blast" title="Permalink to this headline"></a></h3>
-<p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
-<div class="line-block">
-<div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code></div>
-<div class="line"><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">remote_rps</span></code></div>
-</div>
-<blockquote>
-<div><div class="line-block">
-<div class="line">set default: <code class="docutils literal notranslate"><span class="pre">rpsblast</span></code> (section <code class="docutils literal notranslate"><span class="pre">[binary]</span></code>)</div>
-</div>
-</div></blockquote>
-<p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--db</span> <span class="pre">/path/to/rpsblast/db</span></code>.</p>
-</section>
 <section id="rps-blast-local-database">
-<h3><a class="toc-backref" href="#id28"><span class="section-number">6.3.6. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id27"><span class="section-number">6.3.5. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--db</span></code></div>
@@ -871,6 +857,20 @@ bhcas12b</p></td>
 </pre></div>
 </div>
 <p>where the database is contained in the directory <code class="docutils literal notranslate"><span class="pre">/root/rsp_db/</span></code>, the appropriate path to pass to this parameter is: <code class="docutils literal notranslate"><span class="pre">/root/rps_db/Cdd</span></code>, where the trailing ‘Cdd’ is the prefix of all of the database’s files</p>
+</section>
+<section id="rps-blast-remote-database">
+<h3><a class="toc-backref" href="#id28"><span class="section-number">6.3.6. </span>RPS-BLAST remote database</a><a class="headerlink" href="#rps-blast-remote-database" title="Permalink to this headline"></a></h3>
+<p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
+<div class="line-block">
+<div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code></div>
+<div class="line"><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">remote_rps</span></code></div>
+</div>
+<blockquote>
+<div><div class="line-block">
+<div class="line">set default: <code class="docutils literal notranslate"><span class="pre">remote</span> <span class="pre">rps</span></code> (section <code class="docutils literal notranslate"><span class="pre">[binary]</span></code>)</div>
+</div>
+</div></blockquote>
+<p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--db</span> <span class="pre">/path/to/rpsblast/db</span></code>.</p>
 </section>
 </section>
 </section>

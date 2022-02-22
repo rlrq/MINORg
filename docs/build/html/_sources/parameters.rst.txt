@@ -538,17 +538,6 @@ MINORg comes with several preset PAM patterns for different CRISPR systems.
    +-------------+----------------+--------------------------------------+
 
 
-RPS-BLAST
-~~~~~~~~~
-**Type**: :ref:`Parameters:Flag`
-
-| **CLI**: ``--remote-rps``
-| **Python**: ``remote_rps``
-
-  | set default: ``rpsblast`` (section ``[binary]``)
-
-While it is in theory possible to use the remote CDD database & servers instead of local ones, the ``--remote`` option for the 'rpsblast'/'rpsblast+' command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use ``--remote-rps`` instead of ``--db /path/to/rpsblast/db``.
-
 
 RPS-BLAST local database
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -579,3 +568,15 @@ Note: As the local database itself consists of multiple files with different ext
           +-- Cdd.rps
 
 where the database is contained in the directory ``/root/rsp_db/``, the appropriate path to pass to this parameter is: ``/root/rps_db/Cdd``, where the trailing 'Cdd' is the prefix of all of the database's files
+
+
+RPS-BLAST remote database
+~~~~~~~~~~~~~~~~~~~~~~~~~
+**Type**: :ref:`Parameters:Flag`
+
+| **CLI**: ``--remote-rps``
+| **Python**: ``remote_rps``
+
+  | set default: ``remote rps`` (section ``[binary]``)
+
+While it is in theory possible to use the remote CDD database & servers instead of local ones, the ``--remote`` option for the 'rpsblast'/'rpsblast+' command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use ``--remote-rps`` instead of ``--db /path/to/rpsblast/db``.
