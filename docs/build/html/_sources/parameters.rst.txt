@@ -22,62 +22,62 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 +---------------+---------------------------+---------------------------+-------------------------+
 |**Category**   |**CLI arguments**          |**Python attributes**      |**Description**          |
 +---------------+---------------------------+---------------------------+-------------------------+
-|General        |--directory                |directory                  |output directory         |
+|General        |-\-directory               |directory                  |output directory         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--prefix                   |prefix                     |output file/directory    |
+|               |-\-prefix                  |prefix                     |output file/directory    |
 |               |                           |                           |prefix                   |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--thread                   |thread                     |threads                  |
+|               |-\-thread                  |thread                     |threads                  |
 +---------------+---------------------------+---------------------------+-------------------------+
-|Executable     |--blastn                   |blastn                     |local BLAST's blastn     |
+|Executable     |-\-blastn                  |blastn                     |local BLAST's blastn     |
 |               +---------------------------+---------------------------+-------------------------+
-|(path to       |--rpsblast                 |rpsblast                   |local BLAST's            |
+|(path to       |-\-rpsblast                |rpsblast                   |local BLAST's            |
 |executable     |                           |                           |rpsblast/rpsblast+       |
 |               +---------------------------+---------------------------+-------------------------+
-|OR name of     |--mafft                    |mafft                      |MAFFT                    |
+|OR name of     |-\-mafft                   |mafft                      |MAFFT                    |
 |command if     |                           |                           |                         |
 |               |                           |                           |                         |
 |accessible at  |                           |                           |                         |
 |terminal)      |                           |                           |                         |
 +---------------+---------------------------+---------------------------+-------------------------+
-|Reference      |--:ref:`reference          |:ref:`reference            |reference genome         |
+|Reference      |-\-:ref:`reference         |:ref:`reference            |reference genome         |
 |genomes        |<parameters:Reference>`    |<parameters:Reference>`\ * |                         |
 |               +---------------------------+---------------------------+-------------------------+
-|(CLI: seq,     |--assembly                 |                           |reference genome FASTA   |
+|(CLI: seq,     |-\-assembly                |                           |reference genome FASTA   |
 |full;          +---------------------------+---------------------------+-------------------------+
-|               |--annotation               |                           |reference genome GFF     |
+|               |-\-annotation              |                           |reference genome GFF     |
 |Python: seq,   +---------------------------+---------------------------+-------------------------+
-|filter)        |--:ref:`attr_mod           |                           |mapping for non-standard |
+|filter)        |-\-:ref:`attr_mod          |                           |mapping for non-standard |
 |               |<parameters:Attribute      |                           |GFF attribute field names|
 |               |modification>`             |                           |                         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--genetic-code             |                           |NCBI genetic code number |
+|               |-\-genetic-code            |                           |NCBI genetic code number |
 |               |                           |                           |or name                  |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--ext-gene                 |                           |FASTA file of genes to   |
+|               |-\-ext-gene                |                           |FASTA file of genes to   |
 |               |                           |                           |add to reference genome  |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--ext-cds                  |                           |FASTA file of CDS of     |
+|               |-\-ext-cds                 |                           |FASTA file of CDS of     |
 |               |                           |                           |genes to add to reference|
 |               |                           |                           |genome                   |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[seq]          |--gene                     |gene\ **s**                |gene IDs                 |
+|[seq]          |-\-gene                    |gene\ **s**                |gene IDs                 |
 |               +---------------------------+---------------------------+-------------------------+
-|target         |--cluster                  |                           |cluster aliases          |
+|target         |-\-cluster                 |                           |cluster aliases          |
 |definition     +---------------------------+---------------------------+-------------------------+
-|               |--indv                     |                           |individuals to discover  |
+|               |-\-indv                    |                           |individuals to discover  |
 |               |                           |                           |targets in               |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--target                   |target                     |FASTA file of sequences  |
+|               |-\-target                  |target                     |FASTA file of sequences  |
 |               |                           |                           |to find gRNA in          |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--query                    |query                      |FASTA file(s) to discover|
+|               |-\-query                   |query                      |FASTA file(s) to discover|
 |               |                           |                           |targets in               |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--domain <alias>           |                           |aliases of domains to    |
+|               |-\-domain <alias>          |                           |aliases of domains to    |
 |               |                           |                           |find gRNA in             |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--domain <Pssm-Id>         |pssm_ids                   |Pssm-Id(s) of domains to |
+|               |-\-domain <Pssm-Id>        |pssm_ids                   |Pssm-Id(s) of domains to |
 |               |                           |                           |find gRNA in             |
 |               +---------------------------+---------------------------+-------------------------+
 |               |                           |domain_name                |human-readable domain    |
@@ -85,107 +85,107 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |                           |                           |file names in place of   |
 |               |                           |                           |Pssm-Ids                 |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[seq]          |--minid                    |minid                      |minimum hit % identity   |
+|[seq]          |-\-minid                   |minid                      |minimum hit % identity   |
 |               +---------------------------+---------------------------+-------------------------+
-|inferring      |--minlen                   |minlen                     |minimum merged hits      |
+|inferring      |-\-minlen                  |minlen                     |minimum merged hits      |
 |homologues     |                           |                           |length                   |
 |               +---------------------------+---------------------------+-------------------------+
-|from BLASTN    |--mincdslen                |mincdslen                  |minimum CDS length of    |
+|from BLASTN    |-\-mincdslen               |mincdslen                  |minimum CDS length of    |
 |hits           |                           |                           |merged hits              |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--check-recip              |check_recip                |execute reciprocal check |
+|               |-\-check-recip             |check_recip                |execute reciprocal check |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--relax-recip              |relax_recip                |execute relaxed          |
+|               |-\-relax-recip             |relax_recip                |execute relaxed          |
 |               |                           |                           |reciprocal check         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--merge-within             |merge_within               |maximum distance between |
+|               |-\-merge-within            |merge_within               |maximum distance between |
 |               |                           |                           |hits for merging         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--check-id-before-merge    |check_id_before_merge      |filter hits by % identity|
+|               |-\-check-id-before-merge   |check_id_before_merge      |filter hits by % identity|
 |               |                           |                           |before merging           |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[seq]          |--db                       |db                         |path to local RPS-BLAST  |
+|[seq]          |-\-db                      |db                         |path to local RPS-BLAST  |
 |               |                           |                           |database                 |
 |RPS-BLAST      +---------------------------+---------------------------+-------------------------+
-|options        |--remote-rps               |remote_rps                 |use remote RPS-BLAST     |
+|options        |-\-remote-rps              |remote_rps                 |use remote RPS-BLAST     |
 |               |                           |                           |database (currently      |
 |               |                           |                           |non-functional)          |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[grna]         |--:ref:`pam                |:ref:`pam <parameters:pam>`|PAM pattern              |
+|[grna]         |-\-:ref:`pam               |:ref:`pam <parameters:pam>`|PAM pattern              |
 |               |<parameters:pam>`          |                           |                         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--length                   |length                     |gRNA length              |
+|               |-\-length                  |length                     |gRNA length              |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[filter]       |--gc-min                   |gc_min                     |minimum GC content       |
+|[filter]       |-\-gc-min                  |gc_min                     |minimum GC content       |
 |               +---------------------------+---------------------------+-------------------------+
-|GC             |--gc-max                   |gc_max                     |maximum GC content       |
+|GC             |-\-gc-max                  |gc_max                     |maximum GC content       |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[filter]       |--feature                  |feature                    |GFF3 feature type        |
+|[filter]       |-\-feature                 |feature                    |GFF3 feature type        |
 |               +---------------------------+---------------------------+-------------------------+
-|feature        |--max-insertion            |max_insertion              |maximum allowable        |
+|feature        |-\-max-insertion           |max_insertion              |maximum allowable        |
 |               |                           |                           |insertion in feature     |
 |               |                           |                           |                         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--min-within-n             |min_within_n               |minimum number of        |
+|               |-\-min-within-n            |min_within_n               |minimum number of        |
 |               |                           |                           |reference genes which    |
 |               |                           |                           |features overlap with    |
 |               |                           |                           |gRNA range in alignment  |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--min-within-fraction      |min_within_fraction        |minimum fraction of      |
+|               |-\-min-within-fraction     |min_within_fraction        |minimum fraction of      |
 |               |                           |                           |reference genes which    |
 |               |                           |                           |features overlap with    |
 |               |                           |                           |gRNA range in alignment  |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[filter]       |--background               |background                 |FASTA files in which to  |
+|[filter]       |-\-background              |background                 |FASTA files in which to  |
 |               |                           |                           |search for potential     |
 |background     |                           |                           |off-targets              |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--screen-reference         |screen_reference           |include reference genomes|
+|               |-\-screen-reference        |screen_reference           |include reference genomes|
 |               |                           |                           |in search for potential  |
 |               |                           |                           |off-targets              |
 |               +---------------------------+---------------------------+-------------------------+
 |               |                           |mask                       |FASTA files of additional|
 |               |                           |                           |sequences to mask        |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--unmask-ref               |                           |unmask reference genes   |
+|               |-\-unmask-ref              |                           |unmask reference genes   |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--mask-gene                |                           |additional genes to mask |
+|               |-\-mask-gene               |                           |additional genes to mask |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--unmask-gene              |                           |genes to unmask          |
+|               |-\-unmask-gene             |                           |genes to unmask          |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--mask-cluster             |                           |additional clusters to   |
+|               |-\-mask-cluster            |                           |additional clusters to   |
 |               |                           |                           |mask                     |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--unmask-cluster           |                           |clusters to unmask       |
+|               |-\-unmask-cluster          |                           |clusters to unmask       |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--ot-pamless               |ot_pamless                 |ignore absense of PAM for|
+|               |-\-ot-pamless              |ot_pamless                 |ignore absense of PAM for|
 |               |                           |                           |potential off-targets    |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--ot-mismatch              |ot_mismatch                |minimum acceptable       |
+|               |-\-ot-mismatch             |ot_mismatch                |minimum acceptable       |
 |               |                           |                           |mismatches for           |
 |               |                           |                           |off-targets              |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--ot-gap                   |ot_gap                     |minimum acceptable gaps  |
+|               |-\-ot-gap                  |ot_gap                     |minimum acceptable gaps  |
 |               |                           |                           |for off-targets          |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--skip-bg-check            |                           |skip off-target check    |
+|               |-\-skip-bg-check           |                           |skip off-target check    |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[filter]       |--exclude                  |exclude                    |FASTA file of gRNA       |
+|[filter]       |-\-exclude                 |exclude                    |FASTA file of gRNA       |
 |exclude        |                           |                           |sequences to exclude     |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[minimumset]   |--accept-invalid           |accept_invalid             |score 'NA' as 'pass'     |
+|[minimumset]   |-\-accept-invalid          |accept_invalid             |score 'NA' as 'pass'     |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--accept-feature-unknown   |accept_feature_unknown     |score 'NA' as 'pass' for |
+|               |-\-accept-feature-unknown  |accept_feature_unknown     |score 'NA' as 'pass' for |
 |               |                           |                           |feature check            |
 |               +---------------------------+---------------------------+-------------------------+
 |               |                           |accept_invalid_field       |score 'NA' as 'pass' if  |
 |               |                           |                           |all entries for a check  |
 |               |                           |                           |are 'NA'                 |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--sets                     |sets                       |number of gRNA sets      |
+|               |-\-sets                    |sets                       |number of gRNA sets      |
 |               |                           |                           |                         |
 |               +---------------------------+---------------------------+-------------------------+
-|               |--auto                     |auto                       |generate sets without    |
+|               |-\-auto                    |auto                       |generate sets without    |
 |               |                           |                           |require manual user      |
 |               |                           |                           |confirmation for each set|
 +---------------+---------------------------+---------------------------+-------------------------+
