@@ -327,7 +327,7 @@ Multi-argument (CLI)
 
 Multi-argument parameters accept multiple values by re-using a parameter. For example, multiple genes can be specified using ``--gene geneA --gene geneB --gene geneC``.
 
-(Note that some parameters can be both comma-separated AND multi-argument, and that these features can be combined. For examle, ``--gene geneA --gene geneB,geneC`` is also valid.)
+(Note that some parameters can be both comma-separated AND multi-argument, and that these features can be combined. For example, ``--gene geneA --gene geneB,geneC`` is also valid.)
 
 
 Multi-value list (Python)
