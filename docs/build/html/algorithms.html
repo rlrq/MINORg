@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7. Algorithms &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="8. Examples" href="examples.html" />
+    <link rel="prev" title="6. Parameters" href="parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#non-reference-homologue-inference">7.1. Non-reference homologue inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#off-target-assessment">7.2. Off-target assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#within-feature-inference">7.3. Within-feature inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">8. Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="section-number">7. </span>Algorithms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/algorithms.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="algorithms">
+<h1><span class="section-number">7. </span>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline"></a></h1>
+<section id="non-reference-homologue-inference">
+<h2><span class="section-number">7.1. </span>Non-reference homologue inference<a class="headerlink" href="#non-reference-homologue-inference" title="Permalink to this headline"></a></h2>
+<p>Inferrence of homologues is a BLAST-based step that is controlled by 7 parameters: <code class="docutils literal notranslate"><span class="pre">--minid</span></code>, <code class="docutils literal notranslate"><span class="pre">--minlen</span></code>, <code class="docutils literal notranslate"><span class="pre">--mincdslen</span></code>, <code class="docutils literal notranslate"><span class="pre">--merge-within</span></code>, <code class="docutils literal notranslate"><span class="pre">--check-id-before-merge</span></code>, <code class="docutils literal notranslate"><span class="pre">--check-recip</span></code>, <code class="docutils literal notranslate"><span class="pre">--relax-recip</span></code></p>
+<p>It consists broadly of 3 steps:</p>
+<ol class="arabic simple">
+<li><p>BLASTN of target reference genes to non-reference genomes</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--check-id-before-merge</span></code> (flag) and <code class="docutils literal notranslate"><span class="pre">--minid</span></code>: remove hits below percentage ID specified using <code class="docutils literal notranslate"><span class="pre">--minid</span></code></p></li>
+<li><p>Output: BLAST hits</p></li>
+</ul>
+</li>
+<li><p>Merge BLAST hits into candidate targets</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--minlen</span></code>: remove candidate targets shorter than specified length (bp)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mincdslen</span></code>: remove candidate targets with fewer than the specified bases covered by hits to CDS of reference genes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--minid</span></code>: remove candidate targets where none of the hits that were merged into it have a percentage ID equal to or greater than the specified value</p></li>
+<li><p>Output: Candidate targets</p></li>
+</ul>
+</li>
+<li><p>Optional: reciprocal BLAST of candidate targets back to reference genome(s)</p>
+<ul class="simple">
+<li><p>Filter candidate targets by whether they are more similar to target reference genes than any other non-target reference genes</p></li>
+<li><p>Particularly useful if your target genes have very similar homologues</p></li>
+<li><p>Use one of the following flags to turn ON this option:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--check-recip</span></code> (flag): Remove candidate targets where the hit with the highest bitscore is to a non-target reference genes EVEN if  the hit overlaps with a target reference gene</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--relax-recip</span></code> (flag): Remove candidate targets where the hit with the highest bitscore is to a non-target reference genes ONLY if the hit DOES NOT overlap with a target reference gene</p></li>
+</ul>
+</li>
+<li><p>Output: Filtered candidate targets</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="off-target-assessment">
+<h2><span class="section-number">7.2. </span>Off-target assessment<a class="headerlink" href="#off-target-assessment" title="Permalink to this headline"></a></h2>
+<p>Off-target assessment is a BLAST-based step controlled by 2 parameters: <code class="docutils literal notranslate"><span class="pre">--background</span></code>, <code class="docutils literal notranslate"><span class="pre">--screen-ref</span></code>, <code class="docutils literal notranslate"><span class="pre">--mask-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code>, <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code></p>
+<p>It consist broadly of 3 steps</p>
+<ol class="arabic">
+<li><p>Mask targets (and/or target reference genes) in background sequences</p>
+<ul class="simple">
+<li><p>Masking allows gRNA with hits to the masked region to NOT be considered off-target</p></li>
+<li><p>Only regions in background sequences with 100% identity across the FULL LENGTH of a target/gene to mask will be masked</p>
+<ul>
+<li><p>If a sequence comprises only part of a target/gene to mask, it will NOT be masked</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mask-gene</span></code>: reference gene(s) to mask. By default, all genes passed to <code class="docutils literal notranslate"><span class="pre">--gene</span></code> are masked.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--unmask-gene</span></code>: reference gene(s) to unmask. By default, no genes passed to <code class="docutils literal notranslate"><span class="pre">--gene</span></code> are unmasked.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--unmask-gene</span></code> has priority. If a gene appears in both <code class="docutils literal notranslate"><span class="pre">--unmask-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--mask-gene</span></code>, it will NOT be masked.</p></li>
+</ul>
+</li>
+<li><p>Output: Ranges of masked regions in background sequences</p></li>
+</ul>
+</li>
+<li><p>BLASTN of gRNA to background sequences</p>
+<ul class="simple">
+<li><p>Any files passed to <code class="docutils literal notranslate"><span class="pre">--query</span></code> will be included in this screen</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--screen-ref</span></code> (flag): include reference genome(s)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--background</span></code>: file(s) containing additional background sequences</p></li>
+<li><p>Output: BLAST hits</p></li>
+</ul>
+</li>
+<li><p>Identify potentially problematic hits</p>
+<ul>
+<li><p>Hits are subjected to the following tests in order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Hits fully in masked regions will be considered non-problematic</p></li>
+<li><p>Hits that have a minimum number of gaps or mismatches will be considered non-problematic</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code>: minimum number of gaps</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code>: minimum number of mismatches</p></li>
+</ul>
+</li>
+<li><p>Optional: Hits that do not have a PAM pattern nearby will be considered non-problematic</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-pamless</span></code> (flat): use this flag to turn this option OFF</p></li>
+</ul>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>Hits that are not considered non-problematic by AT LEAST ONE of the above test will be considered problematic</p></li>
+<li><p>Output: Problematic BLAST hits</p></li>
+</ul>
+</li>
+<li><p>gRNA with hits that are problematic are considered to have failed off-target assessment</p></li>
+</ol>
+</section>
+<section id="within-feature-inference">
+<h2><span class="section-number">7.3. </span>Within-feature inference<a class="headerlink" href="#within-feature-inference" title="Permalink to this headline"></a></h2>
+<p>MINORg aligns unannotated targets to annotated reference genes (supplied using <code class="docutils literal notranslate"><span class="pre">--gene</span></code> (CLI) or <code class="docutils literal notranslate"><span class="pre">genes</span></code> (Python)) in order to infer gene feature positions.</p>
+<img alt="_images/minorg_within_feature.png" src="_images/minorg_within_feature.png" />
+<p>An alignment of an unannotated target sequence with 2 homologous reference genes is shown in the figure above.</p>
+<ul class="simple">
+<li><p>An effective feature (CDS) range is generated for each target-reference pair separately</p></li>
+<li><p>Where there is an insertion relative to a reference gene, an effective feature (CDS) range is only continuous across it if the insertion is smaller than a user-specified max_insertion length (<code class="docutils literal notranslate"><span class="pre">--max-insertion</span></code>/<code class="docutils literal notranslate"><span class="pre">max_insertion</span></code>, default: 15 bp)</p>
+<ul>
+<li><p>Using a max_insertion of 15 bp, the insertions marked by dashed (smaller than 15 bp) and dotted (larger than 15 bp) lines are included and excluded from the effective CDS range respectively</p></li>
+</ul>
+</li>
+<li><p>The minimum requirement for a gRNA to pass this check is to fall entirely within at least one gene’s effective feature (CDS) range</p></li>
+<li><p>Users may adjust the threshold for minimum number/fraction of effective feature (CDS) ranges a gRNA is required to be contained within to pass</p>
+<ul>
+<li><p>If using min_within_n of 1</p>
+<ul>
+<li><p>gRNA are required to fall entirely within only 1 gene’s effective feature (CDS) range</p></li>
+<li><p>Both gRNA 2 and gRNA 4 pass</p></li>
+</ul>
+</li>
+<li><p>If using min_within_frac of 1</p>
+<ul>
+<li><p>gRNA are required to fall entirely within ALL genes’ effective feature (CDS) ranges</p></li>
+<li><p>Only gRNA 2 passes</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parameters.html" class="btn btn-neutral float-left" title="6. Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="8. Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

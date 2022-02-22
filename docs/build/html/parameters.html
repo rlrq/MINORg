@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5. Parameters &mdash; MINORg 0.1 documentation</title>
+  <title>6. Parameters &mdash; MINORg 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="6. Examples" href="examples.html" />
-    <link rel="prev" title="4. Tutorial" href="tutorial.html" /> 
+    <link rel="next" title="7. Algorithms" href="algorithms.html" />
+    <link rel="prev" title="5. Tutorial (Python)" href="tutorial_py.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,46 +41,54 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">4. Tutorial</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#cli-vs-python">5.1. CLI vs Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parameter-types">5.2. Parameter types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#flags-and-arguments">5.2.1. Flags and arguments</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#flag">5.2.1.1. Flag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#argument">5.2.1.2. Argument</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cli-vs-python">6.1. CLI vs Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-types">6.2. Parameter types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#flags-and-arguments">6.2.1. Flags and arguments</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flag">6.2.1.1. Flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#argument">6.2.1.2. Argument</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#alias-lookup">5.2.2. Alias lookup</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#level-lookup">5.2.2.1. 1-level lookup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id1">5.2.2.2. 2-level lookup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#predefined-lookup">5.2.2.3. Predefined lookup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#raw-values">5.2.2.4. Raw values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paths">6.2.2. Paths</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#executables">6.2.2.1. Executables</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#multiple-values">5.2.3. Multiple values</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#comma-separated-cli">5.2.3.1. Comma-separated (CLI)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#multi-argument-cli">5.2.3.2. Multi-argument (CLI)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#multi-value-list-python">5.2.3.3. Multi-value list (Python)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#multi-value-dictionary-python">5.2.3.4. Multi-value dictionary (Python)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alias-lookup">6.2.3. Alias lookup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#level-lookup">6.2.3.1. 1-level lookup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">6.2.3.2. 2-level lookup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#predefined-lookup">6.2.3.3. Predefined lookup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#raw-values">6.2.3.4. Raw values</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#parameter-descriptions">5.3. Parameter descriptions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#reference">5.3.1. Reference</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#attribute-modification">5.3.2. Attribute modification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#extended-genome">5.3.3. Extended genome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pam">5.3.4. PAM</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#ambiguous-bases-and-repeats">5.3.4.1. Ambiguous bases and repeats</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#spacers-and-3-or-5-pam">5.3.4.2. Spacers and 3’ or 5’ PAM</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#preset-pam-patterns">5.3.4.3. Preset PAM patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-values">6.2.4. Multiple values</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#comma-separated-cli">6.2.4.1. Comma-separated (CLI)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-argument-cli">6.2.4.2. Multi-argument (CLI)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-value-list-python">6.2.4.3. Multi-value list (Python)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-value-dictionary-python">6.2.4.4. Multi-value dictionary (Python)</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-descriptions">6.3. Parameter descriptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reference">6.3.1. Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#attribute-modification">6.3.2. Attribute modification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extended-genome">6.3.3. Extended genome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pam">6.3.4. PAM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ambiguous-bases-and-repeats">6.3.4.1. Ambiguous bases and repeats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spacers-and-3-or-5-pam">6.3.4.2. Spacers and 3’ or 5’ PAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preset-pam-patterns">6.3.4.3. Preset PAM patterns</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">6. Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rps-blast">6.3.5. RPS-BLAST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rps-blast-local-database">6.3.6. RPS-BLAST local database</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">7. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">8. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -100,7 +108,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">5. </span>Parameters</li>
+      <li><span class="section-number">6. </span>Parameters</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/parameters.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -111,7 +119,7 @@
            <div itemprop="articleBody">
              
   <section id="parameters">
-<h1><span class="section-number">5. </span>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h1>
+<h1><span class="section-number">6. </span>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline"></a></h1>
 <p>In addition to a brief overview of the equivalent parameters between CLI and Python versions of MINORg, this section provides additional information about the input format and utility of some of the more cryptic parameters.</p>
 <div class="contents local topic" id="contents">
 <p class="topic-title">Contents</p>
@@ -125,42 +133,49 @@
 <li><p><a class="reference internal" href="#argument" id="id6">Argument</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#alias-lookup" id="id7">Alias lookup</a></p>
+<li><p><a class="reference internal" href="#paths" id="id7">Paths</a></p>
 <ul>
-<li><p><a class="reference internal" href="#level-lookup" id="id8">1-level lookup</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id9">2-level lookup</a></p></li>
-<li><p><a class="reference internal" href="#predefined-lookup" id="id10">Predefined lookup</a></p></li>
-<li><p><a class="reference internal" href="#raw-values" id="id11">Raw values</a></p></li>
+<li><p><a class="reference internal" href="#executables" id="id8">Executables</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#multiple-values" id="id12">Multiple values</a></p>
+<li><p><a class="reference internal" href="#alias-lookup" id="id9">Alias lookup</a></p>
 <ul>
-<li><p><a class="reference internal" href="#comma-separated-cli" id="id13">Comma-separated (CLI)</a></p></li>
-<li><p><a class="reference internal" href="#multi-argument-cli" id="id14">Multi-argument (CLI)</a></p></li>
-<li><p><a class="reference internal" href="#multi-value-list-python" id="id15">Multi-value list (Python)</a></p></li>
-<li><p><a class="reference internal" href="#multi-value-dictionary-python" id="id16">Multi-value dictionary (Python)</a></p></li>
+<li><p><a class="reference internal" href="#level-lookup" id="id10">1-level lookup</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id11">2-level lookup</a></p></li>
+<li><p><a class="reference internal" href="#predefined-lookup" id="id12">Predefined lookup</a></p></li>
+<li><p><a class="reference internal" href="#raw-values" id="id13">Raw values</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#multiple-values" id="id14">Multiple values</a></p>
+<ul>
+<li><p><a class="reference internal" href="#comma-separated-cli" id="id15">Comma-separated (CLI)</a></p></li>
+<li><p><a class="reference internal" href="#multi-argument-cli" id="id16">Multi-argument (CLI)</a></p></li>
+<li><p><a class="reference internal" href="#multi-value-list-python" id="id17">Multi-value list (Python)</a></p></li>
+<li><p><a class="reference internal" href="#multi-value-dictionary-python" id="id18">Multi-value dictionary (Python)</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#parameter-descriptions" id="id17">Parameter descriptions</a></p>
+<li><p><a class="reference internal" href="#parameter-descriptions" id="id19">Parameter descriptions</a></p>
 <ul>
-<li><p><a class="reference internal" href="#reference" id="id18">Reference</a></p></li>
-<li><p><a class="reference internal" href="#attribute-modification" id="id19">Attribute modification</a></p></li>
-<li><p><a class="reference internal" href="#extended-genome" id="id20">Extended genome</a></p></li>
-<li><p><a class="reference internal" href="#pam" id="id21">PAM</a></p>
+<li><p><a class="reference internal" href="#reference" id="id20">Reference</a></p></li>
+<li><p><a class="reference internal" href="#attribute-modification" id="id21">Attribute modification</a></p></li>
+<li><p><a class="reference internal" href="#extended-genome" id="id22">Extended genome</a></p></li>
+<li><p><a class="reference internal" href="#pam" id="id23">PAM</a></p>
 <ul>
-<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id22">Ambiguous bases and repeats</a></p></li>
-<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id23">Spacers and 3’ or 5’ PAM</a></p></li>
-<li><p><a class="reference internal" href="#preset-pam-patterns" id="id24">Preset PAM patterns</a></p></li>
+<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id24">Ambiguous bases and repeats</a></p></li>
+<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id25">Spacers and 3’ or 5’ PAM</a></p></li>
+<li><p><a class="reference internal" href="#preset-pam-patterns" id="id26">Preset PAM patterns</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#rps-blast" id="id27">RPS-BLAST</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-local-database" id="id28">RPS-BLAST local database</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <section id="cli-vs-python">
-<h2><a class="toc-backref" href="#id2"><span class="section-number">5.1. </span>CLI vs Python</a><a class="headerlink" href="#cli-vs-python" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id2"><span class="section-number">6.1. </span>CLI vs Python</a><a class="headerlink" href="#cli-vs-python" title="Permalink to this headline"></a></h2>
 <p>Several CLI arguments have no equivalents in the Python module as they were intended to simplify the building of commands for users who have little to no experience with coding. Users of the Python package are assumed to be comfortable with generating their own preset parameter combinations.</p>
 <p>The table below lists the major similarities and differences between CLI arguments and the Python package’s MINORg class attributes (note that some attributes are in fact properties, but with the exception of <code class="docutils literal notranslate"><span class="pre">reference</span></code>, setting them should be no different from setting attributes).</p>
 <p>Note: Some parameters only apply to specific subcommands (in addition to, of course, the full programme). The relevant subcommands will be indicated in square brackets in the ‘Category’ column.</p>
@@ -179,16 +194,16 @@
 <td><p><strong>Description</strong></p></td>
 </tr>
 <tr class="row-even"><td rowspan="3"><p>General</p></td>
-<td><p>directory</p></td>
+<td><p>–directory</p></td>
 <td><p>directory</p></td>
 <td><p>output directory</p></td>
 </tr>
-<tr class="row-odd"><td><p>prefix</p></td>
+<tr class="row-odd"><td><p>–prefix</p></td>
 <td><p>prefix</p></td>
 <td><p>output file/directory
 prefix</p></td>
 </tr>
-<tr class="row-even"><td><p>thread</p></td>
+<tr class="row-even"><td><p>–thread</p></td>
 <td><p>thread</p></td>
 <td><p>threads</p></td>
 </tr>
@@ -200,16 +215,16 @@ command if</p>
 <p>accessible at
 terminal)</p>
 </td>
-<td><p>blastn</p></td>
+<td><p>–blastn</p></td>
 <td><p>blastn</p></td>
 <td><p>local BLAST’s blastn</p></td>
 </tr>
-<tr class="row-even"><td><p>rpsblast</p></td>
+<tr class="row-even"><td><p>–rpsblast</p></td>
 <td><p>rpsblast</p></td>
 <td><p>local BLAST’s
 rpsblast/rpsblast+</p></td>
 </tr>
-<tr class="row-odd"><td><p>mafft</p></td>
+<tr class="row-odd"><td><p>–mafft</p></td>
 <td><p>mafft</p></td>
 <td><p>MAFFT</p></td>
 </tr>
@@ -220,34 +235,34 @@ full;</p>
 <p>Python: seq,
 filter)</p>
 </td>
-<td><p><a class="reference internal" href="#reference"><span class="std std-ref">reference</span></a></p></td>
+<td><p>–<a class="reference internal" href="#reference"><span class="std std-ref">reference</span></a></p></td>
 <td><p><a class="reference internal" href="#reference"><span class="std std-ref">reference</span></a>*</p></td>
 <td><p>reference genome</p></td>
 </tr>
-<tr class="row-odd"><td><p>assembly</p></td>
+<tr class="row-odd"><td><p>–assembly</p></td>
 <td></td>
 <td><p>reference genome FASTA</p></td>
 </tr>
-<tr class="row-even"><td><p>annotation</p></td>
+<tr class="row-even"><td><p>–annotation</p></td>
 <td></td>
 <td><p>reference genome GFF</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#attribute-modification"><span class="std std-ref">attr_mod</span></a></p></td>
+<tr class="row-odd"><td><p>–<a class="reference internal" href="#attribute-modification"><span class="std std-ref">attr_mod</span></a></p></td>
 <td></td>
 <td><p>mapping for non-standard
 GFF attribute field names</p></td>
 </tr>
-<tr class="row-even"><td><p>genetic_code</p></td>
+<tr class="row-even"><td><p>–genetic-code</p></td>
 <td></td>
 <td><p>NCBI genetic code number
 or name</p></td>
 </tr>
-<tr class="row-odd"><td><p>ext_gene</p></td>
+<tr class="row-odd"><td><p>–ext-gene</p></td>
 <td></td>
 <td><p>FASTA file of genes to
 add to reference genome</p></td>
 </tr>
-<tr class="row-even"><td><p>ext_cds</p></td>
+<tr class="row-even"><td><p>–ext-cds</p></td>
 <td></td>
 <td><p>FASTA file of CDS of
 genes to add to reference
@@ -257,35 +272,35 @@ genome</p></td>
 <p>target
 definition</p>
 </td>
-<td><p>gene</p></td>
+<td><p>–gene</p></td>
 <td><p>gene<strong>s</strong></p></td>
 <td><p>gene IDs</p></td>
 </tr>
-<tr class="row-even"><td><p>cluster</p></td>
+<tr class="row-even"><td><p>–cluster</p></td>
 <td></td>
 <td><p>cluster aliases</p></td>
 </tr>
-<tr class="row-odd"><td><p>indv</p></td>
+<tr class="row-odd"><td><p>–indv</p></td>
 <td></td>
 <td><p>individuals to discover
 targets in</p></td>
 </tr>
-<tr class="row-even"><td><p>target</p></td>
+<tr class="row-even"><td><p>–target</p></td>
 <td><p>target</p></td>
 <td><p>FASTA file of sequences
 to find gRNA in</p></td>
 </tr>
-<tr class="row-odd"><td><p>query</p></td>
+<tr class="row-odd"><td><p>–query</p></td>
 <td><p>query</p></td>
 <td><p>FASTA file(s) to discover
 targets in</p></td>
 </tr>
-<tr class="row-even"><td><p>domain &lt;alias&gt;</p></td>
+<tr class="row-even"><td><p>–domain &lt;alias&gt;</p></td>
 <td></td>
 <td><p>aliases of domains to
 find gRNA in</p></td>
 </tr>
-<tr class="row-odd"><td><p>domain &lt;Pssm-Id&gt;</p></td>
+<tr class="row-odd"><td><p>–domain &lt;Pssm-Id&gt;</p></td>
 <td><p>pssm_ids</p></td>
 <td><p>Pssm-Id(s) of domains to
 find gRNA in</p></td>
@@ -303,35 +318,35 @@ homologues</p>
 <p>from BLASTN
 hits</p>
 </td>
-<td><p>minid</p></td>
+<td><p>–minid</p></td>
 <td><p>minid</p></td>
 <td><p>minimum hit % identity</p></td>
 </tr>
-<tr class="row-even"><td><p>minlen</p></td>
+<tr class="row-even"><td><p>–minlen</p></td>
 <td><p>minlen</p></td>
 <td><p>minimum merged hits
 length</p></td>
 </tr>
-<tr class="row-odd"><td><p>mincdslen</p></td>
+<tr class="row-odd"><td><p>–mincdslen</p></td>
 <td><p>mincdslen</p></td>
 <td><p>minimum CDS length of
 merged hits</p></td>
 </tr>
-<tr class="row-even"><td><p>check_recip</p></td>
+<tr class="row-even"><td><p>–check-recip</p></td>
 <td><p>check_recip</p></td>
 <td><p>execute reciprocal check</p></td>
 </tr>
-<tr class="row-odd"><td><p>relax_recip</p></td>
+<tr class="row-odd"><td><p>–relax-recip</p></td>
 <td><p>relax_recip</p></td>
 <td><p>execute relaxed
 reciprocal check</p></td>
 </tr>
-<tr class="row-even"><td><p>merge_within</p></td>
+<tr class="row-even"><td><p>–merge-within</p></td>
 <td><p>merge_within</p></td>
 <td><p>maximum distance between
 hits for merging</p></td>
 </tr>
-<tr class="row-odd"><td><p>check_id_before_merge</p></td>
+<tr class="row-odd"><td><p>–check-id-before-merge</p></td>
 <td><p>check_id_before_merge</p></td>
 <td><p>filter hits by % identity
 before merging</p></td>
@@ -340,57 +355,57 @@ before merging</p></td>
 <p>RPS-BLAST
 options</p>
 </td>
-<td><p>db</p></td>
+<td><p>–db</p></td>
 <td><p>db</p></td>
 <td><p>path to local RPS-BLAST
 database</p></td>
 </tr>
-<tr class="row-odd"><td><p>remote_rps</p></td>
+<tr class="row-odd"><td><p>–remote-rps</p></td>
 <td><p>remote_rps</p></td>
 <td><p>use remote RPS-BLAST
 database (currently
 non-functional)</p></td>
 </tr>
 <tr class="row-even"><td rowspan="2"><p>[grna]</p></td>
-<td><p><a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
+<td><p>–<a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
 <td><p><a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
 <td><p>PAM pattern</p></td>
 </tr>
-<tr class="row-odd"><td><p>length</p></td>
+<tr class="row-odd"><td><p>–length</p></td>
 <td><p>length</p></td>
 <td><p>gRNA length</p></td>
 </tr>
 <tr class="row-even"><td rowspan="2"><p>[filter]</p>
 <p>GC</p>
 </td>
-<td><p>gc_min</p></td>
+<td><p>–gc-min</p></td>
 <td><p>gc_min</p></td>
 <td><p>minimum GC content</p></td>
 </tr>
-<tr class="row-odd"><td><p>gc_max</p></td>
+<tr class="row-odd"><td><p>–gc-max</p></td>
 <td><p>gc_max</p></td>
 <td><p>maximum GC content</p></td>
 </tr>
 <tr class="row-even"><td rowspan="4"><p>[filter]</p>
 <p>feature</p>
 </td>
-<td><p>feature</p></td>
+<td><p>–feature</p></td>
 <td><p>feature</p></td>
 <td><p>GFF3 feature type</p></td>
 </tr>
-<tr class="row-odd"><td><p>max_insertion</p></td>
+<tr class="row-odd"><td><p>–max-insertion</p></td>
 <td><p>max_insertion</p></td>
 <td><p>maximum allowable
 insertion in feature</p></td>
 </tr>
-<tr class="row-even"><td><p>min_within_n</p></td>
+<tr class="row-even"><td><p>–min-within-n</p></td>
 <td><p>min_within_n</p></td>
 <td><p>minimum number of
 reference genes which
 features overlap with
 gRNA range in alignment</p></td>
 </tr>
-<tr class="row-odd"><td><p>min_within_fraction</p></td>
+<tr class="row-odd"><td><p>–min-within-fraction</p></td>
 <td><p>min_within_fraction</p></td>
 <td><p>minimum fraction of
 reference genes which
@@ -400,13 +415,13 @@ gRNA range in alignment</p></td>
 <tr class="row-even"><td rowspan="12"><p>[filter]</p>
 <p>background</p>
 </td>
-<td><p>background</p></td>
+<td><p>–background</p></td>
 <td><p>background</p></td>
 <td><p>FASTA files in which to
 search for potential
 off-targets</p></td>
 </tr>
-<tr class="row-odd"><td><p>screen_reference</p></td>
+<tr class="row-odd"><td><p>–screen-reference</p></td>
 <td><p>screen_reference</p></td>
 <td><p>include reference genomes
 in search for potential
@@ -417,60 +432,60 @@ off-targets</p></td>
 <td><p>FASTA files of additional
 sequences to mask</p></td>
 </tr>
-<tr class="row-odd"><td><p>unmask_ref</p></td>
+<tr class="row-odd"><td><p>–unmask-ref</p></td>
 <td></td>
 <td><p>unmask reference genes</p></td>
 </tr>
-<tr class="row-even"><td><p>mask_gene</p></td>
+<tr class="row-even"><td><p>–mask-gene</p></td>
 <td></td>
 <td><p>additional genes to mask</p></td>
 </tr>
-<tr class="row-odd"><td><p>unmask_gene</p></td>
+<tr class="row-odd"><td><p>–unmask-gene</p></td>
 <td></td>
 <td><p>genes to unmask</p></td>
 </tr>
-<tr class="row-even"><td><p>mask_cluster</p></td>
+<tr class="row-even"><td><p>–mask-cluster</p></td>
 <td></td>
 <td><p>additional clusters to
 mask</p></td>
 </tr>
-<tr class="row-odd"><td><p>unmask_cluster</p></td>
+<tr class="row-odd"><td><p>–unmask-cluster</p></td>
 <td></td>
 <td><p>clusters to unmask</p></td>
 </tr>
-<tr class="row-even"><td><p>ot_pamless</p></td>
+<tr class="row-even"><td><p>–ot-pamless</p></td>
 <td><p>ot_pamless</p></td>
 <td><p>ignore absense of PAM for
 potential off-targets</p></td>
 </tr>
-<tr class="row-odd"><td><p>ot_mismatch</p></td>
+<tr class="row-odd"><td><p>–ot-mismatch</p></td>
 <td><p>ot_mismatch</p></td>
 <td><p>minimum acceptable
 mismatches for
 off-targets</p></td>
 </tr>
-<tr class="row-even"><td><p>ot_gap</p></td>
+<tr class="row-even"><td><p>–ot-gap</p></td>
 <td><p>ot_gap</p></td>
 <td><p>minimum acceptable gaps
 for off-targets</p></td>
 </tr>
-<tr class="row-odd"><td><p>skip_bg_check</p></td>
+<tr class="row-odd"><td><p>–skip-bg-check</p></td>
 <td></td>
 <td><p>skip off-target check</p></td>
 </tr>
 <tr class="row-even"><td><p>[filter]
 exclude</p></td>
-<td><p>exclude</p></td>
+<td><p>–exclude</p></td>
 <td><p>exclude</p></td>
 <td><p>FASTA file of gRNA
 sequences to exclude</p></td>
 </tr>
 <tr class="row-odd"><td rowspan="5"><p>[minimumset]</p></td>
-<td><p>accept_invalid</p></td>
+<td><p>–accept-invalid</p></td>
 <td><p>accept_invalid</p></td>
 <td><p>score ‘NA’ as ‘pass’</p></td>
 </tr>
-<tr class="row-even"><td><p>accept_feature_unknown</p></td>
+<tr class="row-even"><td><p>–accept-feature-unknown</p></td>
 <td><p>accept_feature_unknown</p></td>
 <td><p>score ‘NA’ as ‘pass’ for
 feature check</p></td>
@@ -481,11 +496,11 @@ feature check</p></td>
 all entries for a check
 are ‘NA’</p></td>
 </tr>
-<tr class="row-even"><td><p>sets</p></td>
+<tr class="row-even"><td><p>–sets</p></td>
 <td><p>sets</p></td>
 <td><p>number of gRNA sets</p></td>
 </tr>
-<tr class="row-odd"><td><p>auto</p></td>
+<tr class="row-odd"><td><p>–auto</p></td>
 <td><p>auto</p></td>
 <td><p>generate sets without
 require manual user
@@ -495,11 +510,11 @@ confirmation for each set</p></td>
 </table>
 </section>
 <section id="parameter-types">
-<h2><a class="toc-backref" href="#id3"><span class="section-number">5.2. </span>Parameter types</a><a class="headerlink" href="#parameter-types" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id3"><span class="section-number">6.2. </span>Parameter types</a><a class="headerlink" href="#parameter-types" title="Permalink to this headline"></a></h2>
 <section id="flags-and-arguments">
-<h3><a class="toc-backref" href="#id4"><span class="section-number">5.2.1. </span>Flags and arguments</a><a class="headerlink" href="#flags-and-arguments" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id4"><span class="section-number">6.2.1. </span>Flags and arguments</a><a class="headerlink" href="#flags-and-arguments" title="Permalink to this headline"></a></h3>
 <section id="flag">
-<h4><a class="toc-backref" href="#id5"><span class="section-number">5.2.1.1. </span>Flag</a><a class="headerlink" href="#flag" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id5"><span class="section-number">6.2.1.1. </span>Flag</a><a class="headerlink" href="#flag" title="Permalink to this headline"></a></h4>
 <p>Flags are parameters that do not take values.</p>
 <p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--auto</span></code></p>
 <p>For example:</p>
@@ -516,7 +531,7 @@ confirmation for each set</p></td>
 </div>
 </section>
 <section id="argument">
-<h4><a class="toc-backref" href="#id6"><span class="section-number">5.2.1.2. </span>Argument</a><a class="headerlink" href="#argument" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id6"><span class="section-number">6.2.1.2. </span>Argument</a><a class="headerlink" href="#argument" title="Permalink to this headline"></a></h4>
 <p>These parameters take values.</p>
 <p><strong>CLI</strong>: all parameters that are not flags</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;other arguments&gt; --prefix my_minorg
@@ -531,11 +546,19 @@ confirmation for each set</p></td>
 </div>
 </section>
 </section>
+<section id="paths">
+<h3><a class="toc-backref" href="#id7"><span class="section-number">6.2.2. </span>Paths</a><a class="headerlink" href="#paths" title="Permalink to this headline"></a></h3>
+<p>As all paths will be resolved to absolute paths, relative paths are acceptable.</p>
+<section id="executables">
+<h4><a class="toc-backref" href="#id8"><span class="section-number">6.2.2.1. </span>Executables</a><a class="headerlink" href="#executables" title="Permalink to this headline"></a></h4>
+<p>If an executable is accessible at the command line, you may simply specify the command itself. If not, the path to the executable is required.</p>
+</section>
+</section>
 <section id="alias-lookup">
-<h3><a class="toc-backref" href="#id7"><span class="section-number">5.2.2. </span>Alias lookup</a><a class="headerlink" href="#alias-lookup" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id9"><span class="section-number">6.2.3. </span>Alias lookup</a><a class="headerlink" href="#alias-lookup" title="Permalink to this headline"></a></h3>
 <p>Note that aliases are <strong>case-sensitive</strong>.</p>
 <section id="level-lookup">
-<h4><a class="toc-backref" href="#id8"><span class="section-number">5.2.2.1. </span>1-level lookup</a><a class="headerlink" href="#level-lookup" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id10"><span class="section-number">6.2.3.1. </span>1-level lookup</a><a class="headerlink" href="#level-lookup" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="configuration.html#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <p>1-level lookup parameters have preset values mapped to aliases defined in a configuration file. Users may use either the alias(es) or provide raw values.</p>
 <div class="line-block">
@@ -544,7 +567,7 @@ confirmation for each set</p></td>
 </div>
 </section>
 <section id="id1">
-<h4><a class="toc-backref" href="#id9"><span class="section-number">5.2.2.2. </span>2-level lookup</a><a class="headerlink" href="#id1" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id11"><span class="section-number">6.2.3.2. </span>2-level lookup</a><a class="headerlink" href="#id1" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a></p>
 <p>2-level lookup parameters use a combination of 2 parameters. The first parameter (suffixed with <cite>set</cite>) specifies a file containing alias mapping information for the second parameter (not suffixed). Aliases for the first parameter are defined in a configuration file, and functions effectively the same way a 1-level lookup parameter does. The second parameter reads alias mapping information from the file specified by the first parameter. Unlike the first parameters, users may only use alias(es)–raw values are not allowed. To specify raw values, different parameters must be used (see <a class="reference internal" href="configuration.html#alternative-parameters"><span class="std std-ref">Alternative parameters</span></a> for which).</p>
 <div class="line-block">
@@ -553,7 +576,7 @@ confirmation for each set</p></td>
 </div>
 </section>
 <section id="predefined-lookup">
-<h4><a class="toc-backref" href="#id10"><span class="section-number">5.2.2.3. </span>Predefined lookup</a><a class="headerlink" href="#predefined-lookup" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id12"><span class="section-number">6.2.3.3. </span>Predefined lookup</a><a class="headerlink" href="#predefined-lookup" title="Permalink to this headline"></a></h4>
 <p>Predefined lookup parameters are built into the programme. Users may use either the alias(es) or raw values.</p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--pam</span></code></div>
@@ -561,26 +584,26 @@ confirmation for each set</p></td>
 </div>
 </section>
 <section id="raw-values">
-<h4><a class="toc-backref" href="#id11"><span class="section-number">5.2.2.4. </span>Raw values</a><a class="headerlink" href="#raw-values" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id13"><span class="section-number">6.2.3.4. </span>Raw values</a><a class="headerlink" href="#raw-values" title="Permalink to this headline"></a></h4>
 <p>All other parameters are raw values only.</p>
 </section>
 </section>
 <section id="multiple-values">
-<h3><a class="toc-backref" href="#id12"><span class="section-number">5.2.3. </span>Multiple values</a><a class="headerlink" href="#multiple-values" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id14"><span class="section-number">6.2.4. </span>Multiple values</a><a class="headerlink" href="#multiple-values" title="Permalink to this headline"></a></h3>
 <section id="comma-separated-cli">
-<h4><a class="toc-backref" href="#id13"><span class="section-number">5.2.3.1. </span>Comma-separated (CLI)</a><a class="headerlink" href="#comma-separated-cli" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id15"><span class="section-number">6.2.4.1. </span>Comma-separated (CLI)</a><a class="headerlink" href="#comma-separated-cli" title="Permalink to this headline"></a></h4>
 <p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--indv</span></code></p>
 <p>Comma-separated multiple value arguments accept multiple values for a single argument so long as the values are comma-separated. For example, multiple genes can be specified using <code class="docutils literal notranslate"><span class="pre">--gene</span> <span class="pre">'geneA,geneB,geneC'</span></code>.</p>
 </section>
 <section id="multi-argument-cli">
-<h4><a class="toc-backref" href="#id14"><span class="section-number">5.2.3.2. </span>Multi-argument (CLI)</a><a class="headerlink" href="#multi-argument-cli" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id16"><span class="section-number">6.2.4.2. </span>Multi-argument (CLI)</a><a class="headerlink" href="#multi-argument-cli" title="Permalink to this headline"></a></h4>
 <p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, <code class="docutils literal notranslate"><span class="pre">--query</span></code>, <code class="docutils literal notranslate"><span class="pre">--feature</span></code>, <code class="docutils literal notranslate"><span class="pre">--ext-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--ext-cds</span></code>, <code class="docutils literal notranslate"><span class="pre">--mask-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--mask-cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask-cluster</span></code>
 .. , <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> (not implemented)</p>
 <p>Multi-argument parameters accept multiple values by re-using a parameter. For example, multiple genes can be specified using <code class="docutils literal notranslate"><span class="pre">--gene</span> <span class="pre">geneA</span> <span class="pre">--gene</span> <span class="pre">geneB</span> <span class="pre">--gene</span> <span class="pre">geneC</span></code>.</p>
 <p>(Note that some parameters can be both comma-separated AND multi-argument, and that these features can be combined. For examle, <code class="docutils literal notranslate"><span class="pre">--gene</span> <span class="pre">geneA</span> <span class="pre">--gene</span> <span class="pre">geneB,geneC</span></code> is also valid.)</p>
 </section>
 <section id="multi-value-list-python">
-<h4><a class="toc-backref" href="#id15"><span class="section-number">5.2.3.3. </span>Multi-value list (Python)</a><a class="headerlink" href="#multi-value-list-python" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id17"><span class="section-number">6.2.4.3. </span>Multi-value list (Python)</a><a class="headerlink" href="#multi-value-list-python" title="Permalink to this headline"></a></h4>
 <p><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">genes</span></code></p>
 <p>Multiple values for a single parameter may be provided to MINORg in a list. For example:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -591,15 +614,15 @@ confirmation for each set</p></td>
 </div>
 </section>
 <section id="multi-value-dictionary-python">
-<h4><a class="toc-backref" href="#id16"><span class="section-number">5.2.3.4. </span>Multi-value dictionary (Python)</a><a class="headerlink" href="#multi-value-dictionary-python" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id18"><span class="section-number">6.2.4.4. </span>Multi-value dictionary (Python)</a><a class="headerlink" href="#multi-value-dictionary-python" title="Permalink to this headline"></a></h4>
 <p><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">query</span></code>, <code class="docutils literal notranslate"><span class="pre">background</span></code></p>
 </section>
 </section>
 </section>
 <section id="parameter-descriptions">
-<h2><a class="toc-backref" href="#id17"><span class="section-number">5.3. </span>Parameter descriptions</a><a class="headerlink" href="#parameter-descriptions" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id19"><span class="section-number">6.3. </span>Parameter descriptions</a><a class="headerlink" href="#parameter-descriptions" title="Permalink to this headline"></a></h2>
 <section id="reference">
-<h3><a class="toc-backref" href="#id18"><span class="section-number">5.3.1. </span>Reference</a><a class="headerlink" href="#reference" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id20"><span class="section-number">6.3.1. </span>Reference</a><a class="headerlink" href="#reference" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#id1"><span class="std std-ref">2-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--reference</span></code></div>
@@ -616,7 +639,7 @@ confirmation for each set</p></td>
 <p>TODO: also link to attribute modification section below when describing setting reference for Python</p>
 </section>
 <section id="attribute-modification">
-<h3><a class="toc-backref" href="#id19"><span class="section-number">5.3.2. </span>Attribute modification</a><a class="headerlink" href="#attribute-modification" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id21"><span class="section-number">6.3.2. </span>Attribute modification</a><a class="headerlink" href="#attribute-modification" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code></div>
@@ -648,7 +671,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 <p>See <a class="reference external" href="http://gmod.org/wiki/GFF3">http://gmod.org/wiki/GFF3</a> for standard attribute field names (see section titled ‘Column 9: “attributes”’).</p>
 </section>
 <section id="extended-genome">
-<h3><a class="toc-backref" href="#id20"><span class="section-number">5.3.3. </span>Extended genome</a><a class="headerlink" href="#extended-genome" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id22"><span class="section-number">6.3.3. </span>Extended genome</a><a class="headerlink" href="#extended-genome" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#raw-values"><span class="std std-ref">Raw values</span></a>, <a class="reference internal" href="#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a>, <a class="reference internal" href="#multi-value-list-python"><span class="std std-ref">Multi-value list (Python)</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code></div>
@@ -679,7 +702,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 <p>CDS sequences <code class="docutils literal notranslate"><span class="pre">geneA.1</span></code> and <code class="docutils literal notranslate"><span class="pre">geneA.two</span></code> will be mapped to gene sequence <code class="docutils literal notranslate"><span class="pre">geneA</span></code>, <code class="docutils literal notranslate"><span class="pre">geneA.foo.bar</span></code> will be mapped to <code class="docutils literal notranslate"><span class="pre">geneA.foo</span></code>, and <code class="docutils literal notranslate"><span class="pre">geneB.1</span></code> will be mapped to <code class="docutils literal notranslate"><span class="pre">geneB</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">geneA.1</span></code> and <code class="docutils literal notranslate"><span class="pre">geneA.two</span></code> will be treated as different isoforms of the gene <code class="docutils literal notranslate"><span class="pre">geneA</span></code>.</p>
 </section>
 <section id="pam">
-<h3><a class="toc-backref" href="#id21"><span class="section-number">5.3.4. </span>PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id23"><span class="section-number">6.3.4. </span>PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#predefined-lookup"><span class="std std-ref">Predefined lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--pam</span></code></div>
@@ -693,9 +716,9 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 </div>
 </div></blockquote>
 <p>By default, MINORg designs gRNA for SpCas9 systems (i.e. 3’ NGG PAM). You may specify other PAM patterns for non-SpCas9 systems using <code class="docutils literal notranslate"><span class="pre">--pam</span></code>. It is recommended that any PAM pattern that uses special characters be enclosed in quotes, as it may lead to unexpected behaviour otherwise at the terminal.</p>
-<p>Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. Howver, do take care to avoid using  <code class="docutils literal notranslate"><span class="pre">.</span></code> as a wildcard, as MINORg uses it to determine where gRNA is relative to a PAM pattern.</p>
+<p>Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. However, do take care to avoid using  <code class="docutils literal notranslate"><span class="pre">.</span></code> as a wildcard, as MINORg uses this character to determine where gRNA is relative to a PAM pattern.</p>
 <section id="ambiguous-bases-and-repeats">
-<h4><a class="toc-backref" href="#id22"><span class="section-number">5.3.4.1. </span>Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id24"><span class="section-number">6.3.4.1. </span>Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h4>
 <p>Unlike many gRNA designers, MINORg accepts ambiguous bases (see: <a class="reference external" href="https://genome.ucsc.edu/goldenPath/help/iupac.html">https://genome.ucsc.edu/goldenPath/help/iupac.html</a> for IUPAC codes) as well as variable number of repeats.</p>
 <blockquote>
 <div><p>Example: The pattern ‘R{1,2}T’ (where ‘R’ means ‘A’ or ‘G’, and {1,2} means either 1 to 2 repetitions
@@ -703,7 +726,7 @@ of the character right before it) will match ‘AT’, ‘GT’, ‘AAT’, ‘A
 </div></blockquote>
 </section>
 <section id="spacers-and-3-or-5-pam">
-<h4><a class="toc-backref" href="#id23"><span class="section-number">5.3.4.2. </span>Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id25"><span class="section-number">6.3.4.2. </span>Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h4>
 <p>In the absence of ‘N’ in the PAM pattern, MINORg will assume 3’ PAM with 1 spacer base (such as in the 3’ ‘NGG’ of SpCas9). If a pattern includes an ‘N’ at either end, MINORg will assume that the gRNA is directly adjacent to the ‘N’ base of the pattern. To specify a 5’ PAM in the absence of ‘N’ in the PAM pattern, ‘.’ should be inserted where the gRNA is.</p>
 <blockquote>
 <div><p>Example 1: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">GG</span></code> are functionally identical.
@@ -724,7 +747,7 @@ expanding it to the undesired explicit pattern <code class="docutils literal not
 <p>For a PAM-less search, use: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">'.'</span></code>.</p>
 </section>
 <section id="preset-pam-patterns">
-<h4><a class="toc-backref" href="#id24"><span class="section-number">5.3.4.3. </span>Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id26"><span class="section-number">6.3.4.3. </span>Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h4>
 <p>MINORg comes with several preset PAM patterns for different CRISPR systems.</p>
 <blockquote>
 <div><p>For example: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">SpCas9</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> are functionally identical.</p>
@@ -790,6 +813,52 @@ bhcas12b</p></td>
 </table>
 </section>
 </section>
+<section id="rps-blast">
+<h3><a class="toc-backref" href="#id27"><span class="section-number">6.3.5. </span>RPS-BLAST</a><a class="headerlink" href="#rps-blast" title="Permalink to this headline"></a></h3>
+<p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
+<div class="line-block">
+<div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code></div>
+<div class="line"><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">remote_rps</span></code></div>
+</div>
+<blockquote>
+<div><div class="line-block">
+<div class="line">set default: <code class="docutils literal notranslate"><span class="pre">rpsblast</span></code> (section <code class="docutils literal notranslate"><span class="pre">[binary]</span></code>)</div>
+</div>
+</div></blockquote>
+<p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--db</span> <span class="pre">/path/to/rpsblast/db</span></code>.</p>
+</section>
+<section id="rps-blast-local-database">
+<h3><a class="toc-backref" href="#id28"><span class="section-number">6.3.6. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
+<p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
+<div class="line-block">
+<div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--db</span></code></div>
+<div class="line"><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">db</span></code></div>
+</div>
+<blockquote>
+<div><div class="line-block">
+<div class="line">set default: <code class="docutils literal notranslate"><span class="pre">rps</span> <span class="pre">database</span></code> (section <code class="docutils literal notranslate"><span class="pre">[data]</span></code>)</div>
+<div class="line">assign aliases: <code class="docutils literal notranslate"><span class="pre">rps</span> <span class="pre">database</span> <span class="pre">alias</span></code> (section <code class="docutils literal notranslate"><span class="pre">[lookup]</span></code>)</div>
+</div>
+</div></blockquote>
+<p>The latest CDD database may be downloaded at <a class="reference external" href="ftp://ftp.ncbi.nih.gov/pub/mmdb/cdd/cdd.targ.gz">ftp://ftp.ncbi.nih.gov/pub/mmdb/cdd/cdd.targ.gz</a>. As the CDD database is regularly updated, the PSSM-Id for a domain shown at the CDD website is subject to change. Thus, I also recommend downloading <a class="reference external" href="ftp://ftp.ncbi.nih.gov/pub/mmdb/cdd/cddid.tbl.gz">ftp://ftp.ncbi.nih.gov/pub/mmdb/cdd/cddid.tbl.gz</a>, which contains information that maps PSSM-Ids to domain accession IDs as well as domain names of the database version at the point of downloading.</p>
+<p>Note: As the local database itself consists of multiple files with different extensions, the path provided to this parameter is not to any single file. For example, given the following file structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span>
+<span class="o">+--</span> <span class="n">root</span><span class="o">/</span>
+    <span class="o">|--</span> <span class="n">other_files</span><span class="o">/</span>
+    <span class="o">|--</span> <span class="n">rps_db</span><span class="o">/</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">aux</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">freq</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">loo</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">phr</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">pin</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">psd</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">psi</span>
+        <span class="o">|--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">psq</span>
+        <span class="o">+--</span> <span class="n">Cdd</span><span class="o">.</span><span class="n">rps</span>
+</pre></div>
+</div>
+<p>where the database is contained in the directory <code class="docutils literal notranslate"><span class="pre">/root/rsp_db/</span></code>, the appropriate path to pass to this parameter is: <code class="docutils literal notranslate"><span class="pre">/root/rps_db/Cdd</span></code>, where the trailing ‘Cdd’ is the prefix of all of the database’s files</p>
+</section>
 </section>
 </section>
 
@@ -797,8 +866,8 @@ bhcas12b</p></td>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tutorial.html" class="btn btn-neutral float-left" title="4. Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples.html" class="btn btn-neutral float-right" title="6. Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorial_py.html" class="btn btn-neutral float-left" title="5. Tutorial (Python)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="algorithms.html" class="btn btn-neutral float-right" title="7. Algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -16,8 +16,10 @@ Module contents
    install
    overview
    configuration
-   tutorial
+   tutorial_cli
+   tutorial_py
    parameters
+   algorithms
    examples
 
 Documentation

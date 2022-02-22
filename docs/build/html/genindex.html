@@ -38,9 +38,11 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">4. Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">5. Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">7. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">8. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -471,6 +473,16 @@
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.check_id_before_merge">check_id_before_merge (minorg.MINORg.MINORg attribute)</a>
 </li>
       <li><a href="minorg.grna.html#minorg.grna.CheckObj.check_names">check_names (minorg.grna.CheckObj property)</a>
+
+      <ul>
+        <li><a href="minorg.grna.html#minorg.grna.gRNAHits.check_names">(minorg.grna.gRNAHits attribute)</a>
+</li>
+        <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.check_names">(minorg.MINORg.MINORg property)</a>
+</li>
+      </ul></li>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.check_names_nonstandard">check_names_nonstandard (minorg.MINORg.MINORg property)</a>
+</li>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.check_names_standard">check_names_standard (minorg.MINORg.MINORg property)</a>
 </li>
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.check_path_and_return">check_path_and_return() (in module minorg.dynamic_logger)</a>
 </li>
@@ -492,6 +504,8 @@
 </li>
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.MultiChild.children_names">children_names (minorg.dynamic_logger.MultiChild property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.MINORgCLI.html#minorg.MINORgCLI.MINORgCLI.cleanup">cleanup() (minorg.MINORgCLI.MINORgCLI method)</a>
 </li>
       <li><a href="minorg.grna.html#minorg.grna.CheckObj.clear_checks">clear_checks() (minorg.grna.CheckObj method)</a>
@@ -500,8 +514,6 @@
         <li><a href="minorg.grna.html#minorg.grna.gRNAHits.clear_checks">(minorg.grna.gRNAHits method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.clear_reference">clear_reference() (minorg.MINORg.MINORg method)</a>
 </li>
       <li><a href="minorg.MINORgCLI.html#minorg.MINORgCLI.MINORgCLI.cluster_aliases">cluster_aliases (minorg.MINORgCLI.MINORgCLI attribute)</a>
@@ -802,6 +814,8 @@
       </ul></li>
       <li><a href="minorg.main.html#minorg.main.generate_grna">generate_grna() (in module minorg.main)</a>
 </li>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.generate_ref_gene_cds">generate_ref_gene_cds() (minorg.MINORg.MINORg method)</a>
+</li>
       <li><a href="minorg.annotation.html#minorg.annotation.Annotation.generate_str">generate_str() (minorg.annotation.Annotation method)</a>
 
       <ul>
@@ -1051,6 +1065,8 @@
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.MultiChild.is_child">is_child() (minorg.dynamic_logger.MultiChild method)</a>
 </li>
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.MultiChild.is_child_class">is_child_class() (minorg.dynamic_logger.MultiChild method)</a>
+</li>
+      <li><a href="minorg.functions.html#minorg.functions.is_empty_file">is_empty_file() (in module minorg.functions)</a>
 </li>
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.DynamicFileLoggerBase.is_enabled_for">is_enabled_for() (minorg.dynamic_logger.DynamicFileLoggerBase method)</a>
 
@@ -1789,8 +1805,6 @@
       </ul></li>
       <li><a href="minorg.grna.html#minorg.grna.gRNAHit.set_feature_check">set_feature_check() (minorg.grna.gRNAHit method)</a>
 </li>
-      <li><a href="minorg.grna.html#minorg.grna.gRNAHit.set_flank_check">set_flank_check() (minorg.grna.gRNAHit method)</a>
-</li>
       <li><a href="minorg.grna.html#minorg.grna.gRNAHit.set_gc_check">set_gc_check() (minorg.grna.gRNAHit method)</a>
 
       <ul>
@@ -2001,12 +2015,14 @@
         <li><a href="minorg.MINORgCLI.html#minorg.MINORgCLI.valid_aliases">(in module minorg.MINORgCLI)</a>
 </li>
       </ul></li>
-      <li><a href="minorg.grna.html#minorg.grna.gRNAHits.valid_hit_check">valid_hit_check() (minorg.grna.gRNAHits method)</a>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.valid_grna">valid_grna() (minorg.MINORg.MINORg method)</a>
 </li>
-      <li><a href="minorg.grna.html#minorg.grna.Target.valid_len">valid_len() (minorg.grna.Target method)</a>
+      <li><a href="minorg.grna.html#minorg.grna.gRNAHits.valid_hit_check">valid_hit_check() (minorg.grna.gRNAHits method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="minorg.grna.html#minorg.grna.Target.valid_len">valid_len() (minorg.grna.Target method)</a>
+</li>
       <li><a href="minorg.MINORg.html#minorg.MINORg.valid_readable_file">valid_readable_file() (in module minorg.MINORg)</a>
 
       <ul>

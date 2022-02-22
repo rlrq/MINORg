@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4. Tutorial &mdash; MINORg 0.1 documentation</title>
+  <title>4. Tutorial (Command line) &mdash; MINORg 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="5. Parameters" href="parameters.html" />
+    <link rel="next" title="5. Tutorial (Python)" href="tutorial_py.html" />
     <link rel="prev" title="3. Configuration" href="configuration.html" /> 
 </head>
 
@@ -41,33 +41,51 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#command-line">4.1. Command line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#defining-target-sequences">4.1.1. Defining target sequences</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#user-provided-targets">4.1.1.1. User-provided targets</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#reference-gene-s-as-targets">4.1.1.2. Reference gene(s) as targets</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#non-reference-gene-s-as-targets">4.1.1.3. Non-reference gene(s) as targets</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#domain-as-targets">4.1.1.4. Domain as targets</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#feature-as-targets">4.1.1.5. Feature as targets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Tutorial (Command line)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#defining-target-sequences">4.1. Defining target sequences</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#user-provided-targets">4.1.1. User-provided targets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-gene-s-as-targets">4.1.2. Reference gene(s) as targets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#single-gene">4.1.2.1. Single gene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-genes">4.1.2.2. Multiple genes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-and-non-standard-reference">4.1.2.3. Multiple and non-standard reference</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#defining-reference-genomes">4.1.2. Defining reference genomes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#single-reference-genome">4.1.2.1. Single reference genome</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#multiple-reference-genomes">4.1.2.2. Multiple reference genomes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#non-standard-reference">4.1.2.3. Non-standard reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-reference-gene-s-as-targets">4.1.3. Non-reference gene(s) as targets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#annotated-genes">4.1.3.1. Annotated genes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unannotated-genes">4.1.3.2. Unannotated genes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#domain-as-targets">4.1.4. Domain as targets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#local-database">4.1.4.1. Local database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#remote-database">4.1.4.2. Remote database</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-as-targets">4.1.5. Feature as targets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-grna">4.2. Defining gRNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filtering-grna">4.3. Filtering gRNA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#filter-by-gc-content">4.3.1. Filter by GC content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-by-off-target">4.3.2. Filter by off-target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-by-feature">4.3.3. Filter by feature</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-reference-genomes">4.4. Defining reference genomes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#single-reference-genome">4.4.1. Single reference genome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-reference-genomes">4.4.2. Multiple reference genomes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-standard-reference">4.4.3. Non-standard reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-genetic-code">4.4.3.1. Non-standard genetic code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-gff3-attribute-field-names">4.4.3.2. Non-standard GFF3 attribute field names</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#python-package">4.2. Python package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#getting-started">4.2.1. Getting started</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">5. Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">6. Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">7. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">7. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">8. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -87,9 +105,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">4. </span>Tutorial</li>
+      <li><span class="section-number">4. </span>Tutorial (Command line)</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/tutorial_cli.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -97,16 +115,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tutorial">
-<h1><span class="section-number">4. </span>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline"></a></h1>
+  <section id="tutorial-command-line">
+<h1><span class="section-number">4. </span>Tutorial (Command line)<a class="headerlink" href="#tutorial-command-line" title="Permalink to this headline"></a></h1>
 <p>In all the following tutorial, the current directory/working directory is presumed to contain all files in <a class="reference external" href="https://github.com/rlrq/MINORg/tree/master/examples">https://github.com/rlrq/MINORg/tree/master/examples</a>. If you have not downloaded the files, please do so and navigate to the directory that contains them.</p>
-<section id="command-line">
-<h2><span class="section-number">4.1. </span>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
 <p>Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your operating system.</p>
 <section id="defining-target-sequences">
-<h3><span class="section-number">4.1.1. </span>Defining target sequences<a class="headerlink" href="#defining-target-sequences" title="Permalink to this headline"></a></h3>
+<h2><span class="section-number">4.1. </span>Defining target sequences<a class="headerlink" href="#defining-target-sequences" title="Permalink to this headline"></a></h2>
 <section id="user-provided-targets">
-<h4><span class="section-number">4.1.1.1. </span>User-provided targets<a class="headerlink" href="#user-provided-targets" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.1.1. </span>User-provided targets<a class="headerlink" href="#user-provided-targets" title="Permalink to this headline"></a></h3>
 <p>Let us begin with the simplest MINORg execution:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_00_target --target ./sample_CDS.fasta
 Final gRNA sequence<span class="o">(</span>s<span class="o">)</span> have been written to minorg_gRNA_final.fasta
@@ -119,10 +135,10 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (<code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">./sample_CDS.fasta</span></code>) and to output files into directory <code class="docutils literal notranslate"><span class="pre">--directory</span> <span class="pre">./example00</span></code>. By default, MINORg generates 20 bp gRNA using NGG PAM.</p>
 </section>
 <section id="reference-gene-s-as-targets">
-<h4><span class="section-number">4.1.1.2. </span>Reference gene(s) as targets<a class="headerlink" href="#reference-gene-s-as-targets" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.1.2. </span>Reference gene(s) as targets<a class="headerlink" href="#reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
 <p>Both examples below specify a reference assembly (<code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">./subset_ref_TAIR10.fasta</span></code>) and annotation (<code class="docutils literal notranslate"><span class="pre">--annotation</span> <span class="pre">./subset_ref_TAIR10.gff</span></code>) file, allowing MINORg to retrieve the gene sequence as target.</p>
 <section id="single-gene">
-<h5><span class="section-number">4.1.1.2.1. </span>Single gene<a class="headerlink" href="#single-gene" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.2.1. </span>Single gene<a class="headerlink" href="#single-gene" title="Permalink to this headline"></a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_01_singlegene <span class="se">\</span>
          --indv ref --gene AT5G45050 <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
@@ -139,9 +155,9 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>In the above example, <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ref</span></code> tells MINORg to generate gRNA for reference gene(s), and <code class="docutils literal notranslate"><span class="pre">--gene</span> <span class="pre">AT5G45050</span></code> tells MINORg that the target gene is AT5G45050.</p>
 </section>
 <section id="multiple-genes">
-<h5><span class="section-number">4.1.1.2.2. </span>Multiple genes<a class="headerlink" href="#multiple-genes" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.2.2. </span>Multiple genes<a class="headerlink" href="#multiple-genes" title="Permalink to this headline"></a></h4>
 <section id="using-gene">
-<h6><span class="section-number">4.1.1.2.2.1. </span>Using <code class="docutils literal notranslate"><span class="pre">--gene</span></code><a class="headerlink" href="#using-gene" title="Permalink to this headline"></a></h6>
+<h5><span class="section-number">4.1.2.2.1. </span>Using <code class="docutils literal notranslate"><span class="pre">--gene</span></code><a class="headerlink" href="#using-gene" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>To specify multiple genes, simply use <code class="docutils literal notranslate"><span class="pre">--gene</span></code> with comma-separated gene IDs, or <code class="docutils literal notranslate"><span class="pre">--gene</span></code> multiple times</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_02_multigene <span class="se">\</span>
@@ -158,7 +174,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </div>
 </section>
 <section id="using-cluster">
-<h6><span class="section-number">4.1.1.2.2.2. </span>Using <code class="docutils literal notranslate"><span class="pre">--cluster</span></code><a class="headerlink" href="#using-cluster" title="Permalink to this headline"></a></h6>
+<h5><span class="section-number">4.1.2.2.2. </span>Using <code class="docutils literal notranslate"><span class="pre">--cluster</span></code><a class="headerlink" href="#using-cluster" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a>, <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>MINORg can also accept preset combinations of genes using <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> and <code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code>. <code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code> accepts a tab-separated lookup file that maps alias(es) to a combinations of genes (see <a class="reference internal" href="configuration.html#cluster"><span class="std std-ref">cluster</span></a> for format). <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used to specify the alias of a combination of genes in that lookup file.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_03_cluster <span class="se">\</span>
@@ -176,22 +192,22 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </section>
 </section>
 <section id="multiple-and-non-standard-reference">
-<h5><span class="section-number">4.1.1.2.3. </span>Multiple and non-standard reference<a class="headerlink" href="#multiple-and-non-standard-reference" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.2.3. </span>Multiple and non-standard reference<a class="headerlink" href="#multiple-and-non-standard-reference" title="Permalink to this headline"></a></h4>
 <p>See: <a class="reference internal" href="#defining-reference-genomes"><span class="std std-ref">Defining reference genomes</span></a></p>
 <p>Multiple reference genomes may be useful when generating gRNA across species boundaries. See <a class="reference internal" href="#multiple-reference-genomes"><span class="std std-ref">Multiple reference genomes</span></a> for how to specify and use multiple reference genomes.</p>
 <p>Some reference genomes may require non-standard genetic code (applicable only with the use of <code class="docutils literal notranslate"><span class="pre">--domain</span></code>) or have unusual attribute field names in their GFF3 annotation files. See <a class="reference internal" href="#non-standard-genetic-code"><span class="std std-ref">Non-standard genetic code</span></a> for how to specify non-standard genetic codes and <a class="reference internal" href="#non-standard-gff3-attribute-field-names"><span class="std std-ref">Non-standard GFF3 attribute field names</span></a> for how to specify mapping of unusual GFF3 attribute field names to standard field names.</p>
 </section>
 </section>
 <section id="non-reference-gene-s-as-targets">
-<h4><span class="section-number">4.1.1.3. </span>Non-reference gene(s) as targets<a class="headerlink" href="#non-reference-gene-s-as-targets" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.1.3. </span>Non-reference gene(s) as targets<a class="headerlink" href="#non-reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
 <section id="annotated-genes">
-<h5><span class="section-number">4.1.1.3.1. </span>Annotated genes<a class="headerlink" href="#annotated-genes" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.3.1. </span>Annotated genes<a class="headerlink" href="#annotated-genes" title="Permalink to this headline"></a></h4>
 <p>If your target genes have been annotated in their non-reference genomes (i.e. you have a GFF3 file containing annotations of your targets), you can use <a class="reference internal" href="#reference-gene-s-as-targets"><span class="std std-ref">Reference gene(s) as targets</span></a> if you have a single non-reference genome, or <a class="reference internal" href="#multiple-reference-genomes"><span class="std std-ref">Multiple reference genomes</span></a> if you have multiple non-reference genomes. In either case, you may treat your non-reference genome the same way you would a reference genome.</p>
 </section>
 <section id="unannotated-genes">
-<h5><span class="section-number">4.1.1.3.2. </span>Unannotated genes<a class="headerlink" href="#unannotated-genes" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.3.2. </span>Unannotated genes<a class="headerlink" href="#unannotated-genes" title="Permalink to this headline"></a></h4>
 <section id="using-extend-gene-and-extend-cds">
-<h6><span class="section-number">4.1.1.3.2.1. </span>Using <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code><a class="headerlink" href="#using-extend-gene-and-extend-cds" title="Permalink to this headline"></a></h6>
+<h5><span class="section-number">4.1.3.2.1. </span>Using <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code><a class="headerlink" href="#using-extend-gene-and-extend-cds" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="parameters.html#extended-genome"><span class="std std-ref">Extended genome</span></a></p>
 <p>If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_04_ext <span class="se">\</span>
@@ -202,7 +218,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>Note that <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code> effectively add new genes to the reference genome, so they can be used just like any reference gene. Therefore, they can also be used in combination with <code class="docutils literal notranslate"><span class="pre">--query</span></code> or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>.</p>
 </section>
 <section id="using-query">
-<h6><span class="section-number">4.1.1.3.2.2. </span>Using <code class="docutils literal notranslate"><span class="pre">--query</span></code><a class="headerlink" href="#using-query" title="Permalink to this headline"></a></h6>
+<h5><span class="section-number">4.1.3.2.2. </span>Using <code class="docutils literal notranslate"><span class="pre">--query</span></code><a class="headerlink" href="#using-query" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="algorithms.html#non-reference-homologue-inference"><span class="std std-ref">Non-reference homologue inference</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>If you would like MINORg to infer homologues genes in non-reference genomes, you can use <code class="docutils literal notranslate"><span class="pre">--query</span></code> to specify the FASTA files of those non-reference genomes. You may provide multiple non-reference genomes by using <code class="docutils literal notranslate"><span class="pre">--query</span></code> multiple times.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_05_query <span class="se">\</span>
@@ -214,7 +230,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p><code class="docutils literal notranslate"><span class="pre">--query</span></code> can be used in combination with <code class="docutils literal notranslate"><span class="pre">--indv</span></code>. For inference parameters, see <a class="reference internal" href="algorithms.html#non-reference-homologue-inference"><span class="std std-ref">Non-reference homologue inference</span></a>.</p>
 </section>
 <section id="using-indv">
-<h6><span class="section-number">4.1.1.3.2.3. </span>Using <code class="docutils literal notranslate"><span class="pre">--indv</span></code><a class="headerlink" href="#using-indv" title="Permalink to this headline"></a></h6>
+<h5><span class="section-number">4.1.3.2.3. </span>Using <code class="docutils literal notranslate"><span class="pre">--indv</span></code><a class="headerlink" href="#using-indv" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="algorithms.html#non-reference-homologue-inference"><span class="std std-ref">Non-reference homologue inference</span></a>, <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a>, <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>You can also use <code class="docutils literal notranslate"><span class="pre">--indv</span></code> to ask MINORg to infer homologues genes in non-reference genomes. Similar to <code class="docutils literal notranslate"><span class="pre">--clusters</span></code>, MINORg accepts a lookup file for non-reference genomes using <code class="docutils literal notranslate"><span class="pre">--genome-set</span></code> (see <a class="reference internal" href="configuration.html#genome"><span class="std std-ref">genome</span></a> for format) and one or more non-reference genome alias using <code class="docutils literal notranslate"><span class="pre">--indv</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_06_indv <span class="se">\</span>
@@ -229,10 +245,10 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </section>
 </section>
 <section id="domain-as-targets">
-<h4><span class="section-number">4.1.1.4. </span>Domain as targets<a class="headerlink" href="#domain-as-targets" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.1.4. </span>Domain as targets<a class="headerlink" href="#domain-as-targets" title="Permalink to this headline"></a></h3>
 <p>MINORg allows users to specify the identifier of an RPS-BLAST position-specific scoring matrix (PSSM-Id) to further restrict the target sequence to a given domain associated with the PSSM-Id. This could be particularly useful when designing gRNA for genes that do not share conserved domain structures but do share a domain that you wish to knock out.</p>
 <section id="local-database">
-<h5><span class="section-number">4.1.1.4.1. </span>Local database<a class="headerlink" href="#local-database" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.4.1. </span>Local database<a class="headerlink" href="#local-database" title="Permalink to this headline"></a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_07_domain <span class="se">\</span>
          --indv ref --gene AT5G45050 <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
@@ -243,7 +259,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. Unlike other examples, the database (<code class="docutils literal notranslate"><span class="pre">--db</span></code>) is not provided as part of the example files. You will have to download it yourself. See <a class="reference internal" href="parameters.html#rps-blast-local-database"><span class="std std-ref">RPS-BLAST local database</span></a> for more information.</p>
 </section>
 <section id="remote-database">
-<h5><span class="section-number">4.1.1.4.2. </span>Remote database<a class="headerlink" href="#remote-database" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.1.4.2. </span>Remote database<a class="headerlink" href="#remote-database" title="Permalink to this headline"></a></h4>
 <p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--db</span> <span class="pre">/path/to/rpsblast/db</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_07_domain <span class="se">\</span>
          --indv ref --gene AT5G45050 <span class="se">\</span>
@@ -255,7 +271,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </section>
 </section>
 <section id="feature-as-targets">
-<h4><span class="section-number">4.1.1.5. </span>Feature as targets<a class="headerlink" href="#feature-as-targets" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.1.5. </span>Feature as targets<a class="headerlink" href="#feature-as-targets" title="Permalink to this headline"></a></h3>
 <p>You may specify gene features to restrict gRNA to. By default, MINORg generates gRNA in coding regions (CDS). However, so long as a feature type is valid in the GFF3 annotation file provided to MINORg, gRNA can theoretically be designed for any feature type.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_08_feature <span class="se">\</span>
          --indv ref --gene AT5G45050 <span class="se">\</span>
@@ -266,17 +282,85 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>The above example will generate gRNA in the 100 bp 3’ UTR of AT5G45050.</p>
 </section>
 </section>
+<section id="defining-grna">
+<h2><span class="section-number">4.2. </span>Defining gRNA<a class="headerlink" href="#defining-grna" title="Permalink to this headline"></a></h2>
+<p>See also: <a class="reference internal" href="parameters.html#pam"><span class="std std-ref">PAM</span></a></p>
+<p>By default, MINORg generates 20 bp gRNA using SpCas9’s NGG PAM. You may specify other gRNA length using <code class="docutils literal notranslate"><span class="pre">--length</span></code> and other PAM using <code class="docutils literal notranslate"><span class="pre">--pam</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_09_grna <span class="se">\</span>
+         --indv ref --gene AT5G45050 <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --length <span class="m">19</span> --pam Cas12a
+</pre></div>
+</div>
+<p>In the example above, MINORg will generate 19 bp gRNA (<code class="docutils literal notranslate"><span class="pre">--length</span> <span class="pre">19</span></code>) using Cas12a’s unusual 5’ PAM pattern (TTTV&lt;gRNA&gt;) (<code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">Cas12a</span></code>). MINORg has several built-in PAMs (see <a class="reference internal" href="parameters.html#preset-pam-patterns"><span class="std std-ref">Preset PAM patterns</span></a> for options), and also supports customisable PAM patterns using ambiguous bases and regular expressions (see <a class="reference internal" href="parameters.html#pam"><span class="std std-ref">PAM</span></a> for format).</p>
+</section>
+<section id="filtering-grna">
+<h2><span class="section-number">4.3. </span>Filtering gRNA<a class="headerlink" href="#filtering-grna" title="Permalink to this headline"></a></h2>
+<p>MINORg supports 3 different gRNA filtering options, all of which can be used together.</p>
+<section id="filter-by-gc-content">
+<h3><span class="section-number">4.3.1. </span>Filter by GC content<a class="headerlink" href="#filter-by-gc-content" title="Permalink to this headline"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_10_gc <span class="se">\</span>
+         --indv ref --gene AT5G45050 <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --gc-min <span class="m">0</span>.2 --gc-max <span class="m">0</span>.8
+</pre></div>
+</div>
+<p>In the above example, MINORg will exclude gRNA with less than 20% (<code class="docutils literal notranslate"><span class="pre">--gc-min</span> <span class="pre">0.2</span></code>) or greater than 80% (<code class="docutils literal notranslate"><span class="pre">--gc-max</span> <span class="pre">0.8</span></code>) GC content. By default, minimum GC content is 30% and maximum is 70%.</p>
+</section>
+<section id="filter-by-off-target">
+<h3><span class="section-number">4.3.2. </span>Filter by off-target<a class="headerlink" href="#filter-by-off-target" title="Permalink to this headline"></a></h3>
+<p>See: <a class="reference internal" href="algorithms.html#off-target-assessment"><span class="std std-ref">Off-target assessment</span></a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_11_ot_ref <span class="se">\</span>
+         --indv ref --gene AT5G45050 <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --screen-reference <span class="se">\</span>
+         --background ./subset_ref_Araly2.fasta --background ./subset_ref_Araha1.fasta <span class="se">\</span>
+         --ot-indv <span class="m">9654</span>,9655 --genome-set ./subset_genome_mapping.txt <span class="se">\</span>
+         --ot-gap <span class="m">2</span> --ot-mismatch <span class="m">2</span>
+</pre></div>
+</div>
+<p>In the above example, MINORg will screen gRNA for off-targets in:</p>
+<ul class="simple">
+<li><p>The reference genome (<code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code>)</p></li>
+<li><p>Two different FASTA files (<code class="docutils literal notranslate"><span class="pre">--background</span> <span class="pre">./subset_Araly2.fasta</span> <span class="pre">--background</span> <span class="pre">./subset_Araha1.fasta</span></code>)</p></li>
+<li><p>Two non-reference genomes (<code class="docutils literal notranslate"><span class="pre">--ot-indv</span> <span class="pre">9654,9655</span> <span class="pre">--genome-set</span> <span class="pre">./subset_genome_mapping.txt</span></code>)
+* <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> functions similarly to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> in that it requires <code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>, except that <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> specifies non-refernece genomes for off-target assessment</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See <a class="reference internal" href="algorithms.html#off-target-assessment"><span class="std std-ref">Off-target assessment</span></a> for more on the off-target assessment algorithm.</p>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is actually redundant as the genome from which targets are obtained (which, because of <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ref</span></code>, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from non-reference genomes, the reference genome is not automatically included for off-target assessment and thus <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is NOT redundant. Additionally, do note that the genes passed to <code class="docutils literal notranslate"><span class="pre">--gene</span></code> are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_12_ot_nonref <span class="se">\</span>
+         --indv <span class="m">9654</span> --genome-set ./subset_genome_mapping.txt <span class="se">\</span>
+         --gene AT5G45050 <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --screen-ref --background ./subset_ref_Araly2.fasta --background ./subset_ref_Araha1.fasta <span class="se">\</span>
+         --ot-indv <span class="m">9655</span> <span class="se">\</span>
+         --ot-gap <span class="m">2</span> --ot-mismatch <span class="m">2</span>
+</pre></div>
+</div>
+<p>To skip off-target check entirely, use <code class="docutils literal notranslate"><span class="pre">--skip-bg-check</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_13_skipbgcheck <span class="se">\</span>
+         --indv ref --gene AT5G45050 <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --skip-bg-check
+</pre></div>
+</div>
+</section>
+<section id="filter-by-feature">
+<h3><span class="section-number">4.3.3. </span>Filter by feature<a class="headerlink" href="#filter-by-feature" title="Permalink to this headline"></a></h3>
+<p>See: <a class="reference internal" href="algorithms.html#within-feature-inference"><span class="std std-ref">Within-feature inference</span></a></p>
+</section>
+</section>
 <section id="defining-reference-genomes">
-<h3><span class="section-number">4.1.2. </span>Defining reference genomes<a class="headerlink" href="#defining-reference-genomes" title="Permalink to this headline"></a></h3>
+<h2><span class="section-number">4.4. </span>Defining reference genomes<a class="headerlink" href="#defining-reference-genomes" title="Permalink to this headline"></a></h2>
 <section id="single-reference-genome">
-<h4><span class="section-number">4.1.2.1. </span>Single reference genome<a class="headerlink" href="#single-reference-genome" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.4.1. </span>Single reference genome<a class="headerlink" href="#single-reference-genome" title="Permalink to this headline"></a></h3>
 <p>See examples in <a class="reference internal" href="#reference-gene-s-as-targets"><span class="std std-ref">Reference gene(s) as targets</span></a>.</p>
 </section>
 <section id="multiple-reference-genomes">
-<h4><span class="section-number">4.1.2.2. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.4.2. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h3>
 <p>See also: <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a>, <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a>, <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>Similar to <code class="docutils literal notranslate"><span class="pre">--clusters</span></code> and <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, MINORg accepts a lookup file for reference genomes using <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code> and one or more reference genome alias using <code class="docutils literal notranslate"><span class="pre">--reference</span></code>. See <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a> for a more comprehensive overview and <a class="reference internal" href="configuration.html#reference"><span class="std std-ref">reference</span></a> for lookup file format.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_07_multiref <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_xx_multiref <span class="se">\</span>
          --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 <span class="se">\</span>
          --reference-set ./arabidopsis_genomes.txt --reference tair10,araly2,araha1
 </pre></div>
@@ -285,11 +369,11 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>Non-standard genetic codes and mapping of non-standard attribute field names for multiple genomes should be specified in the lookup file passed to <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code>. See <a class="reference internal" href="configuration.html#reference"><span class="std std-ref">reference</span></a> for file format.</p>
 </section>
 <section id="non-standard-reference">
-<h4><span class="section-number">4.1.2.3. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h4>
+<h3><span class="section-number">4.4.3. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h3>
 <section id="non-standard-genetic-code">
-<h5><span class="section-number">4.1.2.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.4.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
 <p>When using <code class="docutils literal notranslate"><span class="pre">--domain</span></code>, users should ensure that the correct genetic code is specified, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a> for genetic code numbers and names.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_08_geneticcode <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_xx_geneticcode <span class="se">\</span>
            --indv ref --gene gene-Q0275 <span class="se">\</span>
            --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff <span class="se">\</span>
            --domain <span class="m">366140</span> --genetic-code <span class="m">3</span>
@@ -299,10 +383,10 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>As a failsafe, MINORg does not terminate translated peptide sequences at the first stop codon. This ensures that any codons after an incorrectly translated premature stop codon will still be translated. Typically, a handful of mistranslated codons can still result in the correct RPS-BLAST domain hits, although hit scores may be slightly lower. Nevertheless, to ensure maximum accuracy, the correct genetic code is preferred.</p>
 </section>
 <section id="non-standard-gff3-attribute-field-names">
-<h5><span class="section-number">4.1.2.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h5>
+<h4><span class="section-number">4.4.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
 <p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_09_attrmod <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_xx_attrmod <span class="se">\</span>
            --indv ref --gene Os01t0100100 <span class="se">\</span>
            --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff <span class="se">\</span>
            --attr-mod <span class="s1">&#39;mRNA:Parent=Locus_id&#39;</span>
@@ -313,56 +397,13 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </section>
 </section>
 </section>
-<section id="python-package">
-<h2><span class="section-number">4.2. </span>Python package<a class="headerlink" href="#python-package" title="Permalink to this headline"></a></h2>
-<section id="getting-started">
-<h3><span class="section-number">4.2.1. </span>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h3>
-<p>To begin, import the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> class.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
-</pre></div>
-</div>
-<p>To create a MINORg object:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/path/to/output/directory&#39;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Both <code class="docutils literal notranslate"><span class="pre">directory</span></code> and <code class="docutils literal notranslate"><span class="pre">prefix</span></code> are optional. If not provided, they will default to the current directory and ‘minorg’ respectively.</p>
-<p>If you wish to use the default values specified in a config file, use this instead:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">config</span> <span class="o">=</span> <span class="s1">&#39;/path/to/config.ini&#39;</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/path/to/output/directory&#39;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>You may now set your parameters using the attributes of your <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object. For a table listing the equivalent CLI arguments and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> attributes, see <a class="reference internal" href="parameters.html#cli-vs-python"><span class="std std-ref">CLI vs Python</span></a>. For example, you can specify executables as such:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/path/to/blastn/executable&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">rpsblast</span> <span class="o">=</span> <span class="s1">&#39;/path/to/rpsblast/executable&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">mafft</span> <span class="o">=</span> <span class="s1">&#39;/path/to/mafft/executable&#39;</span>
-</pre></div>
-</div>
-<p>Note that, unlike the command line, the Python package does not support aliases even if the config file has been set up appropriately for command line executions. Therefore, there are no true equivalents to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, or <code class="docutils literal notranslate"><span class="pre">--reference</span></code>.</p>
-<p>To specify cluster genes (analogous to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> and <code class="docutils literal notranslate"><span class="pre">--gene</span></code>):</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="s1">&#39;RPS6&#39;</span> <span class="c1">## incorrect; this attribute does not exist; does not throw error now but will cause problems later</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AT5G46260&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46270&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46450&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46470&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46490&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46510&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46520&#39;</span><span class="p">]</span> <span class="c1">## correct</span>
-</pre></div>
-</div>
-<p>To specify query FASTA files (analogous to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> and <code class="docutils literal notranslate"><span class="pre">--query</span></code>):</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">indv</span> <span class="o">=</span> <span class="s1">&#39;9654,9655&#39;</span> <span class="c1">## incorrect; this attribute does not exist; does not throw error now but will cause problems later</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;9654&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/subset_9654.fasta&#39;</span><span class="p">,</span> <span class="s1">&#39;9655&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/subset_9655.fasta&#39;</span><span class="p">}</span> <span class="c1">## correct</span>
-</pre></div>
-</div>
-<p>To specify reference genomes (analogous to <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--assembly</span></code>, <code class="docutils literal notranslate"><span class="pre">--annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>, and <code class="docutils literal notranslate"><span class="pre">--genetic-code</span></code>; note that <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> and <code class="docutils literal notranslate"><span class="pre">genetic_code</span></code> are optional if the annotation uses standard attribute field names and the standard genetic code, which the example below does):</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="s1">&#39;TAIR10&#39;</span> <span class="c1">## incorrect</span>
-<span class="go">AttributeError: can&#39;t set attribute</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s1">&#39;TAIR10&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/TAIR10.fasta&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/TARI10.gff3&#39;</span><span class="p">,</span> <span class="n">genetic_code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">atr_mod</span> <span class="o">=</span> <span class="p">{})</span> <span class="c1">## correct</span>
-</pre></div>
-</div>
-</section>
-</section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="configuration.html" class="btn btn-neutral float-left" title="3. Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="parameters.html" class="btn btn-neutral float-right" title="5. Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorial_py.html" class="btn btn-neutral float-right" title="5. Tutorial (Python)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
