@@ -308,7 +308,6 @@ class gRNAHits:
     Attributes:
         _gRNAseqs (dict): stores gRNASeq objects by sequence (format: {'<seq>': <gRNASeq object>})
         _hits (dict): stores gRNAHit objects by sequence (format: {'<seq>': [<gRNAHit objects>]})
-        check_names (list): stores check names
     """
     ## seqs are stored in uppercase
     def __init__(self, d = None, gRNA_seqs = None, gRNA_hits = None):
@@ -339,9 +338,33 @@ class gRNAHits:
         :type: list of str
         """
         return list(self.gRNAseqs.keys())
+    @property
+    def check_names(self) -> list:
+        """
+        List of check names.
+        
+        :type: list of str
+        """
+        return list(set(self.check_names_seqs + self.check_names_hits))
+    @property
+    def check_names_seqs(self) -> list:
+        """
+        List of check names for gRNA sequences (gRNASeq objects).
+        
+        :type: list of str
+        """
+        return list(set(itertools.chain(*[grna_seq.check_names for grna_seq in self.flatten_gRNAseqs()])))
+    @property
+    def check_names_hits(self) -> list:
+        """
+        List of check names for gRNA hits (gRNAHit objects).
+        
+        :type: list of str
+        """
+        return list(set(itertools.chain(*[grna_hit.check_names for grna_hit in self.flatten_hits()])))
     def update_records(self) -> None: ## update dictionaries to remove any discrepancies
         """
-        Remove gRNAseq objects from :attr:`~minorg.grna.gRNAHits._gRNAseqs` 
+        Remove gRNASeq objects from :attr:`~minorg.grna.gRNAHits._gRNAseqs` 
         if their sequences are not also in :attr:`~minorg.grna.gRNAHits._hits`.
         Also remove gRNAHit objects from :attr:`~minorg.grna.gRNAHits._hits`
         if their sequences are not also in :attr:`~minorg.grna.gRNAHits._gRNAseqs`.
@@ -463,7 +486,6 @@ class gRNAHits:
             check_names |= set(hit.check_names)
         for seq in self.flatten_gRNAseqs():
             check_names |= set(hit.check_names)
-        self.check_names = list(check_names)
     def parse_from_mapping(self, fname, targets = None) -> None:
         """
         Read gRNA data from MINORg .map file.
@@ -527,7 +549,6 @@ class gRNAHits:
                 ##  checks in columns added by user are also set by hit since we don't know anything
                 else:
                     gRNA_hit.set_check(check, gRNA_checks[i])
-            self.check_names = gRNA_checks
         return
     #################
     ##  MODIFIERS  ##
@@ -781,7 +802,8 @@ class gRNAHits:
             check_names = [check_name for check_name in check_names if self.hit_check_exists(check_name)]
         elif all_checks:
             ## get all possible check names
-            check_names = list(set(itertools.chain(*[hit.check_names for hit in self.flatten_hits()])))
+            check_names = self.check_names_hits
+            # check_names = list(set(itertools.chain(*[hit.check_names for hit in self.flatten_hits()])))
         else:
             raise Exception("Either *check_names OR all_checks is required.")
         ## remove any invalid fields

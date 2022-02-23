@@ -172,24 +172,24 @@ class PathHandler:
             directory (str): final output directory (will be directly written into if tmp=False)
         """
         self.tracebacklimit = (None if LOGGING_LEVEL <= logging.DEBUG else 0)
-        self.out_dir = None if directory is None else os.path.abspath(directory) ## final output directory
-        self.tmp = (tmp if self.out_dir is not None else True)
+        self.directory = None if directory is None else os.path.abspath(directory) ## final output directory
+        self.tmp = (tmp if self.directory is not None else True)
         self.keep_tmp = keep_tmp
         self.new_dirs = []
         self.tmp_files = set()
         ## create temporary directory
         if self.tmp:
-            ## contents to be moved to self.out_dir upon fulfilment of command using self.resolve
+            ## contents to be moved to self.directory upon fulfilment of command using self.resolve
             self.tmpdir = tempfile.mkdtemp()
-            ## self.directory is used outside PathHandler objects.
-            ## PathHandler object will handle cleanup if self.directory points to self.tmpdir
-            self.directory = self.tmpdir
+            ## self.active_directory is used outside PathHandler objects.
+            ## PathHandler object will handle cleanup if self.active_directory points to self.tmpdir
+            self.active_directory = self.tmpdir
             print(f"tmpdir: {self.tmpdir}")
-        elif self.out_dir is not None:
+        elif self.directory is not None:
             self.tmpdir = None
-            self.directory = self.out_dir
-            self.mkdir(self.directory)
-            print(f"Files will be written directly in: {self.directory}")
+            self.active_directory = self.directory
+            self.mkdir(self.active_directory)
+            print(f"Files will be written directly in: {self.active_directory}")
         else:
             print("Directory (directory = <path>) or temporary directory (tmp = True) required.")
             exit
@@ -206,23 +206,24 @@ class PathHandler:
         """
         Update output directory.
         
-        Contents of the current output directory will also be moved to the new directory.
+        Contents of the current output directory will also be moved to the new directory if files are
+        already being written to output directory (i.e. not currently using a tmp dir)
         
         Arguments:
             directory (str): required, path to new output directory
         """
         if directory is None: return
         directory = os.path.abspath(directory)
-        if directory == self.out_dir: return
+        if directory == self.directory: return
         ## if files are being written directly to output directory, move to new destination
-        if self.directory == self.out_dir:
-            mv_dir_overwrite(self.directory, directory)
-            self.tmp_files = set(re.sub('^' + re.escape(self.directory), directory, fname)
+        if self.active_directory == self.directory:
+            mv_dir_overwrite(self.active_directory, directory)
+            self.tmp_files = set(re.sub('^' + re.escape(self.active_directory), directory, fname)
                                  for fname in self.tmp_files)
-            self.new_dirs = [re.sub('^' + re.escape(self.directory), directory, dirname)
+            self.new_dirs = [re.sub('^' + re.escape(self.active_directory), directory, dirname)
                              for dirname in self.new_dirs]
-            self.directory = directory
-        self.out_dir = directory
+            self.active_directory = directory
+        self.directory = directory
     ## make directory (or directories)
     def mkdir(self, *directories, tmp = False):
         """
@@ -235,7 +236,7 @@ class PathHandler:
         output = []
         for directory in directories:
             if not os.path.isabs(directory):
-                directory = os.path.abspath(os.path.join(self.directory, directory))
+                directory = os.path.abspath(os.path.join(self.active_directory, directory))
             output.append(directory)
             if not os.path.exists(directory) and not directory in self.new_dirs:
                 os.mkdir(directory)
@@ -247,11 +248,11 @@ class PathHandler:
         """
         Generate path.
         
-        If path provided is not absolute, self.directory is assumed to be the root directory.
+        If path provided is not absolute, self.active_directory is assumed to be the root directory.
         
         Arguments:
             *path (str): required, path to output file
-                (e.g. self.mkfname('tmp', 'tmp.fasta') --> <self.directory>/tmp/tmp.fasta)
+                (e.g. self.mkfname('tmp', 'tmp.fasta') --> <self.active_directory>/tmp/tmp.fasta)
             tmp (bool): mark file as temporary (for deletion when self.rm_tmpfiles is called)
         
         Returns
@@ -260,7 +261,7 @@ class PathHandler:
             path
         """
         if os.path.isabs(os.path.join(*path)): path = os.path.join(*path)
-        else: path = os.path.join(self.directory, *path)
+        else: path = os.path.join(self.active_directory, *path)
         if tmp: self.tmp_files.add(path)
         return path
     ## mkfname, except it also creates path to directory + empty file if they don't already exist
@@ -319,17 +320,29 @@ class PathHandler:
         """
         ## move files to final destination (lol)
         if self.tmp:
-            if self.out_dir:
+            if self.directory:
                 ## create final output directory if doesn't exist
-                if not os.path.exists(self.out_dir):
-                    os.makedirs(self.out_dir, exist_ok = True)
+                if not os.path.exists(self.directory):
+                    os.makedirs(self.directory, exist_ok = True)
                 ## remove tmp files
                 self.rm_tmpfiles()
                 ## copy items
-                mv_dir_overwrite(self.tmpdir, self.out_dir)
-                print(f"Output files have been generated in {self.out_dir}")
+                mv_dir_overwrite(self.tmpdir, self.directory)
+                ## update file locations
+                self.new_dirs = [re.sub('^' + re.escape(self.active_directory), self.directory, dirname)
+                                 for dirname in self.new_dirs]
+                print(f"Output files have been generated in {self.directory}")
+            else:
+                while True:
+                    inpt = input( ("No output directory specified. Project will be deleted."
+                                   " Proceed? (Y/N) ") )
+                    if inpt in {'N', 'n'}:
+                        return
+                    elif inpt not in {'Y', 'y'}:
+                        print(f"Invalid input: '{inpt}'")
             ## remove tmpdir
             shutil.rmtree(self.tmpdir)
+            self.active_directory = self.directory
 
 # _verbose = True
 # _directory = "/mnt/chaelab/rachelle/scripts/minorgpy/test/minorg"
@@ -415,6 +428,18 @@ class PathHandler:
 # ## 278 without domain, 89 in NB-aRC 366375
 # x.minimumset()
 
+# import sys
+# sys.path.append("/mnt/chaelab/rachelle/scripts/minorgpy")
+# from minorg.MINORg import MINORg
+# x = MINORg()
+# x.parse_grna_map_from_file("/mnt/chaelab/rachelle/scripts/minorgpy/test/minimumset/test_gRNA_all.map")
+# x.minimumset()
+# x.final_map
+# x.resolve() ## input 'n'
+# x.directory = "/mnt/chaelab/rachelle/scripts/minorgpy/test/minimumset/test_newcheck"
+# x.resolve()
+# x.final_map ## unchanged :(
+
 class MINORg (PathHandler):
     """
     Tracks parameters, intermediate files, and output file for reuse.
@@ -452,6 +477,7 @@ class MINORg (PathHandler):
     >>> my_minorg.resolve()
     
     Attributes:
+        directory (str): [general] final output directory
         prefix (str): [general] prefix for output directories and files
         thread (int): [general] maximum number of threads for parallel processing
 
@@ -543,6 +569,9 @@ class MINORg (PathHandler):
             a MINORg object
         """
         self.verbose = False
+        if directory is None:
+            print(f"Setting current directory ({os.getcwd()}) as output directory")
+            directory = os.getcwd()
         super().__init__(directory = directory, keep_tmp = keep_tmp, **kwargs)
         
         ## parse config.ini file if provided (if None, default values will be stored in Params obj)
@@ -609,7 +638,7 @@ class MINORg (PathHandler):
         self.grna_map = None ## .map file, generated by MINORg.write_all_grna_map() if not specified by user
         self.screen_reference = True
         self._offtarget = None ## user-provided function that takes in pam, QueryResult obj, and HSP object and returns whether the off-target hit is acceptable. If not set, defaults to using self.ot_mismatch and self.ot_gap (combined with OR) to set lower limits for acceptable off-target
-        self.background = {} ## {<alias>: <fname>}b
+        self.background = {} ## {<alias>: <fname>}
         self.ot_mismatch = self.params.ot_mismatch.default
         self.ot_gap = self.params.ot_gap.default
         self.ot_pamless = self.params.ot_pamless.default
@@ -776,34 +805,6 @@ class MINORg (PathHandler):
                                         accept_invalid_field = self.accept_invalid_field,
                                         exclude_empty_seqs=True, quiet = True)
         return filtered
-    @property
-    def check_names(self):
-        """
-        gRNA check names
-        
-        :getter: Returns names of checks for gRNA hits
-        :type: list
-        """
-        return self.grna_hits.check_names
-    @property
-    def check_names_nonstandard(self):
-        """
-        Non-standard gRNA check names (i.e. user-defined checks)
-        
-        :getter: Returns names of non-standard checks for gRNA hits
-        :type: list
-        """
-        return [check_name for check_name in self.check_names
-                if check_name not in {"background", "GC", "exclude", "CDS", "feature"}]
-    @property
-    def check_names_standard(self):
-        """
-        Standard gRNA check names (background, GC, exclude, feature)
-        
-        :getter: Returns names of standard checks for gRNA hits
-        :type: list
-        """
-        return list({"background", "GC", "exclude", "CDS", "feature"}.intersection(set(self.check_names)))
     
     ## setters
     @domain_name.setter
@@ -837,16 +838,19 @@ class MINORg (PathHandler):
         Arguments:
             directory (str): required, path to new output directory
         """
+        src_dir = self.active_directory
         super().mv(directory)
         ## move logfile
-        self.logfile.move(self.directory, self.prefix)
+        self.logfile.move(self.active_directory, self.prefix)
+        ## update stored filenames
+        self._update_stored_fnames(src_dir, self.active_directory)
     
     ## update mkfname so it adds a prefix to each file
     def mkfname(self, *path, tmp = False, prefix = True):
         """
         Generate new file name.
         
-        If path provided is not absolute, self.directory is assumed to be the root directory.
+        If path provided is not absolute, self.active_directory is assumed to be the root directory.
         
         Arguments:
             *path (str): required, path to output file (e.g. self.mkfname('tmp', 'tmp.fasta'))
@@ -866,7 +870,7 @@ class MINORg (PathHandler):
     
     def results_fname(self, *path, reserve = False, newfile = False, **kwargs):
         """
-        Generate new file name in results directory (<self.directory>/<self.prefix>).
+        Generate new file name in results directory (<self.active_directory>/<self.prefix>).
         
         Operates exactly as :meth:`MINORg.mkfname`, with the additional options of creating an empty file or clearing an existing file.
         
@@ -882,6 +886,54 @@ class MINORg (PathHandler):
         ## return relevant path
         if reserve or newfile: return self.reserve_fname(self.prefix, *path, **kwargs, newfile = newfile)
         else: return self.mkfname(self.prefix, *path, **kwargs)
+    
+    def resolve(self) -> None:
+        """
+        Wrapper for super().resolve() that also updates logfile and any stored filenames
+        """
+        src_dir = self.active_directory
+        dst_dir = self.directory
+        ## resolve
+        print("resolving")
+        super().resolve()
+        ## update file paths if dst is not None (i.e. if resolve doesn't delete everything)
+        if dst_dir:
+            ## move logfile
+            self.logfile.move(dst_dir, self.prefix)
+            ## update stored filenames
+            self._update_stored_fnames(src_dir, dst_dir)
+    
+    def _update_stored_fnames(self, src_dir, dst_dir) -> None:
+        """
+        Updates paths of files (potentially) generated by MINORg if they are in src_dir to dst_dir.
+        Attributes updated are: gff_domain, ref_gene, ref_cds, target, grna_fasta,
+            grna_map, alignment, pass_map, pass_fasta, final_map, final_fasta
+        
+        Arguments:
+            src_dir (str): path to source directory
+            dst_dir (str) path to destination directory
+        """
+        src_dir_split = os.path.normpath(src_dir).split(os.path.sep)
+        dst_dir_split = os.path.normpath(dst_dir).split(os.path.sep)
+        def update_fname(fname):
+            if not fname: return fname
+            fname_split = os.path.normpath(fname).split(os.path.sep)
+            if fname_split[:len(src_dir_split)] == src_dir_split:
+                return os.path.join(*(dst_dir_split + fname_split[len(src_dir_split):]))
+            return fname
+        ## update
+        for attr in ("gff_domain", "ref_gene", "ref_cds", "target", "grna_fasta", "grna_map",
+                     "alignment", "pass_map", "pass_fasta", "final_map", "final_fasta"):
+            try:
+                setattr(self, attr, update_fname(getattr(self, attr)))
+            except Exception as e:
+                print(attr, getattr(self, attr))
+                raise e
+        return
+
+    ###############
+    ##  GETTERS  ##
+    ###############
     
     def get_ref_seqid(self, seqid, attr):
         """
@@ -925,14 +977,14 @@ class MINORg (PathHandler):
                                 else self.accept_invalid_field)
         ## expand check names
         if not check_names:
-            check_names = self.check_names
+            check_names = self.check_names(standard = True, nonstandard = True, hit = True, seq = True)
         else:
             if "standard" in check_names:
                 check_names.remove("standard")
-                check_names.extend(self.check_names_standard)
+                check_names.extend(self.check_names(standard = True, nonstandard = False))
             if "nonstandard" in check_names:
                 check_names.remove("nonstandard")
-                check_names.extend(self.check_names_nonstandard)
+                check_names.extend(self.check_names(standard = False, nonstandard = True))
         ## filter
         seqs_checks = set(check_names).intersection({"background", "GC", "exclude"})
         hits_checks = set(check_names) - seqs_checks
@@ -945,8 +997,36 @@ class MINORg (PathHandler):
                                         accept_invalid_field = self.accept_invalid_field,
                                         exclude_empty_seqs=True, quiet = True)
         return filtered
-    
-
+    def check_names(self, seq = True, hit = True, standard = True, nonstandard = True) -> list:
+        """
+        Get gRNA check names
+        
+        Arguments:
+            seq (bool): get check names for gRNA sequences (gRNASeq objects)
+            hit (bool): get check names for gRNA hits (gRNAHit objects)
+            standard (bool): get standard check names
+            nonstandard (bool): get nonstandard check names
+        
+        Returns
+        -------
+        list
+            Of check names (str)
+        """
+        if not (seq or hit):
+            raise MessageError("Either one or both of 'seq=True' or 'hit=True' is required.")
+        if not (standard or nonstandard):
+            raise MessageError("Either one or both of 'standard=True' or 'nonstandard=True' is required.")
+        check_names = (self.grna_hits.check_names if (seq and hit)
+                       else self.grna_hits.check_names_seqs if seq
+                       else self.grna_hits.check_names_hits)
+        if standard and nonstandard:
+            return check_names
+        else:
+            standard_check_names = {"background", "GC", "exclude", "CDS", "feature"}
+            if standard:
+                return list(set(check_names).intersection(standard_check_names))
+            elif nonstandard:
+                return list(set(check_names) - standard_check_names)
     
     ####################
     ##  ADD FUNCIONS  ##
@@ -1005,7 +1085,7 @@ class MINORg (PathHandler):
         
         Arguments:
             fout (str): optional, absolute path to output file.
-                Autogenerated using self.prefix and self.directory if not provided.
+                Autogenerated using self.prefix and self.active_directory if not provided.
         """
         if fout is None: fout = get_val_default(self.grna_fasta, self.results_fname("gRNA_all.fasta"))
         self.grna_fasta = fout
@@ -1017,7 +1097,7 @@ class MINORg (PathHandler):
         
         Arguments:
             fout (str): optional, absolute path to output file.
-                Autogenerated using self.prefix and self.directory if not provided.
+                Autogenerated using self.prefix and self.active_directory if not provided.
             write_checks (bool): write all check statuses
         """
         if fout is None: fout = get_val_default(self.grna_map, self.results_fname("gRNA_all.map"))
@@ -1030,7 +1110,7 @@ class MINORg (PathHandler):
         
         Arguments:
             fout (str): optional, absolute path to output file.
-                Autogenerated using self.prefix and self.directory if not provided.
+                Autogenerated using self.prefix and self.active_directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_fasta, self.results_fname("gRNA_pass.fasta"))
         self.valid_grna().write_fasta(fout, write_all = True)
@@ -1041,7 +1121,7 @@ class MINORg (PathHandler):
         
         Arguments:
             fout (str): optional, absolute path to output file.
-                Autogenerated using self.prefix and self.directory if not provided.
+                Autogenerated using self.prefix and self.active_directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_map, self.results_fname("gRNA_pass.map"))
         self.valid_grna().write_mapping(fout, version = 2, write_all = True, write_checks = False)
@@ -1936,7 +2016,7 @@ class MINORg (PathHandler):
         return
     
     def minimumset(self, sets = None, manual = None, fasta = None, fout_fasta = None, fout_map = None,
-                   report_full_path = True, check_all = True, nonstandard_checks = [],
+                   report_full_path = True, all_checks = True, nonstandard_checks = [],
                    exclude_check = True, gc_check = True, background_check = True, feature_check = True):
         """
         Generate minimum set(s) of gRNA required to cover all targets.
@@ -1946,11 +2026,11 @@ class MINORg (PathHandler):
             manual (bool): manually approve all gRNA sets. Defaults to NOT self.auto if not provided.
             fasta (str): optional, path to FASTA file. Used for renaming gRNA.
             fout_fasta (str): optional, path to output FASTA file.
-                Autogenerated using self.prefix and self.directory if not provided.
+                Autogenerated using self.prefix and self.active_directory if not provided.
             fout_map (str): optional, path to output .map file.
-                Autogenerated using self.prefix and self.directory if not provided.
+                Autogenerated using self.prefix and self.active_directory if not provided.
             report_full_path (bool): print full path to output files upon successful writing
-            check_all (bool): include all checks for filtering (including any in user-added columns)
+            all_checks (bool): include all checks for filtering (including any in user-added columns)
             nonstandard_checks (list): non-standard checks to include for filtering (subject to self.accept_invalid_field)
             exclude_check (bool): include 'exclude' field for filtering (subject to self.accept_invalid_field)
             gc_check (bool): include 'GC' field for filtering (subject to self.accept_invalid_field)
@@ -1964,20 +2044,23 @@ class MINORg (PathHandler):
         ## set exclude check
         self.filter_exclude()
         ## check if statuses has been set. If not, warn user.
-        if exclude_check:
+        if all_checks or exclude_check:
             self._check_valid_status("exclude", "seq", "exclude")
-        if gc_check:
+        if all_checks or gc_check:
             self._check_valid_status("GC", "seq", "%GC")
-        if background_check:
+        if all_checks or background_check:
             self._check_valid_status("background", "seq", "off-target")
-        if feature_check:
+        if all_checks or feature_check:
             self._check_valid_status("feature", "hit", "within-feature")
-        if check_all:
-            for check_name in self.grna_hits.check_names:
-                if check_name not in {"GC", "background", "feature", "exclude"}:
-                    self._check_valid_status(check_name, "hit", check_name)
+        if all_checks:
+            for check_name in self.check_names(hit = False, seq = True,
+                                               standard = False, nonstandard = True):
+                self._check_valid_status(check_name, "seq", check_name)
+            for check_name in self.check_names(hit = True, seq = False,
+                                               standard = False, nonstandard = True):
+                self._check_valid_status(check_name, "hit", check_name)
         ## filter grna by checks
-        grna_hits = copy.deepcopy(self.valid_grna(*([] if check_all else
+        grna_hits = copy.deepcopy(self.valid_grna(*([] if all_checks else
                                                     ((["exclude"] if exclude_check else []) +
                                                      (["GC"] if gc_check else []) +
                                                      (["background"] if background_check else []) +
@@ -1995,15 +2078,16 @@ class MINORg (PathHandler):
             self.logfile.warning(f"The gRNA sequences cannot cover all target sequences the desired number of times ({len(grna_hits)} valid gRNA, {sets} set(s) requested).\n")
         ## start generating sets
         grna_sets = []
+        grna_hits_for_setcover = copy.deepcopy(grna_hits)
         while len(grna_sets) < sets:
             ## get a (minimum) set of gRNA sequences
-            seq_set = get_minimum_set(grna_hits, set_num = len(grna_sets) + 1,
+            seq_set = get_minimum_set(grna_hits_for_setcover, set_num = len(grna_sets) + 1,
                                       manual_check = (manual if manual is not None else not self.auto),
                                       targets = targets, suppress_warning = True)
             ## if valid set returned
             if seq_set:
                 grna_sets.append(seq_set) ## add to existing list of sets
-                grna_hits.remove_seqs(seq_set) ## remove seqs in seq_set so they're not repeated
+                grna_hits_for_setcover.remove_seqs(seq_set) ## remove seqs in seq_set so they're not repeated
             else:
                 # warnings.warn(f"The gRNA sequences cannot cover all target sequences the desired number of times ({sets}). (Failed at set {len(grna_sets) + 1} of {sets})\n")
                 self.logfile.warning(f"The gRNA sequences cannot cover all target sequences the desired number of times ({sets}). (Failed at set {len(grna_sets) + 1} of {sets})\n")
@@ -2015,12 +2099,14 @@ class MINORg (PathHandler):
                                                     self.results_fname("gRNA_final.map"))
         ## write gRNA fasta file and gRNA mapping
         if grna_sets:
-            self.grna_hits.write_fasta(fout_fasta, seqs = itertools.chain(*grna_sets), fasta = fasta)
+            grna_hits.write_fasta(fout_fasta, seqs = itertools.chain(*grna_sets), fasta = fasta)
             print("Final gRNA sequence(s) have been written to"
                   f" {fout_fasta if report_full_path else os.path.basename(fout_fasta)}")
-            self.grna_hits.write_mapping(fout_map, sets = grna_sets, fasta = fasta, version = 2)
+            self.final_fasta = fout_fasta
+            grna_hits.write_mapping(fout_map, sets = grna_sets, fasta = fasta, version = 2)
             print("Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to"
                   f" {fout_map if report_full_path else os.path.basename(fout_map)}")
+            self.final_map = fout_map
         ## print summary
         print(f"\n{sets} mutually exclusive gRNA set(s) requested. {len(grna_sets)} set(s) found.")
         return
