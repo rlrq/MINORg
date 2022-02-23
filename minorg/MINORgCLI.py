@@ -719,7 +719,7 @@ class MINORgCLI (MINORg):
             parsed attribute modifications in format
                 {<feature>: {<standard attribute field name>: <nonstandard attribute field name>}}
         """
-        if isinstance(val, str):
+        if val and isinstance(val, str):
             try:
                 from regex import search
                 return self.params.parse_attr_mod(search(r"""[^'"]+""", val).group(0))
@@ -730,9 +730,10 @@ class MINORgCLI (MINORg):
                                                        " from the config file ({self.params.config_file})"
                                                        " via alias '{val}'." ),
                                            hint = self.params.attr_mod.help())
-                else: raise InputFormatError(error_src = "for parameter --attr-mod",
-                                             hint = self.params.attr_mod.help())
-        else: return self.params.attr_mod.default
+                else:
+                    raise InputFormatError(error_src = "for parameter --attr-mod",
+                                           hint = self.params.attr_mod.help())
+        else: return {}
     
     def domain_callback(self, val: str) -> str:
         """

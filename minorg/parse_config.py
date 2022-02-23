@@ -323,7 +323,7 @@ class Params():
                                          "<absolute path to FASTA file>"
                                          "\nOne FASTA file per line." ))
         self.attr_mod = Param(get_val_none(get_data("gff attribute modification"),
-                                           self.attr_mod_presets, none = {}),
+                                           self.attr_mod_presets, none = ''),
                               "--attr-mod",
                               help = ( "mapping for non-standard attribute fields to standard GFF3 fields."
                                        " Only the standard fields 'ID' and 'Parent' will be used."

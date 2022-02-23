@@ -8,6 +8,7 @@ API documentation
    minorg.MINORgCLI
    minorg.annotation
    minorg.blast
+   minorg.console
    minorg.constants
    minorg.display
    minorg.dynamic_logger
@@ -21,8 +22,8 @@ API documentation
    minorg.grna
    minorg.index
    minorg.log
-   minorg.mafftcommandline_add
    minorg.main
+   minorg.mafftcommandline_add
    minorg.minimum_set
    minorg.pam
    minorg.parse_config

@@ -76,6 +76,8 @@ def setup(app):
 
 # autodoc_member_order = "bysource"
 
+autoapi_ignore = ['*main']
+
 ## -- linkcode options ---------------------------------------------------
 
 # def linkcode_resolve(domain, info):

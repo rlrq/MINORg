@@ -5,7 +5,7 @@ with open("README.md", 'r', encoding="utf-8") as fh:
 
 setuptools.setup(
     name="MINORg_rlrq",
-    version="2.2.1",
+    version="2.2.2",
     author="Rachelle R.Q. Lee",
     author_email="rachelle2nd@yahoo.com.sg",
     description="Generate minimum gRNA set for multiple non-reference genomes",
@@ -21,6 +21,6 @@ setuptools.setup(
     ],
     package_dir={"": "minorg"},
     packages=setuptools.find_packages(where="minorg"),
-    install_requires=["setuptools>=42", "biopython", "click", "pybedtools", "pyfaidx", "regex", "typer"],
+    install_requires=["biopython", "click", "pybedtools", "pyfaidx", "regex", "typer"],
     python_requires=">=3.6",
 )
