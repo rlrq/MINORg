@@ -1,23 +1,5 @@
 [build-system]
 requires = [
-     "setuptools>=42",
-     "biopython",
-     "click",
-     "configparser",
-     "datetime",
-     "inspect",
-     "itertools",
-     "logging",
-     "os",
-     "pybedtools",
-     "pyfaidx",
-     "regex",
-     "shutil",
-     "string",
-     "sys",
-     "tempfile",
-     "time",
-     "typer",
-     "warnings"
+     "setuptools>=42"
 ]
 build-backend = "setuptools.build_meta"
