@@ -19,7 +19,7 @@ import warnings
 import itertools
 import tempfile
 import regex as re
-from Bio import Seq
+from Bio.Seq import Seq
 
 from minorg.log import MINORgLogger
 
@@ -1824,7 +1824,7 @@ class MINORg (PathHandler):
             gene = self.get_ref_seqid(seqid_cds, "gene")
             adj_ranges = self._adjust_feature_range(seq_gene, gene, source, "CDS",
                                                     domain = bool(self.gff_domain), subtract_gaps = False)
-            new_cds_seq = Seq.Seq('-'*(len(seq_gene)))
+            new_cds_seq = Seq('-'*(len(seq_gene)))
             for r in adj_ranges:
                 start, end = r
                 new_cds_seq = new_cds_seq[:start] + seq_gene[start:end] + new_cds_seq[end:]

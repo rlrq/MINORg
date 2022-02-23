@@ -3,11 +3,10 @@
 import sys
 sys.path.append("/mnt/chaelab/rachelle/scripts/minorgpy")
 
-import Bio
 import copy
 import tempfile
 
-from Bio import Seq
+from Bio.Seq import Seq
 
 from minorg.exceptions import MessageError
 
@@ -322,7 +321,7 @@ class AnnotatedFeature(Annotation):
         return [(start + index, end + index) for start, end in ranges]
     
     def _get_seq(self, feature_type=None, ranges=[],
-                 adj_dir=True, complete=False, translate=False) -> Bio.Seq.Seq:
+                 adj_dir=True, complete=False, translate=False) -> Seq:
         """
         Get sequence of ``feature_type`` by concatenating subfeatures of feature_type.
         Final range from which sequence will be extracted is the intersection of ``ranges`` and 
@@ -351,7 +350,7 @@ class AnnotatedFeature(Annotation):
         if complete:
             output_ranges = [(min(r[0] for r in output_ranges), max(r[1] for r in output_ranges))]
         ## start extracting seq
-        seq = Bio.Seq.Seq('')
+        seq = Seq('')
         for start, end in output_ranges:
             seq += self.assembly[self.seqid][start:end]
         if adj_dir and not self.plus:

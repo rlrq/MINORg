@@ -1,6 +1,5 @@
 import copy
-import Bio
-from Bio import Seq
+from Bio.Seq import Seq
 from pyfaidx import Fasta
 
 from typing import Union
@@ -128,10 +127,10 @@ class IndexedFasta(Fasta):
         return f"IndexedFasta({self.filename})"
     def __str__(self):
         return self.filename
-    def get_seq(self, *args, **kwargs) -> Bio.Seq.Seq:
+    def get_seq(self, *args, **kwargs) -> Seq:
         pyfaidx_seq = super().get_seq(*args, **kwargs)
-        return Seq.Seq(pyfaidx_seq.seq)
-    def get_spliced_seq(self, *args, **kwargs) -> Bio.Seq.Seq:
+        return Seq(pyfaidx_seq.seq)
+    def get_spliced_seq(self, *args, **kwargs) -> Seq:
         pyfaidx_seq = super().get_spliced_seq(*args, **kwargs)
-        return Seq.Seq(pyfaidx_seq.seq)
+        return Seq(pyfaidx_seq.seq)
 

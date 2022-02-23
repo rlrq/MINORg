@@ -17,42 +17,20 @@ def fasta_to_dict(fname):
         seqs[seq_record.id] = seq_record.seq
     return seqs
 
-def dict_to_SeqRecordList(d, description = '', seq_id_func = lambda x:x, iupac_letters = None,
+def dict_to_SeqRecordList(d, description = '', seq_id_func = lambda x:x,
                           seq_type = "DNA", gap_char = '-', gapped = False):
     out_l = []
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
-    from Bio.Alphabet import IUPAC, Gapped
     for seq_id,seq in d.items():
         out_l.append(SeqRecord(seq if isinstance(seq, Seq) else \
-                               Seq(str(seq),
-                                   Gapped(iupac_letters if iupac_letters else \
-                                          IUPAC.ambiguous_dna if seq_type == "DNA" else \
-                                          IUPAC.ambiguous_protein if seq_type == "protein" else \
-                                          IUPAC.ambiguous_rna, gap_char)) if gapped else \
                                Seq(str(seq)),
                                id = seq_id_func(seq_id), description = description))
     return out_l
 
 def dict_to_fasta(d, fout, seq_type = "detect", gap_char = '-', gapped = False):
-    def detect_iupac_letters(iupac_alphabet):
-        char_set = set(itertools.chain(*[set(str(seq)) for seq in d.values()]))
-        iupac_set = set(str(iupac_alphabet) + str(iupac_alphabet).lower() + gap_char)
-        return char_set - iupac_set == set()
-    if seq_type == "detect":
-        from Bio.Alphabet import IUPAC
-        iupac_letters = IUPAC.unambiguous_dna if detect_iupac_letters(IUPAC.unambiguous_dna) else \
-                        IUPAC.unambiguous_rna if detect_iupac_letters(IUPAC.unambiguous_rna) else \
-                        IUPAC.extended_dna if detect_iupac_letters(IUPAC.extended_dna) else \
-                        IUPAC.ambiguous_dna if detect_iupac_letters(IUPAC.ambiguous_dna) else \
-                        IUPAC.ambiguous_rna if detect_iupac_letters(IUPAC.ambiguous_rna) else \
-                        IUPAC.protein if detect_iupac_letters(IUPAC.protein) else \
-                        IUPAC.extended_protein if detect_iupac_letters(IUPAC.extended_protein) else \
-                        None
-    else:
-        iupac_letters = None
     from Bio import SeqIO
-    SeqIO.write(dict_to_SeqRecordList(d, gap_char = gap_char, gapped = gapped, iupac_letters = iupac_letters),
+    SeqIO.write(dict_to_SeqRecordList(d, gap_char = gap_char, gapped = gapped),
                 fout, "fasta")
 
 def extract_ranges(seq, ranges, strand = '+'):

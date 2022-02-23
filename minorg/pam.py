@@ -49,8 +49,8 @@ class PAM():
         """
         Map ambiguous bases
         """
-        from Bio import Seq
-        amb_dna = Seq.IUPAC.IUPACData.ambiguous_dna_values
+        from Bio.Data import IUPACData
+        amb_dna = IUPACData.ambiguous_dna_values
         pam_mapped = ''
         for c in self.pam:
             mapped = amb_dna.get(c.upper(), c)
