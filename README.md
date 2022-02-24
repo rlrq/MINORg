@@ -1,9 +1,13 @@
 # MINORg
 **Mi**nimum **No**n-**R**eference **g**RNA finder
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
+- Available as both command line application and Python package
 
-## IMPT
-The code in this repository is not complete. Only sections of it are viable. This README file is also not up-to-date. Please refer to slides/PDF in the 'Links' section for execution details for the version on the workstation (accessible only to lab members and guests with accounts).
+## Availability
+Some dependencies are not available for Windows. Windows users should use a Linux emulator to run MINORg.
+
+## Installation
+A version of MINORg is available at test.pypi.org. You may follow this [guide](https://rlrq.github.io/MINORg/build/html/installation.html) to install MINORg and its dependencies.
 
 ## Requirements
 - [Python 3](https://www.python.org/)
@@ -13,8 +17,11 @@ The code in this repository is not complete. Only sections of it are viable. Thi
 
 ## Links
 - Tutorial, example, and documentation: https://rlrq.github.io/MINORg
-- Detailed overview of steps in the programme: https://tinyurl.com/sr84ae9e (Google slides)
-- Flowchart to select & use appropriate input parameters: https://tinyurl.com/jyke76b8 (PDF)
+- Detailed overview of steps in the programme: https://tinyurl.com/sr84ae9e (Google slides) (not up to date)
+- Flowchart to select & use appropriate input parameters: https://tinyurl.com/jyke76b8 (PDF) (not up to date)
+
+## IMPT
+Please refer to slides/PDF in the 'Links' section for execution details for the version on the workstation (accessible only to lab members and guests with accounts).
 
 ## Overview of steps
 1. Identify candidate targets in non-reference genome
@@ -45,7 +52,8 @@ The code in this repository is not complete. Only sections of it are viable. Thi
       1. Extract CDS-only regions of user-specified reference gene(s) from a reference genome (.fasta) using GFF3 annotation (.gff)
          - If the user specified a domain, the range will be restricted accordingly
       2. Align non-reference target sequences (output of step 1.5) with reference sequences from steps 1.1 (or 1.1.3 if domain is specified) and 2.1
-      3. For all candidate gRNA, check their position in the alignment (based on where in each non-reference target they originate) and eliminate any gRNA without **AT LEAST ONE** alignment within the reference CDS regions
+      3. For all candidate gRNA, check their position in the alignment (based on where in each non-reference target they originate) and eliminate any gRNA that do not align within **AT LEAST ONE** reference gene's desired feature
+         - Users may change the desired feature (default is CDS)
 4. Find minimum gRNA set that covers all target sequences
 
 ## Inputs
@@ -57,7 +65,7 @@ The code in this repository is not complete. Only sections of it are viable. Thi
    - Parameters:
       - Gene IDs (--gene)
          - Used with:
-            - Accession/individual (-a) OR
+            - Accession/individual (-i) OR
             - Query fasta file (-q xxx.fasta)
       - Target sequences (--target xxx.fasta)
    - Optional parameters:
@@ -65,18 +73,18 @@ The code in this repository is not complete. Only sections of it are viable. Thi
       - Minimum candidate target length (--minlen 0 (bp))
       - Maximum merge buffer (--buffer 100 (bp))
    - Optional for domain restriction:
-      - PSSM-ID and rpsblast+ database
+      - PSSM-ID (--domain) and rpsblast+ database (--db)
 - Step 2
    - Parameters:
-      - PAM (--pam)
-      - gRNA length (--length)
+      - PAM (--pam SpCas9)
+      - gRNA length (--length 20 (bp))
 - Step 3
    - Optional parameters:
-      - Minimum off-target gaps (--gaps 0)
-      - Minimum off-target mismatch (--mismatch 1 (bp))
+      - Minimum off-target gaps (--ot-gap 0)
+      - Minimum off-target mismatch (--ot-mismatch 1 (bp))
    - Optional data:
       - Background sequences (--background xxx.fasta)
 - Step 4
    - Optional paramters:
       - Number of sets to output (--set 1)
-      - Minimum set algorithm (--algo LAR)
+      - Manually approve each gRNA set (--manual)
