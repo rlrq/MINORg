@@ -38,7 +38,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
@@ -82,7 +82,7 @@
 <h1><span class="section-number">5. </span>Tutorial (Python)<a class="headerlink" href="#tutorial-python" title="Permalink to this headline"></a></h1>
 <section id="getting-started">
 <h2><span class="section-number">5.1. </span>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h2>
-<p>To begin, import the <code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code> class.</p>
+<p>To begin, import the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> class.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 </pre></div>
 </div>
@@ -95,7 +95,7 @@
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">config</span> <span class="o">=</span> <span class="s1">&#39;/path/to/config.ini&#39;</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/path/to/output/directory&#39;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You may now set your parameters using the attributes of your <code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code> object. For a table listing the equivalent CLI arguments and <code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code> attributes, see <a class="reference internal" href="parameters.html#cli-vs-python"><span class="std std-ref">CLI vs Python</span></a>. For example, you can specify executables as such:</p>
+<p>You may now set your parameters using the attributes of your <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object. For a table listing the equivalent CLI arguments and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> attributes, see <a class="reference internal" href="parameters.html#cli-vs-python"><span class="std std-ref">CLI vs Python</span></a>. For example, you can specify executables as such:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/path/to/blastn/executable&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">rpsblast</span> <span class="o">=</span> <span class="s1">&#39;/path/to/rpsblast/executable&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">mafft</span> <span class="o">=</span> <span class="s1">&#39;/path/to/mafft/executable&#39;</span>
