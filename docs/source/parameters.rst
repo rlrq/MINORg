@@ -251,7 +251,7 @@ Paths
 Executables
 +++++++++++
 
-Default values for executables may be specified in the config file (see :ref:`Configuration` for more on the config file).
+Default values for executables may be specified in the config file (see :ref:`Configuration:Configuration` for more on the config file).
 
 
 blastn, rpsblast/rpsblast+, MAFFT

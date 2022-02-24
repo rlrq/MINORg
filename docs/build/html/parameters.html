@@ -559,6 +559,7 @@ confirmation for each set</p></td>
 </div>
 <section id="executables">
 <h4><a class="toc-backref" href="#id8"><span class="section-number">6.2.2.1. </span>Executables</a><a class="headerlink" href="#executables" title="Permalink to this headline"></a></h4>
+<p>Default values for executables may be specified in the config file (see <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> for more on the config file).</p>
 <section id="blastn-rpsblast-rpsblast-mafft">
 <h5><span class="section-number">6.2.2.1.1. </span>blastn, rpsblast/rpsblast+, MAFFT<a class="headerlink" href="#blastn-rpsblast-rpsblast-mafft" title="Permalink to this headline"></a></h5>
 <p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--blastn</span></code>, <code class="docutils literal notranslate"><span class="pre">--rpsblast</span></code>, <code class="docutils literal notranslate"><span class="pre">--maff</span></code></p>
@@ -571,7 +572,17 @@ confirmation for each set</p></td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/usr/bin/blastn&#39;</span> <span class="c1">## tells MINORg where the blastn executable is</span>
 </pre></div>
 </div>
-<p>If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. ‘blastn’ instead of ‘/usr/bin/blastn’). If not, the path to the executable is required.</p>
+<p>If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. ‘blastn’ instead of ‘/usr/bin/blastn’). If not, the <strong>path to the executable</strong> is required.</p>
+<p>To determine if blastn and rpsblast (or rpsblast+ depending on your BLAST+ version) in the command-search path, execute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span><span class="p">:</span> <span class="mf">2.6.0</span><span class="o">+</span>
+ <span class="n">Package</span><span class="p">:</span> <span class="n">blast</span> <span class="mf">2.6.0</span><span class="p">,</span> <span class="n">build</span> <span class="n">Jan</span> <span class="mi">15</span> <span class="mi">2017</span> <span class="mi">17</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">27</span>
+</pre></div>
+</div>
+<p>then ‘blastn’ IS in your command-search path. Repeat this with ‘rpsblast’ and/or ‘rpsblast+’.</p>
 </section>
 <section id="bedtools">
 <h5><span class="section-number">6.2.2.1.2. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h5>
@@ -585,7 +596,19 @@ confirmation for each set</p></td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">bedtools</span> <span class="o">=</span> <span class="s1">&#39;/path/to/bedtools2/bin/&#39;</span> <span class="c1">## tells MINORg where the BEDTools executables are</span>
 </pre></div>
 </div>
-<p>If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the directory containing the BEDTools executables is required.</p>
+<p>If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the <strong>directory containing the BEDTools executables</strong> is required.</p>
+<p>To determine if the BEDTools executables are in your command-search path, execute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>bedtools –version</p>
+</div></blockquote>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bedtools</span> <span class="n">v2</span><span class="mf">.26.0</span>
+</pre></div>
+</div>
+<p>then ‘bedtools’ is in your command-search path.</p>
 </section>
 </section>
 </section>

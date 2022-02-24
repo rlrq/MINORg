@@ -38,7 +38,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
@@ -177,27 +177,28 @@
 <h2><span class="section-number">7.3. </span>Within-feature inference<a class="headerlink" href="#within-feature-inference" title="Permalink to this headline"></a></h2>
 <p>MINORg aligns unannotated targets to annotated reference genes (supplied using <code class="docutils literal notranslate"><span class="pre">--gene</span></code> (CLI) or <code class="docutils literal notranslate"><span class="pre">genes</span></code> (Python)) in order to infer gene feature positions.</p>
 <img alt="_images/minorg_within_feature.png" src="_images/minorg_within_feature.png" />
-<p>An alignment of an unannotated target sequence with 2 homologous reference genes is shown in the figure above.</p>
+<p>An alignment of an unannotated target sequence with 2 homologous reference genes is shown in the figure above. In this example, the desired feature in which to generate gRNA is the coding region (CDS).</p>
 <ul class="simple">
-<li><p>An effective feature (CDS) range is generated for each target-reference pair separately</p></li>
-<li><p>Where there is an insertion relative to a reference gene, an effective feature (CDS) range is only continuous across it if the insertion is smaller than a user-specified max_insertion length (<code class="docutils literal notranslate"><span class="pre">--max-insertion</span></code>/<code class="docutils literal notranslate"><span class="pre">max_insertion</span></code>, default: 15 bp)</p>
+<li><p>An effective feature (CDS in this case) range is generated for each target-reference pair separately</p></li>
+<li><p>Where there is an insertion relative to a reference gene, an effective feature (CDS in this case) range is only continuous across it if the insertion is smaller than a user-specified max_insertion length (<code class="docutils literal notranslate"><span class="pre">--max-insertion</span></code>/<code class="docutils literal notranslate"><span class="pre">max_insertion</span></code>, default: 15 bp)</p>
 <ul>
 <li><p>Using a max_insertion of 15 bp, the insertions marked by dashed (smaller than 15 bp) and dotted (larger than 15 bp) lines are included and excluded from the effective CDS range respectively</p></li>
 </ul>
 </li>
-<li><p>The minimum requirement for a gRNA to pass this check is to fall entirely within at least one gene’s effective feature (CDS) range</p></li>
-<li><p>Users may adjust the threshold for minimum number/fraction of effective feature (CDS) ranges a gRNA is required to be contained within to pass</p>
+<li><p>The minimum requirement for a gRNA to pass this check is to fall entirely within at least one gene’s effective feature (CDS in this case) range</p></li>
+<li><p>Users may adjust the threshold for minimum number/fraction of effective feature (CDS in this case) ranges a gRNA is required to be contained within to pass</p>
 <ul>
-<li><p>If using min_within_n of 1</p>
+<li><p>If using <code class="docutils literal notranslate"><span class="pre">--min-within-n</span></code>/<code class="docutils literal notranslate"><span class="pre">min_within_n</span></code> of 1</p>
 <ul>
-<li><p>gRNA are required to fall entirely within only 1 gene’s effective feature (CDS) range</p></li>
+<li><p>gRNA are required to fall entirely within only 1 gene’s effective feature (CDS in this case) range</p></li>
 <li><p>Both gRNA 2 and gRNA 4 pass</p></li>
 </ul>
 </li>
-<li><p>If using min_within_frac of 1</p>
+<li><p>If using <code class="docutils literal notranslate"><span class="pre">--min-within-fraction</span></code>/<code class="docutils literal notranslate"><span class="pre">min_within_fraction</span></code> of 1</p>
 <ul>
-<li><p>gRNA are required to fall entirely within ALL genes’ effective feature (CDS) ranges</p></li>
+<li><p>gRNA are required to fall entirely within ALL genes’ effective feature (CDS in this case) ranges</p></li>
 <li><p>Only gRNA 2 passes</p></li>
+<li><p>If parts of your genes are freqently pseudogenised, you may wish to set this value fairly high in order to ensure that most, if not all, gRNA are in conserved coding regions</p></li>
 </ul>
 </li>
 </ul>

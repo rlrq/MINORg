@@ -111,6 +111,15 @@
 <li><p>From source: <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/source.html">https://mafft.cbrc.jp/alignment/software/source.html</a></p></li>
 </ul>
 <p>In all cases, do take note of the full path name to the MAFFT executable if the programme is not in your command-search path.</p>
+<p>To determine if the <strong>mafft</strong> is in your command-search path, execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mafft</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v7</span><span class="mf">.427</span> <span class="p">(</span><span class="mi">2019</span><span class="o">/</span><span class="n">Mar</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then it IS in your command-search path. If not, do take note of the full path name to the mafft executable as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--mafft</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">mafft&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.mafft</span> <span class="pre">=</span> <span class="pre">'&lt;path</span> <span class="pre">to</span> <span class="pre">mafft&gt;'</span></code> (in Python).</p>
 </section>
 <section id="blast">
 <h3><span class="section-number">1.2.3. </span>BLAST+<a class="headerlink" href="#blast" title="Permalink to this headline"></a></h3>
@@ -156,7 +165,7 @@
 <h3><span class="section-number">1.2.4. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h3>
 <p>BEDTools is a “swiss-army knife of tools for a wide-range of genomic analysis tasks.” It is not available for Windows.</p>
 <p>You may follow the instructions to install it here: <a class="reference external" href="https://bedtools.readthedocs.io/en/latest/content/installation.html">https://bedtools.readthedocs.io/en/latest/content/installation.html</a></p>
-<p>To determine if the BEDTools executables are in your command-search path, execute</p>
+<p>To determine if BEDTools is in your command-search path, execute</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bedtools</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
 </div>
@@ -168,7 +177,7 @@
 </section>
 <section id="pysam-dependencies">
 <h3><span class="section-number">1.2.5. </span>pysam dependencies<a class="headerlink" href="#pysam-dependencies" title="Permalink to this headline"></a></h3>
-<p>‘pysam’ is part of the ‘pybedtools’ package that MINORg uses. Installation is somewhat tricky as it has a handful of dependencies that are not automatically installed with it. You may install them using your OS’s package manager.</p>
+<p>‘pysam’ is part of the ‘pybedtools’ package that MINORg uses. You DO NOT need to install pysam separately as it will be installed together with MINORg, but you MAY need to install some of its dependencies, as there are a handful that are not automatically installed with it. You may install them using your OS’s package manager.</p>
 <p>Some dependencies include (but may not be limited to):</p>
 <ul class="simple">
 <li><p>curses</p>

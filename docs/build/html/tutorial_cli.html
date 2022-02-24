@@ -38,7 +38,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Tutorial (Command line)</a><ul>
@@ -323,8 +323,11 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <ul class="simple">
 <li><p>The reference genome (<code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code>)</p></li>
 <li><p>Two different FASTA files (<code class="docutils literal notranslate"><span class="pre">--background</span> <span class="pre">./subset_Araly2.fasta</span> <span class="pre">--background</span> <span class="pre">./subset_Araha1.fasta</span></code>)</p></li>
-<li><p>Two non-reference genomes (<code class="docutils literal notranslate"><span class="pre">--ot-indv</span> <span class="pre">9654,9655</span> <span class="pre">--genome-set</span> <span class="pre">./subset_genome_mapping.txt</span></code>)
-* <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> functions similarly to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> in that it requires <code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>, except that <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> specifies non-refernece genomes for off-target assessment</p></li>
+<li><p>Two non-reference genomes (<code class="docutils literal notranslate"><span class="pre">--ot-indv</span> <span class="pre">9654,9655</span> <span class="pre">--genome-set</span> <span class="pre">./subset_genome_mapping.txt</span></code>)</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> functions similarly to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> in that it requires <code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>, except that <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> specifies non-refernece genomes for off-target assessment</p></li>
+</ul>
+</li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See <a class="reference internal" href="algorithms.html#off-target-assessment"><span class="std std-ref">Off-target assessment</span></a> for more on the off-target assessment algorithm.</p>
 <p>In this case, <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is actually redundant as the genome from which targets are obtained (which, because of <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ref</span></code>, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from non-reference genomes, the reference genome is not automatically included for off-target assessment and thus <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is NOT redundant. Additionally, do note that the genes passed to <code class="docutils literal notranslate"><span class="pre">--gene</span></code> are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.</p>

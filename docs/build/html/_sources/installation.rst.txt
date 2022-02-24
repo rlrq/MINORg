@@ -32,6 +32,17 @@ Follow one of the following links most applicable to your setup:
 
 In all cases, do take note of the full path name to the MAFFT executable if the programme is not in your command-search path.
 
+To determine if the **mafft** is in your command-search path, execute
+
+.. code-block::
+   
+   mafft --version
+
+If it prints something like ::
+
+  v7.427 (2019/Mar/24)
+
+then it IS in your command-search path. If not, do take note of the full path name to the mafft executable as you may need to pass it to MINORg using ``--mafft <path to mafft>`` (at command line) or ``my_minorg.mafft = '<path to mafft>'`` (in Python).
 
 BLAST+
 ++++++
@@ -93,7 +104,7 @@ BEDTools is a "swiss-army knife of tools for a wide-range of genomic analysis ta
 
 You may follow the instructions to install it here: https://bedtools.readthedocs.io/en/latest/content/installation.html
 
-To determine if the BEDTools executables are in your command-search path, execute
+To determine if BEDTools is in your command-search path, execute
 
 .. code-block::
    
@@ -109,7 +120,7 @@ then it IS in your command-search path. If not, do take note of the full path na
 pysam dependencies
 ++++++++++++++++++
 
-'pysam' is part of the 'pybedtools' package that MINORg uses. Installation is somewhat tricky as it has a handful of dependencies that are not automatically installed with it. You may install them using your OS's package manager.
+'pysam' is part of the 'pybedtools' package that MINORg uses. You DO NOT need to install pysam separately as it will be installed together with MINORg, but you MAY need to install some of its dependencies, as there are a handful that are not automatically installed with it. You may install them using your OS's package manager.
 
 Some dependencies include (but may not be limited to):
 

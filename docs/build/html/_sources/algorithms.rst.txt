@@ -87,22 +87,23 @@ MINORg aligns unannotated targets to annotated reference genes (supplied using `
 
 .. image:: images/minorg_within_feature.png
 
-An alignment of an unannotated target sequence with 2 homologous reference genes is shown in the figure above.
+An alignment of an unannotated target sequence with 2 homologous reference genes is shown in the figure above. In this example, the desired feature in which to generate gRNA is the coding region (CDS).
 
-* An effective feature (CDS) range is generated for each target-reference pair separately
-* Where there is an insertion relative to a reference gene, an effective feature (CDS) range is only continuous across it if the insertion is smaller than a user-specified max_insertion length (``--max-insertion``/\ ``max_insertion``, default: 15 bp)
+* An effective feature (CDS in this case) range is generated for each target-reference pair separately
+* Where there is an insertion relative to a reference gene, an effective feature (CDS in this case) range is only continuous across it if the insertion is smaller than a user-specified max_insertion length (``--max-insertion``/\ ``max_insertion``, default: 15 bp)
   
   * Using a max_insertion of 15 bp, the insertions marked by dashed (smaller than 15 bp) and dotted (larger than 15 bp) lines are included and excluded from the effective CDS range respectively
     
-* The minimum requirement for a gRNA to pass this check is to fall entirely within at least one gene's effective feature (CDS) range
-* Users may adjust the threshold for minimum number/fraction of effective feature (CDS) ranges a gRNA is required to be contained within to pass
+* The minimum requirement for a gRNA to pass this check is to fall entirely within at least one gene's effective feature (CDS in this case) range
+* Users may adjust the threshold for minimum number/fraction of effective feature (CDS in this case) ranges a gRNA is required to be contained within to pass
   
-  * If using min_within_n of 1
+  * If using ``--min-within-n``/\ ``min_within_n`` of 1
     
-    * gRNA are required to fall entirely within only 1 gene's effective feature (CDS) range
+    * gRNA are required to fall entirely within only 1 gene's effective feature (CDS in this case) range
     * Both gRNA 2 and gRNA 4 pass
       
-  * If using min_within_frac of 1
+  * If using ``--min-within-fraction``/\ ``min_within_fraction`` of 1
     
-    * gRNA are required to fall entirely within ALL genes' effective feature (CDS) ranges
+    * gRNA are required to fall entirely within ALL genes' effective feature (CDS in this case) ranges
     * Only gRNA 2 passes
+    * If parts of your genes are freqently pseudogenised, you may wish to set this value fairly high in order to ensure that most, if not all, gRNA are in conserved coding regions

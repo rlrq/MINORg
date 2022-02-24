@@ -272,6 +272,7 @@ In the above example, MINORg will screen gRNA for off-targets in:
 * The reference genome (``--screen-reference``)
 * Two different FASTA files (``--background ./subset_Araly2.fasta --background ./subset_Araha1.fasta``)
 * Two non-reference genomes (``--ot-indv 9654,9655 --genome-set ./subset_genome_mapping.txt``)
+  
   * ``--ot-indv`` functions similarly to ``--indv`` in that it requires ``--genome-set``, except that ``--ot-indv`` specifies non-refernece genomes for off-target assessment
 
 ``--ot-gap`` and ``--ot-mismatch`` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
