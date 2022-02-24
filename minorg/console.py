@@ -144,6 +144,7 @@ def seq(
         blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
         rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
         mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        bedtools: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
         remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
 
@@ -573,6 +574,7 @@ def full(
         rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
         # rpsblast: Path = typer.Option(*params.rpsblast(), **params.rpsblast.options, **oparams.file_valid),
         mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        bedtools: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
         remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
 

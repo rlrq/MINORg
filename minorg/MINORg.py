@@ -594,6 +594,7 @@ class MINORg (PathHandler):
         self.rpsblast = self.params.rpsblast.default
         self.blastn = self.params.blastn.default
         self.mafft = self.params.mafft.default
+        self.bedtools = self.params.bedtools.default
         ## RPS-BLAST database
         self.db = self.params.db.default
         # self.db_versions = self.params.db_versions.default ## TODO to allow users to specify domain name and let MINORg automatically fetch pssm-ids
@@ -1419,7 +1420,7 @@ class MINORg (PathHandler):
                                      blastn = self.blastn,
                                      fasta_complete = self.ref_gene, fasta_cds = self.ref_cds,
                                      ## reciprocal blast options
-                                     genes = self.genes, 
+                                     genes = self.genes, bedtools = self.bedtools,
                                      check_reciprocal = get_val_default(check_recip, self.check_recip),
                                      relax = get_val_default(relax_recip, self.relax_recip),
                                      ## reference options (for reciprocal blast)

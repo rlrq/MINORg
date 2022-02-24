@@ -34,11 +34,11 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |(path to       |-\-rpsblast                |rpsblast                   |local BLAST's            |
 |executable     |                           |                           |rpsblast/rpsblast+       |
 |               +---------------------------+---------------------------+-------------------------+
-|OR name of     |-\-mafft                   |mafft                      |MAFFT                    |
-|command if     |                           |                           |                         |
-|               |                           |                           |                         |
-|accessible at  |                           |                           |                         |
-|terminal)      |                           |                           |                         |
+|if not in      |-\-mafft                   |mafft                      |MAFFT                    |
+|command-search +---------------------------+---------------------------+-------------------------+
+|               |-\-bedtools                |bedtools                   |EXCEPTION: path to       |
+|path)          |                           |                           |directory containing     |
+|               |                           |                           |BEDTools executables     |
 +---------------+---------------------------+---------------------------+-------------------------+
 |Reference      |-\-:ref:`reference         |:ref:`reference            |reference genome         |
 |genomes        |<parameters:Reference>`    |<parameters:Reference>`\ * |                         |
@@ -251,6 +251,12 @@ Paths
 Executables
 +++++++++++
 
+Default values for executables may be specified in the config file (see :ref:`Configuration` for more on the config file).
+
+
+blastn, rpsblast/rpsblast+, MAFFT
+_________________________________
+
 **CLI**: ``--blastn``, ``--rpsblast``, ``--maff``
 
 .. code-block:: bash
@@ -263,7 +269,47 @@ Executables
 >>> my_minorg = MINORg()
 >>> my_minorg.blastn = '/usr/bin/blastn' ## tells MINORg where the blastn executable is
 
-If an executable is accessible at the command line, you may simply specify the command itself (e.g. 'blastn' instead of '/usr/bin/blastn'). If not, the path to the executable is required.
+If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. 'blastn' instead of '/usr/bin/blastn'). If not, the **path to the executable** is required.
+
+To determine if blastn and rpsblast (or rpsblast+ depending on your BLAST+ version) in the command-search path, execute::
+
+  blastn -version
+
+If it prints something like ::
+
+  blastn: 2.6.0+
+   Package: blast 2.6.0, build Jan 15 2017 17:12:27
+
+then 'blastn' IS in your command-search path. Repeat this with 'rpsblast' and/or 'rpsblast+'.
+
+BEDTools
+________
+
+**CLI**: ``bedtools``
+
+.. code-block:: bash
+
+   $ minorg <other arguments> --bedtools /path/to/bedtools2/bin/
+
+**Python**: ``bedtools``
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg()
+>>> my_minorg.bedtools = '/path/to/bedtools2/bin/' ## tells MINORg where the BEDTools executables are
+
+If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the **directory containing the BEDTools executables** is required.
+
+To determine if the BEDTools executables are in your command-search path, execute::
+
+.. code-block::
+   
+   bedtools --version
+
+If it prints something like ::
+
+  bedtools v2.26.0
+
+then 'bedtools' is in your command-search path.
 
 
 Alias lookup

@@ -13,7 +13,7 @@ Module contents
    :maxdepth: 2
    :numbered:
 
-   install
+   installation
    overview
    configuration
    tutorial_cli

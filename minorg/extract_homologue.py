@@ -4,8 +4,8 @@ import re
 import shutil
 import tempfile
 import itertools
-import pybedtools
 from datetime import datetime
+from pybedtools import BedTool
 
 from minorg.display import make_print_preindent
 
@@ -112,7 +112,8 @@ def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
 def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
                         quiet = True, lvl = 0, keep_tmp = False,
                         check_reciprocal = False, relax = False,
-                        genes = None, blastn = "blastn", fasta_ref = None, gff = None,
+                        genes = None, blastn = "blastn", bedtools = '',
+                        fasta_ref = None, gff = None,
                         attribute_mod = {}, **for_merge_hits_and_filter):
     """
     Find homologue in single FASTA file.
@@ -136,6 +137,8 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
         genes (tuple): optional, required only if check_reciprocal=True, on-target gene IDs
         blastn (str): optional, required only if check_reciprocal=True, 
             blastn command (e.g. 'blastn') if available at CLI else path to blastn executable
+        bedtools (str): path to directory contaiing BEDTools executables if bedtools is not
+            in command-search path
         fasta_ref (dict): optional, required only if check_reciprocal=True,
             dictionary of paths to reference genome FASTA files in format {'<alias>': '/path/to/FASTA'}.
             Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
@@ -179,7 +182,7 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     if check_reciprocal and genes:
         recip_blast_multiref(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
                              lvl = lvl, quiet = quiet, gff = gff, fasta_ref = fasta_ref, relax = relax,
-                             keep_tmp = keep_tmp, attribute_mod = attribute_mod)
+                             keep_tmp = keep_tmp, attribute_mod = attribute_mod, bedtools = bedtools)
     ## remove tmp files
     if not keep_tmp:
         os.remove(tsv_blast_ref)
@@ -362,12 +365,26 @@ def get_merged_seqs(merged_f, fasta, fout, header = [], indv_i = 1):
     return
 
 def recip_blast_multiref(fasta_target, directory, gff, fasta_ref,
-                         blastn = "blastn", keep_tmp = False, attribute_mod = {}, **kwargs):
-    '''
+                         blastn = "blastn", bedtools = '', keep_tmp = False, attribute_mod = {}, **kwargs):
+    """
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
+    
     gff and fasta_ref must be dictionaries of {<alias>: <path to file>}
-    '''
-    from pybedtools import BedTool
+    
+    Arguments:
+        fasta_target (str): path to FASTA file containing query sequences for reciprocal BLAST
+        directory (str): path to directory in which to write temporary files
+        gff (dict): dictionary of GFF3 files for subjects of reciprocal BLAST
+        fasta_ref (dict): dictionary of FASTA files containing subject sequences for reciprocal BLAST,
+        blastn (str): optional, required only if check_reciprocal=True, 
+            blastn command (e.g. 'blastn') if available at CLI else path to blastn executable
+        bedtools (str): optional, required only if bedtool is not in command-search path;
+            path to directory contaiing BEDTools executables
+        attribute_mod (dict): optional, 
+            required only if non-standard attriute field names are present in GFF3 files.
+            Dictionary describing attribute modification.
+    """
+    pybedtools.helper.set_bedtools_path(path = bedtools)
     from Bio.Blast.Applications import NcbiblastnCommandline
     blast_metrics = ["pident", "bitscore"]
     tsv_blasts = []
@@ -395,7 +412,7 @@ def recip_blast_multiref(fasta_target, directory, gff, fasta_ref,
         ##  of course if we choose gff (which i'm super inclined to actually) we're gonna have to adjust
         ##  the colnames_bed of remove_non_max_bitscore.
         intersect_beds.append(blast_bed.intersect(BedTool(gff[alias]), wao = True))
-    remove_non_max_bitscore(fasta_target, intersect_beds, blast_metrics = blast_metrics,
+    remove_non_max_bitscore(fasta_target, intersect_beds, blast_metrics = blast_metrics, bedtools = bedtools,
                             **kwargs) ## kwargs: genes, lvl, quiet
     ## remove temporary files
     if keep_tmp:
@@ -409,10 +426,12 @@ def recip_blast_multiref(fasta_target, directory, gff, fasta_ref,
     return
 
 
-def recip_blast(fasta_target, directory, gff, fasta_ref, blastn = "blastn", keep_tmp = False, **kwargs):
+def recip_blast(fasta_target, directory, gff, fasta_ref,
+                blastn = "blastn", bedtools = '', keep_tmp = False, **kwargs):
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
     '''
+    pybedtools.helper.set_bedtools_path(path = bedtools)
     ## blast
     tsv_blast = os.path.join(directory, "tmp_recipblast.tsv")
     from Bio.Blast.Applications import NcbiblastnCommandline
@@ -421,7 +440,6 @@ def recip_blast(fasta_target, directory, gff, fasta_ref, blastn = "blastn", keep
                 header = "sseqid,sstart,send,qseqid,qstart,qend," + ','.join(blast_metrics),
                 fout = tsv_blast, query = fasta_target, subjects = fasta_ref, dir = directory)
     ## convert hits to BED file for bedtools intersect
-    from pybedtools import BedTool
     get, data = parse_get_data(tsv_blast)
     ## rearrange coords in cols 2 and 3 so that smaller value is in col 2 and larger in col 3
     data_bed = [x[:1] + (x[1:3] if int(x[1]) < int(x[2]) else x[2:0:-1]) + x[3:] for x in data]
@@ -455,9 +473,32 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
                                           "feature", "phase", "attributes", "overlap"],
                             colnames_gff=["bed_chrom", "source", "feature", "bed_start", "bed_end", "score",
                                           "strand", "phase", "attributes", "overlap"],
-                            attribute_mod = {}):
+                            bedtools = '', attribute_mod = {}) -> None:
+    """
+    Remove query sequences for which the subject feature in the query-subject hit with the max bitscore is
+    not a target gene/feature. This occurs in-place.
+    
+    Arguments:
+        fasta (str): path to FASTA file of query sequences to reduce
+        bedtool (:class:`BedTool`): BedTool object where BLAST hits have been intersected with
+            subject GFF3 files
+        genes (list): gene/feature IDs of targets
+        relax (bool): retain query sequences even if max bitscore hit overlaps with non-target feature so long
+            as it also overlaps with a target feature
+        lvl (int): printing indentation
+        quiet (bool): silence non-essential messages
+        colnames_blast (list): column names of BLAST output
+        blast_metrics (list): additional column names of metrics in BLAST output
+        colnames_bed (list): column names if annotation intersected with is BED format
+        colnames_gff (list): column names if annotation intersected with is GFF3 format
+        bedtools (str): path to directory contaiing BEDTools executables if bedtool is not
+            in command-search path
+        attribute_mod (dict): optional, 
+            required only if non-standard attriute field names are present in GFF3 files.
+            Dictionary describing attribute modification.
+    """
     import itertools
-    from pybedtools import BedTool
+    pybedtools.helper.set_bedtools_path(path = bedtools)
     printi = make_local_print(quiet = quiet, printf = make_print_preindent(initial_lvl = lvl))
     genes = set(genes)
     cols_bed = colnames_blast + blast_metrics + colnames_bed

@@ -38,7 +38,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
@@ -207,13 +207,12 @@ prefix</p></td>
 <td><p>thread</p></td>
 <td><p>threads</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="3"><p>Executable</p>
+<tr class="row-odd"><td rowspan="4"><p>Executable</p>
 <p>(path to
 executable</p>
-<p>OR name of
-command if</p>
-<p>accessible at
-terminal)</p>
+<p>if not in
+command-search</p>
+<p>path)</p>
 </td>
 <td><p>--blastn</p></td>
 <td><p>blastn</p></td>
@@ -228,7 +227,13 @@ rpsblast/rpsblast+</p></td>
 <td><p>mafft</p></td>
 <td><p>MAFFT</p></td>
 </tr>
-<tr class="row-even"><td rowspan="7"><p>Reference
+<tr class="row-even"><td><p>--bedtools</p></td>
+<td><p>bedtools</p></td>
+<td><p>EXCEPTION: path to
+directory containing
+BEDTools executables</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="7"><p>Reference
 genomes</p>
 <p>(CLI: seq,
 full;</p>
@@ -239,36 +244,36 @@ filter)</p>
 <td><p><a class="reference internal" href="#reference"><span class="std std-ref">reference</span></a>*</p></td>
 <td><p>reference genome</p></td>
 </tr>
-<tr class="row-odd"><td><p>--assembly</p></td>
+<tr class="row-even"><td><p>--assembly</p></td>
 <td></td>
 <td><p>reference genome FASTA</p></td>
 </tr>
-<tr class="row-even"><td><p>--annotation</p></td>
+<tr class="row-odd"><td><p>--annotation</p></td>
 <td></td>
 <td><p>reference genome GFF</p></td>
 </tr>
-<tr class="row-odd"><td><p>--<a class="reference internal" href="#attribute-modification"><span class="std std-ref">attr_mod</span></a></p></td>
+<tr class="row-even"><td><p>--<a class="reference internal" href="#attribute-modification"><span class="std std-ref">attr_mod</span></a></p></td>
 <td></td>
 <td><p>mapping for non-standard
 GFF attribute field names</p></td>
 </tr>
-<tr class="row-even"><td><p>--genetic-code</p></td>
+<tr class="row-odd"><td><p>--genetic-code</p></td>
 <td></td>
 <td><p>NCBI genetic code number
 or name</p></td>
 </tr>
-<tr class="row-odd"><td><p>--ext-gene</p></td>
+<tr class="row-even"><td><p>--ext-gene</p></td>
 <td></td>
 <td><p>FASTA file of genes to
 add to reference genome</p></td>
 </tr>
-<tr class="row-even"><td><p>--ext-cds</p></td>
+<tr class="row-odd"><td><p>--ext-cds</p></td>
 <td></td>
 <td><p>FASTA file of CDS of
 genes to add to reference
 genome</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="8"><p>[seq]</p>
+<tr class="row-even"><td rowspan="8"><p>[seq]</p>
 <p>target
 definition</p>
 </td>
@@ -276,43 +281,43 @@ definition</p>
 <td><p>gene<strong>s</strong></p></td>
 <td><p>gene IDs</p></td>
 </tr>
-<tr class="row-even"><td><p>--cluster</p></td>
+<tr class="row-odd"><td><p>--cluster</p></td>
 <td></td>
 <td><p>cluster aliases</p></td>
 </tr>
-<tr class="row-odd"><td><p>--indv</p></td>
+<tr class="row-even"><td><p>--indv</p></td>
 <td></td>
 <td><p>individuals to discover
 targets in</p></td>
 </tr>
-<tr class="row-even"><td><p>--target</p></td>
+<tr class="row-odd"><td><p>--target</p></td>
 <td><p>target</p></td>
 <td><p>FASTA file of sequences
 to find gRNA in</p></td>
 </tr>
-<tr class="row-odd"><td><p>--query</p></td>
+<tr class="row-even"><td><p>--query</p></td>
 <td><p>query</p></td>
 <td><p>FASTA file(s) to discover
 targets in</p></td>
 </tr>
-<tr class="row-even"><td><p>--domain &lt;alias&gt;</p></td>
+<tr class="row-odd"><td><p>--domain &lt;alias&gt;</p></td>
 <td></td>
 <td><p>aliases of domains to
 find gRNA in</p></td>
 </tr>
-<tr class="row-odd"><td><p>--domain &lt;Pssm-Id&gt;</p></td>
+<tr class="row-even"><td><p>--domain &lt;Pssm-Id&gt;</p></td>
 <td><p>pssm_ids</p></td>
 <td><p>Pssm-Id(s) of domains to
 find gRNA in</p></td>
 </tr>
-<tr class="row-even"><td></td>
+<tr class="row-odd"><td></td>
 <td><p>domain_name</p></td>
 <td><p>human-readable domain
 name used in sequence and
 file names in place of
 Pssm-Ids</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="7"><p>[seq]</p>
+<tr class="row-even"><td rowspan="7"><p>[seq]</p>
 <p>inferring
 homologues</p>
 <p>from BLASTN
@@ -322,36 +327,36 @@ hits</p>
 <td><p>minid</p></td>
 <td><p>minimum hit % identity</p></td>
 </tr>
-<tr class="row-even"><td><p>--minlen</p></td>
+<tr class="row-odd"><td><p>--minlen</p></td>
 <td><p>minlen</p></td>
 <td><p>minimum merged hits
 length</p></td>
 </tr>
-<tr class="row-odd"><td><p>--mincdslen</p></td>
+<tr class="row-even"><td><p>--mincdslen</p></td>
 <td><p>mincdslen</p></td>
 <td><p>minimum CDS length of
 merged hits</p></td>
 </tr>
-<tr class="row-even"><td><p>--check-recip</p></td>
+<tr class="row-odd"><td><p>--check-recip</p></td>
 <td><p>check_recip</p></td>
 <td><p>execute reciprocal check</p></td>
 </tr>
-<tr class="row-odd"><td><p>--relax-recip</p></td>
+<tr class="row-even"><td><p>--relax-recip</p></td>
 <td><p>relax_recip</p></td>
 <td><p>execute relaxed
 reciprocal check</p></td>
 </tr>
-<tr class="row-even"><td><p>--merge-within</p></td>
+<tr class="row-odd"><td><p>--merge-within</p></td>
 <td><p>merge_within</p></td>
 <td><p>maximum distance between
 hits for merging</p></td>
 </tr>
-<tr class="row-odd"><td><p>--check-id-before-merge</p></td>
+<tr class="row-even"><td><p>--check-id-before-merge</p></td>
 <td><p>check_id_before_merge</p></td>
 <td><p>filter hits by % identity
 before merging</p></td>
 </tr>
-<tr class="row-even"><td rowspan="2"><p>[seq]</p>
+<tr class="row-odd"><td rowspan="2"><p>[seq]</p>
 <p>RPS-BLAST
 options</p>
 </td>
@@ -360,59 +365,59 @@ options</p>
 <td><p>path to local RPS-BLAST
 database</p></td>
 </tr>
-<tr class="row-odd"><td><p>--remote-rps</p></td>
+<tr class="row-even"><td><p>--remote-rps</p></td>
 <td><p>remote_rps</p></td>
 <td><p>use remote RPS-BLAST
 database (currently
 non-functional)</p></td>
 </tr>
-<tr class="row-even"><td rowspan="2"><p>[grna]</p></td>
+<tr class="row-odd"><td rowspan="2"><p>[grna]</p></td>
 <td><p>--<a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
 <td><p><a class="reference internal" href="#pam"><span class="std std-ref">pam</span></a></p></td>
 <td><p>PAM pattern</p></td>
 </tr>
-<tr class="row-odd"><td><p>--length</p></td>
+<tr class="row-even"><td><p>--length</p></td>
 <td><p>length</p></td>
 <td><p>gRNA length</p></td>
 </tr>
-<tr class="row-even"><td rowspan="2"><p>[filter]</p>
+<tr class="row-odd"><td rowspan="2"><p>[filter]</p>
 <p>GC</p>
 </td>
 <td><p>--gc-min</p></td>
 <td><p>gc_min</p></td>
 <td><p>minimum GC content</p></td>
 </tr>
-<tr class="row-odd"><td><p>--gc-max</p></td>
+<tr class="row-even"><td><p>--gc-max</p></td>
 <td><p>gc_max</p></td>
 <td><p>maximum GC content</p></td>
 </tr>
-<tr class="row-even"><td rowspan="4"><p>[filter]</p>
+<tr class="row-odd"><td rowspan="4"><p>[filter]</p>
 <p>feature</p>
 </td>
 <td><p>--feature</p></td>
 <td><p>feature</p></td>
 <td><p>GFF3 feature type</p></td>
 </tr>
-<tr class="row-odd"><td><p>--max-insertion</p></td>
+<tr class="row-even"><td><p>--max-insertion</p></td>
 <td><p>max_insertion</p></td>
 <td><p>maximum allowable
 insertion in feature</p></td>
 </tr>
-<tr class="row-even"><td><p>--min-within-n</p></td>
+<tr class="row-odd"><td><p>--min-within-n</p></td>
 <td><p>min_within_n</p></td>
 <td><p>minimum number of
 reference genes which
 features overlap with
 gRNA range in alignment</p></td>
 </tr>
-<tr class="row-odd"><td><p>--min-within-fraction</p></td>
+<tr class="row-even"><td><p>--min-within-fraction</p></td>
 <td><p>min_within_fraction</p></td>
 <td><p>minimum fraction of
 reference genes which
 features overlap with
 gRNA range in alignment</p></td>
 </tr>
-<tr class="row-even"><td rowspan="12"><p>[filter]</p>
+<tr class="row-odd"><td rowspan="12"><p>[filter]</p>
 <p>background</p>
 </td>
 <td><p>--background</p></td>
@@ -421,86 +426,86 @@ gRNA range in alignment</p></td>
 search for potential
 off-targets</p></td>
 </tr>
-<tr class="row-odd"><td><p>--screen-reference</p></td>
+<tr class="row-even"><td><p>--screen-reference</p></td>
 <td><p>screen_reference</p></td>
 <td><p>include reference genomes
 in search for potential
 off-targets</p></td>
 </tr>
-<tr class="row-even"><td></td>
+<tr class="row-odd"><td></td>
 <td><p>mask</p></td>
 <td><p>FASTA files of additional
 sequences to mask</p></td>
 </tr>
-<tr class="row-odd"><td><p>--unmask-ref</p></td>
+<tr class="row-even"><td><p>--unmask-ref</p></td>
 <td></td>
 <td><p>unmask reference genes</p></td>
 </tr>
-<tr class="row-even"><td><p>--mask-gene</p></td>
+<tr class="row-odd"><td><p>--mask-gene</p></td>
 <td></td>
 <td><p>additional genes to mask</p></td>
 </tr>
-<tr class="row-odd"><td><p>--unmask-gene</p></td>
+<tr class="row-even"><td><p>--unmask-gene</p></td>
 <td></td>
 <td><p>genes to unmask</p></td>
 </tr>
-<tr class="row-even"><td><p>--mask-cluster</p></td>
+<tr class="row-odd"><td><p>--mask-cluster</p></td>
 <td></td>
 <td><p>additional clusters to
 mask</p></td>
 </tr>
-<tr class="row-odd"><td><p>--unmask-cluster</p></td>
+<tr class="row-even"><td><p>--unmask-cluster</p></td>
 <td></td>
 <td><p>clusters to unmask</p></td>
 </tr>
-<tr class="row-even"><td><p>--ot-pamless</p></td>
+<tr class="row-odd"><td><p>--ot-pamless</p></td>
 <td><p>ot_pamless</p></td>
 <td><p>ignore absense of PAM for
 potential off-targets</p></td>
 </tr>
-<tr class="row-odd"><td><p>--ot-mismatch</p></td>
+<tr class="row-even"><td><p>--ot-mismatch</p></td>
 <td><p>ot_mismatch</p></td>
 <td><p>minimum acceptable
 mismatches for
 off-targets</p></td>
 </tr>
-<tr class="row-even"><td><p>--ot-gap</p></td>
+<tr class="row-odd"><td><p>--ot-gap</p></td>
 <td><p>ot_gap</p></td>
 <td><p>minimum acceptable gaps
 for off-targets</p></td>
 </tr>
-<tr class="row-odd"><td><p>--skip-bg-check</p></td>
+<tr class="row-even"><td><p>--skip-bg-check</p></td>
 <td></td>
 <td><p>skip off-target check</p></td>
 </tr>
-<tr class="row-even"><td><p>[filter]
+<tr class="row-odd"><td><p>[filter]
 exclude</p></td>
 <td><p>--exclude</p></td>
 <td><p>exclude</p></td>
 <td><p>FASTA file of gRNA
 sequences to exclude</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="5"><p>[minimumset]</p></td>
+<tr class="row-even"><td rowspan="5"><p>[minimumset]</p></td>
 <td><p>--accept-invalid</p></td>
 <td><p>accept_invalid</p></td>
 <td><p>score ‘NA’ as ‘pass’</p></td>
 </tr>
-<tr class="row-even"><td><p>--accept-feature-unknown</p></td>
+<tr class="row-odd"><td><p>--accept-feature-unknown</p></td>
 <td><p>accept_feature_unknown</p></td>
 <td><p>score ‘NA’ as ‘pass’ for
 feature check</p></td>
 </tr>
-<tr class="row-odd"><td></td>
+<tr class="row-even"><td></td>
 <td><p>accept_invalid_field</p></td>
 <td><p>score ‘NA’ as ‘pass’ if
 all entries for a check
 are ‘NA’</p></td>
 </tr>
-<tr class="row-even"><td><p>--sets</p></td>
+<tr class="row-odd"><td><p>--sets</p></td>
 <td><p>sets</p></td>
 <td><p>number of gRNA sets</p></td>
 </tr>
-<tr class="row-odd"><td><p>--auto</p></td>
+<tr class="row-even"><td><p>--auto</p></td>
 <td><p>auto</p></td>
 <td><p>generate sets without
 require manual user
@@ -554,6 +559,8 @@ confirmation for each set</p></td>
 </div>
 <section id="executables">
 <h4><a class="toc-backref" href="#id8"><span class="section-number">6.2.2.1. </span>Executables</a><a class="headerlink" href="#executables" title="Permalink to this headline"></a></h4>
+<section id="blastn-rpsblast-rpsblast-mafft">
+<h5><span class="section-number">6.2.2.1.1. </span>blastn, rpsblast/rpsblast+, MAFFT<a class="headerlink" href="#blastn-rpsblast-rpsblast-mafft" title="Permalink to this headline"></a></h5>
 <p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--blastn</span></code>, <code class="docutils literal notranslate"><span class="pre">--rpsblast</span></code>, <code class="docutils literal notranslate"><span class="pre">--maff</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;other arguments&gt; --blastn /usr/bin/blastn
 </pre></div>
@@ -564,7 +571,22 @@ confirmation for each set</p></td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/usr/bin/blastn&#39;</span> <span class="c1">## tells MINORg where the blastn executable is</span>
 </pre></div>
 </div>
-<p>If an executable is accessible at the command line, you may simply specify the command itself (e.g. ‘blastn’ instead of ‘/usr/bin/blastn’). If not, the path to the executable is required.</p>
+<p>If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. ‘blastn’ instead of ‘/usr/bin/blastn’). If not, the path to the executable is required.</p>
+</section>
+<section id="bedtools">
+<h5><span class="section-number">6.2.2.1.2. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h5>
+<p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">bedtools</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;other arguments&gt; --bedtools /path/to/bedtools2/bin/
+</pre></div>
+</div>
+<p><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">bedtools</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">bedtools</span> <span class="o">=</span> <span class="s1">&#39;/path/to/bedtools2/bin/&#39;</span> <span class="c1">## tells MINORg where the BEDTools executables are</span>
+</pre></div>
+</div>
+<p>If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the directory containing the BEDTools executables is required.</p>
+</section>
 </section>
 </section>
 <section id="alias-lookup">
@@ -656,7 +678,7 @@ confirmation for each set</p></td>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code></div>
-<div class="line"><strong>Python</strong>: NA (see argument <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> of <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code> instead)</div>
+<div class="line"><strong>Python</strong>: NA (see argument <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> of <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a> instead)</div>
 <div class="line"><strong>Config file</strong>:</div>
 </div>
 <blockquote>

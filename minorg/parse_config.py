@@ -3,6 +3,7 @@ import typer
 import shutil
 import tempfile
 import configparser
+import distutils.spawn
 
 from enum import Enum
 from argparse import Namespace
@@ -20,6 +21,13 @@ from minorg.reference import AnnotatedFasta
 
 ## ensure that 'config = Config(params, keep_on_crash = True)' is updated to 'config = Config(params, keep_on_crash = False)' when released (keep_on_crash set to False)
 ## TODO: ensure genetic code specified in reference_set files are used
+
+def find_executable(default, *alts):
+    for cmd in (default,) + tuple(alts):
+        path = distutils.spawn.find_executable(cmd)
+        if path:
+            return path
+    return default
 
 def get_val_none(val, d: dict, none = None):
     '''
@@ -255,12 +263,15 @@ class Params():
         help_msg = lambda name: (f"absolute path to {name} executable/binary,"
                                  " OR command name if the executable/binary is accessible"
                                  " via the command line")
-        self.rpsblast = Param(get_binary("rpsblast", default = "rpsblast"),
-                              "--rpsblast", help = help_msg("path to rpsblast or rpsblast+ executable") )
-        self.blastn = Param(get_binary("blastn", default = "blastn"),
-                            "--blastn", help = help_msg("path to blastn executable") )
-        self.mafft = Param(get_binary("mafft", default = "mafft"),
-                           "--mafft", help = help_msg("path to mafft executable") )
+        self.rpsblast = Param(get_binary("rpsblast", default = find_executable("rpsblast", "rpsblast+")),
+                              "--rpsblast", help = help_msg("full path to rpsblast or rpsblast+ executable") )
+        self.blastn = Param(get_binary("blastn", default = find_executable("blastn")),
+                            "--blastn", help = help_msg("full path to blastn executable") )
+        self.mafft = Param(get_binary("mafft", default = find_executable("mafft")),
+                           "--mafft", help = help_msg("full path to MAFFT executable") )
+        self.bedtools = Param(get_binary("bedtools", default = ''),
+                              "--bedtools",
+                              help = help_msg("full path to directory containing BEDTools executable") )
         # self.rpsblast = Param(get_val_default(get_binary("rpsblast"), "rpsblast"),
         #                       "--rpsblast", help = help_msg("path to rpsblast or rpsblast+ executable") )
         # self.blastn = Param(get_val_default(get_binary("blastn"), "blastn"),

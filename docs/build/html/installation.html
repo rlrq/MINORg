@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. Installation &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Overview" href="overview.html" />
+    <link rel="prev" title="MINORg" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#note-for-windows-users">1.1. Note for Windows users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">1.2. Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-3-6">1.2.1. Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mafft">1.2.2. MAFFT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blast">1.2.3. BLAST+</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bedtools">1.2.4. BEDTools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pysam-dependencies">1.2.5. pysam dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#install-minorg">1.3. Install MINORg</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">7. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">8. Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="section-number">1. </span>Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<h1><span class="section-number">1. </span>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<section id="note-for-windows-users">
+<h2><span class="section-number">1.1. </span>Note for Windows users<a class="headerlink" href="#note-for-windows-users" title="Permalink to this headline"></a></h2>
+<p>As one of the dependencies is not available for Windows, it is strongly recommended that Windows users use a Unix emulator such as “Ubuntu on Windows” (available for Windows 10 and up). You may follow the instructions at <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/ubuntu_on_windows.html">https://mafft.cbrc.jp/alignment/software/ubuntu_on_windows.html</a> under ‘Installation of Ubuntu’ here for a succint guide OR <a class="reference external" href="https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview">https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview</a> for a more thorough walkthrough. After, you may install the following dependencies using guides for ‘Ubuntu’ or ‘Linux’.</p>
+</section>
+<section id="dependencies">
+<h2><span class="section-number">1.2. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h2>
+<section id="python-3-6">
+<h3><span class="section-number">1.2.1. </span>Python 3.6<a class="headerlink" href="#python-3-6" title="Permalink to this headline"></a></h3>
+<p>MINORg is written and tested using Python 3.6.9, and minimally requires Python 3.6.</p>
+<p>You may download and install Python here: <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+</section>
+<section id="mafft">
+<h3><span class="section-number">1.2.2. </span>MAFFT<a class="headerlink" href="#mafft" title="Permalink to this headline"></a></h3>
+<p>MAFFT is a multiple sequence alignment software that is capable of handling large datasets.</p>
+<p>Follow one of the following links most applicable to your setup:</p>
+<ul class="simple">
+<li><p>Mac OS X: <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/macosx.html">https://mafft.cbrc.jp/alignment/software/macosx.html</a></p></li>
+<li><p>Windows using Ubuntu emulator: <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/ubuntu_on_windows.html">https://mafft.cbrc.jp/alignment/software/ubuntu_on_windows.html</a></p></li>
+<li><p>Linux: <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/linux.html">https://mafft.cbrc.jp/alignment/software/linux.html</a></p></li>
+<li><p>From source: <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/source.html">https://mafft.cbrc.jp/alignment/software/source.html</a></p></li>
+</ul>
+<p>In all cases, do take note of the full path name to the MAFFT executable if the programme is not in your command-search path.</p>
+</section>
+<section id="blast">
+<h3><span class="section-number">1.2.3. </span>BLAST+<a class="headerlink" href="#blast" title="Permalink to this headline"></a></h3>
+<p>BLAST+ is a suite of command-line tools that allows users to perform BLAST searches locally on their own machines. MINORg requires two of the tools: blastn and rpsblast (or rpsblast+)</p>
+<p>Follow one of the following links most applicable to your setup:</p>
+<ul class="simple">
+<li><p>Mac OS X: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_MacOSX_">https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_MacOSX_</a></p></li>
+<li><p>Linux/Unix: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK52640/">https://www.ncbi.nlm.nih.gov/books/NBK52640/</a></p></li>
+<li><p>RedHat Linux: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_RedHat_Linux_">https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_RedHat_Linux_</a></p></li>
+<li><p>From source: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_Source_tarball_">https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_Source_tarball_</a></p></li>
+</ul>
+<p>To determine if the <strong>blastn</strong> is in your command-search path, execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span><span class="p">:</span> <span class="mf">2.6.0</span><span class="o">+</span>
+ <span class="n">Package</span><span class="p">:</span> <span class="n">blast</span> <span class="mf">2.6.0</span><span class="p">,</span> <span class="n">build</span> <span class="n">Jan</span> <span class="mi">15</span> <span class="mi">2017</span> <span class="mi">17</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">27</span>
+</pre></div>
+</div>
+<p>then it IS in your command-search path. If not, do take note of the full path name to the blastn executable as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--blastn</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">blastn&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.blastn</span> <span class="pre">=</span> <span class="pre">'&lt;path</span> <span class="pre">to</span> <span class="pre">blastn&gt;'</span></code> (in Python).</p>
+<p>To determine if <strong>rpsblast</strong> is in your command-search path, execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rpsblast</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rpsblast</span><span class="p">:</span> <span class="mf">2.11.0</span><span class="o">+</span>
+ <span class="n">Package</span><span class="p">:</span> <span class="n">blast</span> <span class="mf">2.11.0</span><span class="p">,</span> <span class="n">build</span> <span class="n">Oct</span> <span class="mi">6</span> <span class="mi">2020</span> <span class="mi">03</span><span class="p">:</span><span class="mi">24</span><span class="p">:</span><span class="mi">05</span>
+</pre></div>
+</div>
+<p>then it IS in your command-search path. If not, execute the following to determine if your version of BLAST+ comes with ‘rpsblast+’ instead of ‘rpsblast’</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rpsblast</span><span class="o">+</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rpsblast</span><span class="o">+</span><span class="p">:</span> <span class="mf">2.6.0</span><span class="o">+</span>
+ <span class="n">Package</span><span class="p">:</span> <span class="n">blast</span> <span class="mf">2.6.0</span><span class="p">,</span> <span class="n">build</span> <span class="n">Jan</span> <span class="mi">15</span> <span class="mi">2017</span> <span class="mi">17</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">27</span>
+</pre></div>
+</div>
+<p>then it IS in your command-search path. If not, do take note of the full path name to the rpsblast (or rpsblast+ depending on version) executables as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--rpsblast</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">rpsblast</span> <span class="pre">or</span> <span class="pre">rpsblast+&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.rpsblast</span> <span class="pre">=</span> <span class="pre">'&lt;path</span> <span class="pre">to</span> <span class="pre">rpsblast</span> <span class="pre">or</span> <span class="pre">rpsblast+&gt;'</span></code> (in Python).</p>
+</section>
+<section id="bedtools">
+<h3><span class="section-number">1.2.4. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h3>
+<p>BEDTools is a “swiss-army knife of tools for a wide-range of genomic analysis tasks.” It is not available for Windows.</p>
+<p>You may follow the instructions to install it here: <a class="reference external" href="https://bedtools.readthedocs.io/en/latest/content/installation.html">https://bedtools.readthedocs.io/en/latest/content/installation.html</a></p>
+<p>To determine if the BEDTools executables are in your command-search path, execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bedtools</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bedtools</span> <span class="n">v2</span><span class="mf">.26.0</span>
+</pre></div>
+</div>
+<p>then it IS in your command-search path. If not, do take note of the full path name to the directory containing BEDTools executables as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--bedtools</span> <span class="pre">&lt;path&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.bedtools</span> <span class="pre">=</span> <span class="pre">'&lt;path&gt;'</span></code> (in Python).</p>
+</section>
+<section id="pysam-dependencies">
+<h3><span class="section-number">1.2.5. </span>pysam dependencies<a class="headerlink" href="#pysam-dependencies" title="Permalink to this headline"></a></h3>
+<p>‘pysam’ is part of the ‘pybedtools’ package that MINORg uses. Installation is somewhat tricky as it has a handful of dependencies that are not automatically installed with it. You may install them using your OS’s package manager.</p>
+<p>Some dependencies include (but may not be limited to):</p>
+<ul class="simple">
+<li><p>curses</p>
+<ul>
+<li><p>Debian/Ubuntu: libcurses5-dev</p></li>
+<li><p>RPM-based linux distributions: ncurses-devel</p></li>
+</ul>
+</li>
+<li><p>zlib</p>
+<ul>
+<li><p>Debian/Ubuntu: zlib1g-dev</p></li>
+<li><p>RPM-based linux distributions or Cygwin: zlib-devel</p></li>
+</ul>
+</li>
+<li><p>libbzip2</p>
+<ul>
+<li><p>Debian/Ubuntu: libbz2-dev</p></li>
+<li><p>RPM-based linux distributions or Cygwin: bzip2-devel</p></li>
+</ul>
+</li>
+<li><p>liblzma</p>
+<ul>
+<li><p>Debian/Ubuntu: liblzma-dev</p></li>
+<li><p>RPM-based linux distributions or Cygwin: xz-devel</p></li>
+<li><p>MacOS via Homebrew: xz</p></li>
+</ul>
+</li>
+</ul>
+<p>Do note that you may fail at installing pysam as part of MINORg’s dependencies when installing MINORg according to <a class="reference internal" href="#install-minorg"><span class="std std-ref">Install MINORg</span></a> if you are still missing some dependencies. Simply install the missing package described in the error message and try installing MINORg again.</p>
+</section>
+</section>
+<section id="install-minorg">
+<h2><span class="section-number">1.3. </span>Install MINORg<a class="headerlink" href="#install-minorg" title="Permalink to this headline"></a></h2>
+<p>Test version available using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="o">--</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">simple</span><span class="o">/</span> <span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">simple</span><span class="o">/</span> <span class="n">MINORg</span><span class="o">-</span><span class="n">rlrq</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="MINORg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="overview.html" class="btn btn-neutral float-right" title="2. Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
