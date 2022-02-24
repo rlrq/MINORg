@@ -54,10 +54,10 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |-\-genetic-code            |                           |NCBI genetic code number |
 |               |                           |                           |or name                  |
 |               +---------------------------+---------------------------+-------------------------+
-|               |-\-ext-gene                |                           |FASTA file of genes to   |
+|               |-\-extend-gene             |                           |FASTA file of genes to   |
 |               |                           |                           |add to reference genome  |
 |               +---------------------------+---------------------------+-------------------------+
-|               |-\-ext-cds                 |                           |FASTA file of CDS of     |
+|               |-\-extend-cds              |                           |FASTA file of CDS of     |
 |               |                           |                           |genes to add to reference|
 |               |                           |                           |genome                   |
 +---------------+---------------------------+---------------------------+-------------------------+
