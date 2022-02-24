@@ -1,0 +1,17 @@
+# MANIFEST.in
+
+include LICENSE
+include README.md
+
+include MANIFEST.in
+
+recursive-include minorg *.py
+
+recursive-exclude minorg/__pycache__/ *
+
+exclude minorg/__pycache__
+
+global-exclude main_eh.py
+global-exclude main.py
+
+global-exclude *.pyc

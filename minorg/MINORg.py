@@ -27,6 +27,8 @@ from minorg.mafftcommandline_add import MafftCommandline
 from minorg.filter_grna import make_target_feature_ranges_function, within_feature
 from minorg.minimum_set import get_minimum_set
 
+from minorg.exceptions import MessageError
+
 from minorg.index import IndexedFasta
 from minorg.annotation import GFF
 from minorg.parse_config import (
@@ -1716,8 +1718,8 @@ class MINORg (PathHandler):
             *other_mask_fnames (str): optional, paths to other FASTA files not in self.background that are also to be screened for off-target
         """
         if not self.grna_hits:
-            raise MessageError( ("MINORg.filter_background requires self.grna_hits"
-                                 " (generated with self.generate_grna)") )
+            raise MessageError( ("MINORg.filter_background requires gRNA"
+                                 " (generated with self.grna())") )
         if self.grna_fasta is None:
             self.grna_fasta = self.results_fname("gRNA_all.fasta") ## write gRNA to file so we can BLAST it
             self.grna_hits.write_fasta(self.grna_fasta, write_all = True)
@@ -2038,6 +2040,11 @@ class MINORg (PathHandler):
                 (subject to self.accept_invalid_field)
             feature_check (bool): include 'feature' field for filtering (subject to self.accept_invalid_field)
         """
+        if not self.grna_hits:
+            raise MessageError( ("MINORg.minimumset requires gRNA."
+                                 " You may read a mapping file using"
+                                 " self.parse_grna_map_from_file('<path to file>')"
+                                 " or use self.grna() to generate gRNA.") )
         if sets is None: sets = self.sets
         ## assume all targets in self.grna_hits are to be, well, targeted
         targets = set(hit.target_id for hit in self.grna_hits.flatten_hits())

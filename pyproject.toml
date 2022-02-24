@@ -1,26 +1,5 @@
-[tool.poetry]
-name = "MINORg"
-## CLI version number ends with 0
-version = "2.2.2.0"
-description = "Generate minimum gRNA set for multiple non-reference genomes"
-authors = ["Rachelle Lee <rachelle.rq.lee@gmail.com>"]
-readme = "README.md"
-
-[tool.poetry.scripts]
-minorg = "minorg.main:app"
-
-[tool.poetry.dependencies]
-python = "^3.6"
-typer = {extras = ["all"], version = "^0.1.0"}
-biopython = "*"
-click = "*"
-pybedtools = "*"
-pyfaidx = "*"
-regex = "*"
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = [
+     "setuptools>=42"
+]
+build-backend = "setuptools.build_meta"

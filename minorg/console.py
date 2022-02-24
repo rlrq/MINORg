@@ -76,7 +76,7 @@ logging_level = logging.DEBUG
 try:
     CONFIG = os.environ["MINORG_CONFIG"]
 except KeyError:
-    print("key error!")
+    print("MINORG_CONFIG not set. Running without config file.")
     # ## TODO: set env variable so we can remove this KeyError exception handling thing
     # CONFIG = "/mnt/chaelab/rachelle/scripts/minorgpy/config.ini"
     CONFIG = None
