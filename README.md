@@ -6,11 +6,10 @@
 The code in this repository is not complete. Only sections of it are viable. This README file is also not up-to-date. Please refer to slides/PDF in the 'Links' section for execution details for the version on the workstation (accessible only to lab members and guests with accounts).
 
 ## Requirements
-- BLAST+ suite
-- Python 3
-   - Biopython
-- bedtools
-- mafft
+- [Python 3](https://www.python.org/)
+- [BLAST+ suite](https://www.ncbi.nlm.nih.gov/books/NBK279690/)
+- [MAFFT](https://mafft.cbrc.jp/alignment/software/)
+- [BEDTools](https://bedtools.readthedocs.io/en/latest/index.html)
 
 ## Links
 - Tutorial, example, and documentation: https://rlrq.github.io/MINORg
@@ -41,7 +40,7 @@ The code in this repository is not complete. Only sections of it are viable. Thi
          - User may also provide sequences to check against
       2. BLASTn candidate gRNA against masked non-reference and reference genome(s)
          - Optional: Screen reference genome also
-      4. Eliminate candidate gRNA that align with masked non-reference genome(s) and fail maximum match/gaps criteria
+      3. Eliminate candidate gRNA with hits outside masked regions in non-reference genome(s) and fail maximum match/gaps criteria
    2. Eliminate candidate gRNA that do not align within the CDS of reference genes
       1. Extract CDS-only regions of user-specified reference gene(s) from a reference genome (.fasta) using GFF3 annotation (.gff)
          - If the user specified a domain, the range will be restricted accordingly
