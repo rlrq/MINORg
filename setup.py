@@ -4,8 +4,8 @@ with open("README.md", 'r', encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="MINORg_rlrq",
-    version="2.2.2.6",
+    name="minorg",
+    version="0.2.1rc",
     author="Rachelle R.Q. Lee",
     author_email="rachelle.rq.lee@gmail.com",
     description="Generate minimum gRNA set for multiple non-reference genomes",

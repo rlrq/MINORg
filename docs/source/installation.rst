@@ -155,5 +155,5 @@ Test version available using:
 
 .. code-block::
 
-   python3 -m pip install --upgrade --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ MINORg-rlrq
+   python3 -m pip install --upgrade --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ minorg
 
