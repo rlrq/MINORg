@@ -12,7 +12,6 @@ API documentation
    minorg.constants
    minorg.display
    minorg.dynamic_logger
-   minorg.exceptions
    minorg.extend_reference
    minorg.extract_homologue
    minorg.fasta

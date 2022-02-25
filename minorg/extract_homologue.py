@@ -8,6 +8,8 @@ import pybedtools
 from datetime import datetime
 from pybedtools import BedTool
 
+from minorg import MINORgError
+
 from minorg.display import make_print_preindent
 
 from minorg.functions import (
@@ -42,10 +44,6 @@ from minorg.annotation import (
 )
 
 from minorg.index import IndexedFasta
-
-from minorg.exceptions import (
-    MessageError
-)
 
 # from minorg.parse_config import (
 #     IndvGenomesAll, IndvGenomesAllClear,
@@ -168,7 +166,7 @@ def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
     ## check for hits
     # if not parse_get_data(tsv_blast_ref)[1]:
     if is_empty_file(tsv_blast_ref):
-        # raise MessageError("No blast hits during homologue search, exiting programme.")
+        # raise MINORgError("No blast hits during homologue search, exiting programme.")
         ## write empty file
         with open(fout, "w+") as f:
             pass

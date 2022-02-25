@@ -39,7 +39,7 @@ To understand how aliases are assigned using the config file, let us take a look
                    araly2:/path/to/subset_ref_Araly2.fasta
                    araha1:/path/to/subset_ref_Araha1.fasta
 
-With this setup, we can use ``--assembly TAIR10`` instead of ``--assembly /path/to/subset_ref_TAIR10.fasta`` when buildling our MINORg command (although either way is acceptable). This applies to ``annotation alias`` (``--annotation``), ``rps database alias`` (``--db``), and ``gff attribute modification presets`` (``--attr-mod``) as well.
+With this setup, we can use ``--assembly TAIR10`` instead of ``--assembly /path/to/subset_ref_TAIR10.fasta`` when building our MINORg command (although either way is acceptable). This applies to ``annotation alias`` (``--annotation``), ``rps database alias`` (``--db``), and ``gff attribute modification presets`` (``--attr-mod``) as well.
 
 +----------------+--------------+----------------+----------------+---------------------------------------------+
 |**assembly**    |**annotation**|**rps database**|**attr mod**    |**description**                              |
@@ -51,7 +51,7 @@ With this setup, we can use ``--assembly TAIR10`` instead of ``--assembly /path/
 |-\-assembly     |-\-annotation |-\-db           |-\-attr-mod     |[CLI] specify value (alias or raw)           |
 +----------------+--------------+----------------+----------------+---------------------------------------------+
 
-Unlike the above parameters, ``domain alias`` is specified in the reverse format (<value>:<semicolon-separated aliases) for readability reasons, as most Pssm-Ids are comprised of the same number of digits. Therefore, the ``domain alias`` in section ``[lookup]`` looks like this instead::
+Unlike the above parameters, ``domain alias`` is specified in the reverse format using commas instead of semi-colons (<value>:<comma-separated aliases) for readability reasons, as most PSSM-Ids are comprised of the same number of digits. Therefore, the ``domain alias`` in section ``[lookup]`` looks like this instead::
   
   domain alias = 366714:TIR
                  366375:NB-ARC,NBS
@@ -164,7 +164,7 @@ Do note that, because of the nature of these lookups, you cannot simply provide 
 |**indv**     |-\-indv <alias(es)> |-\-query <path to FASTA>***                              |
 +-------------+--------------------+---------------------------------------------------------+
 
-\* ``genetic-code`` and ``--attr-mod`` are optional if the reference genome uses the standard genetic code and standard GFF attribute field names respectively. Do note that you CANNOT SPECIFY MULTIPLE reference genomes if not usng aliases.
+\* ``--genetic-code`` and ``--attr-mod`` are optional if the reference genome uses the standard genetic code and standard GFF attribute field names respectively. Do note that you CANNOT SPECIFY MULTIPLE reference genomes if not using aliases.
 
 \*\* If not using aliases, each cluster must be processed separately (i.e. a different MINORg execution for each cluster), as MINORg has no way of knowing which gene belongs to which cluster if you use ``--gene``.
 

@@ -21,13 +21,17 @@ import tempfile
 import regex as re
 from Bio.Seq import Seq
 
+from minorg import (
+    _warning,
+    MINORgWarning,
+    MINORgError
+)
+
 from minorg.log import MINORgLogger
 
 from minorg.mafftcommandline_add import MafftCommandline
 from minorg.filter_grna import make_target_feature_ranges_function, within_feature
 from minorg.minimum_set import get_minimum_set
-
-from minorg.exceptions import MessageError
 
 from minorg.index import IndexedFasta
 from minorg.annotation import GFF
@@ -69,6 +73,8 @@ from minorg.grna import gRNAHits
 from minorg.pam import PAM
 
 from typing import Optional, Type, Dict
+
+warnings.showwarning = _warning
 
 LOGGING_LEVEL = logging.DEBUG
 
@@ -777,7 +783,7 @@ class MINORg (PathHandler):
         if non_string_iter(self._feature):
             if len(self._feature) == 1: return tuple(self._feature)[0]
             elif len(self._feature) == 0: return None
-            else: raise MessageError("Too many features")
+            else: raise MINORgError("Too many features")
         else: return self._feature
     @property
     def features(self):
@@ -954,7 +960,7 @@ class MINORg (PathHandler):
         if attr == "gene": return re.search(self.ref_seqid_gene_pattern, seqid).group(0)
         elif attr == "feature": return re.search(self.ref_seqid_feature_pattern, seqid).group(0)
         elif attr == "source": return re.search(self.ref_seqid_source_pattern, seqid).group(0)
-        else: raise MessageError(f"Unknown attribute: {attr}")
+        else: raise MINORgError(f"Unknown attribute: {attr}")
     
     def valid_grna(self, *check_names, accept_invalid = None, accept_invalid_field = None):
         """
@@ -1016,9 +1022,9 @@ class MINORg (PathHandler):
             Of check names (str)
         """
         if not (seq or hit):
-            raise MessageError("Either one or both of 'seq=True' or 'hit=True' is required.")
+            raise MINORgError("Either one or both of 'seq=True' or 'hit=True' is required.")
         if not (standard or nonstandard):
-            raise MessageError("Either one or both of 'standard=True' or 'nonstandard=True' is required.")
+            raise MINORgError("Either one or both of 'standard=True' or 'nonstandard=True' is required.")
         check_names = (self.grna_hits.check_names if (seq and hit)
                        else self.grna_hits.check_names_seqs if seq
                        else self.grna_hits.check_names_hits)
@@ -1057,7 +1063,7 @@ class MINORg (PathHandler):
             alias (str): required, alias of background file to remove
         """
         if alias not in self.background:
-            raise MessageError(f"'{alias}' is not a valid background alias.")
+            raise MINORgError(f"'{alias}' is not a valid background alias.")
         del self.background[alias]
         return
     
@@ -1158,7 +1164,8 @@ class MINORg (PathHandler):
             else:
                 warnings.warn( ( "Unrecognised reference set lookup file alias or non-existent file:"
                                  f" {val_ref_set}. You may manually provide reference genomes using"
-                                 " MINORg.add_reference(<alias>, <path to FASTA>, <path to GFF3>") )
+                                 " MINORg.add_reference(<alias>, <path to FASTA>, <path to GFF3>"),
+                               MINORgWarning)
         ## get reference
         val_ref = get_val_default(reference, self.params.reference.default)
         if val_ref:
@@ -1489,6 +1496,9 @@ class MINORg (PathHandler):
             cat_files([fout, self.ref_gene], tmp, remove = False)
             os.rename(tmp, fout)
         self.target = fout
+        ## check if any target sequences found
+        if not(fasta_to_dict(fout)):
+            warnings.warn("No target sequences found.", MINORgWarning)
         return
     
     # def homologue(self, **kwargs):
@@ -1722,8 +1732,8 @@ class MINORg (PathHandler):
             *other_mask_fnames (str): optional, paths to other FASTA files not in self.background that are also to be screened for off-target
         """
         if not self.grna_hits:
-            raise MessageError( ("MINORg.filter_background requires gRNA"
-                                 " (generated with self.grna())") )
+            raise MINORgError( ("MINORg.filter_background requires gRNA"
+                                " (generated with self.grna())") )
         if self.grna_fasta is None:
             self.grna_fasta = self.results_fname("gRNA_all.fasta") ## write gRNA to file so we can BLAST it
             self.grna_hits.write_fasta(self.grna_fasta, write_all = True)
@@ -1850,8 +1860,8 @@ class MINORg (PathHandler):
             domain_name (str): optional, domain name to be used when naming output file
         """
         # if not self.ref_cds and self.ref_gene and self.target:
-        #     raise MessageError( ("MINORg.align_reference_and_targets requires"
-        #                          " MINORg.ref_cds, MINORg.ref_gene, and MINORg.targets.") )
+        #     raise MINORgError( ("MINORg.align_reference_and_targets requires"
+        #                         " MINORg.ref_cds, MINORg.ref_gene, and MINORg.targets.") )
         fasta_aln = self.results_fname(f"{get_val_default(domain_name, self.domain_name)}_mafft.fasta")
         tmp_f = self.results_fname("tmp_align_reference_and_targets.fasta", tmp = True)
         ## align reference
@@ -2047,10 +2057,10 @@ class MINORg (PathHandler):
             feature_check (bool): include 'feature' field for filtering (subject to self.accept_invalid_field)
         """
         if not self.grna_hits:
-            raise MessageError( ("MINORg.minimumset requires gRNA."
-                                 " You may read a mapping file using"
-                                 " self.parse_grna_map_from_file('<path to file>')"
-                                 " or use self.grna() to generate gRNA.") )
+            raise MINORgError( ("MINORg.minimumset requires gRNA."
+                                " You may read a mapping file using"
+                                " self.parse_grna_map_from_file('<path to file>')"
+                                " or use self.grna() to generate gRNA.") )
         if sets is None: sets = self.sets
         ## assume all targets in self.grna_hits are to be, well, targeted
         targets = set(hit.target_id for hit in self.grna_hits.flatten_hits())

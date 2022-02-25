@@ -52,7 +52,7 @@ from minorg.parse_config import (
     # parse_multiline_multikey_sdict
 )
 
-from minorg.exceptions import (
+from minorg import (
     MINORgError,
     InputFormatError,
     InvalidPath,
@@ -71,6 +71,7 @@ app_main = typer.Typer()
 app_sub = typer.Typer()
 
 logging_level = logging.DEBUG
+# logging_level = logging.INFO
 
 ## parse config
 try:

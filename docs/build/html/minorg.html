@@ -57,7 +57,6 @@
 <li class="toctree-l2"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
@@ -113,7 +112,6 @@
 <li class="toctree-l1"><a class="reference internal" href="minorg.constants.html">minorg.constants module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="minorg.display.html">minorg.display module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="minorg.dynamic_logger.html">minorg.dynamic_logger module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="minorg.exceptions.html">minorg.exceptions module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="minorg.extend_reference.html">minorg.extend_reference module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="minorg.extract_homologue.html">minorg.extract_homologue module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="minorg.fasta.html">minorg.fasta module</a></li>
@@ -131,7 +129,88 @@
 <li class="toctree-l1"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
 </ul>
 </div>
-<span class="target" id="module-minorg"></span></section>
+<span class="target" id="module-minorg"></span><p>gRNA set generator for multiple genes in multiple genomes.</p>
+<p><a class="reference external" href="https://rlrq.github.io/MINORg">https://rlrq.github.io/MINORg</a></p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.InputFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.</span></span><span class="sig-name descname"><span class="pre">InputFormatError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_src_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L47-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.InputFormatError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.MINORgError" title="minorg.MINORgError"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORgError</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.InputFormatError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_src_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L48-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.InputFormatError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.InvalidFile">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.</span></span><span class="sig-name descname"><span class="pre">InvalidFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L58-L60"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.InvalidFile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.MINORgError" title="minorg.MINORgError"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORgError</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.InvalidFile.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L59-L60"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.InvalidFile.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.InvalidPath">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.</span></span><span class="sig-name descname"><span class="pre">InvalidPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L54-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.InvalidPath" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.MINORgError" title="minorg.MINORgError"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORgError</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.InvalidPath.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L55-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.InvalidPath.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.MINORgError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.</span></span><span class="sig-name descname"><span class="pre">MINORgError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L26-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>MINORg exception.</p>
+<p>MINORg should use this exception (or subclasses of it) to raise
+non-typer or non-click exceptions without printing traceback.
+(i.e. Traceback is reserved for errors of unknown origin.)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L34-L36"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.MINORgError.print_message">
+<span class="sig-name descname"><span class="pre">print_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L39-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgError.print_message" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.MINORgWarning">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.</span></span><span class="sig-name descname"><span class="pre">MINORgWarning</span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L9-L21"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgWarning" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></p>
+<p>MINORg warning.</p>
+<p>MINORg should use this warning (or subclasses of it), making it easy to
+silence all its warnings should you wish to.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg</span> <span class="kn">import</span> <span class="n">MINORgWarning</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">MINORgWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Consult the warnings module documentation for more details.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="minorg.UnreadableFile">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.</span></span><span class="sig-name descname"><span class="pre">UnreadableFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L62-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.UnreadableFile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#minorg.MINORgError" title="minorg.MINORgError"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORgError</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.UnreadableFile.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/__init__.py#L63-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.UnreadableFile.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 
 
            </div>

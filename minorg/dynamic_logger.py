@@ -6,6 +6,17 @@ import tempfile
 import warnings
 import itertools
 
+from datetime import datetime
+# from pathlib import Path
+
+from minorg import (
+    _warning,
+    MINORgWarning,
+    MINORgError
+)
+
+warnings.showwarning = _warning
+
 lvl = logging.DEBUG
 
 # logging.basicConfig(level=slogger.debug)
@@ -16,9 +27,6 @@ slogger.addHandler(ch)
 slogger.setLevel(lvl)
 
 
-from datetime import datetime
-# from pathlib import Path
-
 ## notes after experimentation:
 ## - multiple loggers can write to the same file
 ##  - take advantage of this to format different types of things to log
@@ -26,25 +34,27 @@ from datetime import datetime
 ##   - e.g. logger_args can handle logging arguments, logger_map can log index-query mapping, etc.
 
 ## custom exceptions (in case we need to catch and ignore specific problems)
-class InvalidArgs(Exception): pass
+class InvalidArgs(MINORgError): pass
 
-class InvalidName(Exception): pass
+class InvalidName(MINORgError): pass
 
 class ReservedName(InvalidName): pass
 
-class InvalidType(Exception): pass
+class InvalidType(MINORgError): pass
 
-class DuplicateObject(Exception): pass
+class DuplicateObject(MINORgError): pass
 
 class DuplicateName(InvalidName, DuplicateObject): pass
 
-class UnknownChild(Exception): pass
+class DuplicateWarning(MINORgWarning): pass
 
-class UnknownInitialiser(Exception): pass
+class UnknownChild(MINORgError): pass
+
+class UnknownInitialiser(MINORgError): pass
 
 class UnknownReferenceWarning(UserWarning): pass
 
-class HiddenAttribute(Exception):
+class HiddenAttribute(MINORgError):
     """
     Used to hide superclass attributes by throwing error upon attempted access to specific method names
     Used in conjuction with '@property' decorator, e.g.:
@@ -525,7 +535,7 @@ class MultiLogger(MultiChild):
         elif isinstance(logger, str) and name is None:
             logger = super().add_child(child_name = logger, replace = replace, quiet = quiet, **kwargs)
         elif isinstance(logger, str) and name is not None:
-            warnings.warn("Both arguments are strings. Ignoring 2nd argument.")
+            warnings.warn("Both arguments are strings. Ignoring 2nd argument.", MINORgWarning)
             logger = super().add_child(child_name = logger, replace = replace, quiet = quiet, **kwargs)
         else:
             raise InvalidArgs("Unexpected 1st argument type. Must be Logger object or str.")
@@ -628,7 +638,7 @@ class GroupLogger(MultiLogger):
         handler_obj = self.get_handler(handler)
         handler_name = self.handler.get_child_name(handler_obj)
         if not ignore_duplicate and handler_obj in group_logger.handlers:
-            warnings.warn("Handler '{handler_name}' has already been added.", DuplicateWarning)
+            warnings.warn("Handler '{handler_name}' has already been added.", DuplicateWarnings)
         group_logger.addHandler(handler_obj, handler_name)
         return
     
@@ -988,7 +998,8 @@ class DynamicFileParasiticSingleLogger(DynamicFileLoggerBase):
                     groups_to_remove.append(group)
                     handlers_to_remove.extend(list(self._get_group(group).file_handlers))
                     self._active_groups -= {self._get_group(group)}
-                else: warnings.warn(f"'{group}' is not active for this file '{self._base_logger.name}'.")
+                else: warnings.warn(f"'{group}' is not active for this file '{self._base_logger.name}'.",
+                                    MINORgWarning)
             else: warnings.warn(f"'{group}' is not a known group. Will be ignored.", UnknownReferenceWarning)
         self.remove_handler(*handlers_to_remove)
     

@@ -5,10 +5,21 @@ import click
 import typer
 import shutil
 import logging
+import warnings
 import itertools
 
 from typing import Callable, Tuple, Union
 
+from minorg import (
+    __version__,
+    _warning,
+    MINORgWarning,
+    MINORgError,
+    InputFormatError,
+    InvalidPath,
+    InvalidFile,
+    UnreadableFile
+)
 from minorg.MINORg import (
     MINORg,
     PathHandler,
@@ -21,13 +32,6 @@ from minorg.constants import (
     INDV_GENOMES_REF,
     REFERENCED_ALL,
     REFERENCED_NONE
-)
-from minorg.exceptions import (
-    MessageError,
-    InputFormatError,
-    InvalidPath,
-    InvalidFile,
-    UnreadableFile
 )
 from minorg.parse_config import (
     Param,
@@ -43,13 +47,14 @@ from minorg.functions import (
 
 LOGGING_LEVEL = logging.DEBUG
 
-__version_main__ = "3.1"
-__version_full__ = "2.1"
-__version_seq__ = "2.0"
-__version_grna__ = "2.0"
-__version_filter__ = "2.0"
-__version_minimumset__ = "2.0"
+# __version_main__ = "3.1"
+# __version_full__ = "2.1"
+# __version_seq__ = "2.0"
+# __version_grna__ = "2.0"
+# __version_filter__ = "2.0"
+# __version_minimumset__ = "2.0"
 
+warnings.showwarning = _warning
 
 def valid_readable_file(pathname) -> str:
     """
@@ -349,12 +354,13 @@ class MINORgCLI (MINORg):
         and exit programme using ``typer.Exit()``.
         """
         if val:
-            print((f"MINORg version: {__version_main__}\n"
-                   f"MINORg full: {__version_full__}\n"
-                   f"MINORg seq: {__version_seq__}\n"
-                   f"MINORg grna: {__version_seq__}\n"
-                   f"MINORg filter: {__version_filter}\n"
-                   f"MINORg minimumset: {__version_minimumset__}\n"))
+            print(__version__)
+            # print((f"MINORg version: {__version_main__}\n"
+            #        f"MINORg full: {__version_full__}\n"
+            #        f"MINORg seq: {__version_seq__}\n"
+            #        f"MINORg grna: {__version_seq__}\n"
+            #        f"MINORg filter: {__version_filter__}\n"
+            #        f"MINORg minimumset: {__version_minimumset__}\n"))
             self.cleanup()
             raise typer.Exit()
     
@@ -1140,12 +1146,12 @@ class MINORgCLI (MINORg):
             if self.args.ot_indv:
                 expanded_indv = set(self.args.ot_indv)
                 if standalone and (REFERENCED_ALL in self.args.ot_indv or REFERENCED_NONE in self.args.ot_indv):
-                    raise MessageError( (f"ERROR: '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
-                                         " are not valid for --ot-indv if using subcommand filter"
-                                         " as standalone") )
+                    raise MINORgError( (f"'{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                        " are not valid for --ot-indv if using subcommand filter"
+                                        " as standalone") )
                 if REFERENCED_ALL in self.args.ot_indv and REFERENCED_NONE in self.args.ot_indv:
-                    raise MessageError( (f"ERROR: '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
-                                         " are mutually exclusive for --ot-indv") )
+                    raise MINORgError( (f"'{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                        " are mutually exclusive for --ot-indv") )
                 if REFERENCED_ALL in self.args.ot_indv:
                     expanded_indv -= {REFERENCED_ALL}
                     expanded_indv |= set(self.args.indv)
@@ -1159,7 +1165,7 @@ class MINORgCLI (MINORg):
                     expanded_indv -= set(self.args.indv)
                 for indv in expanded_indv:
                     if str(indv) not in self.genome_aliases:
-                        raise MessageError(f"Unknown genome alias: '{indv}'")
+                        raise MINORgError(f"Unknown genome alias: '{indv}'")
                     self.add_background(self.genome_aliases[str(indv)], alias = str(indv))
     
     ##########################
@@ -1219,8 +1225,8 @@ class MINORgCLI (MINORg):
         ## parse '.' for 'all genes passed to --gene/--cluster'
         def expand_genes(genes_to_expand):
             if REFERENCED_ALL in genes_to_expand and REFERENCED_NONE in genes_to_expand:
-                raise MessageError( (f"ERROR: '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
-                                     " are mutually exclusive for --mask-gene and --unmask-gene") )
+                raise MINORgError( (f"'{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
+                                    " are mutually exclusive for --mask-gene and --unmask-gene") )
             if REFERENCED_ALL in genes_to_expand:
                 genes_to_expand -= {REFERENCED_ALL}
                 genes_to_expand |= genes
@@ -1233,9 +1239,9 @@ class MINORgCLI (MINORg):
         overlap_genes = mask_genes.intersection(unmask_genes)
         ## check for overlaps between mask and unmask if priority is not set
         if priority is None and overlap_genes:
-            raise MessageError( ("ERROR: The following genes were provided to both"
-                                 " --mask-gene/--mask-cluster and --unmask-gene/--unmask-gene:"
-                                 f" {','.join(sorted(overlap_genes))}") )
+            raise MINORgError( ("The following genes were provided to both"
+                                " --mask-gene/--mask-cluster and --unmask-gene/--unmask-gene:"
+                                f" {','.join(sorted(overlap_genes))}") )
         ## generate output dictionary
         output = {}
         if priority == "mask":
@@ -1450,7 +1456,21 @@ class MINORgCLI (MINORg):
         """
         for prefix in self.gene_sets:
             self.set_genes(prefix)
-            super().seq(quiet = False)
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error",
+                                        message = "minorg.MINORgWarning: No target sequences found.",
+                                        category = MINORgWarning)
+                try:
+                    super().seq(quiet = False)
+                except MINORgWarning as e:
+                    print(e.message)
+                    if self.args.cluster:
+                        warnings.warn(f"No target sequences found for {prefix}.",
+                                      MINORgWarning)
+                    else:
+                        warnings.warn(("No target sequences found for this set of genes:"
+                                       f" {','.join(self.genes)}"),
+                                      MINORgWarning)
         return
     
     def subcmd_grna(self):
@@ -1510,17 +1530,26 @@ class MINORgCLI (MINORg):
         ## execute MINORg
         for prefix in self.gene_sets:
             self.set_genes(prefix)
+            def warn_skip(msg):
+                warnings.warn(f"{msg} Skipping this gene set: {','.join(self.genes)}", MINORgWarning)
             ## get targets if not user-provided
             # if self.genes:
-            if not self.args.target:
-                super().seq(quiet = False)
-            ## abort if no targets
-            if len(fasta_to_dict(self.target)) == 0:
-                raise MessageError("No targets found. Aborting programme.")
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error",
+                                        message = "No target sequences found.",
+                                        category = MINORgWarning)
+                if not self.args.target:
+                    try:
+                        super().seq(quiet = False)
+                    ## abort current gene combo if no targets
+                    except MINORgWarning:
+                        warn_skip("No targets found.")
+                        continue
             super().grna()
             ## abort if no gRNA
             if len(self.grna_hits) == 0:
-                raise MessageError("No gRNA found. Aborting programme.")
+                warn_skip("No gRNA found.")
+                continue
             ## filter
             if self.background_check:
                 self.logfile.devsplain("Filtering background")
@@ -1532,6 +1561,9 @@ class MINORgCLI (MINORg):
                 self.logfile.devsplain("Filtering GC")
                 super().filter_gc()
             self.write_all_grna_map()
+            ## abort if no gRNA pass
+            if len(self.grna_hits.valid_grna()) == 0:
+                warn_skip("No valid gRNA after filtering.")
             ## minimumset
             self.minimumset(report_full_path = False)
         return

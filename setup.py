@@ -3,9 +3,18 @@ import setuptools
 with open("README.md", 'r', encoding="utf-8") as fh:
     long_description = fh.read()
 
+# Adapted from Biopython.
+# We now define the MINORg version number in minorg/__init__.py
+# Here we can't use "import minorg" then "minorg.__version__" as that would
+# tell us the version of MINORg already installed (if any).
+__version__ = "Undefined"
+for line in open("minorg/__init__.py"):
+    if line.startswith("__version__"):
+        exec(line.strip())
+
 setuptools.setup(
     name="minorg",
-    version="0.2.1rc",
+    version=__version__,
     author="Rachelle R.Q. Lee",
     author_email="rachelle.rq.lee@gmail.com",
     description="Generate minimum gRNA set for multiple non-reference genomes",

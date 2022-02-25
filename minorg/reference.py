@@ -8,7 +8,7 @@ import tempfile
 
 from Bio.Seq import Seq
 
-from minorg.exceptions import MessageError
+from minorg import MINORgError
 
 from minorg.functions import (
     is_range,
@@ -59,12 +59,12 @@ from minorg.display import (
 # ref.get_feature_seq(gid2, feature = "CDS", pssm_id = pssm, complete = False, adj_dir = True,
 #                     translate = False, mktmp = mktmp, db = rdb, rpsblast = rblast)
 
-class InvalidFeatureID(MessageError):
+class InvalidFeatureID(MINORgError):
     """
     Raised when feature_id does not exist.
     """
     def __init__(self, feature_id):
-        super().__init__( f"Error: Invalid feature ID. {feature_id} does not exist." )
+        super().__init__( f"Invalid feature ID. {feature_id} does not exist." )
 
 #######################
 ##  REFERENCE_MANIP  ##
