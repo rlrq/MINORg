@@ -1685,18 +1685,21 @@ class MINORg (PathHandler):
     
     def _offtarget_hits(self, fasta_subject, keep_output = False, fout = None):
         if not fout:
-            fout = self.mkfname("tmp.xml")
+            fout = self.mkfname("tmp.tsv")
             keep_output = False
         if self.grna_fasta is None:
             self.write_all_grna_fasta()
         from Bio.Blast.Applications import NcbiblastnCommandline
-        blast(NcbiblastnCommandline, header = '', fout = fout, outfmt = 5,
+        fields = ["qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", ## standard fields part 1
+                  "qstart", "qend", "sstart", "send", "evalue", "bitscore", ## standard fields part 2
+                  "gaps", "qlen", "btop", "nident"] ## custom fields
+        blast(NcbiblastnCommandline, header = fields, fout = fout, outfmt = 6,
               query = self.grna_fasta, subject = IndexedFasta(fasta_subject).filename,
               cmd = self.blastn, task = "blastn-short",
               # mt_mode = (0 if self.thread == 1 else 1),
               num_threads = self.thread)
         offtarget = set(hsp.query_id
-                        for query_result in searchio_parse(fout, "blast-xml")
+                        for query_result in searchio_parse(fout, "blast-tab", fields = fields)
                         for hit in query_result for hsp in hit
                         if self.is_offtarget_hit(hsp, query_result, fasta_subject))
         if not keep_output: os.remove(fout)
@@ -1728,16 +1731,18 @@ class MINORg (PathHandler):
             ref_to_mask = self.mkfname("tmp_ref_to_mask.fasta", tmp = True)
             self.get_reference_seq(fout = ref_to_mask)
             self.ref_gene = ref_to_mask
+        print("Masking on-targets")
         self._mask_ontargets(self.target,
                              *([self.ref_gene] if mask_reference and self.genes else []),
                              *self.mask,
                              *other_mask_fnames)
         self.write_mask_report(self.results_fname("masked.txt"))
+        print("Finding off-targets")
         excl_seqid = set()
         def get_excl_seqids(alias_ifasta, descr = None):
             output = set()
             for alias, ifasta in alias_ifasta.items():
-                ot_hits = self.mkfname(f"hit_{descr}_{alias}.xml" if descr else f"hit_{alias}.xml")
+                ot_hits = self.mkfname(f"hit_{descr}_{alias}.tsv" if descr else f"hit_{alias}.tsv")
                 output |= self._offtarget_hits(ifasta, fout = ot_hits,
                                                keep_output = keep_blast_output)
             return output

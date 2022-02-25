@@ -501,7 +501,7 @@ PAM
 
 By default, MINORg designs gRNA for SpCas9 systems (i.e. 3' NGG PAM). You may specify other PAM patterns for non-SpCas9 systems using ``--pam``. It is recommended that any PAM pattern that uses special characters be enclosed in quotes, as it may lead to unexpected behaviour otherwise at the terminal.
 
-Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. However, do take care to avoid using  ``.`` as a wildcard, as MINORg uses this character to determine where gRNA is relative to a PAM pattern.
+Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. Note that PAM is **NOT case-sensitive**. However, do take care to avoid using  ``.`` as a wildcard, as MINORg uses this character to determine where gRNA is relative to a PAM pattern.
 
 
 Ambiguous bases and repeats
