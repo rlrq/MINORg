@@ -618,7 +618,7 @@ class AnnotatedFeature(Annotation):
             BlastNR(query = tmp_pep, blastf = NcbirpsblastCommandline,
                     header = "qseqid,sseqid,pident,length,qstart,qend",
                     fout = tmp_rpsblast, keep_tmp = False,
-                    db = db, cmd = rpsblast, remote_rps = remote_rps,
+                    db = db, cmd = rpsblast, remote = remote_rps,
                     # mt_mode = (1 if thread is not None else 0),
                     num_threads = (1 if thread is None else thread))
             ## store path to output

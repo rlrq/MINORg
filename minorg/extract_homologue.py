@@ -4,6 +4,7 @@ import re
 import shutil
 import tempfile
 import itertools
+import pybedtools
 from datetime import datetime
 from pybedtools import BedTool
 
@@ -384,7 +385,7 @@ def recip_blast_multiref(fasta_target, directory, gff, fasta_ref,
             required only if non-standard attriute field names are present in GFF3 files.
             Dictionary describing attribute modification.
     """
-    pybedtools.helper.set_bedtools_path(path = bedtools)
+    pybedtools.helpers.set_bedtools_path(path = bedtools)
     from Bio.Blast.Applications import NcbiblastnCommandline
     blast_metrics = ["pident", "bitscore"]
     tsv_blasts = []
@@ -431,7 +432,7 @@ def recip_blast(fasta_target, directory, gff, fasta_ref,
     '''
     Additional args: genes (tuple), quiet (bool), relax (bool), lvl (int)
     '''
-    pybedtools.helper.set_bedtools_path(path = bedtools)
+    pybedtools.helpers.set_bedtools_path(path = bedtools)
     ## blast
     tsv_blast = os.path.join(directory, "tmp_recipblast.tsv")
     from Bio.Blast.Applications import NcbiblastnCommandline
@@ -498,7 +499,7 @@ def remove_non_max_bitscore(fasta, bedtool, genes, relax = False, lvl = 0, quiet
             Dictionary describing attribute modification.
     """
     import itertools
-    pybedtools.helper.set_bedtools_path(path = bedtools)
+    pybedtools.helpers.set_bedtools_path(path = bedtools)
     printi = make_local_print(quiet = quiet, printf = make_print_preindent(initial_lvl = lvl))
     genes = set(genes)
     cols_bed = colnames_blast + blast_metrics + colnames_bed
