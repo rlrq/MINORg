@@ -53,6 +53,7 @@ from minorg.parse_config import (
 )
 
 from minorg import (
+    _logging_level,
     MINORgError,
     InputFormatError,
     InvalidPath,
@@ -70,7 +71,7 @@ default_sub_cmd = "full"
 app_main = typer.Typer()
 app_sub = typer.Typer()
 
-logging_level = logging.DEBUG
+logging_level = _logging_level
 # logging_level = logging.INFO
 
 ## parse config

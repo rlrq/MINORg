@@ -11,6 +11,7 @@ import itertools
 from typing import Callable, Tuple, Union
 
 from minorg import (
+    _logging_level,
     __version__,
     _warning,
     MINORgWarning,
@@ -45,7 +46,7 @@ from minorg.functions import (
     non_string_iter
 )
 
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = _logging_level
 
 # __version_main__ = "3.1"
 # __version_full__ = "2.1"
@@ -260,7 +261,7 @@ class MINORgCLI (MINORg):
             self.resolve()
         if self.tmp and not self.keep_on_crash and os.path.exists(self.tmpdir):
             print(f"cleaning up {self.tmpdir}")
-            shutil.rmtree(self.tmpdir)
+            shutil.rmtree(self.tmpdir, ignore_errors = True)
     
     ################################
     ##  UPDATE SUBSET_ANNOTATION  ##
@@ -1562,7 +1563,7 @@ class MINORgCLI (MINORg):
                 super().filter_gc()
             self.write_all_grna_map()
             ## abort if no gRNA pass
-            if len(self.grna_hits.valid_grna()) == 0:
+            if len(self.valid_grna()) == 0:
                 warn_skip("No valid gRNA after filtering.")
             ## minimumset
             self.minimumset(report_full_path = False)

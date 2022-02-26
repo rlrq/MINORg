@@ -10,6 +10,7 @@ from datetime import datetime
 # from pathlib import Path
 
 from minorg import (
+    _logging_level,
     _warning,
     MINORgWarning,
     MINORgError
@@ -17,7 +18,7 @@ from minorg import (
 
 warnings.showwarning = _warning
 
-lvl = logging.DEBUG
+lvl = _logging_level
 
 # logging.basicConfig(level=slogger.debug)
 slogger = logging.Logger("slogger")

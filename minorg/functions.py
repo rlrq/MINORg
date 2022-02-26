@@ -72,19 +72,23 @@ def make_local_print(quiet, printf = print):
 #     return make_fname
 
 ## display for imap_unordered
-import multiprocessing as mp
-def imap_progress(f, args, threads = 1, overwrite = True, overwrite_last = True, return_output = True,
+from multiprocess import Pool
+def imap_progress(f, args, threads = 1,
+                  overwrite = True, overwrite_last = True, return_output = True,
                   msg = lambda curr, last: f"{curr}/{last} done.", lvl = 0, quiet = False):
     printi = make_local_print(quiet = False, printf = make_print_preindent(lvl + 1))
-    pool = mp.Pool(processes = threads)
+    pool = Pool(threads)
     total = len(args)
     output = []
+    def print_update(curr):
+        if overwrite_last or (overwrite and curr < total):
+            printi(msg(curr, total), overwrite = True)
+        else:
+            printi(msg(curr, total), overwrite = False)
+    print_update(0)
     for i, result in enumerate(pool.imap_unordered(f, args), 1):
         output.append(result)
-        if overwrite_last or (overwrite and i < len(fnames)):
-            printi(msg(i, total), overwrite = True)
-        else:
-            printi(msg(i, total), overwrite = False)
+        print_update(i)
     pool.close()
     return output if return_output else None
 

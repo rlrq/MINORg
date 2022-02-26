@@ -602,7 +602,7 @@ Note: As the local database itself consists of multiple files with different ext
   /
   +-- root/
       |-- other_files/
-      |-- rps_db/
+      +-- rps_db/
           |-- Cdd.aux
           |-- Cdd.freq
           |-- Cdd.loo

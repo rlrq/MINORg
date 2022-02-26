@@ -78,115 +78,114 @@ def find_homologue_imap(indv_fout_query_dir_kwargs):
                         directory = directory, **for_find_homologue_indv)
     return fout
 
-def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
-                             **for_find_homologue_indv):
-    """
-    Parallel discovery of homologues in multiple query FASTA.
+# def find_homologue_multiindv(fasta_queries, fout, directory, threads = 1,
+#                              **for_find_homologue_indv):
+#     """
+#     Parallel discovery of homologues in multiple query FASTA.
     
-    Arguments:
-        fasta_queries (list): require, list of paths(s) to FASTA file(s) in which to find homologues
-        fout (str): required, path to output FASTA file in which to write homologues
-        directory (str): required, path in which to write temporary files
-        threads (int): maximum number of parallel processes
-        **for_find_homologue_indv: additional arguments for find_homologue_indv
+#     Arguments:
+#         fasta_queries (list): require, list of paths(s) to FASTA file(s) in which to find homologues
+#         fout (str): required, path to output FASTA file in which to write homologues
+#         directory (str): required, path in which to write temporary files
+#         threads (int): maximum number of parallel processes
+#         **for_find_homologue_indv: additional arguments for find_homologue_indv
     
-    Additional args: 
-    fasta_complete (path), fasta_cds (path), genes (tuple), check_reciprocal (bool), quiet (bool), lvl (int), 
-    relax (bool), fasta_ref (list of path), gff (list of path)
-    Note that fasta_queries is an iterable like such [[<indv_alias/index>, <path to indv's FASTA file>]...]
-    """
-    def mkfout(indv_i):
-        import os
-        return os.path.join(directory, f"{indv_i}_targets.fasta")
-    ## generate arguments
-    args = [[i, mkfout(i), fasta_query, directory, for_find_homologue_indv]
-            for i, fasta_query in fasta_queries]
-    print("chkpt1:", [x[0] for x in args])
-    ## process
-    tmp_fouts = imap_progress(find_homologue_imap, args, threads = threads)
-    ## merge files
-    cat_files(tmp_fouts, fout, remove = True)
-    return
+#     Additional args: 
+#     fasta_complete (path), fasta_cds (path), genes (tuple), check_reciprocal (bool), quiet (bool), lvl (int), 
+#     relax (bool), fasta_ref (list of path), gff (list of path)
+#     Note that fasta_queries is an iterable like such [[<indv_alias/index>, <path to indv's FASTA file>]...]
+#     """
+#     def mkfout(indv_i):
+#         import os
+#         return os.path.join(directory, f"{indv_i}_targets.fasta")
+#     ## generate arguments
+#     args = [[i, mkfout(i), fasta_query, directory, for_find_homologue_indv]
+#             for i, fasta_query in fasta_queries]
+#     ## process
+#     tmp_fouts = imap_progress(find_homologue_imap, args, threads = threads)
+#     ## merge files
+#     cat_files(tmp_fouts, fout, remove = True)
+#     return
 
-def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
-                        quiet = True, lvl = 0, keep_tmp = False,
-                        check_reciprocal = False, relax = False,
-                        genes = None, blastn = "blastn", bedtools = '',
-                        fasta_ref = None, gff = None,
-                        attribute_mod = {}, **for_merge_hits_and_filter):
-    """
-    Find homologue in single FASTA file.
+# def find_homologue_indv(fout, directory, fasta_complete, fasta_cds, fasta_query,
+#                         quiet = True, lvl = 0, keep_tmp = False,
+#                         check_reciprocal = False, relax = False,
+#                         genes = None, blastn = "blastn", bedtools = '',
+#                         fasta_ref = None, gff = None,
+#                         attribute_mod = {}, **for_merge_hits_and_filter):
+#     """
+#     Find homologue in single FASTA file.
     
-    1. Execute BLASTN of reference sequences (``fasta_complete`` and ``fasta_cds``) against ``fasta_query``.
-    2. :func:`~minorg.extract_homologue.merge_hits_and_filter`: Merge hits based on proximity to each other, filtering by length and % identity, to generate candidate homologues.
-    3. :func:`~minorg.extract_homologue.recip_blast_multiref`: If check_reciprocal=True, execute BLASTN of candidate homologues to reference genome.
-        - :func:`~minorg.extract_homologue.recip_blast_multiref`: Remove candidate homolougues if the hit with the best bitscore is NOT to a gene in ``gene``.
-        - :func:`~minorg.extract_homologue.recip_blast_multiref`: If relax=False, candidate homologues which best bitscore hit overlaps with gene in ``gene`` AND ALSO a gene NOT IN ``gene`` will be removed.
+#     1. Execute BLASTN of reference sequences (``fasta_complete`` and ``fasta_cds``) against ``fasta_query``.
+#     2. :func:`~minorg.extract_homologue.merge_hits_and_filter`: Merge hits based on proximity to each other, filtering by length and % identity, to generate candidate homologues.
+#     3. :func:`~minorg.extract_homologue.recip_blast_multiref`: If check_reciprocal=True, execute BLASTN of candidate homologues to reference genome.
+#         - :func:`~minorg.extract_homologue.recip_blast_multiref`: Remove candidate homolougues if the hit with the best bitscore is NOT to a gene in ``gene``.
+#         - :func:`~minorg.extract_homologue.recip_blast_multiref`: If relax=False, candidate homologues which best bitscore hit overlaps with gene in ``gene`` AND ALSO a gene NOT IN ``gene`` will be removed.
     
-    Arguments:
-        fout (str): required, path to output FASTA file in which to write homologues
-        directory (path): required, directory in which to write temporary files
-        fasta_complete (str): required, path to FASTA file containing genomic reference sequences
-        fasta_cds (str): required, path to FASTA file containing CDS reference sequences
-        fasta_query (str): required, path to FASTA file in which to search for homologues
-        quiet (bool): print only essential messages
-        lvl (int): optional, indentation level of printed messages
-        keep_tmp (bool): keep temporary files (default=False)
-        check_reciprocal (bool): execute reciprocal check
-        genes (tuple): optional, required only if check_reciprocal=True, on-target gene IDs
-        blastn (str): optional, required only if check_reciprocal=True, 
-            blastn command (e.g. 'blastn') if available at CLI else path to blastn executable
-        bedtools (str): path to directory contaiing BEDTools executables if bedtools is not
-            in command-search path
-        fasta_ref (dict): optional, required only if check_reciprocal=True,
-            dictionary of paths to reference genome FASTA files in format {'<alias>': '/path/to/FASTA'}.
-            Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
-        gff (dict): optional, required only if check_reciprocal=True,
-            dictionary of paths to reference genome GFF3 files in format {'<alias>': '/path/to/GFF3'}.
-            Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
-        attribute_mod (dict): optional, 
-            required only if non-standard attriute field names are present in GFF3 files.
-            Dictionary describing attribute modification.
-        **for_merge_hits_and_filter: additional arguments for 
-            :func:`~minorg.extract_homologue.for_merge_hits_and_filter`
-    """
-    ## execute BLASTN of reference genes against query
-    ## note: directory must be valid path
-    tsv_blast_ref = os.path.join(directory, f"{fout}_tmp_blastn_ref.tsv")
-    tsv_blast_cds = os.path.join(directory, f"{fout}_tmp_blastn_cds.tsv")
-    from Bio.Blast.Applications import NcbiblastnCommandline
-    blast(blastf = NcbiblastnCommandline, cmd = blastn,
-          header = None, ## default fields
-          # header = "qseqid,sseqid,pident,length,sstart,send",
-          fout = tsv_blast_ref, query = fasta_complete, subject = fasta_query)
-    blast(blastf = NcbiblastnCommandline, cmd = blastn,
-          header = None, ## default fields
-          # header = "qseqid,sseqid,pident,length,sstart,send",
-          fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
-    ## check for hits
-    # if not parse_get_data(tsv_blast_ref)[1]:
-    if is_empty_file(tsv_blast_ref):
-        # raise MINORgError("No blast hits during homologue search, exiting programme.")
-        ## write empty file
-        with open(fout, "w+") as f:
-            pass
-        return
-    ## extract homologue
-    ## hidden args: accIDs = ('.',), pattern = lambda accID: accID, min_cds_len = 1,
-    #                min_len = 1, min_id = 0, merge_within_range = 100,
-    #                check_id_before_merge = False
-    merge_hits_and_filter(blast6_fname = tsv_blast_ref, fout = fout, fasta = fasta_query,
-                          blast6cds_fname = tsv_blast_cds, quiet = quiet, **for_merge_hits_and_filter)
-    ## check reciprocal
-    if check_reciprocal and genes:
-        recip_blast_multiref(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
-                             lvl = lvl, quiet = quiet, gff = gff, fasta_ref = fasta_ref, relax = relax,
-                             keep_tmp = keep_tmp, attribute_mod = attribute_mod, bedtools = bedtools)
-    ## remove tmp files
-    if not keep_tmp:
-        os.remove(tsv_blast_ref)
-        os.remove(tsv_blast_cds)
-    return
+#     Arguments:
+#         fout (str): required, path to output FASTA file in which to write homologues
+#         directory (path): required, directory in which to write temporary files
+#         fasta_complete (str): required, path to FASTA file containing genomic reference sequences
+#         fasta_cds (str): required, path to FASTA file containing CDS reference sequences
+#         fasta_query (str): required, path to FASTA file in which to search for homologues
+#         quiet (bool): print only essential messages
+#         lvl (int): optional, indentation level of printed messages
+#         keep_tmp (bool): keep temporary files (default=False)
+#         check_reciprocal (bool): execute reciprocal check
+#         genes (tuple): optional, required only if check_reciprocal=True, on-target gene IDs
+#         blastn (str): optional, required only if check_reciprocal=True, 
+#             blastn command (e.g. 'blastn') if available at CLI else path to blastn executable
+#         bedtools (str): path to directory contaiing BEDTools executables if bedtools is not
+#             in command-search path
+#         fasta_ref (dict): optional, required only if check_reciprocal=True,
+#             dictionary of paths to reference genome FASTA files in format {'<alias>': '/path/to/FASTA'}.
+#             Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
+#         gff (dict): optional, required only if check_reciprocal=True,
+#             dictionary of paths to reference genome GFF3 files in format {'<alias>': '/path/to/GFF3'}.
+#             Each reference genome should have the same alias in ``fasta_ref`` and ``gff``.
+#         attribute_mod (dict): optional, 
+#             required only if non-standard attriute field names are present in GFF3 files.
+#             Dictionary describing attribute modification.
+#         **for_merge_hits_and_filter: additional arguments for 
+#             :func:`~minorg.extract_homologue.for_merge_hits_and_filter`
+#     """
+#     ## execute BLASTN of reference genes against query
+#     ## note: directory must be valid path
+#     tsv_blast_ref = os.path.join(directory, f"{fout}_tmp_blastn_ref.tsv")
+#     tsv_blast_cds = os.path.join(directory, f"{fout}_tmp_blastn_cds.tsv")
+#     from Bio.Blast.Applications import NcbiblastnCommandline
+#     blast(blastf = NcbiblastnCommandline, cmd = blastn,
+#           header = None, ## default fields
+#           # header = "qseqid,sseqid,pident,length,sstart,send",
+#           fout = tsv_blast_ref, query = fasta_complete, subject = fasta_query)
+#     blast(blastf = NcbiblastnCommandline, cmd = blastn,
+#           header = None, ## default fields
+#           # header = "qseqid,sseqid,pident,length,sstart,send",
+#           fout = tsv_blast_cds, query = fasta_cds, subject = fasta_query)
+#     ## check for hits
+#     # if not parse_get_data(tsv_blast_ref)[1]:
+#     if is_empty_file(tsv_blast_ref):
+#         # raise MINORgError("No blast hits during homologue search, exiting programme.")
+#         ## write empty file
+#         with open(fout, "w+") as f:
+#             pass
+#         return
+#     ## extract homologue
+#     ## hidden args: accIDs = ('.',), pattern = lambda accID: accID, min_cds_len = 1,
+#     #                min_len = 1, min_id = 0, merge_within_range = 100,
+#     #                check_id_before_merge = False
+#     merge_hits_and_filter(blast6_fname = tsv_blast_ref, fout = fout, fasta = fasta_query,
+#                           blast6cds_fname = tsv_blast_cds, quiet = quiet, **for_merge_hits_and_filter)
+#     ## check reciprocal
+#     if check_reciprocal and genes:
+#         recip_blast_multiref(fasta_target = fout, directory = directory, genes = genes, blastn = blastn,
+#                              lvl = lvl, quiet = quiet, gff = gff, fasta_ref = fasta_ref, relax = relax,
+#                              keep_tmp = keep_tmp, attribute_mod = attribute_mod, bedtools = bedtools)
+#     ## remove tmp files
+#     if not keep_tmp:
+#         os.remove(tsv_blast_ref)
+#         os.remove(tsv_blast_cds)
+#     return
 
 def merge_hits_and_filter(blast6_fname, fout, fasta, quiet = True, min_cds_len = 0, indv_i = 1,
                           # colnames = ("sseqid", "sstart", "send", "pident", "length"),
@@ -326,9 +325,10 @@ def filter_min_cds_len(blast6cds_fname, merged, min_cds_len = 0,
             overlap, sseqid, start, end = 0, entry["molecule"], entry["start"], entry["end"]
             cds_i = cds_i_start
             ## find first overlapping cds entry
-            while cds_i < len(cds_output) - 1 and cds_output[cds_i]["molecule"] != sseqid or \
-                  (cds_output[cds_i]["molecule"] == sseqid and \
-                   cds_output[cds_i]["end"] <= start):
+            while cds_i < len(cds_output) - 1 and \
+                  (cds_output[cds_i]["molecule"] != sseqid or \
+                   (cds_output[cds_i]["molecule"] == sseqid and \
+                    cds_output[cds_i]["end"] <= start)):
                 cds_i += 1
             ## update cds_last_start so we don't keep searching earlier cds entries
             cds_i_start = cds_i_start if cds_i >= len(cds_output) - 1 else cds_i

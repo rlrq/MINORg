@@ -22,6 +22,7 @@ import regex as re
 from Bio.Seq import Seq
 
 from minorg import (
+    _logging_level,
     _warning,
     MINORgWarning,
     MINORgError
@@ -30,7 +31,11 @@ from minorg import (
 from minorg.log import MINORgLogger
 
 from minorg.mafftcommandline_add import MafftCommandline
-from minorg.filter_grna import make_target_feature_ranges_function, within_feature
+from minorg.filter_grna import (
+    mask_identical,
+    make_target_feature_ranges_function,
+    within_feature
+)
 from minorg.minimum_set import get_minimum_set
 
 from minorg.index import IndexedFasta
@@ -51,24 +56,28 @@ from minorg.constants import (
     REFERENCED_ALL,
     REFERENCED_NONE
 )
-from minorg.extract_homologue import find_homologue_multiindv
+from minorg.extract_homologue import (
+    merge_hits_and_filter,
+    recip_blast_multiref
+)
 from minorg.extend_reference import extend_reference
 from minorg.reference import AnnotatedFasta
 from minorg.functions import (
     split_none,
+    is_empty_file,
     cat_files,
     non_string_iter,
     assign_alias,
     adjusted_feature_ranges,
     ranges_union,
     ranges_intersect,
-    ranges_subtract
+    ranges_subtract,
+    imap_progress
 )
 from minorg.blast import blast
 from minorg.searchio import searchio_parse
 from minorg.generate_grna import find_multi_gRNA
 from minorg.fasta import dict_to_fasta, fasta_to_dict
-from minorg.filter_grna import mask_identical
 from minorg.grna import gRNAHits
 from minorg.pam import PAM
 
@@ -76,7 +85,7 @@ from typing import Optional, Type, Dict
 
 warnings.showwarning = _warning
 
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = _logging_level
 
 
 #######################
@@ -1405,7 +1414,69 @@ class MINORg (PathHandler):
     #########################
     ##  SUBCMD: HOMOLOGUE  ##
     #########################
-    
+
+
+    def _homologue_indv(self, fout, fasta_query, quiet = True, lvl = 0,
+                        check_recip = None, relax_recip = None,
+                        **for_merge_hits_and_filter):
+        """
+        Find homologue in single FASTA file.
+
+        1. Execute BLASTN of reference sequences (``fasta_complete`` and ``fasta_cds``) against ``fasta_query``.
+        2. :func:`~minorg.extract_homologue.merge_hits_and_filter`: Merge hits based on proximity to each other, filtering by length and % identity, to generate candidate homologues.
+        3. :func:`~minorg.extract_homologue.recip_blast_multiref`: If check_reciprocal=True, execute BLASTN of candidate homologues to reference genome.
+            - :func:`~minorg.extract_homologue.recip_blast_multiref`: Remove candidate homolougues if the hit with the best bitscore is NOT to a gene in ``gene``.
+            - :func:`~minorg.extract_homologue.recip_blast_multiref`: If relax=False, candidate homologues which best bitscore hit overlaps with gene in ``gene`` AND ALSO a gene NOT IN ``gene`` will be removed.
+
+        Arguments:
+            fout (str): required, path to output FASTA file in which to write homologues
+            fasta_query (str): required, path to FASTA file in which to search for homologues
+            quiet (bool): print only essential messages
+            lvl (int): optional, indentation level of printed messages
+            **for_merge_hits_and_filter: additional arguments for 
+                :func:`~minorg.extract_homologue.for_merge_hits_and_filter`
+        """
+        ## execute BLASTN of reference genes against query
+        ## note: directory must be valid path
+        tsv_blast_ref = self.reserve_fname(self.results_fname("homologue",
+                                                              f"{os.path.basename(fout)}_tmp_blastn_ref.tsv"))
+        tsv_blast_cds = self.reserve_fname(self.results_fname("homologue",
+                                                              f"{os.path.basename(fout)}_tmp_blastn_cds.tsv"))
+        from Bio.Blast.Applications import NcbiblastnCommandline
+        blast(blastf = NcbiblastnCommandline, cmd = self.blastn,
+              header = None, ## default fields
+              fout = tsv_blast_ref, query = self.ref_gene, subject = fasta_query)
+        blast(blastf = NcbiblastnCommandline, cmd = self.blastn,
+              header = None, ## default fields
+              # header = "qseqid,sseqid,pident,length,sstart,send",
+              fout = tsv_blast_cds, query = self.ref_cds, subject = fasta_query)
+        ## check for hits
+        # if not parse_get_data(tsv_blast_ref)[1]:
+        if is_empty_file(tsv_blast_ref):
+            # raise MINORgError("No blast hits during homologue search, exiting programme.")
+            ## write empty file
+            with open(fout, "w+") as f:
+                pass
+            return
+        ## extract homologue
+        merge_hits_and_filter(blast6_fname = tsv_blast_ref, fout = fout, fasta = fasta_query,
+                              blast6cds_fname = tsv_blast_cds, quiet = quiet, **for_merge_hits_and_filter)
+        ## check reciprocal
+        check_recip = get_val_default(check_recip, self.check_recip)
+        if check_recip and self.genes:
+            recip_blast_multiref(fasta_target = fout,
+                                 genes = self.genes, blastn = self.blastn, bedtools = self.bedtools,
+                                 gff = self.annotations, fasta_ref = self.assemblies,
+                                 attribute_mod = self.attr_mods,
+                                 relax = get_val_default(check_recip, self.relax_recip),
+                                 directory = self.results_fname("homologue", prefix = False),
+                                 keep_tmp = self.keep_tmp, lvl = lvl, quiet = quiet)
+        ## remove tmp files
+        if not self.keep_tmp:
+            os.remove(tsv_blast_ref)
+            os.remove(tsv_blast_cds)
+        return
+
     def _homologue(self, fout, ref_dir = "ref", quiet = True, domain_name = None,
                    minlen = None, minid = None, mincdslen = None, merge_within = None,
                    check_recip = None, relax_recip = None, check_id_before_merge = None):
@@ -1415,32 +1486,29 @@ class MINORg (PathHandler):
         printi = ((lambda msg: None) if quiet else (print))
         ## get reference data
         self.generate_ref_gene_cds(ref_dir = ref_dir, quiet = quiet, domain_name = domain_name)
+        ## define args
+        args = [[i, self.results_fname(f"{i}_targets.fasta"), fasta_query]
+                for i, fasta_query in self.query_map]
+        ## define function
+        def f(args):
+            indv_i, fout, fasta_query = args
+            self._homologue_indv(fout = fout, fasta_query = fasta_query, indv_i = indv_i,
+                                 check_recip = get_val_default(check_recip, self.check_recip),
+                                 relax_recip = get_val_default(check_recip, self.relax_recip),
+                                 ## merge_hits_and_filter options
+                                 min_len = get_val_default(minlen, self.minlen),
+                                 min_id = get_val_default(minid, self.minid),
+                                 min_cds_len = get_val_default(mincdslen, self.mincdslen),
+                                 check_id_before_merge = get_val_default(check_id_before_merge,
+                                                                         self.check_id_before_merge),
+                                 merge_within_range = get_val_default(merge_within, self.merge_within))
+            return fout
         ## get homologues
         printi("Finding homologues")
         if self.query:
-            find_homologue_multiindv(fasta_queries = self.query_map, fout = fout,
-                                     ## execution options
-                                     # directory = self.results_fname(ref_dir, prefix = False),
-                                     directory = self.results_fname(prefix = False),
-                                     threads = self.thread, keep_tmp = self.keep_tmp,
-                                     ## blastn options
-                                     blastn = self.blastn,
-                                     fasta_complete = self.ref_gene, fasta_cds = self.ref_cds,
-                                     ## reciprocal blast options
-                                     genes = self.genes, bedtools = self.bedtools,
-                                     check_reciprocal = get_val_default(check_recip, self.check_recip),
-                                     relax = get_val_default(relax_recip, self.relax_recip),
-                                     ## reference options (for reciprocal blast)
-                                     # reference = self.reference,
-                                     gff = self.annotations, fasta_ref = self.assemblies,
-                                     attribute_mod = self.attr_mods,
-                                     ## filtering options
-                                     min_len = get_val_default(minlen, self.minlen),
-                                     min_id = get_val_default(minid, self.minid),
-                                     min_cds_len = get_val_default(mincdslen, self.mincdslen),
-                                     check_id_before_merge = get_val_default(check_id_before_merge,
-                                                                             self.check_id_before_merge),
-                                     merge_within_range = get_val_default(merge_within, self.merge_within))
+            self.logfile.devsplain(f"chkpt1: {[x[0] for x in self.query_map]}")
+            tmp_fouts = imap_progress(f, args, threads = self.thread)
+            cat_files(tmp_fouts, fout, remove = True)
         return
         
     def seq(self, minlen = None, minid = None, mincdslen = None, quiet = True,
@@ -1535,21 +1603,28 @@ class MINORg (PathHandler):
         tmp_f = self.reserve_fname("tmp.tsv", newfile = True, tmp = True)
         self.masked = {}
         ## mask function
-        def _mask_identical(alias_subject):
+        def _mask_identical(alias_subject, descr = None):
             fnames = [IndexedFasta(subject).filename for subject in assign_alias(alias_subject).values()]
             fnames = [fname for fname in fnames if fname not in self.masked] ## avoid repeats
-            return {subject: tuple(set(itertools.chain(*[mask_identical(str(mask_fname), subject, tmp_f,
-                                                                        blastn = self.blastn)
-                                                         for mask_fname in mask_fnames if mask_fname])))
-                    for subject in fnames}
+            msg = ((lambda curr, last: f"{descr}: {curr}/{last} done.") if descr is not None
+                   else (lambda curr, last: f"{curr}/{last} done."))
+            args = [(mask_fname, subject, "tmp_{i}_{j}.tsv")
+                    for i, mask_fname in enumerate(mask_fnames) if mask_fname
+                    for j, subject in enumerate(fnames)]
+            def f(args):
+                mask_fname, subject, tmp_f = args
+                output = [subject, mask_identical(mask_fname, subject, tmp_f, blastn = self.blastn)]
+                return output
+            outputs = imap_progress(f, args, threads = self.thread, msg = msg)
+            return dict(outputs)
         ## mask in reference
         ## (we don't use ranges of self.genes directly because some genes may be identical
         ##  but NOT in self.genes and we want to mask those too)
-        self.masked = {**self.masked, **_mask_identical(self.assemblies)}
+        self.masked = {**self.masked, **_mask_identical(self.assemblies, descr = "reference")}
         ## mask in query
-        self.masked = {**self.masked, **_mask_identical(self.query)}
+        self.masked = {**self.masked, **_mask_identical(self.query, descr = "query")}
         ## mask in backgrounds
-        self.masked = {**self.masked, **_mask_identical(self.background)}
+        self.masked = {**self.masked, **_mask_identical(self.background, descr = "background")}
         return
     
     def write_mask_report(self, fout):
@@ -1693,7 +1768,8 @@ class MINORg (PathHandler):
         return self.is_offtarget_pos(hsp, ifasta) and self.is_offtarget_aln(hsp, query_result) and \
             self.is_offtarget_pam(hsp, query_result, ifasta)
     
-    def _offtarget_hits(self, fasta_subject, keep_output = False, fout = None):
+    def _offtarget_hits(self, fasta_subject, keep_output = False, fout = None, thread = None):
+        thread = thread if thread is not None else self.thread
         if not fout:
             fout = self.mkfname("tmp.tsv")
             keep_output = False
@@ -1707,7 +1783,7 @@ class MINORg (PathHandler):
               query = self.grna_fasta, subject = IndexedFasta(fasta_subject).filename,
               cmd = self.blastn, task = "blastn-short",
               # mt_mode = (0 if self.thread == 1 else 1),
-              num_threads = self.thread)
+              num_threads = thread)
         offtarget = set(hsp.query_id
                         for query_result in searchio_parse(fout, "blast-tab", fields = fields)
                         for hit in query_result for hsp in hit
@@ -1749,19 +1825,33 @@ class MINORg (PathHandler):
         self.write_mask_report(self.results_fname("masked.txt"))
         print("Finding off-targets")
         excl_seqid = set()
-        def get_excl_seqids(alias_ifasta, descr = None):
-            output = set()
-            for alias, ifasta in alias_ifasta.items():
-                ot_hits = self.mkfname(f"hit_{descr}_{alias}.tsv" if descr else f"hit_{alias}.tsv")
-                output |= self._offtarget_hits(ifasta, fout = ot_hits,
-                                               keep_output = keep_blast_output)
-            return output
+        def get_excl_seqids(alias_ifasta, descr = None, screened = set()):
+            fname = lambda x: x if not isinstance(x, IndexedFasta) else x.filename
+            blast_thread = max(1, int(self.thread/len(alias_ifasta)))
+            msg = ((lambda curr, last: f"{descr}: {curr}/{last} done.") if descr is not None
+                   else (lambda curr, last: f"{curr}/{last} done."))
+            args = [(ifasta,
+                     self.mkfname(f"hit_{descr}_{alias}.tsv" if descr else f"hit_{alias}.tsv"))
+                    for alias, ifasta in alias_ifasta.items()
+                    if fname(ifasta) not in screened]
+            def f(args):
+                ifasta, fout = args
+                output = self._offtarget_hits(ifasta, fout = fout, keep_output = keep_blast_output,
+                                              thread = blast_thread)
+                return output
+            outputs = imap_progress(f, args, threads = self.thread, msg = msg)
+            screened |= set(fname(ifasta) for ifasta in alias_ifasta.values())
+            return set(itertools.chain(*outputs)), screened
+        screened = set()
         if (self.screen_reference or self.query_reference) and self.reference:
-            excl_seqid |= get_excl_seqids(self.reference, descr = "ref")
-        if self.background:
-            excl_seqid |= get_excl_seqids(self.background, descr = "bg")
+            to_excl, screened = get_excl_seqids(self.reference, descr = "reference", screened = screened)
+            excl_seqid |= to_excl
         if self.query:
-            excl_seqid |= get_excl_seqids(self.query, descr = "query")
+            to_excl, screened = get_excl_seqids(self.query, descr = "query", screened = screened)
+            excl_seqid |= to_excl
+        if self.background:
+            to_excl, screened = get_excl_seqids(self.background, descr = "background", screened = screened)
+            excl_seqid |= to_excl
         ## parse bg check status
         grna_seqs = fasta_to_dict(self.grna_fasta)
         grna_screened = tuple(grna_seqs.values())
@@ -1961,7 +2051,7 @@ class MINORg (PathHandler):
                                                                         max_insertion = max_insertion)
         targets_feature_ranges = {seqid: get_target_feature_ranges(alignment[seqid], seqid)
                                   for seqid in alignment}
-        self.logfile.devsplain(f"{targets_feature_ranges}, {len(self.grna_hits.hits.items())}")
+        # self.logfile.devsplain(f"{targets_feature_ranges}, {len(self.grna_hits.hits.items())}")
         ## iterate through all gRNAs
         for gRNA_seq, coverage in self.grna_hits.hits.items():
             ## assess each hit

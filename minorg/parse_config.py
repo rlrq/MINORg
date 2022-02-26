@@ -116,14 +116,14 @@ def parse_attr_mod_sdict(s: str, attr_sep: str = ',', feature_sep: str = ';', fa
     feature_dict = parse_sep_sdict(s, kv_sep = fa_sep, item_sep = feature_sep)
     return {feature: parse_attr_mod(mappings) for feature, mappings in feature_dict.items()}
 
-def generate_autocompletion(param_name, valid_completion_items):    
-    def complete(ctx: typer.Context, incomplete: str):
-        values = ctx.params.get(param_name) or []
-        for value, help_text in valid_completion_items:
-            if value.startswith(incompelte) and value not in values:
-                yield(value, help_text)
-        return
-    return complete
+# def generate_autocompletion(param_name, valid_completion_items):    
+#     def complete(ctx: typer.Context, incomplete: str):
+#         values = ctx.params.get(param_name) or []
+#         for value, help_text in valid_completion_items:
+#             if value.startswith(incompelte) and value not in values:
+#                 yield(value, help_text)
+#         return
+#     return complete
 
 def mv_dir_overwrite(src_dir, dst_dir):
     for root, dirs, files in list(os.walk(src_dir))[::-1]:
@@ -397,11 +397,11 @@ class Params():
                              alias_value_description = "cluster members")
         self.indv = Param([INDV_GENOMES_NONE], "-i", "--indv",
                           # "-a", "--acc",
-                          autocompletion = generate_autocompletion("indv",
-                                                                   [(INDV_GENOMES_REF, "<reference genome>")] +
-                                                                   list(sorted(self.indv_genomes.items())) +
-                                                                   [(INDV_GENOMES_ALL,
-                                                                     "<all genomes except reference>")]),
+                          # autocompletion = generate_autocompletion("indv",
+                          #                                          [(INDV_GENOMES_REF, "<reference genome>")] +
+                          #                                          list(sorted(self.indv_genomes.items())) +
+                          #                                          [(INDV_GENOMES_ALL,
+                          #                                            "<all genomes except reference>")]),
                           description = "comma-separated genome alias(es)",
                           alias_value_description = "the location of their FASTA files")
         self.target = Param(None, "-t", "--target")
@@ -413,10 +413,11 @@ class Params():
                                          self.domain_aliases, none = "gene"), "--domain",
                                          # self.domain_aliases, none = None), "--domain",
                             # conf.get(section_homologue, "domain"), "--domain",
-                            autocompletion = generate_autocompletion("domain",
-                                                                     sorted([( pssmid, ','.join(aliases) )
-                                                                             for pssmid, aliases in
-                                                                             self.domain_aliases_inv.items()])))
+                            # autocompletion = generate_autocompletion("domain",
+                            #                                          sorted([( pssmid, ','.join(aliases) )
+                            #                                                  for pssmid, aliases in
+                            #                                                  self.domain_aliases_inv.items()]))
+                            )
         self.merge_within = Param(get_val_default(get_homologue("merge hits within", type = int), 100),
                                   "--merge-within")
         self.minid = Param(get_val_default(get_homologue("minimum hit id", type = float), 95),
@@ -586,16 +587,16 @@ class Params():
                                                   ("infer homologues in user-provided non-reference"
                                                    " sequences and mask from off-target search")))
         self.bg_indv = Param([get_val_default(get_filter("screen individuals"), '.')], "--bg-indv",
-                             autocompletion = generate_autocompletion("indv",
-                                                                      [(REFERENCED_ALL,
-                                                                        ("<all genomes passed to '-i',"
-                                                                         " valid only with full programme"
-                                                                         " and when '-i' is used>")),
-                                                                       (REFERENCED_NONE,
-                                                                        ("<no genomes passed to '-i',"
-                                                                         " valid only with full programme"
-                                                                         " and when '-i' is used>"))] +
-                                                                      list(sorted(self.indv_genomes.items()))),
+                             # autocompletion = generate_autocompletion("indv",
+                             #                                          [(REFERENCED_ALL,
+                             #                                            ("<all genomes passed to '-i',"
+                             #                                             " valid only with full programme"
+                             #                                             " and when '-i' is used>")),
+                             #                                           (REFERENCED_NONE,
+                             #                                            ("<no genomes passed to '-i',"
+                             #                                             " valid only with full programme"
+                             #                                             " and when '-i' is used>"))] +
+                             #                                          list(sorted(self.indv_genomes.items()))),
                              description = "comma-separated genome alias(es)",
                              alias_value_description = "the location of their FASTA files",
                              help_subcmd = {"full" :( f"Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"

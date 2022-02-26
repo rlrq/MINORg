@@ -35,6 +35,6 @@ setuptools.setup(
         "minorg"
     ],
     include_package_data=True,
-    install_requires=["biopython", "pybedtools", "pyfaidx", "regex", "typer"],
+    install_requires=["biopython", "pybedtools", "pyfaidx", "regex", "typer", "multiprocess"],
     python_requires=">=3.6",
 )

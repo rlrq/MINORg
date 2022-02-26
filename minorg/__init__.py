@@ -4,7 +4,11 @@ gRNA set generator for multiple genes in multiple genomes.
 https://rlrq.github.io/MINORg
 """
 
-__version__ = "0.2.1.1alpha2"
+import logging
+
+_logging_level = logging.DEBUG
+
+__version__ = "0.2.1.2alpha0"
 
 class MINORgWarning(Warning):
     """
