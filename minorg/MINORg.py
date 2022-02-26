@@ -1608,7 +1608,7 @@ class MINORg (PathHandler):
             fnames = [fname for fname in fnames if fname not in self.masked] ## avoid repeats
             msg = ((lambda curr, last: f"{descr}: {curr}/{last} done.") if descr is not None
                    else (lambda curr, last: f"{curr}/{last} done."))
-            args = [(mask_fname, subject, "tmp_{i}_{j}.tsv")
+            args = [(mask_fname, subject, f"tmp_{i}_{j}.tsv")
                     for i, mask_fname in enumerate(mask_fnames) if mask_fname
                     for j, subject in enumerate(fnames)]
             def f(args):
