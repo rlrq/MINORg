@@ -1372,7 +1372,7 @@ class MINORgCLI (MINORg):
         Parse and check arguments for subcommand minimumset.
         """
         if ( self.args.out_map is None or self.args.out_fasta is None ):
-            typer.echo(f"Output files will be generated in '{self.out_dir}' with the prefix '{self.prefix}'.")
+            typer.echo(f"Output files will be generated in '{self.directory}' with the prefix '{self.prefix}'.")
         self.copy_args("sets", "auto")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
