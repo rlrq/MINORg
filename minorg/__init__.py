@@ -8,7 +8,7 @@ import logging
 
 _logging_level = logging.DEBUG
 
-__version__ = "0.2.1.2alpha0"
+__version__ = "0.2.1.2alpha1"
 
 class MINORgWarning(Warning):
     """
