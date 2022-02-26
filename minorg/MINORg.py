@@ -1489,7 +1489,7 @@ class MINORg (PathHandler):
         ## define args
         args = [[i, self.results_fname(f"{i}_targets.fasta"), fasta_query]
                 for i, fasta_query in self.query_map]
-        ## define function
+        ## define function for multithreading
         def f(args):
             indv_i, fout, fasta_query = args
             self._homologue_indv(fout = fout, fasta_query = fasta_query, indv_i = indv_i,
@@ -1601,6 +1601,7 @@ class MINORg (PathHandler):
     
     def _mask_ontargets(self, *mask_fnames):
         tmp_f = self.reserve_fname("tmp.tsv", newfile = True, tmp = True)
+        ## reset
         self.masked = {}
         ## mask function
         def _mask_identical(alias_subject, descr = None):
@@ -1608,15 +1609,20 @@ class MINORg (PathHandler):
             fnames = [fname for fname in fnames if fname not in self.masked] ## avoid repeats
             msg = ((lambda curr, last: f"{descr}: {curr}/{last} done.") if descr is not None
                    else (lambda curr, last: f"{curr}/{last} done."))
-            args = [(mask_fname, subject, f"tmp_{i}_{j}.tsv")
+            args = [(mask_fname, subject, self.results_fname("masking", f"tmp_{i}_{j}.tsv", reserve = True))
                     for i, mask_fname in enumerate(mask_fnames) if mask_fname
                     for j, subject in enumerate(fnames)]
+            ## define function for multithreading
             def f(args):
                 mask_fname, subject, tmp_f = args
-                output = [subject, mask_identical(mask_fname, subject, tmp_f, blastn = self.blastn)]
-                return output
+                output = mask_identical(mask_fname, subject, tmp_f, blastn = self.blastn)
+                os.remove(tmp_f)
+                return [subject, output]
             outputs = imap_progress(f, args, threads = self.thread, msg = msg)
-            return dict(outputs)
+            output = {subject:
+                      tuple(set(itertools.chain(*[masked for fname, masked in outputs if fname == subject])))
+                      for subject in fnames}
+            return output
         ## mask in reference
         ## (we don't use ranges of self.genes directly because some genes may be identical
         ##  but NOT in self.genes and we want to mask those too)
@@ -1834,6 +1840,7 @@ class MINORg (PathHandler):
                      self.mkfname(f"hit_{descr}_{alias}.tsv" if descr else f"hit_{alias}.tsv"))
                     for alias, ifasta in alias_ifasta.items()
                     if fname(ifasta) not in screened]
+            ## define function for multithreading
             def f(args):
                 ifasta, fout = args
                 output = self._offtarget_hits(ifasta, fout = fout, keep_output = keep_blast_output,
