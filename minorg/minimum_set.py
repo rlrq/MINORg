@@ -17,6 +17,76 @@ from minorg.grna import gRNAHits
 
 impossible_set_message_default = "Consider adjusting --minlen, --minid, and --merge-within, and/or raising --check-reciprocal to restrict candidate target sequences to true biological replicates. Also consider using --domain to restrict the search."
 
+## tie breaker functions
+def all_best_nr(potential_coverage, all_coverage, covered):
+    """
+    Get all gRNA with equivalent non-redundnacy.
+    
+    This function prioritises gRNA with fewest target overlap with already covered targets.
+    
+    Arguments:
+        potential_coverage (dict): dictionary of {'<gRNA seq>': [<list of gRNAHit obj>]}
+            where gRNAHits in <list of gRNAHit obj> only contain hits to targets
+            NOT already covered; AND
+            where ONLY as yet unchosen gRNASeq obj are included
+        all_coverage (dict): dictionary of {'<gRNA seq>': [<list of gRNAHit obj>]}
+            where gRNAHits in <list of gRNAHit obj> only contain hits to all targets
+            REGARDLESS of whether they've already been covered; AND
+            where all gRNA's gRNASeq obj are included REGARDLESS of whether they've
+            already been chosen
+        covered (set): set of IDs of targets already covered
+    
+    Returns
+    -------
+    dict
+        Of {'<gRNA seq>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
+        with equivalent non-redundancy
+    """
+    ## get redundancy count
+    potential_redundancy = {grna_seq: len(set(hit.target_id for hit in hits
+                                              if hit.target_id in covered))
+                            for grna_seq, hits in all_coverage.items()
+                            if grna_seq in potential_coverage}
+    best_redundancy = min(potential_redundancy.values())
+    return {grna_seq: potential_coverage[grna_seq]
+            for grna_seq, redundancy in potential_redundancy.items()
+            if redundancy == best_redundancy}
+
+def all_best_pos(potential_coverage, all_coverage, covered):
+    """
+    Get all gRNA with equivalent closeness to 5'.
+    
+    This function prioritises gRNA closest to 5' end.
+    
+    Arguments:
+        potential_coverage (dict): dictionary of {'<gRNA seq>': [<list of gRNAHit obj>]}
+            where gRNAHits in <list of gRNAHit obj> only contain hits to targets
+            NOT already covered; AND
+            where ONLY as yet unchosen gRNASeq obj are included
+        all_coverage (dict): dictionary of {'<gRNA seq>': [<list of gRNAHit obj>]}
+            where gRNAHits in <list of gRNAHit obj> only contain hits to all targets
+            REGARDLESS of whether they've already been covered; AND
+            where all gRNA's gRNASeq obj are included REGARDLESS of whether they've
+            already been chosen
+        covered (set): set of IDs of targets already covered
+    
+    Returns
+    -------
+    dict
+        Of {'<gRNA seq>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
+        with equivalent closeness to 5'
+    """
+    ## get closeness to 5'
+    proximity = {grna_seq: sum((hit.target_len - hit.range[1] if
+                                hit.target.sense == '-' else
+                                hit.range[0])
+                               for hit in hits)/len(hits)
+                 for grna_seq, hits in potential_coverage.items()}
+    best_proximity = min(proximity.values())
+    return {grna_seq: potential_coverage[grna_seq]
+            for grna_seq, prox in proximity.items()
+            if prox == best_proximity}
+
 ## get_minimum_sets_and_write, except instead of accepting gRNA_dict it accepts 'mapping' file and parses that into a gRNAHits object
 def get_minimum_sets_from_files_and_write(mapping, targets = None, input_map_ver = None, **kwargs):
     ## read data
@@ -96,7 +166,16 @@ def get_minimum_sets_and_write(gRNA_hits, num_sets = 1, targets = None, exclude_
 ## gets a single minimum set
 def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), targets = None,
                     target_len_provided = False, sc_algorithm = "LAR", set_num = 1,
+                    tie_breaker = None,
                     impossible_set_message = impossible_set_message_default, suppress_warning = False):
+    ## tie breakers should return 2 values: <gRNASeq>, [<gRNAHits>]
+    if tie_breaker is None:
+        # tie_breaker = lambda x, covered: min(x.items(),
+        #                                      key = lambda y: sum((-z.range[1] if
+        #                                                           z.target.sense == '-' else
+        #                                                           z.range[0])
+        #                                                          for z in y[1])/len(y[1]))
+        tie_breaker = lambda *args: all_best_pos(*args).items()[0]
     while True:
         ## solve set_cover
         ## note: If antisense, tie break by minimum -end. Else, tie break by minimum start.
@@ -105,11 +184,7 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
                                         set(hit.target_id for hit in gRNA_hits.flatten_hits())),
                             algorithm = sc_algorithm, exclude_seqs = exclude_seqs,
                             id_key = lambda x: x.target_id,
-                            tie_breaker = lambda x: min(x.items(),
-                                                        key = lambda y: sum((-z.range[1] if
-                                                                             z.target.sense == '-' else
-                                                                             z.range[0])
-                                                                            for z in y[1])/len(y[1])),
+                            tie_breaker = tie_breaker,
                             suppress_warning = suppress_warning)
         ## if empty set, print message and break out of loop to exit and return the empty set
         if set(seq_set) == set():
@@ -167,7 +242,8 @@ def set_cover(gRNA_hits, target_ids, algorithm = "LAR", id_key = lambda x: x, su
     return []
 
 ## LAR algorithm
-def set_cover_LAR(gRNA_coverage, target_ids, id_key = lambda x: x, tie_breaker = lambda x: tuple(x.items())[0]):
+def set_cover_LAR(gRNA_coverage, target_ids, id_key = lambda x: x,
+                  tie_breaker = lambda x, covered: tuple(x.items())[0]):
     
     main_sorting_key = lambda k, uncovered_count: len(set(id_key(x) for x in uncovered_count[k]))
     result_cover, covered = {}, set()
@@ -179,7 +255,7 @@ def set_cover_LAR(gRNA_coverage, target_ids, id_key = lambda x: x, tie_breaker =
         max_val = sorting_key(max(uncovered_count, key = sorting_key))
         max_items = {seq: hits for seq, hits in uncovered_count.items()
                      if sorting_key(seq) == max_val}
-        seq, coverage = tie_breaker(max_items)
+        seq, coverage = tie_breaker(max_items, gRNA_coverage, covered)
         coverage = set(id_key(target) for target in coverage)
         covered |= coverage
         result_cover[seq] = coverage
@@ -195,7 +271,8 @@ def set_cover_LAR(gRNA_coverage, target_ids, id_key = lambda x: x, tie_breaker =
 
 
 ## greedy algorithm
-def set_cover_greedy(gRNA_coverage, target_ids, id_key = lambda x: x, tie_breaker = lambda x: x.items()[0]):
+def set_cover_greedy(gRNA_coverage, target_ids, id_key = lambda x: x,
+                     tie_breaker = lambda x, covered: tuple(x.items())[0]):
     
     main_sorting_key = lambda k, covered: len(set(id_key(x) for x in gRNA_coverage[k]) - set(covered))
     coverage_set = lambda k: set(id_key(x) for x in gRNA_coverage[k])
@@ -204,7 +281,7 @@ def set_cover_greedy(gRNA_coverage, target_ids, id_key = lambda x: x, tie_breake
         sorting_key = lambda k: main_sorting_key(k, covered)
         max_val = sorting_key(max(gRNA_coverage, key = sorting_key))
         max_items = {k: v for k, v in gRNA_coverage.items() if sorting_key(k) == max_val}
-        subset = tie_breaker(max_items)[0]
+        subset = tie_breaker(max_items, gRNA_coverage, covered)[0]
         covered |= coverage_set(subset)
         desired.append(subset)
     return set(desired)

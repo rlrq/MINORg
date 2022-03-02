@@ -188,7 +188,13 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |-\-auto                    |auto                       |generate sets without    |
 |               |                           |                           |require manual user      |
 |               |                           |                           |confirmation for each set|
+|               +---------------------------+---------------------------+-------------------------+
+|               |-\-prioritise-nr/          |prioritise_nr/             |prioritise non-redundancy|
+|               |-\-prioritise-pos          |prioritise_pos             |(nr) or proximity to 5'  |
+|               |                           |                           |(pos) when selecting next|
+|               |                           |                           |gRNA in set              |
 +---------------+---------------------------+---------------------------+-------------------------+
+
 
 
 Parameter types
@@ -202,7 +208,7 @@ Flag
 
 Flags are parameters that do not take values.
 
-**CLI**: ``--auto``
+**CLI**: ``--auto``, ``--accept-invalid``, ``--accept-feature-unknown``, ``--prioritise-nr``/\ ``--prioritise-pos``
 
 For example:
 
@@ -213,7 +219,7 @@ For example:
 Simply using ``--auto`` tells MINORg to automate set generation.
 
 
-**Python**: ``auto``
+**Python**: ``auto``, ``accept_invalid``, ``accept_feature_unknown``, ``accept_invalid_field``, ``prioritise_nr``/\ ``prioritise_pos``
 
 In Python, flags are raised by setting the value of their attributes to ``True`` or ``False``. For example:
 
@@ -583,6 +589,26 @@ MINORg comes with several preset PAM patterns for different CRISPR systems.
    |cas14ds      |                |required for ssDNA)                   |
    +-------------+----------------+--------------------------------------+
 
+
+Prioritise non-redundancy
+~~~~~~~~~~~~~~~~~~~~~~~~~
+**Type**: :ref:`Parameters:Flag`
+
+| **CLI**: ``--prioritise-nr``/\ ``--prioritize-nr``
+| **Python**: ``prioritise_nr``/\ ``--prioritize-nr``
+
+  | set default: ``prioritise non-redundnacy``
+
+By default, gRNA are selected for a set in the following order of priority:
+
+#. Coverage
+   - Favour gRNA that cover a larger number of targets not covered by already selected gRNA
+#. Proximity to 5'
+   - Favour gRNA that are positioned closer to the 5' end of a target's sense strand
+#. Non-redundancy
+   - Favour gRNA which coverage has the fewest overlap with targets covered by already selected gRNA
+
+If this flag is raised, 'Non-redundancy' will be prioritised before 'Proximity to 5'. This may be preferred if you wish to generate a large number of sets, as priortisation of non-redundancy makes it less likely that extremely high coverage gRNA will be added to a growing set, such that these gRNA can then be used to seed the next set.
 
 
 RPS-BLAST local database

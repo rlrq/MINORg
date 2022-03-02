@@ -1373,7 +1373,7 @@ class MINORgCLI (MINORg):
         """
         if ( self.args.out_map is None or self.args.out_fasta is None ):
             typer.echo(f"Output files will be generated in '{self.directory}' with the prefix '{self.prefix}'.")
-        self.copy_args("sets", "auto")
+        self.copy_args("sets", "auto", "prioritise_nr")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
         self.grna_fasta = self.args.grna
@@ -1407,7 +1407,7 @@ class MINORgCLI (MINORg):
                        "gc_min", "gc_max", ## filtering options
                        "ot_mismatch", "ot_gap", "ot_pamless",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction",
-                       "sets", "auto") ## minimum set options
+                       "sets", "auto", "prioritise_nr") ## minimum set options
         return
     
     #######################

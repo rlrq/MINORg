@@ -615,6 +615,11 @@ class Params():
                               false_true = ("writes .map to user-specified new file or default output file",
                                             "overwrites .map file passed to --map"))
         self.sets = Param(get_val_default(get_minimumset("sets", type = int), 1), "-s", "--set", "--sets")
+        self.prioritise_nr = Param(get_val_default(get_minimumset("prioritise non-redundancy", type = bool),
+                                                   False),
+                                   "--prioritise-nr/--prioritise-pos",
+                                   "--prioritize-nr/--prioritize-pos",
+                                   false_true = ("prioritise 5'", "prioritise non-redundancy"))
         self.sc_algorithm = Param(get_val_default(get_minimumset("set cover algorithm"), "LAR"),
                                   "--sc-algo", "--sc-algorithm",
                                   help = "algorithm for generating minimum set(s)",

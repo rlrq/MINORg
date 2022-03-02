@@ -531,12 +531,14 @@ def minimumset(
 
         ## data input
         map: Path = typer.Option(*params.map(), **params.map.options, **oparams.file_valid),
-        grna: Path = typer.Option(*params.grna(), *params.fasta.names, **oparams.file_valid),
-        exclude: Path = typer.Option(*params.exclude(), **oparams.file_valid),
+        grna: Path = typer.Option(*params.grna(), *params.fasta.names, **params.grna.options,
+                                  **oparams.file_valid),
+        exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
+        target: Path = typer.Option(*params.target(), **params.target.options),
 
         ## output files: option A
-        out_map: Path = typer.Option(*params.out_map(), resolve_path = True),
-        out_fasta: Path = typer.Option(*params.out_fasta(), resolve_path = True),
+        out_map: Path = typer.Option(*params.out_map(), **params.out_map.options, resolve_path = True),
+        out_fasta: Path = typer.Option(*params.out_fasta(), **params.out_fasta.options, resolve_path = True),
 
         ## output files: option B
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
@@ -548,6 +550,7 @@ def minimumset(
 
         ## flags
         auto: bool = typer.Option(*params.auto(), **params.auto.options),
+        prioritise_nr: bool = typer.Option(*params.prioritise_nr(), **params.prioritise_nr.options),
         accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options),
         accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
                                                     **params.accept_feature_unknown.options) ):
@@ -674,6 +677,7 @@ def full(
         sets: int = typer.Option(*params.sets(), **params.sets.options, callback = positive_callback),
         # sc_algorithm: SetCoverAlgo = typer.Option(*params.sc_algorithm(), **params.sc_algorithm.options),
         auto: bool = typer.Option(*params.auto(), **params.auto.options),
+        prioritise_nr: bool = typer.Option(*params.prioritise_nr(), **params.prioritise_nr.options),
         output_ver: int = typer.Option(*params.output_ver(), **params.output_ver.options),
 
         ## user lookups (this is right at the end because we might need the other args)
