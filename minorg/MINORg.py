@@ -347,6 +347,8 @@ class PathHandler:
                     os.makedirs(self.directory, exist_ok = True)
                 ## remove tmp files
                 self.rm_tmpfiles()
+                ## move logfile
+                self.logfile.move(self.directory, self.prefix)
                 ## copy items
                 mv_dir_overwrite(self.tmpdir, self.directory)
                 ## update file locations
@@ -974,8 +976,6 @@ class MINORg (PathHandler):
         super().resolve()
         ## update file paths if dst is not None (i.e. if resolve doesn't delete everything)
         if dst_dir:
-            ## move logfile
-            self.logfile.move(dst_dir, self.prefix)
             ## update stored filenames
             self._update_stored_fnames(src_dir, dst_dir)
     
@@ -1658,7 +1658,7 @@ class MINORg (PathHandler):
     ######################
     
     def _mask_ontargets(self, *mask_fnames):
-        tmp_f = self.reserve_fname("tmp.tsv", newfile = True, tmp = True)
+        tmp_f = self.reserve_fname("masking_tmp.blast.tsv", newfile = True, tmp = True)
         ## reset
         self.masked = {}
         ## mask function
@@ -1689,6 +1689,8 @@ class MINORg (PathHandler):
         self.masked = {**self.masked, **_mask_identical(self.query, descr = "query")}
         ## mask in backgrounds
         self.masked = {**self.masked, **_mask_identical(self.background, descr = "background")}
+        ## slate 'masking' directory for removal
+        self.results_fname("masking", prefix = False, tmp = True)
         return
     
     def write_mask_report(self, fout):
@@ -2148,8 +2150,8 @@ class MINORg (PathHandler):
         """
         if self.exclude is not None:
             to_exclude = set(str(x).upper() for x in fasta_to_dict(self.exclude).values())
-            self.grna_hits.set_all_seqs_check_by_functon("exclude",
-                                                         lambda grna_seq: str(grna_seq) not in to_exclude)
+            self.grna_hits.set_all_seqs_check_by_function("exclude",
+                                                          lambda grna_seq: str(grna_seq) not in to_exclude)
         return
     
     ##########################
@@ -2222,8 +2224,8 @@ class MINORg (PathHandler):
         ## set exclude check
         self.filter_exclude()
         ## check if statuses has been set. If not, warn user.
-        if all_checks or exclude_check:
-            self._check_valid_status("exclude", "seq", "exclude")
+        # if all_checks or exclude_check:
+        #     self._check_valid_status("exclude", "seq", "exclude")
         if all_checks or gc_check:
             self._check_valid_status("GC", "seq", "%GC")
         if all_checks or background_check:

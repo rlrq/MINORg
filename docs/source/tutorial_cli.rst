@@ -84,7 +84,7 @@ MINORg can also accept preset combinations of genes using ``--cluster`` and ``--
 .. code-block:: bash
                 
    $ minorg --directory ./example_03_cluster \
-            --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt
+            --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
 The above code snippet is effectively identical to the examples in :ref:`Tutorial_cli:Multiple genes`.
@@ -94,7 +94,7 @@ Like ``--gene``, multiple combinations of genes can be specified to ``--cluster`
 .. code-block:: bash
                 
    $ minorg --directory ./example_03_cluster \
-            --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt
+            --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
 
@@ -303,6 +303,93 @@ Filter by feature
 +++++++++++++++++
 
 See: :ref:`Algorithms:Within-feature inference`
+
+By default, when ``--gene`` is used, MINORg restricts gRNA to coding regions (CDS). For more on how MINORg does this for inferred, unannotated homologues, see :ref:`Algorithms:Within-feature inference`. You may change the feature type in which to design gRNA using ``--feature``. See column 3 of your GFF3 file for valid feature types (see https://en.wikipedia.org/wiki/General_feature_format for more on GFF file format).
+
+.. code-block:: bash
+                
+   $ minorg --directory ./example_14_withinfeature \
+            --indv ref --gene AT5G45050 \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+            --feature three_prime_UTR
+
+Generating minimum gRNA set(s)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Number of sets
+++++++++++++++
+
+By default, MINORg outputs a single gRNA set covering all targets. You may request more (mutually exclusive) sets using ``--set``.
+
+.. code-block:: bash
+                
+   $ minorg --directory ./example_15_set \
+            --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+            --set 5
+
+
+Prioritise non-redundancy
++++++++++++++++++++++++++
+
+By default, MINORg selects gRNA for sets using these criteria in decreasing order of priority:
+
+#. Coverage (of as yet uncovered targets)
+#. Proximity to 5' end
+#. Non-redundancy
+
+Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may flip the priority of proximity and non-redundancy using ``--prioritise-nr`` if you prefer to minimise multiple edits in a single target when using a single set of gRNA. (The priority of coverage is NOT modifiable.)
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_16_nr \
+            --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+            --prioritise-nr
+
+Excluding gRNA
+++++++++++++++
+
+You may specify gRNA sequences to exclude from any final gRNA set using ``--exclude``.
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_17_exclude \
+            --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+            --exclude ./sample_exclude_RPS6.fasta
+
+The gRNA names in the file passed to ``--exclude`` do not matter. Only the sequences are used when determining whether to exclude a gRNA.
+
+Accepting unknown checks
+++++++++++++++++++++++++
+
+Sometimes, not all filtering checks (GC, background, and feature) are set for all sequences. This is generally not an issue if you use the full programme (i.e. ``minorg <arguments>``), but may be relevant if you use the 'minimumset' subcommand (i.e. ``minorg minimumset <arguments>``) with a modified mapping file OR a mapping file from the 'filter' subcommand where not all filters have been applied.
+
+Let us take a look at 'sample_custom_check.map', where we've added a custom check called 'my_custom_check' in the last column::
+
+  gRNA id	gRNA sequence	target id	target sense	gRNA strand	start	end	group	background	GC	feature	my_custom_check
+  gRNA_001	CTTCATCTTCTTCTCGAAAT	targetA	NA	+	8	27	1	pass	pass	NA	pass
+  gRNA_001	CTTCATCTTCTTCTCGAAAT	targetB	NA	+	80	99	1	pass	pass	NA	pass
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetA	NA	+	37	56	1	pass	pass	NA	NA
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetB	NA	+	286	305	1	pass	pass	NA	pass
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetC	NA	+	109	128	1	pass	pass	NA	fail
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetD	NA	+	110	129	1	pass	pass	NA	fail
+  gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetB	NA	+	38	57	1	pass	pass	NA	NA
+  gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetC	NA	+	287	306	1	pass	pass	NA	pass
+  gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetD	NA	+	110	129	1	pass	pass	NA	pass
+
+There are three possible values for check status: 'pass', 'fail', and 'NA'.
+
+An invalid/unset check is an 'NA'. If a check is unset for all entries (as is the case with the check 'feature' here), it will be ignored (i.e. the check is treated as 'pass' for all entries). However, when a check has been set for some entries but not others (as is the case with the 'my_custom_check' check here), MINORg will treat invalid/unset checks as 'fail' by default. This is because there isn't enough information on whether this constitutes a pass or fail for the check, and MINORg prefers to be conservative when outputting gRNA. You may override this behaiour using the ``--accept-invalid``. By doing so, MINORg will treat 'NA' as 'pass' for all checks.
+
+.. code-block:: bash
+
+   $ minorg minimumset --directory ./example_18_acceptinvalid \
+                       --map ./sample_custom_check.map \
+                       --accept-invalid
+
+
 
 Defining reference genomes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

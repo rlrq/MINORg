@@ -189,10 +189,10 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |                           |                           |require manual user      |
 |               |                           |                           |confirmation for each set|
 |               +---------------------------+---------------------------+-------------------------+
-|               |-\-prioritise-nr/          |prioritise_nr/             |prioritise non-redundancy|
-|               |-\-prioritise-pos          |prioritise_pos             |(nr) or proximity to 5'  |
-|               |                           |                           |(pos) when selecting next|
-|               |                           |                           |gRNA in set              |
+|               |-\-prioritise-nr           |prioritise_nr              |prioritise non-redundancy|
+|               |                           |                           |(nr) over proximity to 5'|
+|               |                           |                           | when selecting next gRNA|
+|               |                           |                           |in set                   |
 +---------------+---------------------------+---------------------------+-------------------------+
 
 
@@ -604,7 +604,9 @@ By default, gRNA are selected for a set in the following order of priority:
 #. Coverage
    - Favour gRNA that cover a larger number of targets not covered by already selected gRNA
 #. Proximity to 5'
-   - Favour gRNA that are positioned closer to the 5' end of a target's sense strand
+   - Favour gRNA that are positioned closer to the 5' end of a target
+   - For reference genes, MINORg favours proxiity to the 5' end of the **sense strand**
+   - If reference genes have been specified, an alignment would have been generated with targets and reference genes, and sense will be inferred from this alignment. With sense information, MINORg will favour proximity to the 5' end of the **sense strand**.
 #. Non-redundancy
    - Favour gRNA which coverage has the fewest overlap with targets covered by already selected gRNA
 

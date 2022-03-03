@@ -1,0 +1,10 @@
+gRNA id	gRNA sequence	target id	target sense	gRNA strand	start	end	group	background	GC	feature	my_custom_check
+gRNA_001	CTTCATCTTCTTCTCGAAAT	targetA	NA	+	8	27	1	pass	pass	NA	pass
+gRNA_001	CTTCATCTTCTTCTCGAAAT	targetB	NA	+	80	99	1	pass	pass	NA	NA
+gRNA_002	GATGTTTTCTTGAGCTTCAG	targetA	NA	+	37	56	1	pass	pass	NA	NA
+gRNA_002	GATGTTTTCTTGAGCTTCAG	targetB	NA	+	286	305	1	pass	pass	NA	pass
+gRNA_002	GATGTTTTCTTGAGCTTCAG	targetC	NA	+	109	128	1	pass	pass	NA	fail
+gRNA_002	GATGTTTTCTTGAGCTTCAG	targetD	NA	+	110	129	1	pass	pass	NA	fail
+gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetB	NA	+	38	57	1	pass	pass	NA	NA
+gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetC	NA	+	287	306	1	pass	pass	NA	pass
+gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetD	NA	+	110	129	1	pass	pass	NA	pass

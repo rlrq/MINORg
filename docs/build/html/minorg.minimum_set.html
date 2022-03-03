@@ -165,33 +165,141 @@ with equivalent closeness to 5’</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.get_minimum_set">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">get_minimum_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_len_provided</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LAR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impossible_set_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Consider</span> <span class="pre">adjusting</span> <span class="pre">--minlen,</span> <span class="pre">--minid,</span> <span class="pre">and</span> <span class="pre">--merge-within,</span> <span class="pre">and/or</span> <span class="pre">raising</span> <span class="pre">--check-reciprocal</span> <span class="pre">to</span> <span class="pre">restrict</span> <span class="pre">candidate</span> <span class="pre">target</span> <span class="pre">sequences</span> <span class="pre">to</span> <span class="pre">true</span> <span class="pre">biological</span> <span class="pre">replicates.</span> <span class="pre">Also</span> <span class="pre">consider</span> <span class="pre">using</span> <span class="pre">--domain</span> <span class="pre">to</span> <span class="pre">restrict</span> <span class="pre">the</span> <span class="pre">search.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L167-L214"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.get_minimum_set" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="minorg.minimum_set.get_minimum_sets_and_write">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">get_minimum_sets_and_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_unknown_within_feature_status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_map_ver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L100-L164"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.get_minimum_sets_and_write" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="minorg.minimum_set.get_minimum_sets_from_files_and_write">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">get_minimum_sets_from_files_and_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_map_ver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L91-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.get_minimum_sets_from_files_and_write" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">get_minimum_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LAR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impossible_set_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Consider</span> <span class="pre">adjusting</span> <span class="pre">--minlen,</span> <span class="pre">--minid,</span> <span class="pre">and</span> <span class="pre">--merge-within,</span> <span class="pre">and/or</span> <span class="pre">raising</span> <span class="pre">--check-reciprocal</span> <span class="pre">to</span> <span class="pre">restrict</span> <span class="pre">candidate</span> <span class="pre">target</span> <span class="pre">sequences</span> <span class="pre">to</span> <span class="pre">true</span> <span class="pre">biological</span> <span class="pre">replicates.</span> <span class="pre">Also</span> <span class="pre">consider</span> <span class="pre">using</span> <span class="pre">--domain</span> <span class="pre">to</span> <span class="pre">restrict</span> <span class="pre">the</span> <span class="pre">search.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L193-L261"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.get_minimum_set" title="Permalink to this definition"></a></dt>
+<dd><p>Generate minimum set of gRNA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gRNA_hits</strong> (<em>list</em>) – gRNAHit objects</p></li>
+<li><p><strong>manual_check</strong> (<em>bool</em>) – manually approve each gRNA set</p></li>
+<li><p><strong>exclude_seqs</strong> (<em>set/list</em>) – optional, gRNA sequences (str) to exclude</p></li>
+<li><p><strong>targets</strong> (<em>list</em>) – optional, target IDs (str)</p></li>
+<li><p><strong>algorithm</strong> (<em>str</em>) – set cover algorithm</p></li>
+<li><p><strong>set_num</strong> (<em>int</em>) – set number, used for printing only</p></li>
+<li><p><strong>tie_breaker</strong> (<em>func</em>) – tie-breaker function.
+Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
+(2) unmodified ‘gRNA_coverage’,
+(3) list of IDs of targets covered by already selected gRNA</p></li>
+<li><p><strong>impossible_set_message</strong> (<em>str</em>) – message to print when gRNA cannot cover all targets</p></li>
+<li><p><strong>suppress_warning</strong> (<em>bool</em>) – suppress printing of warning when gRNA cannot cover all targets</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Minimum set of gRNA sequences (str)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.set_cover">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm='LAR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_warning=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L223-L242"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm='LAR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_seqs={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_warning=False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L270-L307"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover" title="Permalink to this definition"></a></dt>
+<dd><p>Execute set cover algorithm to generate minimum gRNA set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gRNA_hits</strong> (<em>list</em>) – gRNAHit objects</p></li>
+<li><p><strong>target_ids</strong> (<em>list</em>) – target IDs (str)</p></li>
+<li><p><strong>algorithm</strong> (<em>str</em>) – set cover algorithm</p></li>
+<li><p><strong>exclude_seqs</strong> (<em>set/list</em>) – gRNA sequences (str) to exclude</p></li>
+<li><p><strong>id_key</strong> (<em>func</em>) – function to extract target ID from gRNAHit obj</p></li>
+<li><p><strong>tie_breaker</strong> (<em>func</em>) – tie-breaker function.
+Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
+(2) unmodified ‘gRNA_coverage’,
+(3) list of IDs of targets covered by already selected gRNA</p></li>
+<li><p><strong>suppress_warning</strong> (<em>bool</em>) – suppress printing of warning when gRNA cannot cover all targets</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Minimum set of gRNA sequences (str)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.set_cover_LAR">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_LAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L245-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_LAR" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_LAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L310-L352"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_LAR" title="Permalink to this definition"></a></dt>
+<dd><p>Set cover algorithm LAR.</p>
+<p>Algorithm described in: Yang, Q., Nofsinger, A., Mcpeek, J., Phinney, J. and Knuesel, R. (2015). A Complete Solution to the Set Covering Problem. In International Conference on Scientific Computing (CSC) pp. 36–41</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gRNA_coverage</strong> (<em>dict</em>) – {‘&lt;gRNA seq&gt;’: [&lt;list of gRNAHit obj associated w/ that gRNA seq&gt;]}</p></li>
+<li><p><strong>target_ids</strong> (<em>list</em>) – IDs of targets to cover</p></li>
+<li><p><strong>id_key</strong> (<em>func</em>) – function to extract target ID from gRNAHit obj</p></li>
+<li><p><strong>tie_breaker</strong> (<em>func</em>) – tie-breaker function.
+Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
+(2) unmodified ‘gRNA_coverage’,
+(3) list of IDs of targets covered by already selected gRNA</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Minimum set of gRNA sequences (str)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.set_cover_greedy">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_greedy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L274-L287"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_greedy" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_greedy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L356-L384"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_greedy" title="Permalink to this definition"></a></dt>
+<dd><p>Greedy set cover algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gRNA_coverage</strong> (<em>dict</em>) – {‘&lt;gRNA seq&gt;’: [&lt;list of gRNAHit obj associated w/ that gRNA seq&gt;]}</p></li>
+<li><p><strong>target_ids</strong> (<em>list</em>) – IDs of targets to cover</p></li>
+<li><p><strong>id_key</strong> (<em>func</em>) – function to extract target ID from gRNAHit obj</p></li>
+<li><p><strong>tie_breaker</strong> (<em>func</em>) – tie-breaker function.
+Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
+(2) unmodified ‘gRNA_coverage’,
+(3) list of IDs of targets covered by already selected gRNA</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Minimum set of gRNA sequences (str)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="minorg.minimum_set.tie_break_first">
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">tie_break_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L90-L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.tie_break_first" title="Permalink to this definition"></a></dt>
+<dd><p>Arbitrarily returns the first gRNA sequence and its associated gRNAHit objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>potential_coverage</strong> (<em>dict</em>) – dictionary of {‘&lt;gRNA seq&gt;’: [&lt;list of gRNAHit obj&gt;]}
+where gRNAHits in &lt;list of gRNAHit obj&gt; only contain hits to targets
+NOT already covered; AND
+where ONLY as yet unchosen gRNASeq obj are included</p></li>
+<li><p><strong>all_coverage</strong> (<em>dict</em>) – dictionary of {‘&lt;gRNA seq&gt;’: [&lt;list of gRNAHit obj&gt;]}
+where gRNAHits in &lt;list of gRNAHit obj&gt; only contain hits to all targets
+REGARDLESS of whether they’ve already been covered; AND
+where all gRNA’s gRNASeq obj are included REGARDLESS of whether they’ve
+already been chosen</p></li>
+<li><p><strong>covered</strong> (<em>set</em>) – set of IDs of targets already covered</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – Of gRNA sequence</p></li>
+<li><p><em>list</em> – Of gRNAHit objects (for as yet uncovered targets) associated with the above gRNA sequence</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

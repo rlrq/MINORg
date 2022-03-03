@@ -130,7 +130,9 @@ def mv_dir_overwrite(src_dir, dst_dir):
         out_dir = os.path.join(dst_dir, os.path.relpath(root, src_dir))
         os.makedirs(out_dir, exist_ok = True)
         for fname in files:
-            shutil.move(os.path.join(root, fname), os.path.join(out_dir, fname))
+            fsrc = os.path.join(root, fname)
+            fdst = os.path.join(out_dir, fname)
+            shutil.move(fsrc, fdst)
         for dirname in dirs:
             os.rmdir(os.path.join(root, dirname))
     return

@@ -513,14 +513,15 @@ are ‘NA’</p></td>
 require manual user
 confirmation for each set</p></td>
 </tr>
-<tr class="row-odd"><td><p>--prioritise-nr/
---prioritise-pos</p></td>
-<td><p>prioritise_nr/
-prioritise_pos</p></td>
+<tr class="row-odd"><td><p>--prioritise-nr</p></td>
+<td><p>prioritise_nr</p></td>
 <td><p>prioritise non-redundancy
-(nr) or proximity to 5’
-(pos) when selecting next
-gRNA in set</p></td>
+(nr) over proximity to 5’</p>
+<blockquote>
+<div><p>when selecting next gRNA</p>
+</div></blockquote>
+<p>in set</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -899,7 +900,9 @@ bhcas12b</p></td>
 <li><p>Coverage
 - Favour gRNA that cover a larger number of targets not covered by already selected gRNA</p></li>
 <li><p>Proximity to 5’
-- Favour gRNA that are positioned closer to the 5’ end of a target’s sense strand</p></li>
+- Favour gRNA that are positioned closer to the 5’ end of a target
+- For reference genes, MINORg favours proxiity to the 5’ end of the <strong>sense strand</strong>
+- If reference genes have been specified, an alignment would have been generated with targets and reference genes, and sense will be inferred from this alignment. With sense information, MINORg will favour proximity to the 5’ end of the <strong>sense strand</strong>.</p></li>
 <li><p>Non-redundancy
 - Favour gRNA which coverage has the fewest overlap with targets covered by already selected gRNA</p></li>
 </ol>

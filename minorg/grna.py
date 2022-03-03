@@ -207,8 +207,9 @@ class Target(CheckObj):
         Arguments:
             parent_sense (str): sense of parent sequence. Valid values: '+', 'sense', '-', 'antisense'
         """
-        parent_sense = ('+' if parent_sense in ('+', "sense") else '-')
-        self._sense = (None if self.strand == None else
+        parent_sense = (None if parent_sense == "NA"
+                        else '+' if parent_sense in ('+', "sense") else '-')
+        self._sense = (None if (self.strand is None or parent_sense is None) else
                        '+' if parent_sense == self.strand else '-')
     def parent_sense(self, mode = "raw") -> Union[str, None]:
         """

@@ -431,8 +431,8 @@ def filter_grna(
                                         callback = non_negative_callback),
         ot_gap: int = typer.Option(*params.ot_gap(), **params.ot_gap.options, callback = non_negative_callback),
 
-        ## exclude filter
-        exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
+        # ## exclude filter
+        # exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
 
         ## user lookups (this is right at the end because we might need the other args)
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
@@ -551,9 +551,9 @@ def minimumset(
         ## flags
         auto: bool = typer.Option(*params.auto(), **params.auto.options),
         prioritise_nr: bool = typer.Option(*params.prioritise_nr(), **params.prioritise_nr.options),
-        accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options),
-        accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
-                                                    **params.accept_feature_unknown.options) ):
+        # accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
+        #                                             **params.accept_feature_unknown.options),
+        accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options)):
 
     """
     Subcommand minimumset.
@@ -672,8 +672,8 @@ def full(
 
         ## gRNA minimum set options
         accept_invalid: bool = typer.Option(*params.accept_invalid(), **params.accept_invalid.options),
-        accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
-                                                    **params.accept_feature_unknown.options),
+        # accept_feature_unknown: bool = typer.Option(*params.accept_feature_unknown(),
+        #                                             **params.accept_feature_unknown.options),
         sets: int = typer.Option(*params.sets(), **params.sets.options, callback = positive_callback),
         # sc_algorithm: SetCoverAlgo = typer.Option(*params.sc_algorithm(), **params.sc_algorithm.options),
         auto: bool = typer.Option(*params.auto(), **params.auto.options),

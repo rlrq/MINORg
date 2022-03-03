@@ -70,12 +70,19 @@
 <li class="toctree-l3"><a class="reference internal" href="#filter-by-feature">4.3.3. Filter by feature</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#defining-reference-genomes">4.4. Defining reference genomes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#single-reference-genome">4.4.1. Single reference genome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#multiple-reference-genomes">4.4.2. Multiple reference genomes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#non-standard-reference">4.4.3. Non-standard reference</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#non-standard-genetic-code">4.4.3.1. Non-standard genetic code</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#non-standard-gff3-attribute-field-names">4.4.3.2. Non-standard GFF3 attribute field names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-minimum-grna-set-s">4.4. Generating minimum gRNA set(s)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#number-of-sets">4.4.1. Number of sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prioritise-non-redundancy">4.4.2. Prioritise non-redundancy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#excluding-grna">4.4.3. Excluding gRNA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accepting-unknown-checks">4.4.4. Accepting unknown checks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-reference-genomes">4.5. Defining reference genomes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#single-reference-genome">4.5.1. Single reference genome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-reference-genomes">4.5.2. Multiple reference genomes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-standard-reference">4.5.3. Non-standard reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-genetic-code">4.5.3.1. Non-standard genetic code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-gff3-attribute-field-names">4.5.3.2. Non-standard GFF3 attribute field names</a></li>
 </ul>
 </li>
 </ul>
@@ -178,14 +185,14 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>See also: <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a>, <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>MINORg can also accept preset combinations of genes using <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> and <code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code>. <code class="docutils literal notranslate"><span class="pre">--cluster-set</span></code> accepts a tab-separated lookup file that maps alias(es) to a combinations of genes (see <a class="reference internal" href="configuration.html#cluster"><span class="std std-ref">cluster</span></a> for format). <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used to specify the alias of a combination of genes in that lookup file.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_03_cluster <span class="se">\</span>
-         --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt
+         --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 </pre></div>
 </div>
 <p>The above code snippet is effectively identical to the examples in <a class="reference internal" href="#multiple-genes"><span class="std std-ref">Multiple genes</span></a>.</p>
 <p>Like <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, multiple combinations of genes can be specified to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>. However, unlike <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, each combination will be processed separately (i.e. minimum sets will be separately generated for each combination).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_03_cluster <span class="se">\</span>
-         --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt
+         --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 </pre></div>
 </div>
@@ -351,16 +358,87 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="filter-by-feature">
 <h3><span class="section-number">4.3.3. </span>Filter by feature<a class="headerlink" href="#filter-by-feature" title="Permalink to this headline"></a></h3>
 <p>See: <a class="reference internal" href="algorithms.html#within-feature-inference"><span class="std std-ref">Within-feature inference</span></a></p>
+<p>By default, when <code class="docutils literal notranslate"><span class="pre">--gene</span></code> is used, MINORg restricts gRNA to coding regions (CDS). For more on how MINORg does this for inferred, unannotated homologues, see <a class="reference internal" href="algorithms.html#within-feature-inference"><span class="std std-ref">Within-feature inference</span></a>. You may change the feature type in which to design gRNA using <code class="docutils literal notranslate"><span class="pre">--feature</span></code>. See column 3 of your GFF3 file for valid feature types (see <a class="reference external" href="https://en.wikipedia.org/wiki/General_feature_format">https://en.wikipedia.org/wiki/General_feature_format</a> for more on GFF file format).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_14_withinfeature <span class="se">\</span>
+         --indv ref --gene AT5G45050 <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --feature three_prime_UTR
+</pre></div>
+</div>
+</section>
+</section>
+<section id="generating-minimum-grna-set-s">
+<h2><span class="section-number">4.4. </span>Generating minimum gRNA set(s)<a class="headerlink" href="#generating-minimum-grna-set-s" title="Permalink to this headline"></a></h2>
+<section id="number-of-sets">
+<h3><span class="section-number">4.4.1. </span>Number of sets<a class="headerlink" href="#number-of-sets" title="Permalink to this headline"></a></h3>
+<p>By default, MINORg outputs a single gRNA set covering all targets. You may request more (mutually exclusive) sets using <code class="docutils literal notranslate"><span class="pre">--set</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_15_set <span class="se">\</span>
+         --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --set <span class="m">5</span>
+</pre></div>
+</div>
+</section>
+<section id="prioritise-non-redundancy">
+<h3><span class="section-number">4.4.2. </span>Prioritise non-redundancy<a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
+<p>By default, MINORg selects gRNA for sets using these criteria in decreasing order of priority:</p>
+<ol class="arabic simple">
+<li><p>Coverage (of as yet uncovered targets)</p></li>
+<li><p>Proximity to 5’ end</p></li>
+<li><p>Non-redundancy</p></li>
+</ol>
+<p>Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may flip the priority of proximity and non-redundancy using <code class="docutils literal notranslate"><span class="pre">--prioritise-nr</span></code> if you prefer to minimise multiple edits in a single target when using a single set of gRNA. (The priority of coverage is NOT modifiable.)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_16_nr <span class="se">\</span>
+         --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --prioritise-nr
+</pre></div>
+</div>
+</section>
+<section id="excluding-grna">
+<h3><span class="section-number">4.4.3. </span>Excluding gRNA<a class="headerlink" href="#excluding-grna" title="Permalink to this headline"></a></h3>
+<p>You may specify gRNA sequences to exclude from any final gRNA set using <code class="docutils literal notranslate"><span class="pre">--exclude</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_17_exclude <span class="se">\</span>
+         --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
+         --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
+         --exclude ./sample_exclude_RPS6.fasta
+</pre></div>
+</div>
+<p>The gRNA names in the file passed to <code class="docutils literal notranslate"><span class="pre">--exclude</span></code> do not matter. Only the sequences are used when determining whether to exclude a gRNA.</p>
+</section>
+<section id="accepting-unknown-checks">
+<h3><span class="section-number">4.4.4. </span>Accepting unknown checks<a class="headerlink" href="#accepting-unknown-checks" title="Permalink to this headline"></a></h3>
+<p>Sometimes, not all filtering checks (GC, background, and feature) are set for all sequences. This is generally not an issue if you use the full programme (i.e. <code class="docutils literal notranslate"><span class="pre">minorg</span> <span class="pre">&lt;arguments&gt;</span></code>), but may be relevant if you use the ‘minimumset’ subcommand (i.e. <code class="docutils literal notranslate"><span class="pre">minorg</span> <span class="pre">minimumset</span> <span class="pre">&lt;arguments&gt;</span></code>) with a modified mapping file OR a mapping file from the ‘filter’ subcommand where not all filters have been applied.</p>
+<p>Let us take a look at ‘sample_custom_check.map’, where we’ve added a custom check called ‘my_custom_check’ in the last column:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gRNA</span> <span class="nb">id</span>       <span class="n">gRNA</span> <span class="n">sequence</span>   <span class="n">target</span> <span class="nb">id</span>       <span class="n">target</span> <span class="n">sense</span>    <span class="n">gRNA</span> <span class="n">strand</span>     <span class="n">start</span>   <span class="n">end</span>     <span class="n">group</span>   <span class="n">background</span>      <span class="n">GC</span>      <span class="n">feature</span> <span class="n">my_custom_check</span>
+<span class="n">gRNA_001</span>      <span class="n">CTTCATCTTCTTCTCGAAAT</span>    <span class="n">targetA</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">8</span>       <span class="mi">27</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="k">pass</span>
+<span class="n">gRNA_001</span>      <span class="n">CTTCATCTTCTTCTCGAAAT</span>    <span class="n">targetB</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">80</span>      <span class="mi">99</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="k">pass</span>
+<span class="n">gRNA_002</span>      <span class="n">GATGTTTTCTTGAGCTTCAG</span>    <span class="n">targetA</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">37</span>      <span class="mi">56</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="n">NA</span>
+<span class="n">gRNA_002</span>      <span class="n">GATGTTTTCTTGAGCTTCAG</span>    <span class="n">targetB</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">286</span>     <span class="mi">305</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="k">pass</span>
+<span class="n">gRNA_002</span>      <span class="n">GATGTTTTCTTGAGCTTCAG</span>    <span class="n">targetC</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">109</span>     <span class="mi">128</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="n">fail</span>
+<span class="n">gRNA_002</span>      <span class="n">GATGTTTTCTTGAGCTTCAG</span>    <span class="n">targetD</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">110</span>     <span class="mi">129</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="n">fail</span>
+<span class="n">gRNA_003</span>      <span class="n">ATGTTTTCTTGAGCTTCAGA</span>    <span class="n">targetB</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">38</span>      <span class="mi">57</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="n">NA</span>
+<span class="n">gRNA_003</span>      <span class="n">ATGTTTTCTTGAGCTTCAGA</span>    <span class="n">targetC</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">287</span>     <span class="mi">306</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="k">pass</span>
+<span class="n">gRNA_003</span>      <span class="n">ATGTTTTCTTGAGCTTCAGA</span>    <span class="n">targetD</span> <span class="n">NA</span>      <span class="o">+</span>       <span class="mi">110</span>     <span class="mi">129</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">NA</span>      <span class="k">pass</span>
+</pre></div>
+</div>
+<p>There are three possible values for check status: ‘pass’, ‘fail’, and ‘NA’.</p>
+<p>An invalid/unset check is an ‘NA’. If a check is unset for all entries (as is the case with the check ‘feature’ here), it will be ignored (i.e. the check is treated as ‘pass’ for all entries). However, when a check has been set for some entries but not others (as is the case with the ‘my_custom_check’ check here), MINORg will treat invalid/unset checks as ‘fail’ by default. This is because there isn’t enough information on whether this constitutes a pass or fail for the check, and MINORg prefers to be conservative when outputting gRNA. You may override this behaiour using the <code class="docutils literal notranslate"><span class="pre">--accept-invalid</span></code>. By doing so, MINORg will treat ‘NA’ as ‘pass’ for all checks.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg minimumset --directory ./example_18_acceptinvalid <span class="se">\</span>
+                    --map ./sample_custom_check.map <span class="se">\</span>
+                    --accept-invalid
+</pre></div>
+</div>
 </section>
 </section>
 <section id="defining-reference-genomes">
-<h2><span class="section-number">4.4. </span>Defining reference genomes<a class="headerlink" href="#defining-reference-genomes" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.5. </span>Defining reference genomes<a class="headerlink" href="#defining-reference-genomes" title="Permalink to this headline"></a></h2>
 <section id="single-reference-genome">
-<h3><span class="section-number">4.4.1. </span>Single reference genome<a class="headerlink" href="#single-reference-genome" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">4.5.1. </span>Single reference genome<a class="headerlink" href="#single-reference-genome" title="Permalink to this headline"></a></h3>
 <p>See examples in <a class="reference internal" href="#reference-gene-s-as-targets"><span class="std std-ref">Reference gene(s) as targets</span></a>.</p>
 </section>
 <section id="multiple-reference-genomes">
-<h3><span class="section-number">4.4.2. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">4.5.2. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h3>
 <p>See also: <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a>, <a class="reference internal" href="configuration.html#id1"><span class="std std-ref">2-level lookup</span></a>, <a class="reference internal" href="parameters.html#comma-separated-cli"><span class="std std-ref">Comma-separated (CLI)</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <p>Similar to <code class="docutils literal notranslate"><span class="pre">--clusters</span></code> and <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, MINORg accepts a lookup file for reference genomes using <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code> and one or more reference genome alias using <code class="docutils literal notranslate"><span class="pre">--reference</span></code>. See <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a> for a more comprehensive overview and <a class="reference internal" href="configuration.html#reference"><span class="std std-ref">reference</span></a> for lookup file format.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_xx_multiref <span class="se">\</span>
@@ -372,9 +450,9 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>Non-standard genetic codes and mapping of non-standard attribute field names for multiple genomes should be specified in the lookup file passed to <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code>. See <a class="reference internal" href="configuration.html#reference"><span class="std std-ref">reference</span></a> for file format.</p>
 </section>
 <section id="non-standard-reference">
-<h3><span class="section-number">4.4.3. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">4.5.3. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h3>
 <section id="non-standard-genetic-code">
-<h4><span class="section-number">4.4.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">4.5.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
 <p>When using <code class="docutils literal notranslate"><span class="pre">--domain</span></code>, users should ensure that the correct genetic code is specified, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a> for genetic code numbers and names.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_xx_geneticcode <span class="se">\</span>
            --indv ref --gene gene-Q0275 <span class="se">\</span>
@@ -386,7 +464,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>As a failsafe, MINORg does not terminate translated peptide sequences at the first stop codon. This ensures that any codons after an incorrectly translated premature stop codon will still be translated. Typically, a handful of mistranslated codons can still result in the correct RPS-BLAST domain hits, although hit scores may be slightly lower. Nevertheless, to ensure maximum accuracy, the correct genetic code is preferred.</p>
 </section>
 <section id="non-standard-gff3-attribute-field-names">
-<h4><span class="section-number">4.4.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">4.5.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
 <p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_xx_attrmod <span class="se">\</span>

@@ -1104,7 +1104,7 @@ class MINORgCLI (MINORg):
                 raise click.UsageError("'--feature <feature>' is required if using '--feature-check'.")
             # if standalone and not self.args.alignment:
             #     raise click.UsageError("'--alignment <path to FASTA> is required if using '--filter-feature'.")
-            if not self.args.gene:
+            if not (self.args.gene or self.args.cluster):
                 raise click.UsageError("'--gene <gene ID(s)> is required if using '--feature-check'.'")
             self.reference_required("'--filter-feature'")
         ## background filter
@@ -1197,9 +1197,9 @@ class MINORgCLI (MINORg):
         else self.gene_sets = {'<prefix>': ('gene1', 'gene2', 'gene3')} if ``--gene`` is used.
         """
         if self.args.cluster is None:
-            output = {self.master_prefix: tuple(self.args.gene)}
+            output = {self.master_prefix: tuple([] if self.args.gene is None else self.args.gene)}
         else:
-            output = {**output, **self.parse_cluster()}
+            output = self.parse_cluster()
         self.gene_sets = output
     
     def parse_genes_for_filter(self, priority = None, standalone = False):
@@ -1373,7 +1373,9 @@ class MINORgCLI (MINORg):
         """
         if ( self.args.out_map is None or self.args.out_fasta is None ):
             typer.echo(f"Output files will be generated in '{self.directory}' with the prefix '{self.prefix}'.")
-        self.copy_args("sets", "auto", "prioritise_nr")
+        self.copy_args("sets", "auto", "prioritise_nr", "exclude",
+                       # "accept_feature_unknown",
+                       "accept_invalid")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
         self.grna_fasta = self.args.grna
@@ -1407,7 +1409,9 @@ class MINORgCLI (MINORg):
                        "gc_min", "gc_max", ## filtering options
                        "ot_mismatch", "ot_gap", "ot_pamless",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction",
-                       "sets", "auto", "prioritise_nr") ## minimum set options
+                       "sets", "auto", "prioritise_nr", "exclude",
+                       # "accept_feature_unknown",
+                       "accept_invalid") ## minimum set options
         return
     
     #######################
@@ -1429,6 +1433,13 @@ class MINORgCLI (MINORg):
             print(f"{gene_set_prefix} not in gene_sets ({', '.join(self.gene_sets.keys())}).")
         self.genes = self.gene_sets[gene_set_prefix]
         self.prefix = gene_set_prefix
+    
+    ######################
+    ##  PREFIX MATTERS  ##
+    ######################
+    
+    def reset_prefix(self):
+        self.prefix = self.args.prefix
     
     ################
     ##  WRAPPERS  ##
@@ -1472,6 +1483,7 @@ class MINORgCLI (MINORg):
                         warnings.warn(("No target sequences found for this set of genes:"
                                        f" {','.join(self.genes)}"),
                                       MINORgWarning)
+        self.reset_prefix()
         return
     
     def subcmd_grna(self):
@@ -1485,6 +1497,7 @@ class MINORgCLI (MINORg):
             self.set_genes(prefix)
             super().grna()
             self.write_all_grna_map()
+        self.reset_prefix()
         return
     
     def subcmd_filter(self):
@@ -1567,5 +1580,6 @@ class MINORgCLI (MINORg):
                 warn_skip("No valid gRNA after filtering.")
             ## minimumset
             self.minimumset(report_full_path = False)
+        self.reset_prefix()
         return
             
