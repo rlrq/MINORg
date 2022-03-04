@@ -630,7 +630,7 @@ class Params():
                           # help = "[default: auto]",
                           false_true = ("manual", "auto"), show_default = False)
         self.input_ver = Param(None, "--input-ver")
-        self.output_ver = Param(2, "--output-ver")
+        self.output_ver = Param(4, "--output-ver")
         
         return
     

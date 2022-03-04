@@ -505,8 +505,10 @@ class gRNAHits:
         header_mapping = raw_mapping[0]
         ## determine version where checks start
         version = (1 if "exclusive" in header_mapping[5] else \
-                   3 if "target length" in header_mapping else 2)
-        check_col = header_mapping.index("group") + 1 ## group is last column before any checks
+                   3 if "target length" in header_mapping else \
+                   2 if "group" in header_mapping else 4)
+        group_set_colname = "set" if version == 4 else "group"
+        check_col = header_mapping.index(group_set_colname) + 1 ## group is last column before any checks
         header_checks = header_mapping[check_col:]
         dat_mapping = raw_mapping[1:]
         del raw_mapping
@@ -517,7 +519,7 @@ class gRNAHits:
                 gRNA_id, gRNA_seq, target_id, sense, strand, gRNA_range, group = entry[:check_col]
                 gRNA_start, gRNA_end = map(int, re.search("\[(\d+), (\d+)\)", gRNA_range).group(1,2))
                 target_len = 0
-            elif version == 2:
+            elif version == 2 or version == 4:
                 ## start, end are 1-indexed, start-inclusive and end-inclusive in v2
                 gRNA_id, gRNA_seq, target_id, sense, strand, gRNA_start, gRNA_end, group = entry[:check_col]
                 gRNA_start = int(gRNA_start) - 1 ## convert to 0-indexed, start-inclusive
@@ -914,13 +916,13 @@ class gRNAHits:
     #############
     def write_mapping(self, fout, sets = [], write_all = False,
                       write_checks = False, checks = ["background", "GC", "feature"],
-                      index = 1, start_incl = True, end_incl = True, version = 2,
+                      index = 1, start_incl = True, end_incl = True, version = 4,
                       fasta = None ) -> None: ## if fasta is provided, it will override default naming behaviour
         """
         Write MINORg .map file for gRNA mapping.
         
         A MINORg .map file is tab-delimited and includes a header line.
-        In version 2, columns are:
+        In version 4, columns are:
         
             - gRNA id: gRNA sequence ID
             - gRNA sequence: gRNA sequence
@@ -929,16 +931,16 @@ class gRNAHits:
             - gRNA strand: strand of gRNA (relative to target) ('+' or '-')
             - start: position of start of gRNA in target
             - end: position of end of gRNA in target
-            - group: gRNA group number (set to 1 for all gRNA if ``write_all=True``)
+            - set: gRNA set number (set to 1 for all gRNA if ``write_all=True``)
         
-        Any columns after 'group' are check statuses.
+        Any columns after 'set' are check statuses.
         
         Arguments:
             fout (str): required, path to output file
             sets (list): list of grouped gRNA sequences (e.g. [('<seq1>', '<seq2>'), ('<seq3>',)]).
                 If provided, only gRNA sequences included in ``sets`` will be written.
-                All groups must be mutually exclusive.
-                Used to assign group numbers in 'group' column.
+                All sets must be mutually exclusive.
+                Used to assign set numbers in 'set' column.
                 Overrides ``write_all``.
             write_all (bool): write all gRNA sequences
             write_checks (bool): write check statuses
@@ -963,9 +965,12 @@ class gRNAHits:
         elif version == 2:
             mapping_header = ["gRNA id", "gRNA sequence", "target id", "target sense",
                               "gRNA strand", "start", "end", "group"] + checks
-        else:
+        elif version == 3:
             mapping_header = ["gRNA id", "gRNA sequence", "target id", "target length", "target sense",
                               "gRNA strand", "start", "end", "group"] + checks
+        else:
+            mapping_header = ["gRNA id", "gRNA sequence", "target id", "target sense",
+                              "gRNA strand", "start", "end", "set"] + checks
         mapping_dat = []
         seq_check_names = {"GC", "background"}
         for group, seqs in enumerate(sets):
@@ -983,7 +988,7 @@ class gRNAHits:
                                              if check_name in seq_check_names else
                                              gRNA_hit.check(check_name, mode = "str"))
                                             for check_name in checks])
-                    elif version == 2:
+                    elif version == 2 or version == 4:
                         ## figure out start and end
                         start, end = map(lambda n: n + index, gRNA_hit.range)
                         if not start_incl: start -= 1
@@ -1012,7 +1017,8 @@ class gRNAHits:
         mapping_dat.sort(key = lambda entry: int(entry[mapping_header.index("start")])) ## sort by start
         mapping_dat.sort(key = lambda entry: entry[mapping_header.index("target id")]) ## sort by target id
         mapping_dat.sort(key = lambda entry: entry[mapping_header.index("gRNA id")]) ## sort by gRNA id
-        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("group")])
+        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("set" if version == 4
+                                                                        else "group")])
         to_write = '\n'.join(['\t'.join(map(str, entry)) for entry in ([mapping_header] + mapping_dat)]) + '\n'
         open(fout, "w+").write(to_write)
         return
