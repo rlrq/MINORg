@@ -165,10 +165,10 @@ Column description:
 #. gRNA sequence: gRNA sequence (upper case)
 #. target id: Sequence ID of target sequence, consistent with XXX_targets.fasta
 #. target sense: Whether target sequence is sense or antisense
-   
-  * This is detected by alignment with reference genes.
-  * If the user provided target sequences to the full programme or to the ``seq`` subcommand using ``--target``, all entries in this field will be 'NA'.
-   
+  
+   * This is detected by alignment with reference genes.
+   * If the user provided target sequences to the full programme or to the ``seq`` subcommand using ``--target``, all entries in this field will be 'NA'.
+  
 #. gRNA strand: Strand of gRNA relative to target sequence
 #. start: Start position of gRNA in target sequence
 #. end: End position of gRNA in target sequence
