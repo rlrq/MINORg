@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7. Output &mdash; MINORg 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="8. Algorithms" href="algorithms.html" />
+    <link rel="prev" title="6. Parameters" href="parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="modules.html" class="icon icon-home"> MINORg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Output</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#directory-structure">7.1. Directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-files">7.2. Output files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#minorg-log">7.2.1. minorg.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xxx-mafft-fasta">7.2.2. XXX_mafft.fasta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xxx-targets-fasta">7.2.3. XXX_targets.fasta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grna-fasta-files">7.2.4. gRNA FASTA files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grna-map-files">7.2.5. gRNA .map files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="modules.html">MINORg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="section-number">7. </span>Output</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/output.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="output">
+<h1><span class="section-number">7. </span>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h1>
+<section id="directory-structure">
+<h2><span class="section-number">7.1. </span>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this headline"></a></h2>
+<p>As a general rule of thumb, using the default prefix ‘minorg’, MINORg generates the following files with the following directory structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">output_directory</span><span class="o">&gt;/</span>
+<span class="o">|--</span> <span class="n">minorg</span><span class="o">.</span><span class="n">log</span>
+<span class="o">+--</span> <span class="n">minorg</span><span class="o">/</span>
+    <span class="o">|--</span> <span class="n">minorg_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_mafft</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_targets</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_all</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_all</span><span class="o">.</span><span class="n">map</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_final</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_final</span><span class="o">.</span><span class="n">map</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_pass</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_pass</span><span class="o">.</span><span class="n">map</span>
+    <span class="o">|--</span> <span class="n">minorg_gRNA_masked</span><span class="o">.</span><span class="n">txt</span>
+    <span class="o">+--</span> <span class="n">ref</span><span class="o">/</span>
+        <span class="o">|--</span> <span class="n">minorg_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_CDS</span><span class="o">.</span><span class="n">fasta</span>
+        <span class="o">|--</span> <span class="n">minorg_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_gene</span><span class="o">.</span><span class="n">fasta</span>
+        <span class="o">+--</span> <span class="n">minorg_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_pep</span><span class="o">.</span><span class="n">fasta</span>
+</pre></div>
+</div>
+<p>The exact combination of files generated depends on whether the full programme or a subcommand has been executed, as well as the combination of parameters used.</p>
+<p>If domain is not specified (using <code class="docutils literal notranslate"><span class="pre">--domain</span></code> (CLI) OR <code class="docutils literal notranslate"><span class="pre">pssm_ids</span></code> and/or <code class="docutils literal notranslate"><span class="pre">domain_name</span></code> (Python)), it defaults to ‘gene’. If the user has specified a custom prefix (using <code class="docutils literal notranslate"><span class="pre">--prefix</span></code> (CLI) OR <code class="docutils literal notranslate"><span class="pre">prefix</span></code> (Python)), the prefix replaces ‘minorg’ for all file names.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> (CLI exclusive) is used, the general structure is maintained, except ‘minorg_&lt;cluster alias&gt;’ replaces ‘minorg’ for all files except ‘minorg.log’, and each cluster gets its own directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">output_directory</span><span class="o">&gt;/</span>
+<span class="o">|--</span> <span class="n">minorg</span><span class="o">.</span><span class="n">log</span>
+<span class="o">+--</span> <span class="n">minorg_clusterA</span><span class="o">/</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_mafft</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_targets</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_all</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_all</span><span class="o">.</span><span class="n">map</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_final</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_final</span><span class="o">.</span><span class="n">map</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_pass</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_pass</span><span class="o">.</span><span class="n">map</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">minorg_clusterA_gRNA_masked</span><span class="o">.</span><span class="n">txt</span>
+<span class="o">|</span>   <span class="o">+--</span> <span class="n">ref</span><span class="o">/</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">minorg_clusterA_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_CDS</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">minorg_clusterA_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_gene</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">|</span>       <span class="o">+--</span> <span class="n">minorg_clusterA_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_pep</span><span class="o">.</span><span class="n">fasta</span>
+<span class="o">+--</span> <span class="n">minorg_clusterB</span><span class="o">/</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_mafft</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_targets</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_all</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_all</span><span class="o">.</span><span class="n">map</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_final</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_final</span><span class="o">.</span><span class="n">map</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_pass</span><span class="o">.</span><span class="n">fasta</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_pass</span><span class="o">.</span><span class="n">map</span>
+    <span class="o">|--</span> <span class="n">minorg_clusterB_gRNA_masked</span><span class="o">.</span><span class="n">txt</span>
+    <span class="o">+--</span> <span class="n">ref</span><span class="o">/</span>
+        <span class="o">|--</span> <span class="n">minorg_clusterB_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_CDS</span><span class="o">.</span><span class="n">fasta</span>
+        <span class="o">|--</span> <span class="n">minorg_clusterB_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_gene</span><span class="o">.</span><span class="n">fasta</span>
+        <span class="o">+--</span> <span class="n">minorg_clusterB_ref_</span><span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span><span class="n">_pep</span><span class="o">.</span><span class="n">fasta</span>
+</pre></div>
+</div>
+</section>
+<section id="output-files">
+<h2><span class="section-number">7.2. </span>Output files<a class="headerlink" href="#output-files" title="Permalink to this headline"></a></h2>
+<section id="minorg-log">
+<h3><span class="section-number">7.2.1. </span>minorg.log<a class="headerlink" href="#minorg-log" title="Permalink to this headline"></a></h3>
+<p>The logfile follows the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">raw</span> <span class="n">args</span><span class="p">))</span>
+<span class="n">minorg</span> <span class="o">--</span><span class="n">directory</span> <span class="o">./</span><span class="n">example_07_domain</span> <span class="o">--</span><span class="n">indv</span> <span class="n">ref</span> <span class="o">--</span><span class="n">gene</span> <span class="n">AT5G45050</span> <span class="o">--</span><span class="n">assembly</span> <span class="o">./</span><span class="n">subset_ref_TAIR10</span><span class="o">.</span><span class="n">fasta</span> <span class="o">--</span><span class="n">annotation</span> <span class="o">./</span><span class="n">subset_ref_TAIR10</span><span class="o">.</span><span class="n">gff</span> <span class="o">--</span><span class="n">domain</span> <span class="mi">214815</span>
+
+<span class="p">((</span><span class="n">expanded</span> <span class="n">args</span><span class="p">))</span>
+<span class="n">reference_set</span><span class="p">:</span>        <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">arabidopsis_genomes</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">genome_set</span><span class="p">:</span>   <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">subset_genome_mapping</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">cluster_set</span><span class="p">:</span>  <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">cluster_mapping</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">output_ver</span><span class="p">:</span>   <span class="mi">4</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="n">prioritise_nr</span><span class="p">:</span>        <span class="kc">False</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="n">auto</span><span class="p">:</span> <span class="kc">True</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="n">sets</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="n">accept_invalid</span><span class="p">:</span>       <span class="kc">False</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="n">exclude</span><span class="p">:</span>      <span class="kc">None</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">&lt;</span><span class="n">more</span> <span class="n">arguments</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where ‘raw arguments’ log the exact command and parameters used and ‘expanded arguments’ shows all arguments, including those that the user did not explicitly specify in their command.</p>
+<p>Warning and/or error messages may be logged after the arguments.</p>
+</section>
+<section id="xxx-mafft-fasta">
+<h3><span class="section-number">7.2.2. </span>XXX_mafft.fasta<a class="headerlink" href="#xxx-mafft-fasta" title="Permalink to this headline"></a></h3>
+<p>The file ending in ‘_mafft.fasta’ contains a sequence alignment of targets to reference genes generated using MAFFT.</p>
+</section>
+<section id="xxx-targets-fasta">
+<h3><span class="section-number">7.2.3. </span>XXX_targets.fasta<a class="headerlink" href="#xxx-targets-fasta" title="Permalink to this headline"></a></h3>
+<p>The file ending in ‘_targets.fasta’ contains target sequence(s).</p>
+<p>The names of target sequences follow the following format for reference genes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Reference</span><span class="o">|&lt;</span><span class="n">reference</span> <span class="n">alias</span><span class="o">&gt;|&lt;</span><span class="n">domain</span><span class="o">&gt;|&lt;</span><span class="n">feature</span> <span class="nb">type</span><span class="o">&gt;|&lt;</span><span class="n">stitched</span><span class="o">/</span><span class="n">complete</span><span class="o">&gt;|&lt;</span><span class="n">gene</span> <span class="n">ID</span><span class="o">&gt;|&lt;</span><span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Reference alias: Unique alias given to each reference genome</p></li>
+<li><p>Domain: PSSM ID or domain name</p></li>
+<li><p>Feature type: GFF3 feature type</p></li>
+<li><p>Stitched/complete: Whether sequences were concatenated
+* Stitched: Concatenated sequence, generated by stitching together regions of the requested GFF3 feature type. For example, individual CDS regions concatenated together into a single translatable sequence is considered ‘stitched’. On the other hand
+* Complete: Sequence that includes intervening regions that may or may not also be of the requested GFF3 feature type. For example, a sequence that spans the first base of the first CDS block to the last base of the last CDS block would be a ‘complete’ CDS sequence.</p></li>
+<li><p>Gene ID: Gene ID</p></li>
+<li><p>Range(s): Ranges of the gene that this sequence spans
+* For stitched sequences, there may be multiple feature ranges in the format ‘0-10,20-30’
+* For complete sequences, there will only be a single range spanning the first base of the first feature to the last base of the last feature of that feature type in the gene.</p></li>
+</ul>
+<p>The names of target sequences follow the following format if they were discovered by homology inferrence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">query</span> <span class="n">alias</span><span class="o">&gt;|&lt;</span><span class="n">molecule</span><span class="o">&gt;|&lt;</span><span class="n">i</span><span class="o">&gt;|&lt;</span><span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Query alias: Unique alias given to each query file</p></li>
+<li><p>Molecule: Sequence ID of sequence the target is from
+* For example, if the query is a FASTA file with sequences named ‘ChrA’, ‘ChrB’, and ‘scaffold_001’, and the target is found on scaffold_001, the value of this field will be ‘scaffold_001’</p></li>
+<li><p>i: Unique number given to each target sequence from the same query file</p></li>
+<li><p>Range(s): Range of the target in the molecule</p></li>
+</ul>
+</section>
+<section id="grna-fasta-files">
+<h3><span class="section-number">7.2.4. </span>gRNA FASTA files<a class="headerlink" href="#grna-fasta-files" title="Permalink to this headline"></a></h3>
+<p>Names of files containing gRNA sequences follow the following format: &lt;prefix&gt;_gRNA_&lt;category&gt;.fasta</p>
+<p>The categories are:</p>
+<ul class="simple">
+<li><p>all: all candidate gRNA, regardless of pass/fail status</p></li>
+<li><p>pass: candidate gRNA that have passed all valid checks</p></li>
+<li><p>final: final gRNA selected in minimum sets</p></li>
+</ul>
+</section>
+<section id="grna-map-files">
+<h3><span class="section-number">7.2.5. </span>gRNA .map files<a class="headerlink" href="#grna-map-files" title="Permalink to this headline"></a></h3>
+<p>Names of files containing information for mapping gRNA to targets format: &lt;prefix&gt;_gRNA_&lt;category&gt;.map</p>
+<p>As with gRNA FASTA files, the categories are:</p>
+<ul class="simple">
+<li><p>all: all candidate gRNA, regardless of pass/fail status</p></li>
+<li><p>pass: candidate gRNA that have passed all valid checks</p></li>
+<li><p>final: final gRNA selected in minimum sets</p></li>
+</ul>
+<p>The format of the files look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gRNA</span> <span class="nb">id</span>       <span class="n">gRNA</span> <span class="n">sequence</span>   <span class="n">target</span> <span class="nb">id</span>       <span class="n">target</span> <span class="n">sense</span>    <span class="n">gRNA</span> <span class="n">strand</span>     <span class="n">start</span>   <span class="n">end</span>     <span class="nb">set</span>     <span class="n">background</span>      <span class="n">GC</span>      <span class="n">feature</span>
+<span class="n">gRNA_001</span>      <span class="n">CTATGGGTTTGGCGAAAGTA</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">+</span>       <span class="mi">4</span>       <span class="mi">23</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">fail</span>
+<span class="n">gRNA_002</span>      <span class="n">TCAAAAGTTCTCCTTATCCA</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">+</span>       <span class="mi">38</span>      <span class="mi">57</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">fail</span>
+<span class="n">gRNA_003</span>      <span class="n">AAATCTTTGATGTTTACTTA</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">+</span>       <span class="mi">79</span>      <span class="mi">98</span>      <span class="mi">1</span>       <span class="k">pass</span>    <span class="n">fail</span>    <span class="n">fail</span>
+<span class="n">gRNA_004</span>      <span class="n">GTCTTTGCTTTTTACTTCTC</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">+</span>       <span class="mi">111</span>     <span class="mi">130</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="n">fail</span>
+<span class="n">gRNA_005</span>      <span class="n">TATAGATGTGCCAGCTCGAA</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">+</span>       <span class="mi">140</span>     <span class="mi">159</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="k">pass</span>
+<span class="n">gRNA_006</span>      <span class="n">GCTCGAAAGGTTGTTTTGCT</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">+</span>       <span class="mi">153</span>     <span class="mi">172</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="k">pass</span>
+<span class="n">gRNA_007</span>      <span class="n">TAAGTAATTACTGAAACATT</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">-</span>       <span class="mi">206</span>     <span class="mi">225</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="n">fail</span>    <span class="k">pass</span>
+<span class="n">gRNA_008</span>      <span class="n">CTGAAACATTTGGATCAGTG</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">-</span>       <span class="mi">196</span>     <span class="mi">215</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="k">pass</span>
+<span class="n">gRNA_009</span>      <span class="n">AGCAAAACAACCTTTCGAGC</span>    <span class="n">Reference</span><span class="o">|</span><span class="n">Reference</span><span class="o">|</span><span class="mi">214815</span><span class="o">|</span><span class="n">gene</span><span class="o">|</span><span class="n">stitched</span><span class="o">|</span><span class="n">AT5G45050</span><span class="o">|</span><span class="mi">4139</span><span class="o">-</span><span class="mi">4382</span>    <span class="n">sense</span>   <span class="o">-</span>       <span class="mi">153</span>     <span class="mi">172</span>     <span class="mi">1</span>       <span class="k">pass</span>    <span class="k">pass</span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Column description:</p>
+<ol class="arabic simple">
+<li><p>gRNA id: Unique ID for each gRNA sequence, consistent with gRNA FASTA files</p></li>
+<li><p>gRNA sequence: gRNA sequence (upper case)</p></li>
+<li><p>target id: Sequence ID of target sequence, consistent with XXX_targets.fasta</p></li>
+<li><p>target sense: Whether target sequence is sense or antisense</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>This is detected by alignment with reference genes.</p></li>
+<li><p>If the user provided target sequences to the full programme or to the <code class="docutils literal notranslate"><span class="pre">seq</span></code> subcommand using <code class="docutils literal notranslate"><span class="pre">--target</span></code>, all entries in this field will be ‘NA’.</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>gRNA strand: Strand of gRNA relative to target sequence</p></li>
+<li><p>start: Start position of gRNA in target sequence</p></li>
+<li><p>end: End position of gRNA in target sequence</p></li>
+<li><p>set: gRNA set number</p>
+<ul class="simple">
+<li><p>Unless the file ends with ‘_final.map’, all entries in this field will be set to 1.</p></li>
+<li><p>If the file ends with ‘_final.map’, this value corresponds to the set a gRNA is assigned to.</p></li>
+</ul>
+</li>
+<li><p>background: Status of background check</p></li>
+<li><p>GC: Status of gRNA check</p></li>
+<li><p>feature: Status of within feature check</p></li>
+<li><p>Users may provide custom checks in additional columns</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parameters.html" class="btn btn-neutral float-left" title="6. Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="algorithms.html" class="btn btn-neutral float-right" title="8. Algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Rachelle R.Q. Lee.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

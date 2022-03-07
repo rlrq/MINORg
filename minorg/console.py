@@ -240,6 +240,7 @@ def generate_grna(
         ## output files: option A
         out_map: Path = typer.Option(*params.out_map(), resolve_path = True),
         out_fasta: Path = typer.Option(*params.out_fasta(), resolve_path = True),
+        out_pass: Path = typer.Option(*params.out_pass(), resolve_path = True),
 
         ## output files: option B
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
@@ -345,7 +346,8 @@ def filter_grna(
 
         ## input files
         map: Path = typer.Option(*params.map(), **params.map.options, **oparams.file_valid),
-        grna: Path = typer.Option(*params.grna(), **params.grna.options, **oparams.file_valid),
+        # grna: Path = typer.Option(*params.grna(), **params.grna.options, **oparams.file_valid),
+        rename: Path = typer.Option(*params.rename(), **params.rename.options, **oparams.file_valid),
         # alignment: Path = typer.Option(*params.alignment(), **params.alignment.options, **oparams.file_valid),
         target: Path = typer.Option(*params.target(), **params.target.options, **oparams.file_valid),
         reference: Optional[List[str]] = typer.Option(*params.reference(), **params.reference.options,
@@ -391,6 +393,7 @@ def filter_grna(
         ## output options
         out_map: Path = typer.Option(*params.out_map(), resolve_path = True),
         out_fasta: Path = typer.Option(*params.out_fasta(), resolve_path = True),
+        out_pass: Path = typer.Option(*params.out_pass(), resolve_path = True),
         in_place: bool = typer.Option(*params.in_place(), **params.in_place.options),
 
         ## background filter options
@@ -531,8 +534,9 @@ def minimumset(
 
         ## data input
         map: Path = typer.Option(*params.map(), **params.map.options, **oparams.file_valid),
-        grna: Path = typer.Option(*params.grna(), *params.fasta.names, **params.grna.options,
-                                  **oparams.file_valid),
+        # grna: Path = typer.Option(*params.grna(), *params.fasta.names, **params.grna.options,
+        #                           **oparams.file_valid),
+        rename: Path = typer.Option(*params.rename(), **params.rename.options, **oparams.file_valid),
         exclude: Path = typer.Option(*params.exclude(), **params.exclude.options, **oparams.file_valid),
         target: Path = typer.Option(*params.target(), **params.target.options),
 

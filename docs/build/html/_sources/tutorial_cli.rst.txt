@@ -5,6 +5,13 @@ In all the following tutorial, the current directory/working directory is presum
 
 Note that all command line code snippets in the following tutorial are for **bash terminal**. You may have to adapt them according to your operating system.
 
+
+Setting up the tutorial
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To ensure that the examples in this tutorial work, please replace '/path/to' in the files 'arabidopsis_genomes.txt', 'athaliana_genomes.txt', and 'subset_genome_mapping.txt' with the full path to the directory containing the example files.
+
+
 Defining target sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -20,7 +27,7 @@ Let us begin with the simplest MINORg execution:
    Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
    
    1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
-   Output files have been generated in /path/to/current/directory/example00
+   Output files have been generated in /path/to/current/directory/example_00_target
 
 The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``--target ./sample_CDS.fasta``) and to output files into directory ``--directory ./example00``. By default, MINORg generates 20 bp gRNA using NGG PAM.
 
@@ -200,21 +207,20 @@ While it is in theory possible to use the remote CDD database & servers instead 
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --rpsblast /path/to/rpsblast/executable --remote-rps \
             --domain 214815
+..
+   Feature as targets
+   ++++++++++++++++++
 
+   You may specify gene features to restrict gRNA to. By default, MINORg generates gRNA in coding regions (CDS). However, so long as a feature type is valid in the GFF3 annotation file provided to MINORg, gRNA can theoretically be designed for any feature type.
 
-Feature as targets
-++++++++++++++++++
+   .. code-block:: bash
 
-You may specify gene features to restrict gRNA to. By default, MINORg generates gRNA in coding regions (CDS). However, so long as a feature type is valid in the GFF3 annotation file provided to MINORg, gRNA can theoretically be designed for any feature type.
+      $ minorg --directory ./example_08_feature \
+               --indv ref --gene AT5G45050 \
+               --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+               --feature three_prime_UTR
 
-.. code-block:: bash
-
-   $ minorg --directory ./example_08_feature \
-            --indv ref --gene AT5G45050 \
-            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
-            --feature three_prime_UTR
-
-The above example will generate gRNA in the 100 bp 3' UTR of AT5G45050.
+   The above example will generate gRNA in the 100 bp 3' UTR of AT5G45050.
 
 
 Defining gRNA
@@ -226,7 +232,7 @@ By default, MINORg generates 20 bp gRNA using SpCas9's NGG PAM. You may specify 
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_09_grna \
+   $ minorg --directory ./example_08_grna \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --length 19 --pam Cas12a
@@ -244,7 +250,7 @@ Filter by GC content
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_10_gc \
+   $ minorg --directory ./example_09_gc \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --gc-min 0.2 --gc-max 0.8
@@ -259,7 +265,7 @@ See: :ref:`Algorithms:Off-target assessment`
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_11_ot_ref \
+   $ minorg --directory ./example_10_ot_ref \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --screen-reference \
@@ -274,20 +280,41 @@ In the above example, MINORg will screen gRNA for off-targets in:
 * Two non-reference genomes (``--ot-indv 9654,9655 --genome-set ./subset_genome_mapping.txt``)
   
   * ``--ot-indv`` functions similarly to ``--indv`` in that it requires ``--genome-set``, except that ``--ot-indv`` specifies non-refernece genomes for off-target assessment
+  * Note that any AT5G45050 homologues in these two genomes will NOT be masked. This means that only gRNA that do not target any AT5G45050 homologues in these two non-reference genomes will pass this off-target check.
+    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``--mask <FASTA>``. You may use subcommand ``seq`` (see :ref:`Tutorial_cli:Subcommand \`\`seq\`\``) to identify these homologues.
 
 ``--ot-gap`` and ``--ot-mismatch`` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
 
-In this case, ``--screen-reference`` is actually redundant as the genome from which targets are obtained (which, because of ``--indv ref``, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from non-reference genomes, the reference genome is not automatically included for off-target assessment and thus ``--screen-reference`` is NOT redundant. Additionally, do note that the genes passed to ``--gene`` are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.
+In the case above, ``--screen-reference`` is actually redundant as the genome from which targets are obtained (which, because of ``--indv ref``, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from **non-reference genomes**, the reference genome is not automatically included for off-target assessment and thus ``--screen-reference`` is NOT redundant. Additionally, do note that the genes passed to ``--gene`` are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_12_ot_nonref \
+   $ minorg --directory ./example_11_ot_nonref \
             --indv 9654 --genome-set ./subset_genome_mapping.txt \
             --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --screen-ref --background ./subset_ref_Araly2.fasta --background ./subset_ref_Araha1.fasta \
             --ot-indv 9655 \
             --ot-gap 2 --ot-mismatch 2
+
+PAM-less off-target check
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, MINORg checks for the presence of PAM sites next to potential off-target hits. If there are no PAM sites, MINORg considers that hit non-problematic. You may override this behaviour using ``--ot-pamless``. This tells MINORg to mark off-target hits that meet the ``--ot-gap`` or ``--ot-mismatch`` thresholds as problematic regardless of the presence or absence of PAM sites nearby.
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_12_ot_pamless \
+            --indv 9654 --genome-set ./subset_genome_mapping.txt \
+            --gene AT5G45050 \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+            --screen-ref --background ./subset_ref_Araly2.fasta --background ./subset_ref_Araha1.fasta \
+            --ot-indv 9655 \
+            --ot-gap 2 --ot-mismatch 2 \
+            --ot-pamless
+
+Skip off-target check
+^^^^^^^^^^^^^^^^^^^^^
 
 To skip off-target check entirely, use ``--skip-bg-check``.
 
@@ -364,7 +391,7 @@ The gRNA names in the file passed to ``--exclude`` do not matter. Only the seque
 Accepting unknown checks
 ++++++++++++++++++++++++
 
-Sometimes, not all filtering checks (GC, background, and feature) are set for all sequences. This is generally not an issue if you use the full programme (i.e. ``minorg <arguments>``), but may be relevant if you use the 'minimumset' subcommand (i.e. ``minorg minimumset <arguments>``) with a modified mapping file OR a mapping file from the 'filter' subcommand where not all filters have been applied.
+Sometimes, not all filtering checks (GC, background, and feature) are set for all sequences. This is not an issue if you use the full programme (i.e. ``minorg <arguments>``), but may be relevant if you are re-generating sets using the 'minimumset' subcommand (i.e. ``minorg minimumset <arguments>``) with a modified mapping file OR a mapping file from the 'filter' subcommand where not all filters have been applied.
 
 Let us take a look at 'sample_custom_check.map', where we've added a custom check called 'my_custom_check' in the last column::
 
@@ -389,7 +416,225 @@ An invalid/unset check is an 'NA'. If a check is unset for all entries (as is th
                        --map ./sample_custom_check.map \
                        --accept-invalid
 
+                       
+Manually approve gRNA sets
+++++++++++++++++++++++++++
 
+You may opt to manually inspect each gRNA set before MINORg write them to file using the ``--manual`` flag.
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_19_manual --target ./sample_CDS.fasta
+            --manual
+   	ID	sequence (Set 1)
+	gRNA_001	GGAATACAAGAGATTATCGA
+   Hit 'x' to continue if you are satisfied with these sequences. Otherwise, enter the sequence ID or sequence of an undesirable gRNA (case-sensitive) and hit the return key to update this list: x
+   Final gRNA sequence(s) have been written to minorg_gRNA_final.fasta
+   Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
+   
+   1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
+   Output files have been generated in /path/to/current/directory/example_19_manual
+
+
+Subcommands
+~~~~~~~~~~~
+
+MINORg comprises of four main steps:
+
+#. Target sequence identification
+#. Candidate gRNA generation
+#. gRNA filtering
+#. Minimum gRNA set generation
+
+As users may only wish to execute a subset of these steps instead of the full programme, MINORg also provides four subcommands corresponding to these four steps:
+
+#. ``seq``
+#. ``grna``
+#. ``filter``
+#. ``minimumset``
+
+The subcommands may be useful if you already have a preferred off-target/on-target assessment software. In this case, you may execute subcommands ``seq`` and ``grna``, submit the gRNA output by MINORg for off-target/on-target assessment, update the .map file output by MINORg with the status of each gRNA for that off-target/on-target assessment, and execute ``minimumset`` to obtain a desired number of minimum gRNA sets.
+   
+Subcommand ``seq``
+++++++++++++++++++
+
+The ``seq`` subcommand identifies target sequences, whether by extracting them from a reference genome or inferring homologues in unannotated genomes. All parameters described in :ref:`Tutorial_cli:Defining target sequences` (except ``--target``) and :ref:`Tutorial_cli:Defining reference genomes` apply.
+
+This step will output target sequences into a file ending with '_targets.fasta'.
+
+To use this subcommand, simply replace the command ``minorg`` with ``minorg seq``.
+
+.. code-block:: bash
+
+   $ minorg seq --directory ./example_20_subcmdseq \
+                --query ./subset_9654.fasta --query ./subset_9655.fasta \
+                --gene AT1G10920 \
+                --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
+
+Subcommand ``grna``
++++++++++++++++++++
+
+The ``grna`` subcommand generates gRNA within target sequences. It incorporates parts of the ``seq`` and ``filter`` subcommands in order to provide rudimentary filtering for gRNA within specific GFF3 features (e.g. CDS) for reference genes as well as by GC content. All parameters described in :ref:`Tutorial_cli:Defining target sequences` (except those related to homology discovery in unannotated genomes such as ``query``, ``indv``, and ``genome-set``), :ref:`Tutorial_cli:Defining reference genomes`, :ref:`Tutorial_cli:Defining gRNA`, and :ref:`Tutorial_cli:Filter by GC content`, and :ref:`Tutorial_cli:Filter by feature` apply.
+
+Unlike the full programme or the ``seq`` subcommand, however, ``--indv ref`` is not necessary to specify reference genes as target. As this subcommand does not support homologue discovery, if ``--gene`` or ``--cluster`` is used, ``--indv ref`` will automatically be filled since unannotated genomes are not allowed.
+
+This step will output target sequences into a file ending with '_targets.fasta' if ``--target`` was not used. gRNA sequences will be written into files ending with '_gRNA_all.fasta' (for all candidate gRNA) and '_gRNA_pass.fasta' (for candidate gRNA that pass GC and feature checks). A file ending with '_gRNA_all.map' that maps gRNA to their targets will also be generated. You may optionally specify the location of the FASTA and .map output files using:
+
+* ``--out-fasta``: path to output file that originally ends with '_gRNA_all.fasta'
+* ``--out-pass``: path to output file that originally ends with '_gRNA_pass.fasta'
+* ``--out-map``: path to output file that originally ends with '_gRNA_all.map'
+
+To use this subcommand, simply replace the command ``minorg`` with ``minorg grna``.
+
+.. code-block:: bash
+
+   $ minorg grna --directory ./example_21_subcmdgrna \
+                 --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
+                 --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+                 --length 19 --pam Cas12a \
+                 --feature three_prime_UTR \
+                 --gc-min 0.2 --gc-max 0.8 \
+                 --out-map ./example_20.map
+
+Subcommand ``filter``
++++++++++++++++++++++
+
+The ``filter`` subcommand takes in a compulsory MINORg .map file (``--map``) and rewrites some/all checks. You should specify the checks you wish to re-assess using some combination of ``--gc-check``, ``--background-check``, and/or ``--feature-check`` flags OR ``--check-all`` to raise all three flags. For in-place modification of the .map file, use ``--in-place``. Otherwise, MINORg will write a new file using the default naming format of '<prefix>_gRNA_all.map' (this may still overwrite the original file if the directory and prefix are identical to what was used to generate the original file).
+
+gRNA sequences will be written into files ending with '_gRNA_all.fasta' (for all candidate gRNA) and '_gRNA_pass.fasta' (for candidate gRNA that pass the updated checks). A file ending with '_gRNA_all.map' that maps gRNA to their targets will also be generated with the updated check statuses. As with subcommand ``grna``, you may optionally specify the location of the FASTA and .map output files using:
+
+* ``--out-fasta``: path to output file that originally ends with '_gRNA_all.fasta'
+* ``--out-pass``: path to output file that originally ends with '_gRNA_pass.fasta'
+* ``--out-map``: path to output file that originally ends with '_gRNA_all.map'
+
+To use this subcommand, simply replace the command ``minorg`` with ``minorg filter``.
+
+In all cases, you may rename the gRNA using ``--rename <FASTA>``, where the FASTA file contains the gRNA sequences you wish to rename with sequence IDs of the names you wish to rename them to.
+
+GC check
+^^^^^^^^
+
+All parameters described in :ref:`Tutorial_cli:Filter by GC content` apply.
+
+.. code-block:: bash
+
+   $ minorg filter --directory ./example_22_subcmdfilter_gc \
+                   --map ./sample_custom_check.map \
+                   --gc-check --gc-min 0.2 --gc-max 0.8
+
+Background check
+^^^^^^^^^^^^^^^^
+
+All parameters described in :ref:`Tutorial_cli:Filter by off-target` apply. Additionally, you should supply target sequences using ``--target`` so that MINORg can mask them (this tells MINORg that any gRNA hits to them is in fact on-target and NOT off-target). Any additional sequences to be masked may be provided using ``--mask <FASTA>``. If you are using ``--screen-ref`` to include reference genome(s) (see :ref:`Tutorial_cli:Multiple reference genomes` for how to specify multiple reference genomes) in the off-target screen, you may specify reference genes to be masked using ``--mask-gene`` or ``--mask-cluster`` (unlike ``--cluster``, all clusters passed to ``--mask-cluster`` will be processed simultaneously; i.e. there will not be separate executions for each cluster).
+
+Let us first generate a .map file for filtering.
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_23_subcmdfilter_bg_pt1 \
+            --indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
+            --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+            --skip-bg-check
+
+In the code above, we skipped off-targete check by raising the ``--skip-bg-check`` flag. But we've changed out mind and would like to screen the reference genome and the non-reference genomes that these targets are from AND we don't want our gRNA to be able to target any genes in 'subset_9944.fasta' and 'subset_9947'. We can do that using the ``filter`` subcommand.
+
+.. code-block:: bash
+
+   $ minorg filter --directory ./example_23_subcmdfilter_bg_pt2 \
+                   --map ./example_23_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map \
+                   --background-check \
+                   --target ./example_23_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta \
+                   --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+                   --screen-ref \
+                   --mask-cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
+                   --ot-indv 9654,9655,9944,9947 --genome-set ./subset_genome_mapping.txt
+
+The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the ``filter`` subcommand on files that have already been generated.
+
+Feature check
+^^^^^^^^^^^^^
+
+All parameters described in :ref:`Tutorial_cli:Filter by feature` apply. Additionally, you will need to provide a FASTA file of target sequences (using ``--target <FASTA>``), reference genome(s) (see :ref:`Tutorial_cli:Defining reference genomes`), and genes (using ``--gene <gene IDs>`` or ``--cluster <cluster alias>``). The specified reference gene(s) will be extracted from the reference genome(s) and aligned with target sequence(s) in order for MINORg to infer feature boundaries in target sequence(s). See :ref:`Algorithms:Within-feature inference` for the algorithm of how feature boundaries are inferred.
+
+Do note that unlike the full programme or the ``seq`` subcommand, all clusters passed to ``--cluster`` will be processed simultaneously (i.e. there will not be separate executions for each cluster).
+
+Let us first generate a .map file for filtering.
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_24_subcmdfilter_feature_pt1 \
+            --indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
+            --gene AT5G45050 \
+            --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
+
+By default, MINORg sets the desired feature to 'CDS'. You can re-assess and overwrite the 'feature' check in the .map file to only allow gRNA in the 3' UTR using ``minorg filter`` with the ``--feature-check`` flag raised.
+
+.. code-block:: bash
+
+   $ minorg filter --directory ./example_24_subcmdfilter_feature \
+                   --map ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+                   --feature-check \
+                   --target ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
+                   --gene AT5G45050 \
+                   --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+                   --feature three_prime_UTR
+
+Combination of checks
+^^^^^^^^^^^^^^^^^^^^^
+
+You can execute all checks (or some combination of them) in a single ``minorg filter`` command as well, if you wish. Just make sure that you raise the appropriate flag(s).
+
+To use some combination of checks, simply raise the relevant flags (``--gc-check``, ``--background-check``, and/or ``--feature-check``). In the example below, we filter the gRNA generated by full MINORg execution in :ref:`Tutorial_cli:Feature check` by both GC content (``--gc-check``) as well as gene feature (``--feature-check``).
+
+.. code-block:: bash
+
+   $ minorg filter --directory ./example_25_subcmdfilter_gcfeature \
+                   --map ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+                   --gc-check \
+                   --gc-min 0.2 --gc-max 0.8 \
+                   --feature-check \
+                   --target ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
+                   --gene AT5G45050 \
+                   --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+                   --feature three_prime_UTR
+
+To execute all checks, use ``--check-all``. In the example below, we filter the gRNA generated by full MINORg execution in :ref:`Tutorial_cli:Feature check` by all checks.
+
+.. code-block:: bash
+
+   $ minorg filter --directory ./example_26_subcmdfilter_all \
+                   --map ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+                   --check-all \
+                   --gc-min 0.2 --gc-max 0.8 \ ## GC
+                   --target ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \ ## feature
+                   --gene AT5G45050 \
+                   --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
+                   --feature three_prime_UTR \
+                   --screen-ref --mask-gene AT5G45050 ## off-target
+
+Subcommand ``minimumset``
++++++++++++++++++++++++++
+
+The ``minimumset`` subcommand generates mutually exclusive minimum set(s) of gRNA, where each set is capable of covering all targets. All parameters described in :ref:`Tutorial_cli:Generating minimum gRNA set(s)` apply.
+
+This step will write final gRNA sequences into a file ending with '_gRNA_final.fasta'. A file ending with '_gRNA_final.map' that maps gRNA to their targets will also be generated. You may optionally specify the location of the FASTA and .map output files using:
+
+* ``--out-fasta``: path to output file that originally ends with '_gRNA_final.fasta'
+* ``--out-map``: path to output file that originally ends with '_gRNA_final.map'
+
+**NOTE:** Unlike subcommands ``grna`` and ``filter``, ``--out-fasta`` and ``--out-map`` are used to specify output files for **FINAL** gRNA sets, not all candidate gRNA.
+
+To use this subcommand, simply replace the command ``minorg`` with ``minorg grna``.
+
+.. code-block:: bash
+
+   $ minorg minimumset --directory ./example_27_subcmdminimumset
+                       --map ./example_05_query/minorg/minorg_gRNA_all.map \
+                       --target ./example_05_query/minorg/minorg_gene_targets.fasta \
+                       --set 5 --manual --prioritise-nr
+
+In order for MINORg to better assess a gRNA's proximity to the 5' end (of hopefully sense strand) of a target in the event a tie-breaker is necessary, it is strongly suggested that target sequences be provided using ``--target <FASTA>`` so MINORg knows how long a target sequence is. This is especially so if the target sequences are antisense ones (you can check this using the .map file) generated by MINORg's inferences of homologues in unannotated genomes.
 
 Defining reference genomes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,9 +652,9 @@ Similar to ``--clusters`` and ``--indv``, MINORg accepts a lookup file for refer
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_xx_multiref \
+   $ minorg --directory ./example_28_multiref \
             --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 \
-            --reference-set ./arabidopsis_genomes.txt --reference tair10,araly2,araha1
+            --reference tair10,araly2,araha1 --reference-set ./arabidopsis_genomes.txt
 
 In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.
 
@@ -425,7 +670,7 @@ When using ``--domain``, users should ensure that the correct genetic code is sp
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example_xx_geneticcode \
+   $ minorgpy --directory ./example_29_geneticcode \
               --indv ref --gene gene-Q0275 \
               --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
               --domain 366140 --genetic-code 3
@@ -443,9 +688,24 @@ MINORg requires standard attribute field names in GFF3 files in order to properl
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example_xx_attrmod \
+   $ minorgpy --directory ./example_30_attrmod \
               --indv ref --gene Os01t0100100 \
               --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
               --attr-mod 'mRNA:Parent=Locus_id'
 
 The IRGSP 1.0 reference genome for rice (*Oryza sativa* subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of 'Parent', which is the standard name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation use 'Locus_id'. See :ref:`Parameters:Attribute modification` for more details on how to format the input to ``--attr-mod``.
+
+Multithreading
+~~~~~~~~~~~~~~
+
+MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using ``--query`` or ``--indv``), have multiple reference genomes (``--reference``), or multiple background sequences (``--background``).
+
+To run MINORg with parallel processing, use ``--thread <number of threads>``.
+
+.. code-block:: bash
+
+   $ minorg --directory ./example_31_thread \
+            --query ./subset_9654.fasta --query ./subset_9655.fasta \
+            --gene AT1G10920 \
+            --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta \
+            --thread 2

@@ -513,7 +513,7 @@ class MINORgCLI (MINORg):
                                                            cli_lookup_arg = "--clusters",
                                                            lookup_fmt = "alias-members",
                                                            param = self.params.cluster_set)
-        self.cluster_set = set_fname
+        self.cluster_set = os.path.abspath(set_fname)
         self.cluster_aliases = {**self.cluster_aliases, **set_aliases}
         return val
     
@@ -1017,6 +1017,10 @@ class MINORgCLI (MINORg):
         # if sum(map(lambda x: x is not None, [self.args.gene, self.args.cluster, self.args.target])) > 1:
         #     raise click.UsageError( ("'-g <gene(s)>', '-c <cluster(s)>', and '-t <path to FASTA file>'"
         #                              " are mutually exclusive.") )
+        if standalone:
+            if self.args.target and (self.args.gene or self.args.cluster):
+                raise click.UsageError( ("'-t <FASTA>' and '-g <gene(s)>' and '-c <cluster(s)>'"
+                                         " are mutually exclusive.") )
         ## REQUIRED ARGS
         ## check that --pam is provided
         if self.args.pam is None:
@@ -1027,6 +1031,8 @@ class MINORgCLI (MINORg):
         ## if -g/-c is provided, check that --ref and --annotation are also provided
         if (self.args.gene is not None or self.args.cluster is not None):
             self.reference_required("'-g <gene(s)>' or '-c <cluster(s)>'")
+            ## set query_reference to True
+            self.query_reference = True
         ## check that --rpsblast is provided if using --domain
         if self.args.domain is not None and self.args.domain != "gene":
             if self.args.rpsblast is None:
@@ -1068,8 +1074,9 @@ class MINORgCLI (MINORg):
             if not self.args.gc_check and not self.args.feature_check and not self.args.background_check:
                 raise click.UsageError( ("At least one of the following is required:"
                                          " '--gc-check', '--feature-check', '--background-check'") )
-            if self.args.feature_check and not (self.args.target and self.args.gene):
-                raise click.UsageError( ("'--target' and '--gene' are required if using '--feature-check'.") )
+            if self.args.feature_check and not (self.args.target and (self.args.gene or self.args.cluster)):
+                raise click.UsageError( ("'--target' and ['--gene' or '--cluster'] are required"
+                                         " if using '--feature-check'.") )
             if self.args.cluster and len(self.args.cluster) > 1:
                 raise click.BadParameter( ("Multiple clusters (--cluster) are not allowed if using"
                                            " subcommand 'filter'.") )
@@ -1088,14 +1095,15 @@ class MINORgCLI (MINORg):
         if standalone:
             if self.args.map is None:
                 raise click.UsageError("'--map <path to minorg .map file>' is required.")
-            if self.args.background_check:
-                ## if args.grna is not provided, create FASTA file from .map file
-                if self.args.grna is None:
-                    self.args.grna = self.mkfname("tmp_grna_all.fasta", prefix = False, tmp = True)
-                    grnahits = gRNAHits()
-                    # grnahits.parse_from_mapping(self.args.map, version = None)
-                    grnahits.parse_from_mapping(self.args.map)
-                    grnahits.write_fasta(self.args.grna, write_all = True)
+            ## commented out because self.grna_fasta will be written when subcmd filter is used regardless of checks
+            # if self.args.background_check:
+            #     ## if args.grna is not provided, create FASTA file from .map file
+            #     if self.args.grna is None:
+            #         self.args.grna = self.mkfname("tmp_grna_all.fasta", prefix = False, tmp = True)
+            #         grnahits = gRNAHits()
+            #         # grnahits.parse_from_mapping(self.args.map, version = None)
+            #         grnahits.parse_from_mapping(self.args.map)
+            #         grnahits.write_fasta(self.args.grna, write_all = True)
             if self.args.in_place:
                 self.args.out_map = self.args.map
         ## feature filter
@@ -1105,7 +1113,10 @@ class MINORgCLI (MINORg):
             # if standalone and not self.args.alignment:
             #     raise click.UsageError("'--alignment <path to FASTA> is required if using '--filter-feature'.")
             if not (self.args.gene or self.args.cluster):
-                raise click.UsageError("'--gene <gene ID(s)> is required if using '--feature-check'.'")
+                raise click.UsageError( ("'--gene <gene ID(s)>' or '--cluster <cluster alias>'"
+                                         " is required if using '--feature-check'.'") )
+            if (self.args.gene and self.args.cluster):
+                raise click.UsageError("'-g <gene ID(s)>' and '-c <cluster alias(es)>' are mutually exclusive.")
             self.reference_required("'--filter-feature'")
         ## background filter
         if self.args.background_check:
@@ -1211,6 +1222,9 @@ class MINORgCLI (MINORg):
         
         self.mask_gene_sets = {'mask': ('gene1', 'gene2'), 'unmask': ('gene3',)}
         """
+        ## if standalone, combine all clusters (if any) into a single gene set under the master prefix
+        if standalone:
+            self.gene_sets = {self.master_prefix: tuple(itertools.chain(*self.gene_sets.values()))}
         # genes = (set() if self.args.gene is None else set(self.args.gene))
         genes = set()
         if self.gene_sets: genes |= set(itertools.chain(*self.gene_sets.values()))
@@ -1339,6 +1353,7 @@ class MINORgCLI (MINORg):
         self.copy_args("rpsblast", "db", "remote_rps", "thread", "pam", "target", "length")
         self.grna_map = self.args.out_map
         self.grna_fasta = self.args.out_fasta
+        self.pass_fasta = self.args.out_pass
         return
     
     def parse_filter_args(self):
@@ -1360,11 +1375,13 @@ class MINORgCLI (MINORg):
                        "target", "feature", "max_insertion", "min_within_n", "min_within_fraction")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
+        if self.args.rename:
+            self.rename_grna(str(self.args.rename.resolve()))
         if self.args.reset_checks:
             self.grna_hits.clear_checks()
-        self.grna_fasta = self.args.grna
+        self.grna_fasta = self.args.out_fasta
         self.grna_map = self.args.out_map
-        self.pass_fasta = self.args.out_fasta
+        self.pass_fasta = self.args.out_pass
         return
     
     def parse_minimumset_args(self):
@@ -1378,7 +1395,9 @@ class MINORgCLI (MINORg):
                        "accept_invalid")
         ## args that require a little more parsing/have different names
         self.parse_grna_map_from_file(self.args.map)
-        self.grna_fasta = self.args.grna
+        if self.args.rename:
+            self.rename_grna(str(self.args.rename.resolve()))
+        # self.grna_fasta = self.args.grna
         self.final_map = self.args.out_map
         self.final_fasta = self.args.out_fasta
         return
@@ -1495,8 +1514,24 @@ class MINORgCLI (MINORg):
         """
         for prefix in self.gene_sets:
             self.set_genes(prefix)
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error",
+                                        message = "minorg.MINORgWarning: No target sequences found.",
+                                        category = MINORgWarning)
+                try:
+                    super().seq(quiet = False)
+                except MINORgWarning as e:
+                    print(e.message)
+                    if self.args.cluster:
+                        warnings.warn(f"No target sequences found for {prefix}.",
+                                      MINORgWarning)
+                    else:
+                        warnings.warn(("No target sequences found for this set of genes:"
+                                       f" {','.join(self.genes)}"),
+                                      MINORgWarning)
             super().grna()
             self.write_all_grna_map()
+            self.write_pass_grna_fasta()
         self.reset_prefix()
         return
     
@@ -1507,6 +1542,8 @@ class MINORgCLI (MINORg):
         Executes background, feature, and GC check.
         Writes .map file detailing check statuses of each gRNA-target combination.
         """
+        if self.grna_fasta is None:
+            self.write_all_grna_fasta()
         if self.background_check:
             print("Executing background check")
             self.filter_background()

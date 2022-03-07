@@ -1877,8 +1877,7 @@ class MINORg (PathHandler):
             raise MINORgError( ("MINORg.filter_background requires gRNA"
                                 " (generated with self.grna())") )
         if self.grna_fasta is None:
-            self.grna_fasta = self.results_fname("gRNA_all.fasta") ## write gRNA to file so we can BLAST it
-            self.grna_hits.write_fasta(self.grna_fasta, write_all = True)
+            self.write_all_grna_fasta() ## write gRNA to file so we can BLAST it
         if mask_reference and not self.ref_gene and self.genes:
             ref_to_mask = self.mkfname("tmp_ref_to_mask.fasta", tmp = True)
             self.get_reference_seq(fout = ref_to_mask)

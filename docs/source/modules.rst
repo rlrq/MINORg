@@ -19,6 +19,7 @@ Module contents
    tutorial_cli
    tutorial_py
    parameters
+   output
    algorithms
    examples
 

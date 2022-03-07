@@ -386,8 +386,12 @@ class Params():
         self.fasta = Param(None, "-f", "--fasta")
         self.thread = Param(1, "--thread")
         ## shared by grna, filter, and mininmumset
-        self.out_map = Param(None, "--out-map")
-        self.out_fasta = Param(None, "--out-fasta")
+        self.out_map = Param(None, "--out-map",
+                             help = "path to output .map file")
+        self.out_fasta = Param(None, "--out-fasta",
+                               help = "path to output FASTA file for all candidate gRNA")
+        self.out_pass = Param(None, "--out-pass",
+                              help = "path to output FASTA file for passing gRNA")
         
         ## homolog/homologue
         section_homologue = "homologue"
@@ -451,7 +455,7 @@ class Params():
         self.check_all = Param(False, "--check-all",
                                false_true = ("execute some checks", "execute all checks"),
                                description = "Filter gRNA by all checks")
-        self.gc_check = Param(True, "--gc-check/--skip-gc-check",
+        self.gc_check = Param(False, "--gc-check/--skip-gc-check",
                               false_true = ("skip GC content check", "execute GC content check"),
                               description = "Filter gRNA by GC content")
         self.feature_check = Param(False, "--feature-check/--skip-feature-check",
@@ -611,7 +615,9 @@ class Params():
         ## minimumset
         section_minimumset = "minimumset"
         get_minimumset = lambda x, **kwargs: conf_get(section_minimumset, x, **kwargs)
-        self.grna = Param(None, "--grna")
+        # self.grna = Param(None, "--grna")
+        self.rename = Param(None, "--rename",
+                            help = "FASTA file of gRNA to be rename")
         self.map = Param(..., "-m", "--map")
         self.in_place = Param(False, "--in-place",
                               false_true = ("writes .map to user-specified new file or default output file",
