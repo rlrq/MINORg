@@ -148,16 +148,16 @@ As with gRNA FASTA files, the categories are:
 
 The format of the files look like this::
   
-  gRNA id	gRNA sequence	target id	target sense	gRNA strand	start	end	set	background	GC	feature
-  gRNA_001	CTATGGGTTTGGCGAAAGTA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	4	23	1	pass	pass	fail
-  gRNA_002	TCAAAAGTTCTCCTTATCCA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	38	57	1	pass	pass	fail
-  gRNA_003	AAATCTTTGATGTTTACTTA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	79	98	1	pass	fail	fail
-  gRNA_004	GTCTTTGCTTTTTACTTCTC	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	111	130	1	pass	pass	fail
-  gRNA_005	TATAGATGTGCCAGCTCGAA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	140	159	1	pass	pass	pass
-  gRNA_006	GCTCGAAAGGTTGTTTTGCT	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	153	172	1	pass	pass	pass
-  gRNA_007	TAAGTAATTACTGAAACATT	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	-	206	225	1	pass	fail	pass
-  gRNA_008	CTGAAACATTTGGATCAGTG	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	-	196	215	1	pass	pass	pass
-  gRNA_009	AGCAAAACAACCTTTCGAGC	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	-	153	172	1	pass	pass	pass
+  gRNA id	gRNA sequence	target id	target sense	gRNA strand	start	end	set	background	GC	feature	my_custom_check
+  gRNA_001	CTATGGGTTTGGCGAAAGTA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	4	23	1	pass	pass	fail	pass
+  gRNA_002	TCAAAAGTTCTCCTTATCCA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	38	57	1	pass	pass	fail	pass
+  gRNA_003	AAATCTTTGATGTTTACTTA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	79	98	1	pass	fail	fail	fail
+  gRNA_004	GTCTTTGCTTTTTACTTCTC	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	111	130	1	pass	pass	fail	pass
+  gRNA_005	TATAGATGTGCCAGCTCGAA	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	140	159	1	pass	pass	pass	fail
+  gRNA_006	GCTCGAAAGGTTGTTTTGCT	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	+	153	172	1	pass	pass	pass	fail
+  gRNA_007	TAAGTAATTACTGAAACATT	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	-	206	225	1	pass	fail	pass	pass
+  gRNA_008	CTGAAACATTTGGATCAGTG	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	-	196	215	1	pass	pass	pass	pass
+  gRNA_009	AGCAAAACAACCTTTCGAGC	Reference|Reference|214815|gene|stitched|AT5G45050|4139-4382	sense	-	153	172	1	pass	pass	pass	pass
 
 Column description:
 
@@ -177,7 +177,9 @@ Column description:
    * Unless the file ends with '_final.map', all entries in this field will be set to 1.
    * If the file ends with '_final.map', this value corresponds to the set a gRNA is assigned to.
    
-#. background: Status of background check
-#. GC: Status of gRNA check
-#. feature: Status of within feature check
+#. background: Status of background check (only in file ending with '_all.map')
+#. GC: Status of gRNA check (only in file ending with '_all.map')
+#. feature: Status of within feature check (only in file ending with '_all.map')
 #. Users may provide custom checks in additional columns
+   
+   * In this example, I've named my custom check 'my_custom_check'
