@@ -3,7 +3,7 @@ Tutorial (Command line)
 
 In all the following tutorial, the current directory/working directory is presumed to contain all files in https://github.com/rlrq/MINORg/tree/master/examples. If you have not downloaded the files, please do so and navigate to the directory that contains them.
 
-Note that all command line code snippets in the following tutorial are for **bash terminal**. You may have to adapt them according to your operating system.
+Note that all command line code snippets in the following tutorial are for **bash terminal**. You may have to adapt them according to your terminal.
 
 
 Setting up the tutorial
@@ -29,7 +29,7 @@ Let us begin with the simplest MINORg execution:
    1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
    Output files have been generated in /path/to/current/directory/example_00_target
 
-The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``--target ./sample_CDS.fasta``) and to output files into directory ``--directory ./example00``. By default, MINORg generates 20 bp gRNA using NGG PAM.
+The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``--target ./sample_CDS.fasta``) and to output files into a user-specified directory (``--directory ./example_00_target``). By default, MINORg generates 20 bp gRNA using NGG PAM.
 
 
 Reference gene(s) as targets
@@ -84,6 +84,7 @@ OR
 
 Using ``--cluster``
 *******************
+
 See also: :ref:`Configuration:2-level lookup`, :ref:`Parameters:Comma-separated (CLI)`, :ref:`Parameters:Multi-argument (CLI)`
 
 MINORg can also accept preset combinations of genes using ``--cluster`` and ``--cluster-set``. ``--cluster-set`` accepts a tab-separated lookup file that maps alias(es) to a combinations of genes (see :ref:`Configuration:cluster` for format). ``--cluster`` is used to specify the alias of a combination of genes in that lookup file.
@@ -129,9 +130,10 @@ Unannotated genes
 
 Using ``--extend-gene`` and ``--extend-cds``
 ********************************************
+
 See also: :ref:`Parameters:Extended genome`
 
-If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using ``--extend-gene`` and ``--extend-cds``.
+If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using ``--extend-gene`` and ``--extend-cds``. See :ref:`Parameters:Extended genome` for how to name your sequences to ensure proper mapping of CDS to genes.
 
 .. code-block:: bash
 
@@ -180,7 +182,7 @@ The above code snippet is effectively identical to the example in :ref:`Tutorial
 Domain as targets
 +++++++++++++++++
 
-MINORg allows users to specify the identifier of an RPS-BLAST position-specific scoring matrix (PSSM-Id) to further restrict the target sequence to a given domain associated with the PSSM-Id. This could be particularly useful when designing gRNA for genes that do not share conserved domain structures but do share a domain that you wish to knock out.
+MINORg allows users to specify the identifier of an RPS-BLAST position-specific scoring matrix (PSSM-Id) to further restrict the target sequence to a given domain associated with the PSSM-Id. This could be particularly useful when designing gRNA for genes that do not share conserved domain structures but do share a domain that you wish to knock out. ``--domain`` can also be used with ``--query`` or ``--indv``.
 
 Local database
 ^^^^^^^^^^^^^^
@@ -260,7 +262,6 @@ In the above example, MINORg will exclude gRNA with less than 20% (``--gc-min 0.
 
 Filter by off-target
 ++++++++++++++++++++
-
 See: :ref:`Algorithms:Off-target assessment`
 
 .. code-block:: bash
@@ -646,6 +647,7 @@ See examples in :ref:`Tutorial_cli:Reference gene(s) as targets`.
 
 Multiple reference genomes
 ++++++++++++++++++++++++++
+
 See also: :ref:`Parameters:Reference`, :ref:`Configuration:2-level lookup`, :ref:`Parameters:Comma-separated (CLI)`, :ref:`Parameters:Multi-argument (CLI)`
 
 Similar to ``--clusters`` and ``--indv``, MINORg accepts a lookup file for reference genomes using ``--reference-set`` and one or more reference genome alias using ``--reference``. See :ref:`Parameters:Reference` for a more comprehensive overview and :ref:`Configuration:reference` for lookup file format.
@@ -682,6 +684,7 @@ As a failsafe, MINORg does not terminate translated peptide sequences at the fir
 
 Non-standard GFF3 attribute field names
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 See also: :ref:`Parameters:Attribute modification`
 
 MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using ``--attr-mod`` (for 'attribute modification').

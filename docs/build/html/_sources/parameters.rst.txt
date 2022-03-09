@@ -412,7 +412,7 @@ Reference
 **Type**: :ref:`Parameters:Argument`, :ref:`Parameters:2-level lookup`
 
 | **CLI**: ``--reference``
-| **Python**: ``reference``
+| **Python**: set using :meth:`~minorg.MINORg.MINORg.add_reference`, get using ``reference``
 | **Config file**:
 
   | set default: ``reference`` (section ``[data]``)
@@ -440,9 +440,14 @@ Attribute modification
 
 This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally developed when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (*Oryza sativa* subsp. Nipponbare) and discovered that it uses 'Locus_id' instead of 'Parent' for mRNA annotations.
 
-The input given to ``--attr-mod`` should follow this format (with quotes):
+See http://gmod.org/wiki/GFF3 for standard attribute field names (see section titled ‘Column 9: “attributes”’).
 
-  ‘<feature>:<standard>=<nonstandard>,<standard>=<nonstandard>;<feature>:<standard>=<nonstandard>’
+CLI
++++
+
+The input given to ``--attr-mod`` should follow this format (with quotes)::
+
+  ‘<feature type>:<standard>=<nonstandard>,<standard>=<nonstandard>;<feature type>:<standard>=<nonstandard>’
 
 Examples:
 
@@ -454,18 +459,33 @@ Examples:
   ``--attr-mod 'all:ID=id'``
     'id' is the non-standard field name for the field 'ID' for all feature types.
 
-See http://gmod.org/wiki/GFF3 for standard attribute field names (see section titled ‘Column 9: “attributes”’).
+Python
+++++++
 
+The input given to the ``attr_mod`` keyword argument of the :meth:`~minorg.MINORg.MINORg.add_reference` method should be a dictionary following the following format::
+
+  {'<feature type>': {'<standard>': '<nonstandard>', '<standard>': '<nonstandard>'},
+   '<feature type>': {'<standard>': '<nonstandard>'}}
+   
+Examples:
+
+  ``{'mRNA': {'Parent': 'Locus_id', 'ID': 'transcript_id'}, 'CDS': {'Parent': 'transcript_id'}}``
+    'Locus_id' and 'transcript_id' are non-standard field names for
+    fields 'Parent' and 'ID' respectively for the feature type 'mRNA',
+    and 'transcript_id' is the non-standard name for the field 'Parent' for the feature type 'CDS'.
+
+  ``{'all': {'ID': 'id'}}``
+    'id' is the non-standard field name for the field 'ID' for all feature types.
 
 Extended genome
 ~~~~~~~~~~~~~~~
 
-**Type**: :ref:`Parameters:Argument`, :ref:`Parameters:Raw values`, :ref:`Parameters:Multi-argument (CLI)`, :ref:`Parameters:Multi-value list (Python)`
+**Type**: :ref:`Parameters:Argument`, :ref:`Parameters:Raw values`, :ref:`Parameters:Multi-argument (CLI)`
 
 | **CLI**: ``--extend-gene``, ``--extend-cds``
-| **Python**: ``ext_gene``, ``ext_cds``
+| **Python**: use :meth:`~minorg.MINORg.MINORg.extend_reference`
 
-These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (``--extend-gene``, ``ext_gene``) and CDS-only (``--extend-cds``, ``ext_cds``) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries. These genes will then be added to the reference genome **and you can use their gene IDs as you would reference gene IDs**. You may provide multiple files to each parameter--MINORg will process them all simultaneously.
+These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (``--extend-gene``; first positional argument of :meth:`~minorg.MIONRg.MINORg.extend_reference`) and CDS-only (``--extend-cds``; second positional argument of :meth:`~minorg.MIONRg.MINORg.extend_reference`) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries. These genes will then be added to the reference genome **and you can use their gene IDs as you would reference gene IDs**. You may provide multiple files to each parameter--MINORg will process them all simultaneously.
 
 For MINORg to map the CDS-only sequences to the correct gene sequences, CDS-only sequences should be named according to the the format: '<gene ID>.<CDS ID>'
 

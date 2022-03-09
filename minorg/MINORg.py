@@ -423,8 +423,8 @@ class PathHandler:
 # x = MINORg(directory = "/mnt/chaelab/rachelle/scripts/minorgpy/test/minorg_nrg", prefix = "test",
 #            tmp = False, keep_tmp = True, thread = 1)
 # x.genes = ["AT5G66900", "AL8G44500.v2.1"]
-# x.add_reference("TAIR10", "/mnt/chaelab/shared/genomes/TAIR10/fasta/a_thaliana_all.fasta", "/mnt/chaelab/rachelle/scripts/minorgpy/test/full/test_full_NRG1_1/reduced_ann/reduced.TAIR10.gff", replace = True)
-# x.add_reference("araly2", "/mnt/chaelab/rachelle/data/Alyrata/v2.1/Alyrata_384_v1.fa", "/mnt/chaelab/rachelle/scripts/minorgpy/test/full/test_full_NRG1_1/reduced_ann/reduced.araly2.gff")
+# x.add_reference("/mnt/chaelab/shared/genomes/TAIR10/fasta/a_thaliana_all.fasta", "/mnt/chaelab/rachelle/scripts/minorgpy/test/full/test_full_NRG1_1/reduced_ann/reduced.TAIR10.gff", alias = "TAIR10", replace = True)
+# x.add_reference("/mnt/chaelab/rachelle/data/Alyrata/v2.1/Alyrata_384_v1.fa", "/mnt/chaelab/rachelle/scripts/minorgpy/test/full/test_full_NRG1_1/reduced_ann/reduced.araly2.gff", alias = "araly2")
 # x.subset_annotation()
 # # [y.get_attr("ID") for y in x.reference["TAIR10"].annotation.get_subfeatures(*x.genes)]
 # x.query_reference = True
@@ -470,8 +470,8 @@ class MINORg (PathHandler):
     >>> from minorg.MINORg import MINORg
     >>> my_minorg = MINORg(directory = "/my/output/directory", 
                            prefix = "test", tmp = False, keep_tmp = True, thread = 1)
-    >>> my_minorg.add_reference("TAIR10", "/path/to/TAIR10_Chr.all.fasta", "/path/to/TAIR10_GFF3.genes.gff", replace = True)
-    >>> my_minorg.add_reference("araly2", "/path/to/Alyrata_384_v1.fa", "/path/to/Alyrata_384_v2.1.gene.gff3")
+    >>> my_minorg.add_reference("/path/to/TAIR10_Chr.all.fasta", "/path/to/TAIR10_GFF3.genes.gff", alias = "TAIR10", replace = True)
+    >>> my_minorg.add_reference("/path/to/Alyrata_384_v1.fa", "/path/to/Alyrata_384_v2.1.gene.gff3", alias = "araly2")
     >>> my_minorg.genes = ["AT5G66900", "AL8G44500.v2.1"]
     >>> my_minorg.subset_annotation()
     >>> [y.get_attr("ID") for y in my_minorg.reference["TAIR10"].annotation.get_subfeatures(*x.genes)]
@@ -540,6 +540,7 @@ class MINORg (PathHandler):
         ot_mismatch (int):
             [filter: background] minimum number of mismatches allowed for off-target gRNA hits
         ot_gap (int): [filter: background] minimum number of gaps allowed for off-target gRNA hits
+        mask (list): [filter: background] FASTA file of additional sequences to mask in background
 
         gc_min (float):
             [filter: GC] minimum GC content (between 0 and 1, where 0 is no GC content and 1 is all GC)
@@ -1108,6 +1109,33 @@ class MINORg (PathHandler):
     ##  ADD FUNCIONS  ##
     ####################
     
+    def add_query(self, fname, alias = None):
+        """
+        Add file to be queried.
+        
+        Arguments:
+            fname (str): required, path to file
+            alias (str): optional, alias for query file
+        """
+        if not alias:
+            max_id = max([int(re.search("\d+$", y).group(0)) for y in
+                          ["query_0"] + [x for x in self.query if re.search("^query_\d+$", x)]])
+            alias = f"query_{str(max_id + 1).zfill(3)}"
+        self.query[alias] = IndexedFasta(str(fname))
+        return
+    
+    def remove_query(self, alias):
+        """
+        Remove file for querying.
+        
+        Arguments:
+            alias (str): required, alias of query file to remove
+        """
+        if alias not in self.query:
+            raise MINORgError(f"'{alias}' is not a valid query alias.")
+        del self.query[alias]
+        return
+
     def add_background(self, fname, alias = None):
         """
         Add file for background filter.
@@ -1118,7 +1146,9 @@ class MINORg (PathHandler):
                 Used when writing mask report and for removing background.
         """
         if not alias:
-            alias = f"bg_{str(len(self.background) + 1).zfill(3)}"
+            max_id = max([int(re.search("\d+$", y).group(0)) for y in
+                          ["bg_0"] + [x for x in self.background if re.search("^bg_\d+$", x)]])
+            alias = f"bg_{str(max_id + 1).zfill(3)}"
         self.background[alias] = IndexedFasta(str(fname))
         return
     
@@ -1231,7 +1261,7 @@ class MINORg (PathHandler):
             else:
                 warnings.warn( ( "Unrecognised reference set lookup file alias or non-existent file:"
                                  f" {val_ref_set}. You may manually provide reference genomes using"
-                                 " MINORg.add_reference(<alias>, <path to FASTA>, <path to GFF3>"),
+                                 " MINORg.add_reference(<path to FASTA>, <path to GFF3>, alias = '<alias>')"),
                                MINORgWarning)
         ## get reference
         val_ref = get_val_default(reference, self.params.reference.default)
@@ -1242,7 +1272,7 @@ class MINORg (PathHandler):
                                    param = self.params.reference, return_mapping = True)
             for alias, ref in mapped.items():
                 fasta, ann, genetic_code, attr_mod = reference_aliases[alias]
-                self.add_reference(alias, fasta, ann, genetic_code = genetic_code,
+                self.add_reference(fasta, ann, alias = alias, genetic_code = genetic_code,
                                    attr_mod = self.params.parse_attr_mod(attr_mod))
         return
     
@@ -1252,21 +1282,25 @@ class MINORg (PathHandler):
     ############################
     
     ## takes path to FASTA and GFF/BED file and indexes them before storing.
-    def add_reference(self, alias, fasta, annotation, genetic_code = 1, attr_mod = {},
+    def add_reference(self, fasta, annotation, alias = None, genetic_code = 1, attr_mod = {},
                       memsave = True, replace = False):
         """
         Add reference genome.
         
         Arguments:
-            alias (str): required, name of fasta-annotation combo
             fasta (str): required, path to fasta file
             annotation (str): required path to GFF3 file
+            alias (str): optional, name of fasta-annotation combo
             genetic_code (str or int): NCBI genetic code (default=1)
             attr_mod (dict): mapping for non-standard attribute field names in GFF3 file (default={})
             replace (bool): replace any existing reference with same alias (default=False)
         """
         if alias in self.reference and not replace:
             raise Exception(f"ID '{alias}' is already in use.")
+        if not alias:
+            max_id = max([int(re.search("\d+$", y).group(0)) for y in
+                          ["Reference_0"] + [x for x in self.reference if re.search("^Reference_\d+$", x)]])
+            alias = f"Reference_{str(max_id + 1).zfill(3)}"
         self._reference[alias] = AnnotatedFasta(fasta, annotation, attr_mod = attr_mod,
                                                 genetic_code = genetic_code, name = alias, memsave = memsave)
         return
@@ -1344,7 +1378,7 @@ class MINORg (PathHandler):
         extend_reference(ext_gene, ext_cds, ext_fasta, ext_gff, mafft = self.mafft,
                          # feature_type = "gene", subfeature_type = "CDS",
                          thread = self.thread, directory = tmp_dir, tmp = True, logger = self.logfile)
-        self.add_reference("Extended", ext_fasta, ext_gff)
+        self.add_reference(ext_fasta, ext_gff, alias = "Extended")
         return
     def _get_reference_seq(self, ids, *features, adj_dir=False, by_gene=False, mktmp=None, ref=None,
                            seqid_template="Reference|$source|$gene|$isoform|$feature|$n",
@@ -1581,7 +1615,7 @@ class MINORg (PathHandler):
         
         >>> my_minorg = MINORg(directory = "/my/output/directory", 
                                prefix = "test", tmp = False, keep_tmp = True, thread = 1)
-        >>> my_minorg.add_reference("TAIR10", "/path/to/TAIR10_Chr.all.fasta", "/path/to/TAIR10_GFF3.genes.gff", replace = True)
+        >>> my_minorg.add_reference("/path/to/TAIR10_Chr.all.fasta", "/path/to/TAIR10_GFF3.genes.gff", alias = "TAIR10", replace = True)
         >>> my_minorg.genes = ["AT5G66900"]
         >>> my_minorg.subset_annotation()
         >>> my_minorg.pssm_ids = "366375" # NB-ARC domain
@@ -1857,8 +1891,7 @@ class MINORg (PathHandler):
         if not keep_output: os.remove(fout)
         return offtarget
     
-    def filter_background(self, keep_blast_output = False, mask_reference = True,
-                          *other_mask_fnames):
+    def filter_background(self, *other_mask_fnames, keep_blast_output = False, mask_reference = True):
         """
         Set background filter check for candidate gRNAs.
         
@@ -1869,9 +1902,9 @@ class MINORg (PathHandler):
         Relevant methods: add_background, remove_background
         
         Arguments:
+            *other_mask_fnames (str): optional, paths to other FASTA files not in self.background that are also to be screened for off-target
             keep_blast_output (bool): retain BLAST output file. Default behaviour deletes it.
             mask_reference (bool): mask reference genes (default=True)
-            *other_mask_fnames (str): optional, paths to other FASTA files not in self.background that are also to be screened for off-target
         """
         if not self.grna_hits:
             raise MINORgError( ("MINORg.filter_background requires gRNA"
@@ -2153,6 +2186,26 @@ class MINORg (PathHandler):
                                                           lambda grna_seq: str(grna_seq) not in to_exclude)
         return
     
+    def filter(self, background_check = True, feature_check = True, gc_check = True):
+        """
+        Execute self.filter_background, self.filter_feature, and self.filter_gc based on self's attributes.
+        
+        Arguments:
+            background_check (bool): filter gRNA by off-target (default=True)
+            feature_check (bool): filter gRNA by within-feature (default=True)
+            gc_check (bool): filter gRNA by GC content (default=True)
+        """
+        if background_check:
+            self.logfile.devsplain("Filtering background")
+            self.filter_background()
+        if feature_check:
+            self.logfile.devsplain("Filtering feature")
+            self.filter_feature()
+        if gc_check:
+            self.logfile.devsplain("Filtering GC")
+            self.filter_gc()
+        return
+    
     ##########################
     ##  SUBCMD: MINIMUMSET  ##
     ##########################
@@ -2299,9 +2352,40 @@ class MINORg (PathHandler):
         ## print summary
         print(f"\n{sets} mutually exclusive gRNA set(s) requested. {len(grna_sets)} set(s) found.")
         return
-
-
-
+    
+    ####################
+    ##  SUBCMD: FULL  ##
+    ####################
+    
+    def full(self, feature_check = True, background_check = True, gc_check = True):
+        """
+        Execute full MINORg programme using self's attributes as parameter values.
+        """
+        with warnings.catch_warnings():
+            warnings.filterwarnings("error", message = "No target sequences found.",
+                                    category = MINORgWarning)
+            if not self.args.target:
+                try:
+                    self.seq(quiet = False)
+                except MINORgWarning:
+                    warnings.warn("No targets found.", MINORgWarning)
+                    return
+        self.grna()
+        if len(self.grna_hits) == 0:
+            warnings.warn("No gRNA found.", MINORgWarning)
+            return
+        ## filter
+        self.filter(background_check = background_check,
+                    filter_check = filter_check,
+                    gc_check = gc_check)
+        self.write_all_grna_map()
+        ## abort if no gRNA pass
+        if len(self.valid_grna()) == 0:
+            warnings.warn("No valid gRNA after filtering.", MINORgWarning)
+            return
+        ## minimumset
+        self.minimumset(report_full_path = False)
+        return
 
 # :param directory: path to output directory
 # :type directory: str

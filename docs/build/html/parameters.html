@@ -73,7 +73,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#parameter-descriptions">6.3. Parameter descriptions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#reference">6.3.1. Reference</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#attribute-modification">6.3.2. Attribute modification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#attribute-modification">6.3.2. Attribute modification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cli">6.3.2.1. CLI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python">6.3.2.2. Python</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#extended-genome">6.3.3. Extended genome</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pam">6.3.4. PAM</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ambiguous-bases-and-repeats">6.3.4.1. Ambiguous bases and repeats</a></li>
@@ -161,18 +165,23 @@
 <li><p><a class="reference internal" href="#parameter-descriptions" id="id19">Parameter descriptions</a></p>
 <ul>
 <li><p><a class="reference internal" href="#reference" id="id20">Reference</a></p></li>
-<li><p><a class="reference internal" href="#attribute-modification" id="id21">Attribute modification</a></p></li>
-<li><p><a class="reference internal" href="#extended-genome" id="id22">Extended genome</a></p></li>
-<li><p><a class="reference internal" href="#pam" id="id23">PAM</a></p>
+<li><p><a class="reference internal" href="#attribute-modification" id="id21">Attribute modification</a></p>
 <ul>
-<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id24">Ambiguous bases and repeats</a></p></li>
-<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id25">Spacers and 3’ or 5’ PAM</a></p></li>
-<li><p><a class="reference internal" href="#preset-pam-patterns" id="id26">Preset PAM patterns</a></p></li>
+<li><p><a class="reference internal" href="#cli" id="id22">CLI</a></p></li>
+<li><p><a class="reference internal" href="#python" id="id23">Python</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#prioritise-non-redundancy" id="id27">Prioritise non-redundancy</a></p></li>
-<li><p><a class="reference internal" href="#rps-blast-local-database" id="id28">RPS-BLAST local database</a></p></li>
-<li><p><a class="reference internal" href="#rps-blast-remote-database" id="id29">RPS-BLAST remote database</a></p></li>
+<li><p><a class="reference internal" href="#extended-genome" id="id24">Extended genome</a></p></li>
+<li><p><a class="reference internal" href="#pam" id="id25">PAM</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id26">Ambiguous bases and repeats</a></p></li>
+<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id27">Spacers and 3’ or 5’ PAM</a></p></li>
+<li><p><a class="reference internal" href="#preset-pam-patterns" id="id28">Preset PAM patterns</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#prioritise-non-redundancy" id="id29">Prioritise non-redundancy</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-local-database" id="id30">RPS-BLAST local database</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-remote-database" id="id31">RPS-BLAST remote database</a></p></li>
 </ul>
 </li>
 </ul>
@@ -697,7 +706,7 @@ confirmation for each set</p></td>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#id1"><span class="std std-ref">2-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--reference</span></code></div>
-<div class="line"><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">reference</span></code></div>
+<div class="line"><strong>Python</strong>: set using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a>, get using <code class="docutils literal notranslate"><span class="pre">reference</span></code></div>
 <div class="line"><strong>Config file</strong>:</div>
 </div>
 <blockquote>
@@ -724,10 +733,13 @@ confirmation for each set</p></td>
 </div>
 </div></blockquote>
 <p>This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally developed when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (<em>Oryza sativa</em> subsp. Nipponbare) and discovered that it uses ‘Locus_id’ instead of ‘Parent’ for mRNA annotations.</p>
+<p>See <a class="reference external" href="http://gmod.org/wiki/GFF3">http://gmod.org/wiki/GFF3</a> for standard attribute field names (see section titled ‘Column 9: “attributes”’).</p>
+<section id="cli">
+<h4><a class="toc-backref" href="#id22"><span class="section-number">6.3.2.1. </span>CLI</a><a class="headerlink" href="#cli" title="Permalink to this headline"></a></h4>
 <p>The input given to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> should follow this format (with quotes):</p>
-<blockquote>
-<div><p>‘&lt;feature&gt;:&lt;standard&gt;=&lt;nonstandard&gt;,&lt;standard&gt;=&lt;nonstandard&gt;;&lt;feature&gt;:&lt;standard&gt;=&lt;nonstandard&gt;’</p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>‘&lt;feature type&gt;:&lt;standard&gt;=&lt;nonstandard&gt;,&lt;standard&gt;=&lt;nonstandard&gt;;&lt;feature type&gt;:&lt;standard&gt;=&lt;nonstandard&gt;’
+</pre></div>
+</div>
 <p>Examples:</p>
 <blockquote>
 <div><dl class="simple">
@@ -739,16 +751,35 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 </dd>
 </dl>
 </div></blockquote>
-<p>See <a class="reference external" href="http://gmod.org/wiki/GFF3">http://gmod.org/wiki/GFF3</a> for standard attribute field names (see section titled ‘Column 9: “attributes”’).</p>
+</section>
+<section id="python">
+<h4><a class="toc-backref" href="#id23"><span class="section-number">6.3.2.2. </span>Python</a><a class="headerlink" href="#python" title="Permalink to this headline"></a></h4>
+<p>The input given to the <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> keyword argument of the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a> method should be a dictionary following the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;&lt;feature type&gt;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;&lt;standard&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;nonstandard&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;standard&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;nonstandard&gt;&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;&lt;feature type&gt;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;&lt;standard&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;nonstandard&gt;&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<blockquote>
+<div><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">{'mRNA':</span> <span class="pre">{'Parent':</span> <span class="pre">'Locus_id',</span> <span class="pre">'ID':</span> <span class="pre">'transcript_id'},</span> <span class="pre">'CDS':</span> <span class="pre">{'Parent':</span> <span class="pre">'transcript_id'}}</span></code></dt><dd><p>‘Locus_id’ and ‘transcript_id’ are non-standard field names for
+fields ‘Parent’ and ‘ID’ respectively for the feature type ‘mRNA’,
+and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for the feature type ‘CDS’.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">{'all':</span> <span class="pre">{'ID':</span> <span class="pre">'id'}}</span></code></dt><dd><p>‘id’ is the non-standard field name for the field ‘ID’ for all feature types.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
 </section>
 <section id="extended-genome">
-<h3><a class="toc-backref" href="#id22"><span class="section-number">6.3.3. </span>Extended genome</a><a class="headerlink" href="#extended-genome" title="Permalink to this headline"></a></h3>
-<p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#raw-values"><span class="std std-ref">Raw values</span></a>, <a class="reference internal" href="#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a>, <a class="reference internal" href="#multi-value-list-python"><span class="std std-ref">Multi-value list (Python)</span></a></p>
+<h3><a class="toc-backref" href="#id24"><span class="section-number">6.3.3. </span>Extended genome</a><a class="headerlink" href="#extended-genome" title="Permalink to this headline"></a></h3>
+<p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#raw-values"><span class="std std-ref">Raw values</span></a>, <a class="reference internal" href="#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code></div>
-<div class="line"><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">ext_gene</span></code>, <code class="docutils literal notranslate"><span class="pre">ext_cds</span></code></div>
+<div class="line"><strong>Python</strong>: use <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.extend_reference" title="minorg.MINORg.MINORg.extend_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extend_reference()</span></code></a></div>
 </div>
-<p>These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (<code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">ext_gene</span></code>) and CDS-only (<code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code>, <code class="docutils literal notranslate"><span class="pre">ext_cds</span></code>) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries. These genes will then be added to the reference genome <strong>and you can use their gene IDs as you would reference gene IDs</strong>. You may provide multiple files to each parameter–MINORg will process them all simultaneously.</p>
+<p>These parameters accept FASTA files and allow MINORg to infer coding regions (CDS) from genomic (<code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code>; first positional argument of <code class="xref py py-meth docutils literal notranslate"><span class="pre">extend_reference()</span></code>) and CDS-only (<code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code>; second positional argument of <code class="xref py py-meth docutils literal notranslate"><span class="pre">extend_reference()</span></code>) sequences. They should be used when you do not have a GFF3 annotation file for your desired genes, but DO have the above mentioned sequences. MINORg will align gene and CDS-only sequences using MAFFT to generate a GFF3 annotation file with inferred intron-exon boundaries. These genes will then be added to the reference genome <strong>and you can use their gene IDs as you would reference gene IDs</strong>. You may provide multiple files to each parameter–MINORg will process them all simultaneously.</p>
 <p>For MINORg to map the CDS-only sequences to the correct gene sequences, CDS-only sequences should be named according to the the format: ‘&lt;gene ID&gt;.&lt;CDS ID&gt;’</p>
 <p>For example, given the following CDS sequences:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">geneA</span><span class="mf">.1</span>
@@ -773,7 +804,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 <p>CDS sequences <code class="docutils literal notranslate"><span class="pre">geneA.1</span></code> and <code class="docutils literal notranslate"><span class="pre">geneA.two</span></code> will be mapped to gene sequence <code class="docutils literal notranslate"><span class="pre">geneA</span></code>, <code class="docutils literal notranslate"><span class="pre">geneA.foo.bar</span></code> will be mapped to <code class="docutils literal notranslate"><span class="pre">geneA.foo</span></code>, and <code class="docutils literal notranslate"><span class="pre">geneB.1</span></code> will be mapped to <code class="docutils literal notranslate"><span class="pre">geneB</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">geneA.1</span></code> and <code class="docutils literal notranslate"><span class="pre">geneA.two</span></code> will be treated as different isoforms of the gene <code class="docutils literal notranslate"><span class="pre">geneA</span></code>.</p>
 </section>
 <section id="pam">
-<h3><a class="toc-backref" href="#id23"><span class="section-number">6.3.4. </span>PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id25"><span class="section-number">6.3.4. </span>PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#predefined-lookup"><span class="std std-ref">Predefined lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--pam</span></code></div>
@@ -789,7 +820,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 <p>By default, MINORg designs gRNA for SpCas9 systems (i.e. 3’ NGG PAM). You may specify other PAM patterns for non-SpCas9 systems using <code class="docutils literal notranslate"><span class="pre">--pam</span></code>. It is recommended that any PAM pattern that uses special characters be enclosed in quotes, as it may lead to unexpected behaviour otherwise at the terminal.</p>
 <p>Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. Note that PAM is <strong>NOT case-sensitive</strong>. However, do take care to avoid using  <code class="docutils literal notranslate"><span class="pre">.</span></code> as a wildcard, as MINORg uses this character to determine where gRNA is relative to a PAM pattern.</p>
 <section id="ambiguous-bases-and-repeats">
-<h4><a class="toc-backref" href="#id24"><span class="section-number">6.3.4.1. </span>Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id26"><span class="section-number">6.3.4.1. </span>Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h4>
 <p>Unlike many gRNA designers, MINORg accepts ambiguous bases (see: <a class="reference external" href="https://genome.ucsc.edu/goldenPath/help/iupac.html">https://genome.ucsc.edu/goldenPath/help/iupac.html</a> for IUPAC codes) as well as variable number of repeats.</p>
 <blockquote>
 <div><p>Example: The pattern ‘R{1,2}T’ (where ‘R’ means ‘A’ or ‘G’, and {1,2} means either 1 to 2 repetitions
@@ -797,7 +828,7 @@ of the character right before it) will match ‘AT’, ‘GT’, ‘AAT’, ‘A
 </div></blockquote>
 </section>
 <section id="spacers-and-3-or-5-pam">
-<h4><a class="toc-backref" href="#id25"><span class="section-number">6.3.4.2. </span>Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id27"><span class="section-number">6.3.4.2. </span>Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h4>
 <p>In the absence of ‘N’ in the PAM pattern, MINORg will assume 3’ PAM with 1 spacer base (such as in the 3’ ‘NGG’ of SpCas9). If a pattern includes an ‘N’ at either end, MINORg will assume that the gRNA is directly adjacent to the ‘N’ base of the pattern. To specify a 5’ PAM in the absence of ‘N’ in the PAM pattern, ‘.’ should be inserted where the gRNA is.</p>
 <blockquote>
 <div><p>Example 1: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">GG</span></code> are functionally identical.
@@ -818,7 +849,7 @@ expanding it to the undesired explicit pattern <code class="docutils literal not
 <p>For a PAM-less search, use: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">'.'</span></code>.</p>
 </section>
 <section id="preset-pam-patterns">
-<h4><a class="toc-backref" href="#id26"><span class="section-number">6.3.4.3. </span>Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id28"><span class="section-number">6.3.4.3. </span>Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h4>
 <p>MINORg comes with several preset PAM patterns for different CRISPR systems.</p>
 <blockquote>
 <div><p>For example: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">SpCas9</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> are functionally identical.</p>
@@ -885,7 +916,7 @@ bhcas12b</p></td>
 </section>
 </section>
 <section id="prioritise-non-redundancy">
-<h3><a class="toc-backref" href="#id27"><span class="section-number">6.3.5. </span>Prioritise non-redundancy</a><a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id29"><span class="section-number">6.3.5. </span>Prioritise non-redundancy</a><a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--prioritise-nr</span></code>/<code class="docutils literal notranslate"><span class="pre">--prioritize-nr</span></code></div>
@@ -910,7 +941,7 @@ bhcas12b</p></td>
 <p>If this flag is raised, ‘Non-redundancy’ will be prioritised before ‘Proximity to 5’. This may be preferred if you wish to generate a large number of sets, as priortisation of non-redundancy makes it less likely that extremely high coverage gRNA will be added to a growing set, such that these gRNA can then be used to seed the next set.</p>
 </section>
 <section id="rps-blast-local-database">
-<h3><a class="toc-backref" href="#id28"><span class="section-number">6.3.6. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id30"><span class="section-number">6.3.6. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--db</span></code></div>
@@ -942,7 +973,7 @@ bhcas12b</p></td>
 <p>where the database is contained in the directory <code class="docutils literal notranslate"><span class="pre">/root/rsp_db/</span></code>, the appropriate path to pass to this parameter is: <code class="docutils literal notranslate"><span class="pre">/root/rps_db/Cdd</span></code>, where the trailing ‘Cdd’ is the prefix of all of the database’s files</p>
 </section>
 <section id="rps-blast-remote-database">
-<h3><a class="toc-backref" href="#id29"><span class="section-number">6.3.7. </span>RPS-BLAST remote database</a><a class="headerlink" href="#rps-blast-remote-database" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id31"><span class="section-number">6.3.7. </span>RPS-BLAST remote database</a><a class="headerlink" href="#rps-blast-remote-database" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code></div>

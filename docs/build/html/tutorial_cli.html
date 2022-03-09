@@ -145,7 +145,7 @@
   <section id="tutorial-command-line">
 <h1><span class="section-number">4. </span>Tutorial (Command line)<a class="headerlink" href="#tutorial-command-line" title="Permalink to this headline"></a></h1>
 <p>In all the following tutorial, the current directory/working directory is presumed to contain all files in <a class="reference external" href="https://github.com/rlrq/MINORg/tree/master/examples">https://github.com/rlrq/MINORg/tree/master/examples</a>. If you have not downloaded the files, please do so and navigate to the directory that contains them.</p>
-<p>Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your operating system.</p>
+<p>Note that all command line code snippets in the following tutorial are for <strong>bash terminal</strong>. You may have to adapt them according to your terminal.</p>
 <section id="setting-up-the-tutorial">
 <h2><span class="section-number">4.1. </span>Setting up the tutorial<a class="headerlink" href="#setting-up-the-tutorial" title="Permalink to this headline"></a></h2>
 <p>To ensure that the examples in this tutorial work, please replace ‘/path/to’ in the files ‘arabidopsis_genomes.txt’, ‘athaliana_genomes.txt’, and ‘subset_genome_mapping.txt’ with the full path to the directory containing the example files.</p>
@@ -163,7 +163,7 @@ Final gRNA sequence ID<span class="o">(</span>s<span class="o">)</span>, gRNA se
 Output files have been generated <span class="k">in</span> /path/to/current/directory/example_00_target
 </pre></div>
 </div>
-<p>The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (<code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">./sample_CDS.fasta</span></code>) and to output files into directory <code class="docutils literal notranslate"><span class="pre">--directory</span> <span class="pre">./example00</span></code>. By default, MINORg generates 20 bp gRNA using NGG PAM.</p>
+<p>The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (<code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">./sample_CDS.fasta</span></code>) and to output files into a user-specified directory (<code class="docutils literal notranslate"><span class="pre">--directory</span> <span class="pre">./example_00_target</span></code>). By default, MINORg generates 20 bp gRNA using NGG PAM.</p>
 </section>
 <section id="reference-gene-s-as-targets">
 <h3><span class="section-number">4.2.2. </span>Reference gene(s) as targets<a class="headerlink" href="#reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
@@ -240,7 +240,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="using-extend-gene-and-extend-cds">
 <h5><span class="section-number">4.2.3.2.1. </span>Using <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code><a class="headerlink" href="#using-extend-gene-and-extend-cds" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="parameters.html#extended-genome"><span class="std std-ref">Extended genome</span></a></p>
-<p>If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code>.</p>
+<p>If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code> and <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code>. See <a class="reference internal" href="parameters.html#extended-genome"><span class="std std-ref">Extended genome</span></a> for how to name your sequences to ensure proper mapping of CDS to genes.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_04_ext <span class="se">\</span>
          --indv ref --gene AT1G10920 <span class="se">\</span>
          --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
@@ -277,7 +277,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </section>
 <section id="domain-as-targets">
 <h3><span class="section-number">4.2.4. </span>Domain as targets<a class="headerlink" href="#domain-as-targets" title="Permalink to this headline"></a></h3>
-<p>MINORg allows users to specify the identifier of an RPS-BLAST position-specific scoring matrix (PSSM-Id) to further restrict the target sequence to a given domain associated with the PSSM-Id. This could be particularly useful when designing gRNA for genes that do not share conserved domain structures but do share a domain that you wish to knock out.</p>
+<p>MINORg allows users to specify the identifier of an RPS-BLAST position-specific scoring matrix (PSSM-Id) to further restrict the target sequence to a given domain associated with the PSSM-Id. This could be particularly useful when designing gRNA for genes that do not share conserved domain structures but do share a domain that you wish to knock out. <code class="docutils literal notranslate"><span class="pre">--domain</span></code> can also be used with <code class="docutils literal notranslate"><span class="pre">--query</span></code> or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>.</p>
 <section id="local-database">
 <h4><span class="section-number">4.2.4.1. </span>Local database<a class="headerlink" href="#local-database" title="Permalink to this headline"></a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_07_domain <span class="se">\</span>

@@ -852,7 +852,7 @@ class MINORgCLI (MINORg):
             if self.args.reference:
                 typer.echo("As --assembly and --annotation are used, --reference will be ignored.")
             self.clear_reference()
-            self.add_reference("Reference", str(self.args.assembly), str(self.args.annotation),
+            self.add_reference(str(self.args.assembly), str(self.args.annotation), alias = "Reference",
                                genetic_code = self.args.genetic_code, attr_mod = self.args.attr_mod)
             self.args.reference = None
         elif self.args.reference:
@@ -870,7 +870,7 @@ class MINORgCLI (MINORg):
                 for alias in self.args.reference:
                     fasta, ann, genetic_code, attr_mod = self.reference_aliases[str(alias)]
                     attr_mod = None if attr_mod == '' else attr_mod
-                    self.add_reference(alias, fasta, ann, genetic_code = genetic_code,
+                    self.add_reference(fasta, ann, alias = alias, genetic_code = genetic_code,
                                        attr_mod = self.params.parse_attr_mod(attr_mod))
                     # self.extend_reference(alias, fasta, ann)
         ## if --extend-gene or --extend-cds is provided, check that the other is also provided
@@ -1576,8 +1576,9 @@ class MINORgCLI (MINORg):
         """
         ## generate sequences to mask
         if self.background_check and self.mask_gene_sets["mask"]:
-            self._get_reference_seq(*self.mask_gene_sets["mask"], adj_dir = True,
-                                    fout = self.mkfname("to_mask.fasta", tmp = True))
+            to_mask = self.reserve_fname("to_mask.fasta", tmp = True)
+            self._get_reference_seq(*self.mask_gene_sets["mask"], adj_dir = True, fout = to_mask)
+            self.mask.append(to_mask)
         ## execute MINORg
         for prefix in self.gene_sets:
             self.set_genes(prefix)
@@ -1586,37 +1587,49 @@ class MINORgCLI (MINORg):
             ## get targets if not user-provided
             # if self.genes:
             with warnings.catch_warnings():
-                warnings.filterwarnings("error",
-                                        message = "No target sequences found.",
+                warnings.filterwarnings("error", message = "No targets found.",
                                         category = MINORgWarning)
-                if not self.args.target:
-                    try:
-                        super().seq(quiet = False)
-                    ## abort current gene combo if no targets
-                    except MINORgWarning:
-                        warn_skip("No targets found.")
-                        continue
-            super().grna()
-            ## abort if no gRNA
-            if len(self.grna_hits) == 0:
-                warn_skip("No gRNA found.")
-                continue
-            ## filter
-            if self.background_check:
-                self.logfile.devsplain("Filtering background")
-                super().filter_background()
-            if self.feature_check:
-                self.logfile.devsplain("Filtering feature")
-                super().filter_feature()
-            if self.gc_check:
-                self.logfile.devsplain("Filtering GC")
-                super().filter_gc()
-            self.write_all_grna_map()
-            ## abort if no gRNA pass
-            if len(self.valid_grna()) == 0:
-                warn_skip("No valid gRNA after filtering.")
-            ## minimumset
-            self.minimumset(report_full_path = False)
+                warnings.filterwarnings("error", message = "No gRNA found.",
+                                        category = MINORgWarning)
+                warnings.filterwarnings("error", message = "No vaid gRNA after filtering.",
+                                        category = MINORgWarning)
+                try:
+                    super().full(background_check = self.background_check,
+                                 feature_check = self.feature_check,
+                                 gc_check = self.gc_check)
+                except MINORgWarning as w:
+                    warnings.filterwarnings("default", category = MINORgWarning)
+                    warn_skip(str(w))
+            #     if not self.args.target:
+            #         try:
+            #             super().seq(quiet = False)
+            #             warnings.warn("No target sequences found.", MINORgWarning)
+            #         ## abort current gene combo if no targets
+            #         except MINORgWarning as w:
+            #             print(dir(w), str(w), w.args)
+            #             warn_skip("No targets found.")
+            #             continue
+            # super().grna()
+            # ## abort if no gRNA
+            # if len(self.grna_hits) == 0:
+            #     warn_skip("No gRNA found.")
+            #     continue
+            # ## filter
+            # if self.background_check:
+            #     self.logfile.devsplain("Filtering background")
+            #     super().filter_background()
+            # if self.feature_check:
+            #     self.logfile.devsplain("Filtering feature")
+            #     super().filter_feature()
+            # if self.gc_check:
+            #     self.logfile.devsplain("Filtering GC")
+            #     super().filter_gc()
+            # self.write_all_grna_map()
+            # ## abort if no gRNA pass
+            # if len(self.valid_grna()) == 0:
+            #     warn_skip("No valid gRNA after filtering.")
+            # ## minimumset
+            # self.minimumset(report_full_path = False)
         self.reset_prefix()
         return
             
