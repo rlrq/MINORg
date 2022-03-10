@@ -8,6 +8,7 @@ INDV_GENOMES_REF = "ref"
 REFERENCED_ALL = '.'
 REFERENCED_NONE = '-'
 
+## if this dictionary is updated, ensure that the variables in pam.py are updated as well
 PAM_PATTERNS = {"SpCas9": ".NGG",
                 "spcas9": ".NGG",
                 "SaCas9N": ".NGRRN",

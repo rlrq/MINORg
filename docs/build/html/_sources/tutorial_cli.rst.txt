@@ -22,14 +22,14 @@ Let us begin with the simplest MINORg execution:
 
 .. code-block:: bash
    
-   $ minorg --directory ./example_00_target --target ./sample_CDS.fasta
+   $ minorg --directory ./example_100_target --target ./sample_CDS.fasta
    Final gRNA sequence(s) have been written to minorg_gRNA_final.fasta
    Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
    
    1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
-   Output files have been generated in /path/to/current/directory/example_00_target
+   Output files have been generated in /path/to/current/directory/example_100_target
 
-The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``--target ./sample_CDS.fasta``) and to output files into a user-specified directory (``--directory ./example_00_target``). By default, MINORg generates 20 bp gRNA using NGG PAM.
+The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``--target ./sample_CDS.fasta``) and to output files into a user-specified directory (``--directory ./example_100_target``). By default, MINORg generates 20 bp gRNA using NGG PAM.
 
 
 Reference gene(s) as targets
@@ -42,7 +42,7 @@ Single gene
 
 .. code-block:: bash
    
-   $ minorg --directory ./example_01_singlegene \
+   $ minorg --directory ./example_101_singlegene \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
    Extracting reference sequences
@@ -68,7 +68,7 @@ To specify multiple genes, simply use ``--gene`` with comma-separated gene IDs, 
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_02_multigene \
+   $ minorg --directory ./example_102_multigene \
             --indv ref --gene AT5G45050,AT5G45060,AT5G45200,AT5G45210,AT5G45220,AT5G45230,AT5G45240,AT5G45250 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -76,7 +76,7 @@ OR
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_02_multigene \
+   $ minorg --directory ./example_102_multigene \
             --indv ref --gene AT5G45050 --gene AT5G45060 --gene AT5G45200 \
             --gene AT5G45210 --gene AT5G45220 --gene AT5G45230 --gene AT5G45240 --gene AT5G45250 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
@@ -91,7 +91,7 @@ MINORg can also accept preset combinations of genes using ``--cluster`` and ``--
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_03_cluster \
+   $ minorg --directory ./example_103_cluster \
             --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -101,7 +101,7 @@ Like ``--gene``, multiple combinations of genes can be specified to ``--cluster`
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_03_cluster \
+   $ minorg --directory ./example_103_cluster \
             --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -137,7 +137,7 @@ If you have both genomic and CDS-only sequences of your target genes but not a G
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_04_ext \
+   $ minorg --directory ./example_104_ext \
             --indv ref --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
 
@@ -152,7 +152,7 @@ If you would like MINORg to infer homologues genes in non-reference genomes, you
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_05_query \
+   $ minorg --directory ./example_105_query \
             --query ./subset_9654.fasta --query ./subset_9655.fasta \
             --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
@@ -169,7 +169,7 @@ You can also use ``--indv`` to ask MINORg to infer homologues genes in non-refer
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_06_indv \
+   $ minorg --directory ./example_106_indv \
             --indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
             --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
@@ -189,7 +189,7 @@ Local database
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_07_domain \
+   $ minorg --directory ./example_107_domain \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --rpsblast /path/to/rpsblast/executable --db /path/to/rpsblast/db \
@@ -204,7 +204,7 @@ While it is in theory possible to use the remote CDD database & servers instead 
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_07_domain \
+   $ minorg --directory ./example_107_domain \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --rpsblast /path/to/rpsblast/executable --remote-rps \
@@ -217,7 +217,7 @@ While it is in theory possible to use the remote CDD database & servers instead 
 
    .. code-block:: bash
 
-      $ minorg --directory ./example_08_feature \
+      $ minorg --directory ./example_108_feature \
                --indv ref --gene AT5G45050 \
                --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                --feature three_prime_UTR
@@ -234,7 +234,7 @@ By default, MINORg generates 20 bp gRNA using SpCas9's NGG PAM. You may specify 
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_08_grna \
+   $ minorg --directory ./example_108_grna \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --length 19 --pam Cas12a
@@ -252,7 +252,7 @@ Filter by GC content
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_09_gc \
+   $ minorg --directory ./example_109_gc \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --gc-min 0.2 --gc-max 0.8
@@ -266,7 +266,7 @@ See: :ref:`Algorithms:Off-target assessment`
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_10_ot_ref \
+   $ minorg --directory ./example_110_ot_ref \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --screen-reference \
@@ -290,7 +290,7 @@ In the case above, ``--screen-reference`` is actually redundant as the genome fr
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_11_ot_nonref \
+   $ minorg --directory ./example_111_ot_nonref \
             --indv 9654 --genome-set ./subset_genome_mapping.txt \
             --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
@@ -305,7 +305,7 @@ By default, MINORg checks for the presence of PAM sites next to potential off-ta
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_12_ot_pamless \
+   $ minorg --directory ./example_112_ot_pamless \
             --indv 9654 --genome-set ./subset_genome_mapping.txt \
             --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
@@ -321,7 +321,7 @@ To skip off-target check entirely, use ``--skip-bg-check``.
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_13_skipbgcheck \
+   $ minorg --directory ./example_113_skipbgcheck \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --skip-bg-check
@@ -336,7 +336,7 @@ By default, when ``--gene`` is used, MINORg restricts gRNA to coding regions (CD
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_14_withinfeature \
+   $ minorg --directory ./example_114_withinfeature \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --feature three_prime_UTR
@@ -351,7 +351,7 @@ By default, MINORg outputs a single gRNA set covering all targets. You may reque
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_15_set \
+   $ minorg --directory ./example_115_set \
             --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --set 5
@@ -370,7 +370,7 @@ Proximity is only assessed when there is a tie for coverage, and non-redundancy 
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_16_nr \
+   $ minorg --directory ./example_116_nr \
             --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --prioritise-nr
@@ -382,7 +382,7 @@ You may specify gRNA sequences to exclude from any final gRNA set using ``--excl
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_17_exclude \
+   $ minorg --directory ./example_117_exclude \
             --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --exclude ./sample_exclude_RPS6.fasta
@@ -409,11 +409,11 @@ Let us take a look at 'sample_custom_check.map', where we've added a custom chec
 
 There are three possible values for check status: 'pass', 'fail', and 'NA'.
 
-An invalid/unset check is an 'NA'. If a check is unset for all entries (as is the case with the check 'feature' here), it will be ignored (i.e. the check is treated as 'pass' for all entries). However, when a check has been set for some entries but not others (as is the case with the 'my_custom_check' check here), MINORg will treat invalid/unset checks as 'fail' by default. This is because there isn't enough information on whether this constitutes a pass or fail for the check, and MINORg prefers to be conservative when outputting gRNA. You may override this behaiour using the ``--accept-invalid``. By doing so, MINORg will treat 'NA' as 'pass' for all checks.
+An invalid/unset check is an 'NA'. If a check is unset for all entries (as is the case with the check 'feature' here), it will be ignored (i.e. the check is treated as 'pass' for all entries). However, when a check has been set for some entries but not others (as is the case with the 'my_custom_check' check here), MINORg will treat invalid/unset checks as 'fail' by default. This is because there isn't enough information on whether this constitutes a pass or fail for the check, and MINORg prefers to be conservative when outputting gRNA. You may override this behaviour using the ``--accept-invalid``. By doing so, MINORg will treat 'NA' as 'pass' for all checks.
 
 .. code-block:: bash
 
-   $ minorg minimumset --directory ./example_18_acceptinvalid \
+   $ minorg minimumset --directory ./example_118_acceptinvalid \
                        --map ./sample_custom_check.map \
                        --accept-invalid
 
@@ -425,16 +425,16 @@ You may opt to manually inspect each gRNA set before MINORg write them to file u
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_19_manual --target ./sample_CDS.fasta
+   $ minorg --directory ./example_119_manual --target ./sample_CDS.fasta
             --manual
    	ID	sequence (Set 1)
-	gRNA_001	GGAATACAAGAGATTATCGA
+   	gRNA_001	GGAATACAAGAGATTATCGA
    Hit 'x' to continue if you are satisfied with these sequences. Otherwise, enter the sequence ID or sequence of an undesirable gRNA (case-sensitive) and hit the return key to update this list: x
    Final gRNA sequence(s) have been written to minorg_gRNA_final.fasta
    Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
    
    1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
-   Output files have been generated in /path/to/current/directory/example_19_manual
+   Output files have been generated in /path/to/current/directory/example_119_manual
 
 
 Subcommands
@@ -467,7 +467,7 @@ To use this subcommand, simply replace the command ``minorg`` with ``minorg seq`
 
 .. code-block:: bash
 
-   $ minorg seq --directory ./example_20_subcmdseq \
+   $ minorg seq --directory ./example_120_subcmdseq \
                 --query ./subset_9654.fasta --query ./subset_9655.fasta \
                 --gene AT1G10920 \
                 --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
@@ -489,13 +489,13 @@ To use this subcommand, simply replace the command ``minorg`` with ``minorg grna
 
 .. code-block:: bash
 
-   $ minorg grna --directory ./example_21_subcmdgrna \
+   $ minorg grna --directory ./example_121_subcmdgrna \
                  --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
                  --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                  --length 19 --pam Cas12a \
                  --feature three_prime_UTR \
                  --gc-min 0.2 --gc-max 0.8 \
-                 --out-map ./example_20.map
+                 --out-map ./example_120.map
 
 Subcommand ``filter``
 +++++++++++++++++++++
@@ -519,7 +519,7 @@ All parameters described in :ref:`Tutorial_cli:Filter by GC content` apply.
 
 .. code-block:: bash
 
-   $ minorg filter --directory ./example_22_subcmdfilter_gc \
+   $ minorg filter --directory ./example_122_subcmdfilter_gc \
                    --map ./sample_custom_check.map \
                    --gc-check --gc-min 0.2 --gc-max 0.8
 
@@ -532,7 +532,7 @@ Let us first generate a .map file for filtering.
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_23_subcmdfilter_bg_pt1 \
+   $ minorg --directory ./example_123_subcmdfilter_bg_pt1 \
             --indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
             --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
@@ -542,10 +542,10 @@ In the code above, we skipped off-targete check by raising the ``--skip-bg-check
 
 .. code-block:: bash
 
-   $ minorg filter --directory ./example_23_subcmdfilter_bg_pt2 \
-                   --map ./example_23_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map \
+   $ minorg filter --directory ./example_123_subcmdfilter_bg_pt2 \
+                   --map ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map \
                    --background-check \
-                   --target ./example_23_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta \
+                   --target ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --screen-ref \
                    --mask-cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
@@ -564,7 +564,7 @@ Let us first generate a .map file for filtering.
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_24_subcmdfilter_feature_pt1 \
+   $ minorg --directory ./example_124_subcmdfilter_feature_pt1 \
             --indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
             --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
@@ -573,10 +573,10 @@ By default, MINORg sets the desired feature to 'CDS'. You can re-assess and over
 
 .. code-block:: bash
 
-   $ minorg filter --directory ./example_24_subcmdfilter_feature \
-                   --map ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+   $ minorg filter --directory ./example_124_subcmdfilter_feature \
+                   --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
                    --feature-check \
-                   --target ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
+                   --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
                    --gene AT5G45050 \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --feature three_prime_UTR
@@ -590,12 +590,12 @@ To use some combination of checks, simply raise the relevant flags (``--gc-check
 
 .. code-block:: bash
 
-   $ minorg filter --directory ./example_25_subcmdfilter_gcfeature \
-                   --map ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+   $ minorg filter --directory ./example_125_subcmdfilter_gcfeature \
+                   --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
                    --gc-check \
                    --gc-min 0.2 --gc-max 0.8 \
                    --feature-check \
-                   --target ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
+                   --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
                    --gene AT5G45050 \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --feature three_prime_UTR
@@ -604,11 +604,11 @@ To execute all checks, use ``--check-all``. In the example below, we filter the 
 
 .. code-block:: bash
 
-   $ minorg filter --directory ./example_26_subcmdfilter_all \
-                   --map ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+   $ minorg filter --directory ./example_126_subcmdfilter_all \
+                   --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
                    --check-all \
                    --gc-min 0.2 --gc-max 0.8 \ ## GC
-                   --target ./example_24_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \ ## feature
+                   --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \ ## feature
                    --gene AT5G45050 \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --feature three_prime_UTR \
@@ -630,9 +630,9 @@ To use this subcommand, simply replace the command ``minorg`` with ``minorg grna
 
 .. code-block:: bash
 
-   $ minorg minimumset --directory ./example_27_subcmdminimumset
-                       --map ./example_05_query/minorg/minorg_gRNA_all.map \
-                       --target ./example_05_query/minorg/minorg_gene_targets.fasta \
+   $ minorg minimumset --directory ./example_127_subcmdminimumset
+                       --map ./example_105_query/minorg/minorg_gRNA_all.map \
+                       --target ./example_105_query/minorg/minorg_gene_targets.fasta \
                        --set 5 --manual --prioritise-nr
 
 In order for MINORg to better assess a gRNA's proximity to the 5' end (of hopefully sense strand) of a target in the event a tie-breaker is necessary, it is strongly suggested that target sequences be provided using ``--target <FASTA>`` so MINORg knows how long a target sequence is. This is especially so if the target sequences are antisense ones (you can check this using the .map file) generated by MINORg's inferences of homologues in unannotated genomes.
@@ -654,7 +654,7 @@ Similar to ``--clusters`` and ``--indv``, MINORg accepts a lookup file for refer
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_28_multiref \
+   $ minorg --directory ./example_128_multiref \
             --indv ref --gene AT1G33560,AL1G47950.v2.1,Araha.3012s0003.v1.1 \
             --reference tair10,araly2,araha1 --reference-set ./arabidopsis_genomes.txt
 
@@ -672,7 +672,7 @@ When using ``--domain``, users should ensure that the correct genetic code is sp
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example_29_geneticcode \
+   $ minorgpy --directory ./example_129_geneticcode \
               --indv ref --gene gene-Q0275 \
               --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
               --domain 366140 --genetic-code 3

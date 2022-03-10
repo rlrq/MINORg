@@ -1,6 +1,9 @@
 import itertools
+import warnings
 
 from typing import Union
+
+from minorg import MINORgWarning
 
 from minorg.functions import (
     gc_content,
@@ -258,7 +261,8 @@ class gRNASeq(CheckObj):
         Arguments:
             seq (str or Bio.Seq.Seq): sequence
         """
-        super().__init__("background", "exclude", "GC")
+        # super().__init__("background", "exclude", "GC")
+        super().__init__("background", "GC")
         self._seq = str(seq).upper()
         self._id = None
     def __str__(self): return self.seq
@@ -325,7 +329,7 @@ class gRNAHits:
         self._hits = {} if gRNA_hits is None else gRNA_hits ## dictionary of {seq: [list of <gRNAHit obj>]}
         if d:
             self.parse_from_dict(d)
-    def __repr__(self): return f"gRNAHits(len = {len(self)})"
+    def __repr__(self): return f"gRNAHits(gRNA = {len(self)})"
     def __len__(self): return len(self.seqs)
     @property
     def gRNAseqs(self) -> dict: return self._gRNAseqs
@@ -735,7 +739,7 @@ class gRNAHits:
         gRNASeq
             If exists
         None
-            If doesnt exist
+            If doesn't exist
         """
         output = [gRNA_seq for gRNA_seq in self.flatten_gRNAseqs() if gRNA_seq.id == id]
         if not output: return None
@@ -783,7 +787,8 @@ class gRNAHits:
     ######################
     ## filter gRNAHit objects for certain criteria and return new gRNAHits object
     def filter_hits(self, *check_names, exclude_empty_seqs = True, accept_invalid = False,
-                    accept_invalid_field = True, all_checks = False, quiet = False):
+                    accept_invalid_field = True, all_checks = False, quiet = False,
+                    report_invalid_field = False):
         """
         Filter gRNA hits by checks and return new gRNAHits object.
         
@@ -809,6 +814,13 @@ class gRNAHits:
             # check_names = list(set(itertools.chain(*[hit.check_names for hit in self.flatten_hits()])))
         else:
             raise Exception("Either *check_names OR all_checks is required.")
+        ## warn about any invalid fields
+        if ( (report_invalid_field or not quiet) and
+             (not all(self.valid_hit_check(check_name) for check_name in check_names)) ):
+            warnings.warn( ("The following hit check(s) have not been set: " +
+                            ','.join([check_name for check_name in check_names
+                                      if not self.valid_hit_check(check_name)])),
+                           MINORgWarning)
         ## remove any invalid fields
         if accept_invalid_field:
             check_names = [check_name for check_name in check_names if self.valid_hit_check(check_name)]
@@ -851,7 +863,7 @@ class gRNAHits:
         return self.filter_hits(all_checks = True, **kwargs)
     ## filter gRNASeq objects for certain criteria and return new gRNAHits object
     def filter_seqs(self, *check_names, accept_invalid = True, accept_invalid_field = True,
-                    all_checks = False, quiet = False):
+                    all_checks = False, quiet = False, report_invalid_field = False):
         """
         Filter gRNA sequences by checks and return new gRNAHits object.
         
@@ -874,6 +886,13 @@ class gRNAHits:
             check_names = list(set(itertools.chain(*[seq.check_names for seq in self.flatten_gRNAseqs()])))
         else:
             raise Exception("Either *check_names OR all_checks is required.")
+        ## warn about any invalid fields
+        if ( (report_invalid_field or not quiet) and
+             (not all(self.valid_seq_check(check_name) for check_name in check_names)) ):
+            warnings.warn( ("The following seq check(s) have not been set: " +
+                            ','.join([check_name for check_name in check_names
+                                      if not self.valid_seq_check(check_name)])),
+                           MINORgWarning)
         ## remove any invalid fields
         if accept_invalid_field:
             check_names = [check_name for check_name in check_names if self.valid_seq_check(check_name)]

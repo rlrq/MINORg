@@ -125,7 +125,7 @@ def parse_attr_mod_sdict(s: str, attr_sep: str = ',', feature_sep: str = ';', fa
 #         return
 #     return complete
 
-def mv_dir_overwrite(src_dir, dst_dir):
+def mv_dir_overwrite(src_dir, dst_dir, rm_dir = True):
     for root, dirs, files in list(os.walk(src_dir))[::-1]:
         out_dir = os.path.join(dst_dir, os.path.relpath(root, src_dir))
         os.makedirs(out_dir, exist_ok = True)

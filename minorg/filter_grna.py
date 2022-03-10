@@ -206,7 +206,7 @@ def within_feature(feature_ranges, seq, query_range, min_within_n = 1, min_withi
 
 def make_target_feature_ranges_function(feature_only_ranges, feature_gaps_ranges,
                                         max_insertion = 15):
-    print("Max acceptable insertion length:", max_insertion)
+    # print("Max acceptable insertion length:", max_insertion)
     def get_target_feature_ranges(seq, q_seqid):
         output = {}
         seq_pos = {i for i, c in enumerate(seq) if c != '-'}

@@ -32,7 +32,8 @@ from minorg.constants import (
     INDV_GENOMES_NONE,
     INDV_GENOMES_REF,
     REFERENCED_ALL,
-    REFERENCED_NONE
+    REFERENCED_NONE,
+    PAM_PATTERNS
 )
 from minorg.parse_config import (
     Param,
@@ -197,7 +198,7 @@ class MINORgCLI (MINORg):
             a MINORgCLI object
         """
         from argparse import Namespace
-        super().__init__(tmp = True, keep_tmp = keep_tmp, config = config)
+        super().__init__(cli = True, tmp = False, keep_tmp = keep_tmp, config = config)
         self.tracebacklimit = (None if LOGGING_LEVEL <= logging.DEBUG else 0)
         self.keep_on_crash = keep_on_crash
         self._raw_args = Namespace() ## hidden from user. Stores raw args for posterity/logging
@@ -1149,9 +1150,10 @@ class MINORgCLI (MINORg):
             if self.args.pam is not None:
                 if standalone:
                     ## set minimum length for least restrictive regex
-                    self.args.pam = PAM(pam = self.args.pam, gRNA_length = 1)
+                    self.length = 1
+                    self.parse_PAM()
                 else:
-                    self.args.pam = PAM(pam = self.args.pam)
+                    self.parse_PAM()
             if self.args.background:
                 for i, fname in enumerate(self.args.background):
                     self.add_background(fname, alias = f"bg_{str(i+1).zfill(3)}")
@@ -1274,13 +1276,18 @@ class MINORgCLI (MINORg):
         
     def parse_PAM(self):
         """
-        Create PAM object from self.args.pam and self.args.length and store object at self.pam.
+        Parse PAM by converting aliases of preset PAM patterns to PAM patterns.
         
         To be called after ``--pam`` and ``--length`` have passed check_grna_args checks OR
                      after ``--pam`` has passed check_filter_args (standalone) checks
         """
-        self.PAM = PAM(pam = self.args.pam, gRNA_length = self.args.length)
-        self.gRNA_length = self.args.length
+        if self.args.pam in PAM_PATTERNS:
+            self.pam = PAM_PATTERNS[self.args.pam]
+        else:
+            if self.verbose:
+                print(f"Parsing {self.args.pam} as PAM pattern.")
+            self.pam = self.args.pam
+        return
     
     #######################
     ##  MASTER ARGPARSE  ##
@@ -1304,7 +1311,9 @@ class MINORgCLI (MINORg):
             self.master_prefix = self.args.prefix
             self.prefix = self.args.prefix ## this may be updated by target OR full for each cluster
         if self.args.directory:
-            self.mv(self.args.directory)
+            self._mv_frm_tmp(self.args.directory)
+        ## make MINORG dir
+        self.mkdir(self.master_prefix)
         ## check the appropriate args are used for each subcmd
         ## (no checks for subcmd minimumset)
         if subcmd in ["homologue", "homolog", "target", "seq"]:
@@ -1350,7 +1359,8 @@ class MINORgCLI (MINORg):
         ## args handled by callbacks: domain
         ## args handled by check_reference_args: ext_gene, ext_cds, attr_mod
         ## args handled separately by parser: cluster, gene --> self.gene_sets
-        self.copy_args("rpsblast", "db", "remote_rps", "thread", "pam", "target", "length")
+        self.copy_args("rpsblast", "db", "remote_rps", "thread", "target", "length")
+        self.parse_PAM()
         self.grna_map = self.args.out_map
         self.grna_fasta = self.args.out_fasta
         self.pass_fasta = self.args.out_pass
@@ -1368,12 +1378,13 @@ class MINORgCLI (MINORg):
         self.subset_annotation(quiet = True)
         ## FORMAT ARGS FOR AND PASS ARGS TO MINORg
         ## args handled by check_reference_args: ext_gene, ext_cds, attr_mod
-        self.copy_args("pam", "blastn", "mafft", "thread",
+        self.copy_args("blastn", "mafft", "thread",
                        "mask",
                        "gc_min", "gc_max",
                        "ot_mismatch", "ot_gap", "ot_pamless",
                        "target", "feature", "max_insertion", "min_within_n", "min_within_fraction")
         ## args that require a little more parsing/have different names
+        self.parse_PAM()
         self.parse_grna_map_from_file(self.args.map)
         if self.args.rename:
             self.rename_grna(str(self.args.rename.resolve()))
@@ -1424,13 +1435,14 @@ class MINORgCLI (MINORg):
                        "thread",
                        "target", "feature", "check_recip", "relax_recip", ## target definition
                        "minid", "mincdslen", "check_id_before_merge", "merge_within",
-                       "pam", "target", "length", ## gRNA generation
+                       "target", "length", ## gRNA generation
                        "gc_min", "gc_max", ## filtering options
                        "ot_mismatch", "ot_gap", "ot_pamless",
                        "feature", "max_insertion", "min_within_n", "min_within_fraction",
                        "sets", "auto", "prioritise_nr", "exclude",
                        # "accept_feature_unknown",
                        "accept_invalid") ## minimum set options
+        self.parse_PAM()
         return
     
     #######################
@@ -1592,6 +1604,8 @@ class MINORgCLI (MINORg):
                 warnings.filterwarnings("error", message = "No gRNA found.",
                                         category = MINORgWarning)
                 warnings.filterwarnings("error", message = "No vaid gRNA after filtering.",
+                                        category = MINORgWarning)
+                warnings.filterwarnings("ignore", message = "The following .* check\(s\) have not been set: .*",
                                         category = MINORgWarning)
                 try:
                     super().full(background_check = self.background_check,

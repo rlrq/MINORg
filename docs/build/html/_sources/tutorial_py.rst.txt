@@ -41,17 +41,17 @@ User-provided targets
 Let us begin with the simplest MINORg execution:
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_00py_target")
+>>> my_minorg = MINORg(directory = "/path/to/example_200_target")
 >>> my_minorg.target = "/path/to/sample_CDS.fasta"
 >>> my_minorg.full()
 
-The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``my_minorg.target = 'pat/to/sample_CDS.fasta'``) and to output files into the directory ``/path/to/output/directory/example_00py_target``. By default, MINORg generates 20 bp gRNA using NGG PAM. The full MINORg programme is executed by calling the :meth:`~minorg.MINORg.MINORg.full` method (``my_minorg.full()``).
+The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (``my_minorg.target = 'pat/to/sample_CDS.fasta'``) and to output files into the directory ``/path/to/output/directory/example_200_target``. By default, MINORg generates 20 bp gRNA using NGG PAM. The full MINORg programme is executed by calling the :meth:`~minorg.MINORg.MINORg.full` method (``my_minorg.full()``).
 
 Reference gene(s) as targets
 ++++++++++++++++++++++++++++
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_01py_refgene")
+>>> my_minorg = MINORg(directory = "/path/to/example_201_refgene")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050", "AT5G45060", "AT5G45200", "AT5G45210", "AT5G45220", "AT5G45230", "AT5G45240", "AT5G45250"]
 >>> my_minorg.query_reference = True
@@ -74,26 +74,26 @@ Extending the reference
 
 See also: :ref:`Parameters:Extended genome`
 
-If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using :meth:`~mionrg.MIONRg.MINORg.extend_reference`. See :ref:`Parameters:Extended genome` for how to name your sequences to ensure proper mapping of CDS to genes.
+If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using :meth:`~minorg.MINORg.MINORg.extend_reference`. See :ref:`Parameters:Extended genome` for how to name your sequences to ensure proper mapping of CDS to genes.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_02py_ext")
+>>> my_minorg = MINORg(directory = "/path/to/example_202_ext")
 >>> my_minorg.extend_reference("/path/to/sample_gene.fasta", "/path/to/sample_CDS.fasta")
 >>> my_minorg.genes = ["AT1G10920"]
 >>> my_minorg.query_reference = True
 >>> my_minorg.full()
 
-:meth:`~minorg.MINORg.MINORg.extend_reference` effectively adds new genes to the reference genome, so they can be used just like any reference gene. Therefore, they can also be used in combination with :attr:`~minorg.MINORg.MINORg.query`.
+:meth:`~minorg.MINORg.MINORg.extend_reference` effectively adds new genes to the reference genome, so they can be used just like any reference gene. Therefore, they can also be used in combination with :meth:`~minorg.MINORg.MINORg.add_query`.
 
 Inferring homologues in unannotated genomes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-See also: :ref:`Algorithms:Non-reference homologue inference`, :ref:`Parameters:Multi-argument (CLI)`
+See also: :ref:`Algorithms:Non-reference homologue inference`
 
 If you would like MINORg to infer homologues genes in non-reference genomes, you can use :meth:`~minorg.MINORg.MINORg.add_query` to specify the FASTA files of those non-reference genomes.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_03py_query")
+>>> my_minorg = MINORg(directory = "/path/to/example_203_query")
 >>> my_minorg.extend_reference("/path/to/sample_gene.fasta", "/path/to/sample_CDS.fasta")
 >>> my_minorg.genes = ["AT1G10920"]
 >>> my_minorg.add_query("/path/to/subset_9654.fasta", alias = "9654")
@@ -123,7 +123,7 @@ Local database
 ^^^^^^^^^^^^^^
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_04py_domain")
+>>> my_minorg = MINORg(directory = "/path/to/example_204_domain")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
@@ -140,7 +140,7 @@ Remote database
 While it is in theory possible to use the remote CDD database & servers instead of local ones, the ``--remote`` option for the 'rpsblast'/'rpsblast+' command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use :attr:`~minorg.MINORg.MINORg.remote_rps` instead of :attr:`~minorg.MINORg.MINORg.db`.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_04py_domain")
+>>> my_minorg = MINORg(directory = "/path/to/example_204_domain")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
@@ -157,15 +157,16 @@ See also: :ref:`Parameters:PAM`
 By default, MINORg generates 20 bp gRNA using SpCas9's NGG PAM. You may specify other gRNA length using :attr:`~minorg.MINORg.MINORg.length` and other PAM using :attr:`~minorg.MINORg.MINORg.pam`.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_05py_grna")
+>>> my_minorg = MINORg(directory = "/path/to/example_205_grna")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
 >>> my_minorg.length = 19
->>> my_minorg.pam = "Cas12a"
+>>> from minorg import pam
+>>> my_minorg.pam = pam.Cas12a
 >>> my_minorg.full()
 
-In the example above, MINORg will generate 19 bp gRNA (``my_minorg.length = 19``) using Cas12a's unusual 5' PAM pattern (TTTV<gRNA>) (``my_minorg.pam = "Cas12a"``). MINORg has several built-in PAMs (see :ref:`Parameters:Preset PAM patterns` for options), and also supports customisable PAM patterns using ambiguous bases and regular expressions (see :ref:`Parameters:PAM` for format).
+In the example above, MINORg will generate 19 bp gRNA (``my_minorg.length = 19``) using Cas12a's unusual 5' PAM pattern (TTTV<gRNA>) (``my_minorg.pam = pam.Cas12a``). MINORg has several built-in PAMs (see :ref:`Parameters:Preset PAM patterns` for options), and also supports customisable PAM patterns using ambiguous bases and regular expressions (see :ref:`Parameters:PAM` for format). To use preset PAMs, such as in the example above, you will first need to import MINORg's :ref:`minorg.pam:minorg.pam module` module (``from minorg import pam``), then use ``pam.<preset pam alias>`` (such as ``pam.Cas12a``) to refer to the desired PAM pattern.
 
 Filtering gRNA
 ~~~~~~~~~~~~~~
@@ -176,7 +177,7 @@ Filter by GC content
 ++++++++++++++++++++
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_06py_gc")
+>>> my_minorg = MINORg(directory = "/path/to/example_206_gc")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
@@ -191,7 +192,7 @@ Filter by off-target
 See: :ref:`Algorithms:Off-target assessment`
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_07py_ot_ref")
+>>> my_minorg = MINORg(directory = "/path/to/example_207_ot_ref")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
@@ -211,14 +212,14 @@ In the above example, MINORg will screen gRNA for off-targets in:
   
   * The alias keyword argument is optional. If not provided, MINORg will generate a unique alias.
   * Note that any AT5G45050 homologues in these four FASTA files will NOT be masked. This means that only gRNA that do not target any AT5G45050 homologues in these four genomes will pass this off-target check.
-    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``my_minorg.mask = ["/path/to/to_mask_1.fasta", "/path/to/to_mask_2.fasta"]``. You may use subcommand :meth:`~minorg.MINORg.MINORg.seq` (see :ref:`Tutorial_py:Subcommand :meth:\`~minorg.MINORg.MINORg.seq\``) to identify these homologues.
+    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``my_minorg.mask = ["/path/to/to_mask_1.fasta", "/path/to/to_mask_2.fasta"]``. You may use subcommand :meth:`~minorg.MINORg.MINORg.seq` (see :ref:`Tutorial_py:Subcommands`) to identify these homologues.
 
-:attr:`~minorg.MINORg.MINORg.ot_gap` and :attr:`~minorg.MINORg.MINORg.ot_mismatch` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
+:attr:`~minorg.MINORg.MINORg.ot_gap` and :attr:`~minorg.MINORg.MINORg.ot_mismatch` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. By default, both values are set to '1'. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
 
 In the case above, ``my_minorg.screen_reference = True`` is actually redundant as the genome from which targets are obtained (which, because of ``my_minorg.query_reference``, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from **non-reference genomes**, the reference genome is not automatically included for off-target assessment and thus :attr:`~minorg.MINORg.MINORg.screen_reference` is NOT redundant. Additionally, do note that the genes specified using :attr:`~minorg.MINORg.MINORg.gene` are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_08py_ot_nonref")
+>>> my_minorg = MINORg(directory = "/path/to/example_208_ot_nonref")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.add_query("/path/to/subset_9654.fasta", alias = "9654")
@@ -236,7 +237,7 @@ PAM-less off-target check
 By default, MINORg checks for the presence of PAM sites next to potential off-target hits. If there are no PAM sites, MINORg considers that hit non-problematic. You may override this behaviour by setting :attr:`~minorg.MINORg.MINORg.ot_pamless` to ``True``. This tells MINORg to mark off-target hits that meet the :attr:`~minorg.MINORg.MINORg.ot_gap` or :attr:`~minorg.MINORg.MINORg.ot_mismatch` thresholds as problematic regardless of the presence or absence of PAM sites nearby.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_09py_ot_pamless")
+>>> my_minorg = MINORg(directory = "/path/to/example_209_ot_pamless")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.add_query("/path/to/subset_9654.fasta", alias = "9654")
@@ -255,7 +256,7 @@ Skip off-target check
 To skip off-target check entirely, use ``background_check = False`` when calling :meth:`~minorg.MINORg.MINORg.full`.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_10py_skipbgcheck")
+>>> my_minorg = MINORg(directory = "/path/to/example_210_skipbgcheck")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
@@ -268,12 +269,114 @@ See: :ref:`Algorithms:Within-feature inference`
 By default, when :attr:`~minorg.MINORg.MINORg.genes` is set, MINORg restricts gRNA to coding regions (CDS). For more on how MINORg does this for inferred, unannotated homologues, see :ref:`Algorithms:Within-feature inference`. You may change the feature type in which to design gRNA using the attribute :attr:`~minorg.MINORg.MINORg.feature`. See column 3 of your GFF3 file for valid feature types (see https://en.wikipedia.org/wiki/General_feature_format for more on GFF file format).
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_11py_withinfeature")
+>>> my_minorg = MINORg(directory = "/path/to/example_211_withinfeature")
 >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
 >>> my_minorg.genes = ["AT5G45050"]
 >>> my_minorg.query_reference = True
 >>> my_minorg.feature = "three_prime_UTR"
 >>> my_minorg.full(background_check = False)
+
+Generating minimum gRNA set(s)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Number of sets
+++++++++++++++
+
+By default, MINORg outputs a single gRNA set covering all targets. You may request more (mutually exclusive) sets using the :attr:`~minorg.MINORg.MINORg.set` attribute.
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_212_set")
+>>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
+>>> my_minorg.genes = ["AT5G46260", "AT5G46270", "AT5G46450", "AT5G46470", "AT5G46490", "AT5G46510", "AT5G46520"]
+>>> my_minorg.query_reference = True
+>>> my_minorg.set = 5
+>>> my_minorg.full()
+
+Prioritise non-redundancy
++++++++++++++++++++++++++
+
+By default, MINORg selects gRNA for sets using these criteria in decreasing order of priority:
+
+#. Coverage (of as yet uncovered targets)
+#. Proximity to 5' end
+#. Non-redundancy
+
+Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may flip the priority of proximity and non-redundancy by setting :attr:`~minorg.MINORg.MINORg.prioritise_nr` to ``True`` if you prefer to minimise multiple edits in a single target when using a single set of gRNA. (The priority of coverage is NOT modifiable.)
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_213_nr")
+>>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
+>>> my_minorg.genes = ["AT5G46260", "AT5G46270", "AT5G46450", "AT5G46470", "AT5G46490", "AT5G46510", "AT5G46520"]
+>>> my_minorg.query_reference = True
+>>> my_minorg.prioritise_nr = True
+>>> my_minorg.full()
+
+Excluding gRNA
+++++++++++++++
+
+You may specify gRNA sequences to exclude from any final gRNA set by providing the path to a FASTA file containing sequences to exclude to :attr:`~minorg.MINORg.MINORg.exclude`.
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_214_exclude")
+>>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
+>>> my_minorg.genes = ["AT5G46260", "AT5G46270", "AT5G46450", "AT5G46470", "AT5G46490", "AT5G46510", "AT5G46520"]
+>>> my_minorg.query_reference = True
+>>> my_minorg.exclude = /path/to/sample_exclude_RPS6.fasta
+>>> my_minorg.full()
+
+The gRNA names in the file passed to :attr:`~minorg.MINORg.MINORg.exclude` do not matter. Only the sequences are used when determining whether to exclude a gRNA.
+
+Accepting unknown checks
+++++++++++++++++++++++++
+
+Sometimes, not all filtering checks (GC, background, and feature) are set for all sequences. This is not an issue if you use the full programme (i.e. :meth:`~minorg.MINORg.MINORg.full`), but may be relevant if you are re-generating sets using the 'minimumset' subcommand (i.e. :meth:`~minorg.MINORg.MINORg.minimumset`) with a modified mapping file OR a mapping file from the 'filter' subcommand where not all filters have been applied.
+
+Let us take a look at 'sample_custom_check.map', where we've added a custom check called 'my_custom_check' in the last column::
+
+  gRNA id	gRNA sequence	target id	target sense	gRNA strand	start	end	group	background	GC	feature	my_custom_check
+  gRNA_001	CTTCATCTTCTTCTCGAAAT	targetA	NA	+	8	27	1	pass	pass	NA	pass
+  gRNA_001	CTTCATCTTCTTCTCGAAAT	targetB	NA	+	80	99	1	pass	pass	NA	pass
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetA	NA	+	37	56	1	pass	pass	NA	NA
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetB	NA	+	286	305	1	pass	pass	NA	pass
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetC	NA	+	109	128	1	pass	pass	NA	fail
+  gRNA_002	GATGTTTTCTTGAGCTTCAG	targetD	NA	+	110	129	1	pass	pass	NA	fail
+  gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetB	NA	+	38	57	1	pass	pass	NA	NA
+  gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetC	NA	+	287	306	1	pass	pass	NA	pass
+  gRNA_003	ATGTTTTCTTGAGCTTCAGA	targetD	NA	+	110	129	1	pass	pass	NA	pass
+
+There are three possible values for check status: 'pass', 'fail', and 'NA'.
+
+An invalid/unset check is an 'NA'. If a check is unset for all entries (as is the case with the check 'feature' here), it will be ignored (i.e. the check is treated as 'pass' for all entries). However, when a check has been set for some entries but not others (as is the case with the 'my_custom_check' check here), MINORg will treat invalid/unset checks as 'fail' by default. This is because there isn't enough information on whether this constitutes a pass or fail for the check, and MINORg prefers to be conservative when outputting gRNA. You may override this behaviour by setting :attr:`~minorg.MINORg.MINORg.accept_invalid` to ``True``. By doing so, MINORg will treat 'NA' as 'pass' for all checks.
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_215_acceptinvalid")
+>>> my_minorg.parse_grna_map_from_file("/path/to/sample_custom_check.map")
+>>> my_minorg.accept_invalid = True
+>>> my_minorg.minimumset()
+                       
+Manually approve gRNA sets
+++++++++++++++++++++++++++
+
+You may opt to manually inspect each gRNA set before MINORg write them to file by using ``manual = True`` when executing :meth:`~minorg.MINORg.MINORg.full` or the minimum set subcommand :meth:`~minorg.MINORg.MINORg.minimumset`.
+
+.. code-block:: python
+   
+   >>> from minorg.MINORg import MINORg
+   >>> my_minorg = MINORg(directory = "/path/to/example_216_manual")
+   >>> my_minorg.target = "/path/to/sample_CDS.fasta"
+   >>> my_minorg.full(manual = True)
+
+           ID	sequence (Set 1)
+           gRNA_001	GGAATACAAGAGATTATCGA
+   Hit 'x' to continue if you are satisfied with these sequences. Otherwise, enter the sequence ID or
+   sequence of an undesirable gRNA (case-sensitive) and hit the return key to update this list: x
+
+   Final gRNA sequence(s) have been written to minorg_gRNA_final.fasta
+   Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
+
+   1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
+   Output files have been generated in /path/to/example_216_manual
+
 
 Subcommands
 ~~~~~~~~~~~
@@ -299,10 +402,177 @@ As users may only wish to execute a subset of these steps instead of the full pr
 
 The subcommands may be useful if you already have a preferred off-target/on-target assessment software. In this case, you may execute subcommands :meth:`~minorg.MINORg.MINORg.seq` and :meth:`~minorg.MINORg.MINORg.grna`, submit the gRNA output by MINORg for off-target/on-target assessment, update the .map file output by MINORg with the status of each gRNA for that off-target/on-target assessment, and execute :meth:`~minorg.MINORg.MINORg.minimumset` to obtain a desired number of minimum gRNA sets. Note that if you do this, you should re-read the updated .map file into MINORg using :meth:`~minorg.MINORg.MINORg.parse_grna_map_from_file` so MINORg can replace the gRNA data stored in memory with your updated gRNA data.
 
+Each subcommand may require a different combination of attributes.
+
 Subcommand :meth:`~minorg.MINORg.MINORg.seq`
 ++++++++++++++++++++++++++++++++++++++++++++
 
+The :meth:`~minorg.MINORg.MINORg.seq` subcommand identifies target sequences, whether by extracting them from a reference genome or inferring homologues in unannotated genomes. All parameters desecribed in :ref:`Tutorial_py:Defining target sequences` (except attribute :attr:`~minorg.MINORg.MINORg.target`) and :ref:`Tutorial_py:Defining reference genomes` apply. If you already have a FASTA file containing your target sequences, you may set :attr:`~minorg.MINORg.MINORg.target` to the path of that FASTA file and skip this subcommand.
+
+This step will output target sequences into a file ending with '_targets.fasta'. This filename will be stored at attribute :attr:`~minorg.MINORg.MINORg.target`.
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_217_subcmdseq")
+>>> my_minorg.extend_reference("/path/to/sample_gene.fasta", "/path/to/sample_CDS.fasta")
+>>> my_minorg.genes = ["AT1G10920"]
+>>> my_minorg.add_query("/path/to/subset_9654.fasta", alias = "9654")
+>>> my_minorg.add_query("/path/to/subset_9655.fasta", alias = "9655")
+>>> my_minorg.seq()
+>>> my_minorg.target
+'/path/to/example_217_subcmdseq/minorg/minorg_gene_targets.fasta'
+
+Subcommand :meth:`~minorg.MINORg.MINORg.grna`
++++++++++++++++++++++++++++++++++++++++++++++
+
+The :meth:`~minorg.MINORg.MINORg.grna` subcommand generates gRNA within target sequences from a target file. Unlike the command line version, it **DOES NOT** incorporate parts of the :meth:`~minorg.MINORg.MINORg.seq` and :meth:`~minorg.MINORg.MINORg.filter` subcommands. All parameters described in :ref:`Tutorial_py:Defining gRNA` apply.
+
+gRNA sequences will **NOT** be written to files. If you wish to do so, you may use the following methods. If you do not supply an output file path, it will be automatically generated:
+
+* :meth:`~minorg.MINORg.MINORg.write_all_grna_map`: write .map file containing all candidate gRNA (no checks will be set by :meth:`~minorg.MINORg.MINORg.grna` so all entries in check fields will be 'NA')
+
+  * Path to output file will be stored at :attr:`~minorg.MINORg.MINORg.grna_map`
+
+* :meth:`~minorg.MINORg.MINORg.write_all_grna_fasta`: write FASTA file containing all candidate gRNA
+
+  * Path to output file will be stored at :attr:`~minorg.MINORg.MINORg.grna_fasta`
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_218_subcmdgrna")
+>>> my_minorg.target = "/path/to/sample_CDS.fasta"
+>>> my_minorg.grna() ## default 3' NGG PAM
+PAM pattern: .{20}(?=[GATC]GG)
+>>> my_minorg.grna_hits
+gRNAHits(gRNA = 201)
+>>> from minorg import pam
+>>> my_minorg.pam = pam.Cas12a ## 5' TTTV PAM
+PAM pattern: (?<=TTT[ACG]).{20}
+>>> my_minorg.grna_hits
+gRNAHits(gRNA = 95)
+>>> my_minorg.pam = "ATV."
+PAM pattern: (?<=AT[ACG]).{20}
+>>> my_minorg.grna_hits
+gRNAHits(gRNA = 267)
+>>> my_minorg.write_all_grna_fasta()
+>>> my_minorg.grna_fasta
+'/path/to/example_218_subcmdgrna/minorg/minorg_gRNA_all.fasta'
+
+gRNA data is stored at the attribute :attr:`~minorg.MINORg.MINORg.grna_hits`, and it prints the number of gRNA as a string representation. In the above example, 201 different gRNA are generated from the target sequences in the target file "sample_CDS.fasta". We then decided we want to generate gRNA for Cas12a instead, which has a 5' TTTV PAM pattern. This yields us 95 different gRNA. Finally we decided to try a completely made up 5' ATV PAM pattern, netting us 267 different gRNA in the end. Satisfied, we wrote the sequences of these gRNA to file, and printed the path of the file.
+
+
+Subcommand :meth:`~minorg.MINORg.MINORg.filter`
++++++++++++++++++++++++++++++++++++++++++++++++
+
 TODO
+
+Subcommand :meth:`~minorg.MINORg.MINORg.filter_gc`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Subcommand :meth:`~minorg.MINORg.MINORg.filter_background`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Subcommand :meth:`~minorg.MINORg.MINORg.filter_feature`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TODO
+
+Subcommand :meth:`~minorg.MINORg.MINORg.minimumset`
++++++++++++++++++++++++++++++++++++++++++++++++++++
+TODO
+
+Chaining subcommands
+++++++++++++++++++++
+
+You may use subcommands separately if you'd like to inspect the outcome of each step and/or repeat a step with different parameters before proceeding with the next. MINORg tracks the output of previous steps, so you do not need to read them into MINORg before executing the next step.
+
+.. code-block:: python
+   
+   >>> from minorg.MINORg import MINORg
+   >>> my_minorg = MINORg(directory = "/path/to/example_217_subcmd", prefix = "test", thread = 1)
+   >>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10", replace = True)
+   >>> my_minorg.add_reference("/path/to/subset_ref_Araly2.fasta", "/path/to/subset_ref_Araly2.gff", alias = "araly2")
+   >>> my_minorg.genes = ["AT5G66900", "AL8G44500.v2.1"]
+   >>> my_minorg.query_reference = True
+   >>> my_minorg.seq() ## generate target sequences
+   >>> my_minorg.target ## print path to FASTA file containing target sequences
+   '/path/to/example_217_subcmd/minorg/minorg_gene_targets.fasta'
+   >>> my_minorg.grna()
+   PAM pattern: .{20}(?=[GATC]GG)
+   >>> my_minorg.screen_reference = True
+   >>> my_minorg.filter_background()
+   Masking on-targets
+   Finding off-targets
+   >>> my_minorg.valid_grna("background")
+   gRNAHits(gRNA = 395)
+   >>> my_minorg.add_background("/path/to/subset_ref_Araha1.fasta", alias = "araha1") ## add background file
+   >>> my_minorg.filter_background() ## repeat background check with additional background file
+   Masking on-targets
+   Finding off-targets
+   >>> my_minorg.valid_grna("background") ## updated set of passing gRNA
+   gRNAHits(gRNA = 250)
+   >>> my_minorg.filter_gc()
+   >>> my_minorg.valid_grna("GC")
+   gRNAHits(gRNA = 355)
+   >>> my_minorg.valid_grna("background", "GC")
+   gRNAHits(gRNA = 223)
+   >>> my_minorg.valid_grna() ## gRNA filtered for all valid checks (at this point, background and GC)
+   /path/to/minorg/grna.py:823: MINORgWarning: The following hit checks have not been set: feature
+   gRNAHits(gRNA = 223)
+   >>> my_minorg.filter_feature() ## by default, MINORg only retains gRNA in CDS
+   >>> my_minorg.valid_grna("feature")
+   gRNAHits(gRNA = 324)
+   >>> my_minorg.valid_grna()
+   gRNAHits(gRNA = 181)
+   >>> my_minorg.minimumset(manual = True)
+
+           ID	sequence (Set 1)
+           gRNA_026	GTCGTTTCCGGAGACTATGA
+   Hit 'x' to continue if you are satisfied with these sequences. Otherwise, enter the sequence ID or
+   sequence of an undesirable gRNA (case-sensitive) and hit the return key to update this list: gRNA_026
+
+           ID	sequence (Set 1)
+           gRNA_223	TCAATCTCCATCATAGTCTC
+   Hit 'x' to continue if you are satisfied with these sequences. Otherwise, enter the sequence ID or
+   sequence of an undesirable gRNA (case-sensitive) and hit the return key to update this list: x
+
+   Final gRNA sequence(s) have been written to /path/to/example_217_subcmd/minorg/minorg_gRNA_final.fasta
+   Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to
+   /path/to/example_217_subcmd/minorg/minorg_gRNA_final.map
+
+   1 mutually exclusive gRNA set(s) requested. 1 set(s) found.
+   >>> my_minorg.write_all_grna_map() ## write .map file containing check information for all candidate gRNA
+   >>> my_minorg.write_all_grna_fasta() ## write FASTA file containing all candidate gRNA
+   >>> my_minorg.write_pass_grna_map() ## write .map file containing information for valid gRNA
+   >>> my_minorg.write_pass_grna_fasta() ## write FASTA file containing valid gRNA
+   >>> my_minorg.resolve() ## remove temporary files
+
+It is highly recommended that you execute :meth:`~minorg.MINORg.MINORg.resolve` to remove any temporary files generated.
+
+Defining reference genomes
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Single reference genome
++++++++++++++++++++++++
+
+See example in :ref:`Tutorial_py:Reference gene(s) as targets`.
+
+Multiple reference genomes
+++++++++++++++++++++++++++
+
+See also: :ref:`Parameters:Reference`
+
+You may specify genes from multiple reference genomes so long as those reference genomes have also been added using :meth:`~minorg.MINORg.MINORg.add_reference`.
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_218_multiref")
+>>> my_minorg.add_reference("/path/to/subset_ref_TAIR10.fasta", "/path/to/subset_ref_TAIR10.gff", alias = "TAIR10")
+>>> my_minorg.add_reference("/path/to/subset_ref_Araly2.fasta", "/path/to/subset_ref_Araly2.gff", alias = "Araly2")
+>>> my_minorg.add_reference("/path/to/subset_ref_Araha1.fasta", "/path/to/subset_ref_Araha1.gff", alias = "Araha1")
+>>> my_minorg.genes = ["AT1G33560", "AL1G47950.v2.1", "Araha.3012s0003.v1.1"]
+>>> my_minorg.query_reference = True
+>>> my_minorg.full()
+
+In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.
 
 
 Non-standard reference
@@ -315,7 +585,7 @@ When using :attr:`~minorg.MINORg.MINORg.pssm_ids`, users should ensure that the 
 
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_XXpy_geneticcode")
+>>> my_minorg = MINORg(directory = "/path/to/example_219_geneticcode")
 >>> my_minorg.add_reference("/path/to/subset_ref_yeast_mt.fasta", "/path/to/subset_ref_yeast_mt.gff", alias = "yeast_mt", genetic_code = 3) ## specify genetic code here
 >>> my_minorg.genes = ["gene-Q0275"]
 >>> my_minorg.query_reference = True
@@ -335,7 +605,7 @@ See also: :ref:`Parameters:Attribute modification`
 MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using the ``attr_mod`` (for 'attribute modification') keyword argument when adding reference genomes using :meth:`~minorg.MINORg.MINORg.add_reference`.
 
 >>> from minorg.MINORg import MINORg
->>> my_minorg = MINORg(directory = "/path/to/example_XXpy_attrmod")
+>>> my_minorg = MINORg(directory = "/path/to/example_220_attrmod")
 >>> my_minorg.add_reference("/path/to/subset_ref_irgsp.fasta", "/path/to/subset_ref_irgsp.gff", alias = "irgsp", attr_mod = {"mRNA": {"Parent": "Locus_id"}}) ## specify attribute modifications
 >>> my_minorg.genes = ["Os01t0100100"]
 >>> my_minorg.query_reference = True
@@ -346,37 +616,74 @@ The IRGSP 1.0 reference genome for rice (*Oryza sativa* subsp. Nipponbare) uses 
 Multithreading
 ~~~~~~~~~~~~~~
 
-MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using ``--query`` or ``--indv``), have multiple reference genomes (``--reference``), or multiple background sequences (``--background``).
+MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes, have multiple reference genomes, or multiple background sequences.
 
-To run MINORg with parallel processing, use ``--thread <number of threads>``.
+To run MINORg with parallel processing, set :attr:`~minorg.MINORg.MINORg.thread` to the desired number of threads.
 
-.. code-block:: bash
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg(directory = "/path/to/example_221_thread")
+>>> my_minorg.extend_reference("/path/to/sample_gene.fasta", "/path/to/sample_CDS.fasta")
+>>> my_minorg.genes = ["AT1G10920"]
+>>> my_minorg.add_query("/path/to/subset_9654.fasta", alias = "9654")
+>>> my_minorg.add_query("/path/to/subset_9655.fasta", alias = "9655")
+>>> my_minorg.thread = 2
+>>> my_minorg.full()
 
-   $ minorg --directory ./example_31_thread \
-            --query ./subset_9654.fasta --query ./subset_9655.fasta \
-            --gene AT1G10920 \
-            --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta \
-            --thread 2
 
 Differences between CLI and Python versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Note that, unlike the command line, the Python package does not support aliases even if the config file has been set up appropriately for command line executions. Therefore, there are no true equivalents to ``--cluster``, ``--indv``, or ``--reference``.
 
-To specify cluster genes (analogous to ``--cluster`` and ``--gene``):
+To specify cluster genes
+++++++++++++++++++++++++
 
->>> my_minorg.cluster = 'RPS6' ## incorrect; this attribute does not exist; does not throw error now but will cause problems later
->>> my_minorg.genes = ['AT5G46260','AT5G46270','AT5G46450','AT5G46470','AT5G46490','AT5G46510','AT5G46520'] ## correct
+Analogous to ``--cluster`` and ``--gene``.
 
-To specify query FASTA files (analogous to ``--indv`` and ``--query``):
+**Correct:**
 
->>> my_minorg.indv = '9654,9655' ## incorrect; this attribute does not exist; does not throw error now but will cause problems later
->>> my_minorg.query = {'9654': '/path/to/subset_9654.fasta', '9655': '/path/to/subset_9655.fasta'} ## correct
+>>> my_minorg.genes = ['AT5G46260','AT5G46270','AT5G46450','AT5G46470','AT5G46490','AT5G46510','AT5G46520']
 
-To specify reference genomes (analogous to ``--reference``, ``--assembly``, ``--annotation``, ``--attr-mod``, and ``--genetic-code``; note that ``attr_mod`` and ``genetic_code`` are optional if the annotation uses standard attribute field names and the standard genetic code, which the example below does):
+**Incorrect:**
 
->>> my_minorg.reference = 'TAIR10' ## incorrect
+>>> my_minorg.cluster_set = '/path/to/subset_cluster_mapping.txt'
+>>> my_minorg.cluster = 'RPS6'
+
+Attributes 'cluster_set' and 'cluster' do not exist. This does not throw error now but will cause problems later.
+
+To specify query FASTA files
+++++++++++++++++++++++++++++
+
+Analogous to ``--indv`` and ``--query``.
+
+**Correct:**
+
+>>> my_minorg.add_query('/path/to/subset_9654.fasta', alias = '9654')
+>>> my_minorg.add_query('/path/to/subset_9655.fasta', alias = '9655')
+
+**Incorrect:**
+
+>>> my_minorg.genome_set = '/path/to/subset_genome_mapping.txt'
+>>> my_minorg.indv = '9654,9655'
+
+Attributes 'genome_set' and 'indv' do not exist. This does not throw error now but will cause problems later.
+
+To specify reference genomes
+++++++++++++++++++++++++++++
+
+Analogous to ``--reference``, ``--assembly``, ``--annotation``, ``--attr-mod``, and ``--genetic-code``.
+
+**Correct:**
+
+>>> my_minorg.add_reference('/path/to/TAIR10.fasta', '/path/to/TARI10.gff3', alias = 'TAIR10', genetic_code = 1, atr_mod = {})
+
+Note that ``attr_mod`` and ``genetic_code`` are optional if the annotation uses standard attribute field names and the standard genetic code, which the example above does.
+
+**Incorrect:**
+
+>>> my_minorg.reference_set = '/path/to/arabidopsis_genomes.txt'
+>>> my_minorg.reference = 'TAIR10'
 AttributeError: can't set attribute
->>> my_minorg.add_reference('TAIR10', '/path/to/TAIR10.fasta', '/path/to/TARI10.gff3', genetic_code = 1, atr_mod = {}) ## correct
 
+Attributes 'reference_set' does not exist, and 'reference' is a property that users are not allowed to directly modify.
 

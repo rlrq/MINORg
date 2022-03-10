@@ -88,6 +88,7 @@ from minorg.pam import PAM
 from typing import Optional, Type, Dict
 
 warnings.showwarning = _warning
+warnings.filterwarnings("always", category = MINORgWarning)
 
 LOGGING_LEVEL = _logging_level
 
@@ -222,29 +223,29 @@ class PathHandler:
         self._tracebacklimit = limit
         import sys
         sys.tracebacklimit = self._tracebacklimit
-    ## update output directory
-    def mv(self, directory):
-        """
-        Update output directory.
+    # ## update output directory
+    # def mv(self, directory):
+    #     """
+    #     Update output directory.
         
-        Contents of the current output directory will also be moved to the new directory if files are
-        already being written to output directory (i.e. not currently using a tmp dir)
+    #     Contents of the current output directory will also be moved to the new directory if files are
+    #     already being written to output directory (i.e. not currently using a tmp dir)
         
-        Arguments:
-            directory (str): required, path to new output directory
-        """
-        if directory is None: return
-        directory = os.path.abspath(directory)
-        if directory == self.directory: return
-        ## if files are being written directly to output directory, move to new destination
-        if self.active_directory == self.directory:
-            mv_dir_overwrite(self.active_directory, directory)
-            self.tmp_files = set(re.sub('^' + re.escape(self.active_directory), directory, fname)
-                                 for fname in self.tmp_files)
-            self.new_dirs = [re.sub('^' + re.escape(self.active_directory), directory, dirname)
-                             for dirname in self.new_dirs]
-            self.active_directory = directory
-        self.directory = directory
+    #     Arguments:
+    #         directory (str): required, path to new output directory
+    #     """
+    #     if directory is None: return
+    #     directory = os.path.abspath(directory)
+    #     if directory == self.directory: return
+    #     ## if files are being written directly to output directory, move to new destination
+    #     if self.active_directory == self.directory:
+    #         mv_dir_overwrite(self.active_directory, directory)
+    #         self.tmp_files = set(re.sub('^' + re.escape(self.active_directory), directory, fname)
+    #                              for fname in self.tmp_files)
+    #         self.new_dirs = [re.sub('^' + re.escape(self.active_directory), directory, dirname)
+    #                          for dirname in self.new_dirs]
+    #         self.active_directory = directory
+    #     self.directory = directory
     ## make directory (or directories)
     def mkdir(self, *directories, tmp = False):
         """
@@ -259,8 +260,14 @@ class PathHandler:
             if not os.path.isabs(directory):
                 directory = os.path.abspath(os.path.join(self.active_directory, directory))
             output.append(directory)
-            if not os.path.exists(directory) and not directory in self.new_dirs:
-                os.mkdir(directory)
+            if not os.path.exists(directory):
+                print(directory)
+                def make_parent(d):
+                    if not os.path.exists(os.path.dirname(d)):
+                        make_parent(os.path.dirname(d))
+                    else:
+                        os.mkdir(d)
+                make_parent(directory)
                 self.new_dirs.append(directory)
                 if tmp: self.tmp_files.add(directory)
         return output[0] if len(directories) == 1 else output
@@ -276,10 +283,8 @@ class PathHandler:
                 (e.g. self.mkfname('tmp', 'tmp.fasta') --> <self.active_directory>/tmp/tmp.fasta)
             tmp (bool): mark file as temporary (for deletion when self.rm_tmpfiles is called)
         
-        Returns
-        -------
-        str
-            path
+        Returns:
+            str: path
         """
         if os.path.isabs(os.path.join(*path)): path = os.path.join(*path)
         else: path = os.path.join(self.active_directory, *path)
@@ -297,10 +302,8 @@ class PathHandler:
             tmp (bool): mark file as temporary (for deletion when self.rm_tmpfiles is called)
             newfile (bool): clear an existing file at destination if it already exists
         
-        Returns
-        -------
-        str
-            path
+        Returns: 
+            str: path
         """
         fname = self.mkfname(*path)
         fdir = os.path.dirname(fname)
@@ -349,8 +352,9 @@ class PathHandler:
                 self.rm_tmpfiles()
                 ## move logfile
                 self.logfile.move(self.directory, self.prefix)
-                ## copy items
-                mv_dir_overwrite(self.tmpdir, self.directory)
+                ## copy items (but not the whole directory, just directory minorg created)
+                mv_dir_overwrite(self.mkfname(self.tmpdir, self.prefix),
+                                 self.mkfname(self.directory, self.prefix))
                 ## update file locations
                 self.new_dirs = [re.sub('^' + re.escape(self.active_directory), self.directory, dirname)
                                  for dirname in self.new_dirs]
@@ -484,18 +488,18 @@ class MINORg (PathHandler):
     >>> my_minorg.screen_reference = True
     >>> my_minorg.filter_background()
     >>> my_minorg.grna_hits.filter_seqs("background")
-    gRNAHits(len = 352)
+    gRNAHits(gRNA = 352)
     >>> my_minorg.filter_gc()
     >>> my_minorg.grna_hits.filter_seqs("GC")
-    gRNAHits(len = 370)
+    gRNAHits(gRNA = 370)
     >>> my_minorg.grna_hits.filter_seqs("background", "GC")
-    gRNAHits(len = 321)
+    gRNAHits(gRNA = 321)
     >>> my_minorg.filter_feature() ## by default, MINORg only retains gRNA in CDS
     Max acceptable insertion length: 15
     >>> my_minorg.grna_hits.filter_hits("feature")
-    gRNAHits(len = 344)
+    gRNAHits(gRNA = 344)
     >>> my_minorg.valid_grna()
-    gRNAHits(len = 278)
+    gRNAHits(gRNA = 278)
     >>> my_minorg.minimumset()
     >>> my_minorg.resolve()
     
@@ -507,6 +511,8 @@ class MINORg (PathHandler):
         blastn (str): [executable] path to blastn executable
         rpsblast (str): [executable] path to rpsblast or rpsblast+ executable
         mafft (str): [executable] path to mafft executable
+        bedtools (str): [executable] path to directory containing BEDTools executables.
+            Use ONLY IF BEDTools is not in your command-search path.
 
         db (str): [RPS-BLAST option] path to local RPS-BLAST database
         remote_rps (bool): [RPS-BLAST option] use remote database instead of local database for RPS-BLAST
@@ -576,7 +582,7 @@ class MINORg (PathHandler):
             (autogenerated by MINORg if not provided)
     """
     def __init__(self, directory = None, config = None, prefix = "minorg",
-                 thread = None, keep_tmp = False, **kwargs):
+                 thread = None, keep_tmp = False, cli = False, **kwargs):
         """Create a MINORg object.
         
         Arguments:
@@ -587,16 +593,18 @@ class MINORg (PathHandler):
             keep_tmp (bool): retain temporary files
             **kwargs: other arguments supplied to parent class :class:`PathHandler`
         
-        Returns
-        -------
-        :class:`~minorg.MINORg.MINORg`
-            a MINORg object
+        Returns: 
+            :class:`~minorg.MINORg.MINORg`: a MINORg object
         """
         self.verbose = False
         if directory is None:
             print(f"Setting current directory ({os.getcwd()}) as output directory")
             directory = os.getcwd()
         super().__init__(directory = directory, keep_tmp = keep_tmp, **kwargs)
+        
+        ## track whether MINORg is being used at command-line.
+        ## this may be used to determine which statements to print
+        self._cli = cli
         
         ## parse config.ini file if provided (if None, default values will be stored in Params obj)
         self.params = Params(config)
@@ -908,19 +916,42 @@ class MINORg (PathHandler):
         self.prioritise_pos = val
     
     ## update 'mv' so that it also moves logfile
-    def mv(self, directory):
+    def _mv_frm_tmp(self, directory):
         """
         Update output directory.
         
-        Contents of the current output directory will also be moved to the new directory.
+        Contents of the current output directory will also be moved to the new directory if files are
+        already being written to output directory (i.e. not currently using a tmp dir)
         
         Arguments:
             directory (str): required, path to new output directory
         """
+        print("moving")
         src_dir = self.active_directory
-        super().mv(directory)
-        ## move logfile
-        self.logfile.move(self.active_directory, self.prefix)
+        ## move MINORg contents
+        if directory is None: return
+        directory = os.path.abspath(directory)
+        if directory == self.directory: return
+        ## if files are being written directly to output directory, move to new destination
+        if self.active_directory == self.directory:
+            ## make output directory
+            if not os.path.exists(directory):
+                os.makedirs(directory, exist_ok = True)
+            ## copy items (but not the whole directory, just directory minorg created)
+            minorg_dir = self.mkfname(self.active_directory, self.prefix, prefix = False)
+            if os.path.exists(minorg_dir):
+                out_dir = self.mkfname(directory, self.prefix, prefix = False)
+                os.makedirs(out_dir, exist_ok = True)
+                mv_dir_overwrite(minorg_dir, out_dir)
+            ## update some file paths
+            self.tmp_files = set(re.sub('^' + re.escape(self.active_directory), directory, fname)
+                                 for fname in self.tmp_files)
+            self.new_dirs = [re.sub('^' + re.escape(self.active_directory), directory, dirname)
+                             for dirname in self.new_dirs]
+            self.active_directory = directory
+            ## move logfile
+            self.logfile.move(directory, self.prefix)
+        self.directory = directory
         ## update stored filenames
         self._update_stored_fnames(src_dir, self.active_directory)
     
@@ -968,7 +999,8 @@ class MINORg (PathHandler):
     
     def resolve(self) -> None:
         """
-        Wrapper for super().resolve() that also updates logfile and any stored filenames
+        Wrapper for super().resolve() that also updates stored filenames.
+        Removes logfile if not in CLI mode.
         """
         src_dir = self.active_directory
         dst_dir = self.directory
@@ -979,6 +1011,8 @@ class MINORg (PathHandler):
         if dst_dir:
             ## update stored filenames
             self._update_stored_fnames(src_dir, dst_dir)
+        if not self._cli:
+            os.remove(self.logfile.filename)
     
     def _update_stored_fnames(self, src_dir, dst_dir) -> None:
         """
@@ -1021,9 +1055,8 @@ class MINORg (PathHandler):
             attr (str): required, attribute to return.
                 Valid attributes: 'gene', 'feature', 'source'.
         
-        Returns
-        -------
-        str
+        Returns: 
+            str
         """
         if attr == "gene": return re.search(self.ref_seqid_gene_pattern, seqid).group(0)
         elif attr == "feature": return re.search(self.ref_seqid_feature_pattern, seqid).group(0)
@@ -1037,24 +1070,27 @@ class MINORg (PathHandler):
         Relevant attributes: accept_invalid, accept_invalid_field
         
         Arguments:
-            *check_names (str): optional, checks to include
-                If not specified, all checks, both standard and non-standard, will be used
-                If 'standard': only background, GC, and feature checks will be used
-                    Can be used in combination with non-standard check names
-                If 'nonstandard': only non-standard checks will be used
-                    Can be used in combination with standard check names
+            *check_names (str): optional, checks to include.
+
+                If not specified: all checks, both standard and non-standard, will be used.
         
-        Returns
-        -------
-        gRNAHits
+                If 'standard': only background, GC, and feature checks will be used.
+                Can be used in combination with non-standard check names.
+        
+                If 'nonstandard': only non-standard checks will be used.
+                Can be used in combination with standard check names.
+        
+        Returns:
+            :class:`~minorg.grna.gRNAHits`
         """
         accept_invalid = (accept_invalid if accept_invalid is not None
                           else self.accept_invalid)
         accept_invalid_field = (accept_invalid_field if accept_invalid_field is not None
                                 else self.accept_invalid_field)
         ## expand check names
+        extant_check_names = self.check_names(standard = True, nonstandard = True, hit = True, seq = True)
         if not check_names:
-            check_names = self.check_names(standard = True, nonstandard = True, hit = True, seq = True)
+            check_names = copy.copy(extant_check_names)
         else:
             if "standard" in check_names:
                 check_names.remove("standard")
@@ -1062,17 +1098,27 @@ class MINORg (PathHandler):
             if "nonstandard" in check_names:
                 check_names.remove("nonstandard")
                 check_names.extend(self.check_names(standard = False, nonstandard = True))
+        ## check for unknown check names
+        unknown_check_names = [check_name for check_name in check_names if check_name not in extant_check_names]
+        if unknown_check_names:
+            warnings.warn( f"Unknown check name(s): {','.join(unknown_check_names)}" , MINORgWarning)
+        check_names = [check_name for check_name in check_names if check_name in extant_check_names]
         ## filter
         seqs_checks = set(check_names).intersection({"background", "GC", "exclude"})
         hits_checks = set(check_names) - seqs_checks
-        filtered = self.grna_hits.filter_seqs(*seqs_checks,
-                                              accept_invalid = self.accept_invalid,
-                                              accept_invalid_field = self.accept_invalid_field,
-                                              quiet = True)
-        filtered = filtered.filter_hits(*hits_checks,
-                                        accept_invalid = (self.accept_invalid or self.accept_feature_unknown),
-                                        accept_invalid_field = self.accept_invalid_field,
-                                        exclude_empty_seqs=True, quiet = True)
+        filtered = self.grna_hits
+        if seqs_checks:
+            filtered = filtered.filter_seqs(*seqs_checks,
+                                            accept_invalid = self.accept_invalid,
+                                            accept_invalid_field = self.accept_invalid_field,
+                                            quiet = True, report_invalid_field = True)
+        if hits_checks:
+            filtered = filtered.filter_hits(*hits_checks,
+                                            accept_invalid = (self.accept_invalid
+                                                              or self.accept_feature_unknown),
+                                            accept_invalid_field = self.accept_invalid_field,
+                                            exclude_empty_seqs = True, quiet = True,
+                                            report_invalid_field = True)
         return filtered
     def check_names(self, seq = True, hit = True, standard = True, nonstandard = True) -> list:
         """
@@ -1084,10 +1130,8 @@ class MINORg (PathHandler):
             standard (bool): get standard check names
             nonstandard (bool): get nonstandard check names
         
-        Returns
-        -------
-        list
-            Of check names (str)
+        Returns: 
+            list: List of check names (str)
         """
         if not (seq or hit):
             raise MINORgError("Either one or both of 'seq=True' or 'hit=True' is required.")
@@ -1194,6 +1238,7 @@ class MINORg (PathHandler):
                 Autogenerated using self.prefix and self.active_directory if not provided.
         """
         if fout is None: fout = get_val_default(self.grna_fasta, self.results_fname("gRNA_all.fasta"))
+        self.reserve_fname(fout)
         self.grna_fasta = fout
         self.grna_hits.write_fasta(fout, write_all = True)
     
@@ -1207,6 +1252,7 @@ class MINORg (PathHandler):
             write_checks (bool): write all check statuses
         """
         if fout is None: fout = get_val_default(self.grna_map, self.results_fname("gRNA_all.map"))
+        self.reserve_fname(fout)
         self.grna_map = fout
         self.grna_hits.write_mapping(fout, version = 4, write_all = True, write_checks = write_checks)
     
@@ -1219,6 +1265,7 @@ class MINORg (PathHandler):
                 Autogenerated using self.prefix and self.active_directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_fasta, self.results_fname("gRNA_pass.fasta"))
+        self.reserve_fname(fout)
         self.valid_grna().write_fasta(fout, write_all = True)
     
     def write_pass_grna_map(self, fout = None):
@@ -1230,6 +1277,7 @@ class MINORg (PathHandler):
                 Autogenerated using self.prefix and self.active_directory if not provided.
         """
         if fout is None: fout = get_val_default(self.pass_map, self.results_fname("gRNA_pass.map"))
+        self.reserve_fname(fout)
         self.valid_grna().write_mapping(fout, version = 4, write_all = True, write_checks = False)
     
     ##########################
@@ -1296,7 +1344,7 @@ class MINORg (PathHandler):
             replace (bool): replace any existing reference with same alias (default=False)
         """
         if alias in self.reference and not replace:
-            raise Exception(f"ID '{alias}' is already in use.")
+            raise MINORgError(f"ID '{alias}' is already in use.")
         if not alias:
             max_id = max([int(re.search("\d+$", y).group(0)) for y in
                           ["Reference_0"] + [x for x in self.reference if re.search("^Reference_\d+$", x)]])
@@ -1463,11 +1511,9 @@ class MINORg (PathHandler):
             **fouts (str): optional, path to output files for each feature if features is specified.
                 Example: self.get_reference_seq("CDS", CDS = <path to file>) returns dict AND writes to file
         
-        Returns
-        -------
-        dict
-            sequence(s) of reference genes or isoforms (specified in self.genes), grouped by feature.
-            Format: {<feature>: {<seqid>: <seq>}}
+        Returns:
+            dict: sequence(s) of reference genes or isoforms (specified in self.genes), grouped by feature.
+                  Format: {<feature>: {<seqid>: <seq>}}
         """
         return self._get_reference_seq(self.genes, *features, adj_dir = adj_dir,
                                        by_gene = by_gene, ref = ref,
@@ -1480,7 +1526,7 @@ class MINORg (PathHandler):
         Get and store self.genes' gene and CDS sequences, and GFF data for domains.
         """
         if not all(map(lambda gid: gid in self.subset_gid, self.genes)):
-            self._subset_annotation(*self.genes)
+            self.subset_annotation()
         ## instantiate variables
         printi = ((lambda msg: None) if quiet else (print))
         seqid_template = "Reference|${source}|${domain}|${feature}|${complete}|${gene}|${isoform}"
@@ -1659,6 +1705,9 @@ class MINORg (PathHandler):
         ## check if any target sequences found
         if not(fasta_to_dict(fout)):
             warnings.warn("No target sequences found.", MINORgWarning)
+            if not self._cli and not self.query_reference:
+                print( ("Did you mean to query reference genes?"
+                        " If so, don't forget to use '<MINORg object>.query_reference = True'.") )
         return
     
     # def homologue(self, **kwargs):
@@ -1768,10 +1817,8 @@ class MINORg (PathHandler):
             hsp (Biopython HSP): required
             ifasta (IndexedFasta): required, subject of BLAST search
         
-        Returns
-        -------
-        bool
-            whether a HSP hit is outside of a masked region
+        Returns: 
+            bool: whether a HSP hit is outside of a masked region
         """
         return self._is_offtarget_pos(hsp, ifasta)
     
@@ -1797,10 +1844,8 @@ class MINORg (PathHandler):
             query_result (Biopython QueryResult): required
             **kwargs: other arguments supplied passed to :meth:`MINORg._is_offtarget_aln`
         
-        Returns
-        -------
-        bool
-            whether a HSP hit meets the threshold for problematic off-target gRNA hit
+        Returns: 
+            bool: whether a HSP hit meets the threshold for problematic off-target gRNA hit
         """
         return self._is_offtarget_aln(hsp, query_result, **kwargs)
     
@@ -1839,10 +1884,8 @@ class MINORg (PathHandler):
             query_result (Biopython QueryResult): required
             ifasta (IndexedFasta): required
         
-        Returns
-        -------
-        bool
-            whether a HSP hit is in close proximity and correct orientation to a PAM site
+        Returns: 
+            bool: whether a HSP hit is in close proximity and correct orientation to a PAM site
         """
         if self.ot_pamless: return True
         return self._has_pam(hsp, query_result, ifasta)
@@ -1859,10 +1902,8 @@ class MINORg (PathHandler):
             query_result (Biopython QueryResult): required
             ifasta (IndexedFasta): required
         
-        Returns
-        -------
-        bool
-            whether a gRNA hit is off-target and problematic
+        Returns: 
+            bool: whether a gRNA hit is off-target and problematic
         """
         ifasta = IndexedFasta(ifasta)
         return self.is_offtarget_pos(hsp, ifasta) and self.is_offtarget_aln(hsp, query_result) and \
@@ -2342,7 +2383,7 @@ class MINORg (PathHandler):
         ## write gRNA fasta file and gRNA mapping
         if grna_sets:
             grna_hits.write_fasta(fout_fasta, seqs = itertools.chain(*grna_sets), fasta = fasta)
-            print("Final gRNA sequence(s) have been written to"
+            print("\nFinal gRNA sequence(s) have been written to"
                   f" {fout_fasta if report_full_path else os.path.basename(fout_fasta)}")
             self.final_fasta = fout_fasta
             grna_hits.write_mapping(fout_map, sets = grna_sets, fasta = fasta, version = 4)
@@ -2357,9 +2398,15 @@ class MINORg (PathHandler):
     ##  SUBCMD: FULL  ##
     ####################
     
-    def full(self, feature_check = True, background_check = True, gc_check = True):
+    def full(self, manual = False, background_check = True, feature_check = True, gc_check = True):
         """
         Execute full MINORg programme using self's attributes as parameter values.
+        
+        Arguments:
+            manual (bool): manually approve all gRNA sets. Defaults to NOT self.auto if not provided.
+            background_check (bool): filter gRNA by off-target (default=True)
+            feature_check (bool): filter gRNA by within-feature (default=True)
+            gc_check (bool): filter gRNA by GC content (default=True)
         """
         with warnings.catch_warnings():
             warnings.filterwarnings("error", message = "No target sequences found.",
@@ -2376,7 +2423,7 @@ class MINORg (PathHandler):
             return
         ## filter
         self.filter(background_check = background_check,
-                    filter_check = filter_check,
+                    feature_check = feature_check,
                     gc_check = gc_check)
         self.write_all_grna_map()
         ## abort if no gRNA pass
@@ -2384,7 +2431,7 @@ class MINORg (PathHandler):
             warnings.warn("No valid gRNA after filtering.", MINORgWarning)
             return
         ## minimumset
-        self.minimumset(report_full_path = False)
+        self.minimumset(report_full_path = False, manual = manual)
         return
 
 # :param directory: path to output directory

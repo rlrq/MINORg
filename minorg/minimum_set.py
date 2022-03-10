@@ -243,7 +243,7 @@ def get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), target
         else:
             ## print gRNA sequences in seq_set to screen for user to evaluate
             gRNA_seq_set = sorted(gRNA_hits.get_gRNAseqs_by_seq(*seq_set), key = lambda gRNA_seq: gRNA_seq.id)
-            print(f"\tID\tsequence (Set {set_num})")
+            print(f"\n\tID\tsequence (Set {set_num})")
             for gRNA_seq in gRNA_seq_set:
                 print(f"\t{gRNA_seq.id}\t{gRNA_seq.seq}")
             ## obtain user input
