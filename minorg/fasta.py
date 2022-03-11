@@ -1,6 +1,7 @@
 import tempfile
 import itertools
 
+from minorg.index import IndexedFasta
 from minorg.searchio import searchio_parse
 
 ###################
@@ -41,33 +42,47 @@ def extract_ranges(seq, ranges, strand = '+'):
                   seq[int(end)-1:int(start)-1:-1]
     return output
 
-def find_identical_in_fasta(query, subject):
+def find_identical_in_fasta(query, subject, chunk = 100000):
     """
-    Searches for exact matches.
+    Searches for exact matches in memory saving way using 
+    sliding within with size ``2*(max(chunk, len(query_seq)))``
+    and overlap ``max(chunk, len(query_seq))``.
     DOES NOT EXPAND AMBIGUOUS BASES. (i.e. 'N' matches ONLY 'N' character, not any base)
+    
+    Arguments:
+        query (dict): {'<seqid>': '<str of seq or Bio.Seq.Seq obj>'}
+        subject (str): path to FASTA file
+        chunk (int): window overlap size (bp) for search
+    
+    Returns:
+        list: list of SearchIO QueryResult objects as if read from blast-tab file
+              with fields "qseqid sseqid sstart send"
     """
-    from Bio import SeqIO
-    subject_seqs = SeqIO.parse(open(subject, 'r'), "fasta")
-    if isinstance(query, dict):
-        from Bio import Seq
-        query_fwd = {seqid: (seq if isinstance(seq, Seq.Seq) else Seq.Seq(seq))
-                     for seqid, seq in query.items()}
-    else:
-        query_fwd = fasta_to_dict(query)
-    query_rvs = {seqid: seq.reverse_complement() for seqid, seq in query_fwd.items()}
+    isubject = IndexedFasta(subject)
     output = []
-    ## find all identical seqs (even overlapping ones)
     def find_overlapping(query, subject, query_id):
-        ## Bio.Seq.Seq.find only returns first match. loop until no matches left.
-        pos = subject.seq.find(query)
-        while pos >= 0:
-            output.append((query_id, subject.id, pos + 1, pos + len(query)))
-            pos = subject.seq.find(query, start = pos + 1)
+        overlap = max(len(query), chunk)
+        query_rvs = query.reverse_complement()
+        for i in range(0, len(subject), overlap):
+            subject_window = subject[i:(i+(2*overlap))]
+            ## fwd query
+            pos = subject_window.find(query)
+            while pos >= 0:
+                ## BLAST tab fmt: 1-index, end inclusive
+                output.append((query_id, subject.name, i + pos + 1, i + pos + len(query)))
+                pos = subject_window.find(query, start = pos + 1)
+            ## rvs query
+            pos = subject_window.find(query_rvs)
+            while pos >= 0:
+                ## BLAST tab fmt: 1-index, end inclusive
+                output.append((query_id, subject.name, i + pos + 1, i + pos + len(query)))
+                pos = subject_window.find(query_rvs, start = pos + 1)
         return
-    for subject_seq in subject_seqs:
-        for query_id in query_fwd:
-            find_overlapping(query_fwd[query_id], subject_seq, query_id)
-            find_overlapping(query_rvs[query_id], subject_seq, query_id)
+    from Bio import Seq
+    for subject_seq in isubject.values():
+        for query_id, seq in query.items():
+            query_seq = (seq if isinstance(seq, Seq.Seq) else Seq.Seq(seq))
+            find_overlapping(query_seq, subject_seq, query_id)
     ## write to file and parse with SearchIO into generator
     import tempfile
     tmp_f = tempfile.mkstemp(suffix = ".tsv")[1]

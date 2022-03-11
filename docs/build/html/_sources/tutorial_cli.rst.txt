@@ -538,7 +538,7 @@ Let us first generate a .map file for filtering.
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
             --skip-bg-check
 
-In the code above, we skipped off-targete check by raising the ``--skip-bg-check`` flag. But we've changed out mind and would like to screen the reference genome and the non-reference genomes that these targets are from AND we don't want our gRNA to be able to target any genes in 'subset_9944.fasta' and 'subset_9947'. We can do that using the ``filter`` subcommand.
+In the code above, we skipped off-target check by raising the ``--skip-bg-check`` flag. But we've changed out mind and would like to screen the reference genome and the non-reference genomes that these targets are from AND we don't want our gRNA to be able to target any genes in 'subset_9944.fasta' and 'subset_9947'. We can do that using the ``filter`` subcommand.
 
 .. code-block:: bash
 
@@ -551,7 +551,7 @@ In the code above, we skipped off-targete check by raising the ``--skip-bg-check
                    --mask-cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
                    --ot-indv 9654,9655,9944,9947 --genome-set ./subset_genome_mapping.txt
 
-The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the ``filter`` subcommand on files that have already been generated.
+The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the ``filter`` subcommand on files that have already been generated. You should then use the ``minimumset`` subcommand (see :ref:`Tutorial_cli:Subcommand \`\`minimumset\`\``) to regenerate minimum sets using your update .map file.
 
 Feature check
 ^^^^^^^^^^^^^

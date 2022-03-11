@@ -560,7 +560,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
          --skip-bg-check
 </pre></div>
 </div>
-<p>In the code above, we skipped off-targete check by raising the <code class="docutils literal notranslate"><span class="pre">--skip-bg-check</span></code> flag. But we’ve changed out mind and would like to screen the reference genome and the non-reference genomes that these targets are from AND we don’t want our gRNA to be able to target any genes in ‘subset_9944.fasta’ and ‘subset_9947’. We can do that using the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand.</p>
+<p>In the code above, we skipped off-target check by raising the <code class="docutils literal notranslate"><span class="pre">--skip-bg-check</span></code> flag. But we’ve changed out mind and would like to screen the reference genome and the non-reference genomes that these targets are from AND we don’t want our gRNA to be able to target any genes in ‘subset_9944.fasta’ and ‘subset_9947’. We can do that using the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg filter --directory ./example_123_subcmdfilter_bg_pt2 <span class="se">\</span>
                 --map ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map <span class="se">\</span>
                 --background-check <span class="se">\</span>
@@ -571,7 +571,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
                 --ot-indv <span class="m">9654</span>,9655,9944,9947 --genome-set ./subset_genome_mapping.txt
 </pre></div>
 </div>
-<p>The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand on files that have already been generated.</p>
+<p>The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand on files that have already been generated. You should then use the <code class="docutils literal notranslate"><span class="pre">minimumset</span></code> subcommand (see <a class="reference internal" href="#subcommand-minimumset"><span class="std std-ref">Subcommand minimumset</span></a>) to regenerate minimum sets using your update .map file.</p>
 </section>
 <section id="feature-check">
 <h4><span class="section-number">4.6.3.3. </span>Feature check<a class="headerlink" href="#feature-check" title="Permalink to this headline"></a></h4>

@@ -71,7 +71,7 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |-\-target                  |target                     |FASTA file of sequences  |
 |               |                           |                           |to find gRNA in          |
 |               +---------------------------+---------------------------+-------------------------+
-|               |-\-query                   |query                      |FASTA file(s) to discover|
+|               |-\-query                   |query*                     |FASTA file(s) to discover|
 |               |                           |                           |targets in               |
 |               +---------------------------+---------------------------+-------------------------+
 |               |-\-domain <alias>          |                           |aliases of domains to    |
@@ -136,7 +136,7 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |                           |                           |features overlap with    |
 |               |                           |                           |gRNA range in alignment  |
 +---------------+---------------------------+---------------------------+-------------------------+
-|[filter]       |-\-background              |background                 |FASTA files in which to  |
+|[filter]       |-\-background              |background*                |FASTA files in which to  |
 |               |                           |                           |search for potential     |
 |background     |                           |                           |off-targets              |
 |               +---------------------------+---------------------------+-------------------------+

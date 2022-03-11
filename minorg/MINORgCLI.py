@@ -198,7 +198,8 @@ class MINORgCLI (MINORg):
             a MINORgCLI object
         """
         from argparse import Namespace
-        super().__init__(cli = True, tmp = False, keep_tmp = keep_tmp, config = config)
+        super().__init__(cli = True, tmp = False, keep_tmp = keep_tmp, config = config,
+                         auto_update_files = False)
         self.tracebacklimit = (None if LOGGING_LEVEL <= logging.DEBUG else 0)
         self.keep_on_crash = keep_on_crash
         self._raw_args = Namespace() ## hidden from user. Stores raw args for posterity/logging
