@@ -26,11 +26,21 @@ If you wish to use the default values specified in a config file, use this inste
 
 >>> my_minorg = MINORg(config = "/path/to/config.ini", directory = "/path/to/output/directory", prefix = "prefix")
 
-You may now set your parameters using the attributes of your :class:`~minorg.MINORg.MINORg` object. For a table listing the equivalent CLI arguments and :class:`~minorg.MINORg.MINORg` attributes, see :ref:`Parameters:CLI vs Python`. For example, you can specify executables as such:
+You may now set your parameters using the attributes of your :class:`~minorg.MINORg.MINORg` object. For a table listing the equivalent CLI arguments and :class:`~minorg.MINORg.MINORg` attributes, see :ref:`Parameters:CLI vs Python`.
+
+IMPT: Note on executables
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See: :ref:`Parameters:Executables`
+
+You can specify executables as such:
 
 >>> my_minorg.blastn = '/path/to/blastn/executable'
 >>> my_minorg.rpsblast = '/path/to/rpsblast/executable'
 >>> my_minorg.mafft = '/path/to/mafft/executable'
+>>> my_minorg.bedtools = '/path/to/bedtools2/bin'
+
+Note that BEDTools is unique in that if it is not in your command-search path, you should provide the path **TO THE DIRECTORY CONTAINING ITS EXECUTABLES** (i.e. there will not be a single 'bedtools' executable), and if it **IS** in your command-search path you **SHOULD NOT** be using the :attr:`~minorg.MINOR.MINORg.bedtools` attribute. See :ref:`Parameters:Executables` for more on executables.
 
 Defining target sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~

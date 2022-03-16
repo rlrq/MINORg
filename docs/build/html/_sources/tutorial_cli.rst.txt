@@ -12,6 +12,29 @@ Setting up the tutorial
 To ensure that the examples in this tutorial work, please replace '/path/to' in the files 'arabidopsis_genomes.txt', 'athaliana_genomes.txt', and 'subset_genome_mapping.txt' with the full path to the directory containing the example files.
 
 
+IMPT: Note on executables
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See: :ref:`Parameters:blastn, rpsblast/rpsblast+, MAFFT`, :ref:`Parameters:BEDTools`
+
+If blastn, rpsblast/rpsblast+, mafft, and/or bedtools is/are not in your command-search path, you will have to append one or more of the appropriate parameters below to your command to tell MINORg where they are.
+
+``--blastn <path to blastn executable>``
+
+* Applicable to: ``minorg`` (full programme), ``minorg seq`` (subcommand :ref:`Tutorial_cli:Subcommand \`\`seq\`\``), ``minorg filter`` (:ref:`Tutorial_cli:Subcommand \`\`filter\`\``)
+
+``--rpsblast <path to rpsblast or rpsblast+ executable>``
+
+* Applicable to: ``minorg`` (full programme), ``minorg seq`` (subcommand :ref:`Tutorial_cli:Subcommand \`\`seq\`\``), ``minorg grna`` (subcommand :ref:`Tutorial_cli:Subcommand \`\`grna\`\``), ``minorg filter`` (:ref:`Tutorial_cli:Subcommand \`\`filter\`\``)
+
+``--mafft <path to MAFFT executable>``
+
+* Applicable to: ``minorg`` (full programme), ``minorg seq`` (subcommand :ref:`Tutorial_cli:Subcommand \`\`seq\`\``), ``minorg grna`` (subcommand :ref:`Tutorial_cli:Subcommand \`\`grna\`\``), ``minorg filter`` (:ref:`Tutorial_cli:Subcommand \`\`filter\`\``)
+
+``--bedtools <path to directory containing BEDTools executables>``
+
+* Applicable to: ``minorg`` (full programme), ``minorg seq`` (subcommand :ref:`Tutorial_cli:Subcommand \`\`seq\`\``)
+
 Defining target sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

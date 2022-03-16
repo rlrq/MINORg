@@ -72,10 +72,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#parameter-descriptions">6.3. Parameter descriptions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#reference">6.3.1. Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference">6.3.1. Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reference-cli">6.3.1.1. Reference (CLI)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-python">6.3.1.2. Reference (Python)</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#attribute-modification">6.3.2. Attribute modification</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cli">6.3.2.1. CLI</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#python">6.3.2.2. Python</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attribute-modification-format-cli">6.3.2.1. Attribute modification format (CLI)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attribute-modification-format-reference-lookup-file">6.3.2.2. Attribute modification format (reference lookup file)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attribute-modification-format-python">6.3.2.3. Attribute modification format (Python)</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#extended-genome">6.3.3. Extended genome</a></li>
@@ -164,24 +169,30 @@
 </li>
 <li><p><a class="reference internal" href="#parameter-descriptions" id="id19">Parameter descriptions</a></p>
 <ul>
-<li><p><a class="reference internal" href="#reference" id="id20">Reference</a></p></li>
-<li><p><a class="reference internal" href="#attribute-modification" id="id21">Attribute modification</a></p>
+<li><p><a class="reference internal" href="#reference" id="id20">Reference</a></p>
 <ul>
-<li><p><a class="reference internal" href="#cli" id="id22">CLI</a></p></li>
-<li><p><a class="reference internal" href="#python" id="id23">Python</a></p></li>
+<li><p><a class="reference internal" href="#reference-cli" id="id21">Reference (CLI)</a></p></li>
+<li><p><a class="reference internal" href="#reference-python" id="id22">Reference (Python)</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#extended-genome" id="id24">Extended genome</a></p></li>
-<li><p><a class="reference internal" href="#pam" id="id25">PAM</a></p>
+<li><p><a class="reference internal" href="#attribute-modification" id="id23">Attribute modification</a></p>
 <ul>
-<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id26">Ambiguous bases and repeats</a></p></li>
-<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id27">Spacers and 3’ or 5’ PAM</a></p></li>
-<li><p><a class="reference internal" href="#preset-pam-patterns" id="id28">Preset PAM patterns</a></p></li>
+<li><p><a class="reference internal" href="#attribute-modification-format-cli" id="id24">Attribute modification format (CLI)</a></p></li>
+<li><p><a class="reference internal" href="#attribute-modification-format-reference-lookup-file" id="id25">Attribute modification format (reference lookup file)</a></p></li>
+<li><p><a class="reference internal" href="#attribute-modification-format-python" id="id26">Attribute modification format (Python)</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#prioritise-non-redundancy" id="id29">Prioritise non-redundancy</a></p></li>
-<li><p><a class="reference internal" href="#rps-blast-local-database" id="id30">RPS-BLAST local database</a></p></li>
-<li><p><a class="reference internal" href="#rps-blast-remote-database" id="id31">RPS-BLAST remote database</a></p></li>
+<li><p><a class="reference internal" href="#extended-genome" id="id27">Extended genome</a></p></li>
+<li><p><a class="reference internal" href="#pam" id="id28">PAM</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ambiguous-bases-and-repeats" id="id29">Ambiguous bases and repeats</a></p></li>
+<li><p><a class="reference internal" href="#spacers-and-3-or-5-pam" id="id30">Spacers and 3’ or 5’ PAM</a></p></li>
+<li><p><a class="reference internal" href="#preset-pam-patterns" id="id31">Preset PAM patterns</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#prioritise-non-redundancy" id="id32">Prioritise non-redundancy</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-local-database" id="id33">RPS-BLAST local database</a></p></li>
+<li><p><a class="reference internal" href="#rps-blast-remote-database" id="id34">RPS-BLAST remote database</a></p></li>
 </ul>
 </li>
 </ul>
@@ -584,6 +595,26 @@ confirmation for each set</p></td>
 <p>Default values for executables may be specified in the config file (see <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> for more on the config file).</p>
 <section id="blastn-rpsblast-rpsblast-mafft">
 <h5><span class="section-number">6.2.2.1.1. </span>blastn, rpsblast/rpsblast+, MAFFT<a class="headerlink" href="#blastn-rpsblast-rpsblast-mafft" title="Permalink to this headline"></a></h5>
+<p>If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. ‘blastn’ instead of ‘/usr/bin/blastn’). If not, the <strong>path to the executable</strong> is required.</p>
+<p>To determine if blastn and rpsblast (or rpsblast+ depending on your BLAST+ version) in the command-search path, execute at the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span><span class="p">:</span> <span class="mf">2.6.0</span><span class="o">+</span>
+ <span class="n">Package</span><span class="p">:</span> <span class="n">blast</span> <span class="mf">2.6.0</span><span class="p">,</span> <span class="n">build</span> <span class="n">Jan</span> <span class="mi">15</span> <span class="mi">2017</span> <span class="mi">17</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">27</span>
+</pre></div>
+</div>
+<p>then ‘blastn’ IS in your command-search path. Repeat this with ‘rpsblast’ and/or ‘rpsblast+’.</p>
+<p>To determine if the mafft is in your command-search path, execute at the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mafft</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If it prints something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v7</span><span class="mf">.427</span> <span class="p">(</span><span class="mi">2019</span><span class="o">/</span><span class="n">Mar</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>then it IS in your command-search path.</p>
 <p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--blastn</span></code>, <code class="docutils literal notranslate"><span class="pre">--rpsblast</span></code>, <code class="docutils literal notranslate"><span class="pre">--maff</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;other arguments&gt; --blastn /usr/bin/blastn
 </pre></div>
@@ -594,32 +625,11 @@ confirmation for each set</p></td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/usr/bin/blastn&#39;</span> <span class="c1">## tells MINORg where the blastn executable is</span>
 </pre></div>
 </div>
-<p>If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. ‘blastn’ instead of ‘/usr/bin/blastn’). If not, the <strong>path to the executable</strong> is required.</p>
-<p>To determine if blastn and rpsblast (or rpsblast+ depending on your BLAST+ version) in the command-search path, execute:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span> <span class="o">-</span><span class="n">version</span>
-</pre></div>
-</div>
-<p>If it prints something like</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastn</span><span class="p">:</span> <span class="mf">2.6.0</span><span class="o">+</span>
- <span class="n">Package</span><span class="p">:</span> <span class="n">blast</span> <span class="mf">2.6.0</span><span class="p">,</span> <span class="n">build</span> <span class="n">Jan</span> <span class="mi">15</span> <span class="mi">2017</span> <span class="mi">17</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">27</span>
-</pre></div>
-</div>
-<p>then ‘blastn’ IS in your command-search path. Repeat this with ‘rpsblast’ and/or ‘rpsblast+’.</p>
 </section>
 <section id="bedtools">
 <h5><span class="section-number">6.2.2.1.2. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h5>
-<p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">bedtools</span></code></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;other arguments&gt; --bedtools /path/to/bedtools2/bin/
-</pre></div>
-</div>
-<p><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">bedtools</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">bedtools</span> <span class="o">=</span> <span class="s1">&#39;/path/to/bedtools2/bin/&#39;</span> <span class="c1">## tells MINORg where the BEDTools executables are</span>
-</pre></div>
-</div>
 <p>If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the <strong>directory containing the BEDTools executables</strong> is required.</p>
-<p>To determine if the BEDTools executables are in your command-search path, execute:</p>
+<p>To determine if the BEDTools executables are in your command-search path, execute at the command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span>
 </pre></div>
 </div>
@@ -631,6 +641,16 @@ confirmation for each set</p></td>
 </pre></div>
 </div>
 <p>then ‘bedtools’ is in your command-search path.</p>
+<p><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">bedtools</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg &lt;other arguments&gt; --bedtools /path/to/bedtools2/bin/
+</pre></div>
+</div>
+<p><strong>Python</strong>: <code class="docutils literal notranslate"><span class="pre">bedtools</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">bedtools</span> <span class="o">=</span> <span class="s1">&#39;/path/to/bedtools2/bin/&#39;</span> <span class="c1">## tells MINORg where the BEDTools executables are</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -705,7 +725,7 @@ confirmation for each set</p></td>
 <h3><a class="toc-backref" href="#id20"><span class="section-number">6.3.1. </span>Reference</a><a class="headerlink" href="#reference" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#id1"><span class="std std-ref">2-level lookup</span></a></p>
 <div class="line-block">
-<div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--reference</span></code></div>
+<div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--reference</span></code> (used with <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code>)</div>
 <div class="line"><strong>Python</strong>: set using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a>, get using <code class="docutils literal notranslate"><span class="pre">reference</span></code></div>
 <div class="line"><strong>Config file</strong>:</div>
 </div>
@@ -716,10 +736,19 @@ confirmation for each set</p></td>
 <div class="line">assign aliases to sets: <code class="docutils literal notranslate"><span class="pre">reference</span> <span class="pre">sets</span></code> (section <code class="docutils literal notranslate"><span class="pre">[lookup]</span></code>)</div>
 </div>
 </div></blockquote>
-<p>TODO: also link to attribute modification section below when describing setting reference for Python</p>
+<p>This paramter allows users to specify multiple reference genomes.</p>
+<section id="reference-cli">
+<h4><a class="toc-backref" href="#id21"><span class="section-number">6.3.1.1. </span>Reference (CLI)</a><a class="headerlink" href="#reference-cli" title="Permalink to this headline"></a></h4>
+<p>See <a class="reference internal" href="tutorial_cli.html#multiple-reference-genomes"><span class="std std-ref">Multiple reference genomes</span></a> for usage.</p>
+<p>The primary difference between using <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">&lt;alias(es)&gt;</span> <span class="pre">--reference-set</span> <span class="pre">&lt;reference</span> <span class="pre">lookup</span> <span class="pre">file&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">&lt;FASTA&gt;</span> <span class="pre">--annotation</span> <span class="pre">&lt;GFF3&gt;</span></code> is that you can specify multiple genomes. This is achieved by supplying a reference lookup file (which maps a reference alias to a combination of &lt;FASTA&gt;-&lt;GFF3&gt;-&lt;genetic code&gt;-&lt;GFF3 attribute modification&gt;) using <code class="docutils literal notranslate"><span class="pre">--reference-set</span></code> (see <a class="reference internal" href="configuration.html#reference"><span class="std std-ref">reference</span></a> for lookup file format) as well as the alias(es) of refence genome(s) to use using <code class="docutils literal notranslate"><span class="pre">--reference</span></code>.</p>
+</section>
+<section id="reference-python">
+<h4><a class="toc-backref" href="#id22"><span class="section-number">6.3.1.2. </span>Reference (Python)</a><a class="headerlink" href="#reference-python" title="Permalink to this headline"></a></h4>
+<p>See <a class="reference internal" href="tutorial_py.html#multiple-reference-genomes"><span class="std std-ref">Multiple reference genomes</span></a> for an example of how to use the dedicated method <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a> to specify reference genomes, and <a class="reference internal" href="tutorial_py.html#non-standard-reference"><span class="std std-ref">Non-standard reference</span></a> for how to specify genetic code and GFF3 attribute mdifications for non-standard genomes/annotations.</p>
+</section>
 </section>
 <section id="attribute-modification">
-<h3><a class="toc-backref" href="#id21"><span class="section-number">6.3.2. </span>Attribute modification</a><a class="headerlink" href="#attribute-modification" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id23"><span class="section-number">6.3.2. </span>Attribute modification</a><a class="headerlink" href="#attribute-modification" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code></div>
@@ -734,8 +763,8 @@ confirmation for each set</p></td>
 </div></blockquote>
 <p>This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally developed when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (<em>Oryza sativa</em> subsp. Nipponbare) and discovered that it uses ‘Locus_id’ instead of ‘Parent’ for mRNA annotations.</p>
 <p>See <a class="reference external" href="http://gmod.org/wiki/GFF3">http://gmod.org/wiki/GFF3</a> for standard attribute field names (see section titled ‘Column 9: “attributes”’).</p>
-<section id="cli">
-<h4><a class="toc-backref" href="#id22"><span class="section-number">6.3.2.1. </span>CLI</a><a class="headerlink" href="#cli" title="Permalink to this headline"></a></h4>
+<section id="attribute-modification-format-cli">
+<h4><a class="toc-backref" href="#id24"><span class="section-number">6.3.2.1. </span>Attribute modification format (CLI)</a><a class="headerlink" href="#attribute-modification-format-cli" title="Permalink to this headline"></a></h4>
 <p>The input given to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> should follow this format (with quotes):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>‘&lt;feature type&gt;:&lt;standard&gt;=&lt;nonstandard&gt;,&lt;standard&gt;=&lt;nonstandard&gt;;&lt;feature type&gt;:&lt;standard&gt;=&lt;nonstandard&gt;’
 </pre></div>
@@ -752,8 +781,12 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 </dl>
 </div></blockquote>
 </section>
-<section id="python">
-<h4><a class="toc-backref" href="#id23"><span class="section-number">6.3.2.2. </span>Python</a><a class="headerlink" href="#python" title="Permalink to this headline"></a></h4>
+<section id="attribute-modification-format-reference-lookup-file">
+<h4><a class="toc-backref" href="#id25"><span class="section-number">6.3.2.2. </span>Attribute modification format (reference lookup file)</a><a class="headerlink" href="#attribute-modification-format-reference-lookup-file" title="Permalink to this headline"></a></h4>
+<p>See <a class="reference internal" href="#attribute-modification-format-cli"><span class="std std-ref">Attribute modification format (CLI)</span></a>, except quotes are not required.</p>
+</section>
+<section id="attribute-modification-format-python">
+<h4><a class="toc-backref" href="#id26"><span class="section-number">6.3.2.3. </span>Attribute modification format (Python)</a><a class="headerlink" href="#attribute-modification-format-python" title="Permalink to this headline"></a></h4>
 <p>The input given to the <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> keyword argument of the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a> method should be a dictionary following the following format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;&lt;feature type&gt;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;&lt;standard&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;nonstandard&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;standard&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;nonstandard&gt;&#39;</span><span class="p">},</span>
  <span class="s1">&#39;&lt;feature type&gt;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;&lt;standard&gt;&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;nonstandard&gt;&#39;</span><span class="p">}}</span>
@@ -773,7 +806,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 </section>
 </section>
 <section id="extended-genome">
-<h3><a class="toc-backref" href="#id24"><span class="section-number">6.3.3. </span>Extended genome</a><a class="headerlink" href="#extended-genome" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id27"><span class="section-number">6.3.3. </span>Extended genome</a><a class="headerlink" href="#extended-genome" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#raw-values"><span class="std std-ref">Raw values</span></a>, <a class="reference internal" href="#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--extend-gene</span></code>, <code class="docutils literal notranslate"><span class="pre">--extend-cds</span></code></div>
@@ -804,7 +837,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 <p>CDS sequences <code class="docutils literal notranslate"><span class="pre">geneA.1</span></code> and <code class="docutils literal notranslate"><span class="pre">geneA.two</span></code> will be mapped to gene sequence <code class="docutils literal notranslate"><span class="pre">geneA</span></code>, <code class="docutils literal notranslate"><span class="pre">geneA.foo.bar</span></code> will be mapped to <code class="docutils literal notranslate"><span class="pre">geneA.foo</span></code>, and <code class="docutils literal notranslate"><span class="pre">geneB.1</span></code> will be mapped to <code class="docutils literal notranslate"><span class="pre">geneB</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">geneA.1</span></code> and <code class="docutils literal notranslate"><span class="pre">geneA.two</span></code> will be treated as different isoforms of the gene <code class="docutils literal notranslate"><span class="pre">geneA</span></code>.</p>
 </section>
 <section id="pam">
-<h3><a class="toc-backref" href="#id25"><span class="section-number">6.3.4. </span>PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id28"><span class="section-number">6.3.4. </span>PAM</a><a class="headerlink" href="#pam" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#predefined-lookup"><span class="std std-ref">Predefined lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--pam</span></code></div>
@@ -820,7 +853,7 @@ and ‘transcript_id’ is the non-standard name for the field ‘Parent’ for 
 <p>By default, MINORg designs gRNA for SpCas9 systems (i.e. 3’ NGG PAM). You may specify other PAM patterns for non-SpCas9 systems using <code class="docutils literal notranslate"><span class="pre">--pam</span></code>. It is recommended that any PAM pattern that uses special characters be enclosed in quotes, as it may lead to unexpected behaviour otherwise at the terminal.</p>
 <p>Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory possible to utilise the full suite of Python regex syntax to customise your PAM pattern. Note that PAM is <strong>NOT case-sensitive</strong>. However, do take care to avoid using  <code class="docutils literal notranslate"><span class="pre">.</span></code> as a wildcard, as MINORg uses this character to determine where gRNA is relative to a PAM pattern.</p>
 <section id="ambiguous-bases-and-repeats">
-<h4><a class="toc-backref" href="#id26"><span class="section-number">6.3.4.1. </span>Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id29"><span class="section-number">6.3.4.1. </span>Ambiguous bases and repeats</a><a class="headerlink" href="#ambiguous-bases-and-repeats" title="Permalink to this headline"></a></h4>
 <p>Unlike many gRNA designers, MINORg accepts ambiguous bases (see: <a class="reference external" href="https://genome.ucsc.edu/goldenPath/help/iupac.html">https://genome.ucsc.edu/goldenPath/help/iupac.html</a> for IUPAC codes) as well as variable number of repeats.</p>
 <blockquote>
 <div><p>Example: The pattern ‘R{1,2}T’ (where ‘R’ means ‘A’ or ‘G’, and {1,2} means either 1 to 2 repetitions
@@ -828,7 +861,7 @@ of the character right before it) will match ‘AT’, ‘GT’, ‘AAT’, ‘A
 </div></blockquote>
 </section>
 <section id="spacers-and-3-or-5-pam">
-<h4><a class="toc-backref" href="#id27"><span class="section-number">6.3.4.2. </span>Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id30"><span class="section-number">6.3.4.2. </span>Spacers and 3’ or 5’ PAM</a><a class="headerlink" href="#spacers-and-3-or-5-pam" title="Permalink to this headline"></a></h4>
 <p>In the absence of ‘N’ in the PAM pattern, MINORg will assume 3’ PAM with 1 spacer base (such as in the 3’ ‘NGG’ of SpCas9). If a pattern includes an ‘N’ at either end, MINORg will assume that the gRNA is directly adjacent to the ‘N’ base of the pattern. To specify a 5’ PAM in the absence of ‘N’ in the PAM pattern, ‘.’ should be inserted where the gRNA is.</p>
 <blockquote>
 <div><p>Example 1: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">NGG</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">GG</span></code> are functionally identical.
@@ -849,7 +882,7 @@ expanding it to the undesired explicit pattern <code class="docutils literal not
 <p>For a PAM-less search, use: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">'.'</span></code>.</p>
 </section>
 <section id="preset-pam-patterns">
-<h4><a class="toc-backref" href="#id28"><span class="section-number">6.3.4.3. </span>Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h4>
+<h4><a class="toc-backref" href="#id31"><span class="section-number">6.3.4.3. </span>Preset PAM patterns</a><a class="headerlink" href="#preset-pam-patterns" title="Permalink to this headline"></a></h4>
 <p>MINORg comes with several preset PAM patterns for different CRISPR systems.</p>
 <blockquote>
 <div><p>For example: <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">SpCas9</span></code> and <code class="docutils literal notranslate"><span class="pre">--pam</span> <span class="pre">.NGG</span></code> are functionally identical.</p>
@@ -916,7 +949,7 @@ bhcas12b</p></td>
 </section>
 </section>
 <section id="prioritise-non-redundancy">
-<h3><a class="toc-backref" href="#id29"><span class="section-number">6.3.5. </span>Prioritise non-redundancy</a><a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id32"><span class="section-number">6.3.5. </span>Prioritise non-redundancy</a><a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--prioritise-nr</span></code>/<code class="docutils literal notranslate"><span class="pre">--prioritize-nr</span></code></div>
@@ -941,7 +974,7 @@ bhcas12b</p></td>
 <p>If this flag is raised, ‘Non-redundancy’ will be prioritised before ‘Proximity to 5’. This may be preferred if you wish to generate a large number of sets, as priortisation of non-redundancy makes it less likely that extremely high coverage gRNA will be added to a growing set, such that these gRNA can then be used to seed the next set.</p>
 </section>
 <section id="rps-blast-local-database">
-<h3><a class="toc-backref" href="#id30"><span class="section-number">6.3.6. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id33"><span class="section-number">6.3.6. </span>RPS-BLAST local database</a><a class="headerlink" href="#rps-blast-local-database" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#argument"><span class="std std-ref">Argument</span></a>, <a class="reference internal" href="#level-lookup"><span class="std std-ref">1-level lookup</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--db</span></code></div>
@@ -973,7 +1006,7 @@ bhcas12b</p></td>
 <p>where the database is contained in the directory <code class="docutils literal notranslate"><span class="pre">/root/rsp_db/</span></code>, the appropriate path to pass to this parameter is: <code class="docutils literal notranslate"><span class="pre">/root/rps_db/Cdd</span></code>, where the trailing ‘Cdd’ is the prefix of all of the database’s files</p>
 </section>
 <section id="rps-blast-remote-database">
-<h3><a class="toc-backref" href="#id31"><span class="section-number">6.3.7. </span>RPS-BLAST remote database</a><a class="headerlink" href="#rps-blast-remote-database" title="Permalink to this headline"></a></h3>
+<h3><a class="toc-backref" href="#id34"><span class="section-number">6.3.7. </span>RPS-BLAST remote database</a><a class="headerlink" href="#rps-blast-remote-database" title="Permalink to this headline"></a></h3>
 <p><strong>Type</strong>: <a class="reference internal" href="#flag"><span class="std std-ref">Flag</span></a></p>
 <div class="line-block">
 <div class="line"><strong>CLI</strong>: <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code></div>

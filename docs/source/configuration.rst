@@ -218,7 +218,7 @@ This is a tab-separated file where:
 * column 2: path to genome FASTA file
 * column 3: path to genome GFF3 file
 * column 4: NCBI genetic code number or name (optional if standard genetic code)
-* column 5: mapping of nonstandard GFF3 attribute field names to standard field names (optional if standard)
+* column 5: mapping of nonstandard GFF3 attribute field names to standard field names (optional if standard) (see :ref:`Parameters:Attribute modification format (reference lookup file)` for format)
 
 ..
    However, having multiple files where each file is maintained by a separate user is one way users can update their list of reference genomes without needing a common file accessible by everyone.

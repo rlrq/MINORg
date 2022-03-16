@@ -57,11 +57,9 @@ Follow one of the following links most applicable to your setup:
 * From source: https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_Source_tarball_
 
 
-To determine if the **blastn** is in your command-search path, execute
+To determine if the **blastn** is in your command-search path, execute at the command line::
 
-.. code-block::
-   
-   blastn -version
+  blastn -version
 
 If it prints something like ::
 
@@ -70,23 +68,18 @@ If it prints something like ::
 
 then it IS in your command-search path. If not, do take note of the full path name to the blastn executable as you may need to pass it to MINORg using ``--blastn <path to blastn>`` (at command line) or ``my_minorg.blastn = '<path to blastn>'`` (in Python).
 
+To determine if **rpsblast** is in your command-search path, execute at the command line::
 
-To determine if **rpsblast** is in your command-search path, execute
-
-.. code-block::
-   
-   rpsblast -version
+  rpsblast -version
 
 If it prints something like ::
 
   rpsblast: 2.11.0+
    Package: blast 2.11.0, build Oct 6 2020 03:24:05
 
-then it IS in your command-search path. If not, execute the following to determine if your version of BLAST+ comes with 'rpsblast+' instead of 'rpsblast'
+then it IS in your command-search path. If not, execute the following to determine if your version of BLAST+ comes with 'rpsblast+' instead of 'rpsblast'::
 
-.. code-block::
-   
-   rpsblast+ -version
+  rpsblast+ -version
 
 If it prints something like ::
 
@@ -104,11 +97,9 @@ BEDTools is a "swiss-army knife of tools for a wide-range of genomic analysis ta
 
 You may follow the instructions to install it here: https://bedtools.readthedocs.io/en/latest/content/installation.html
 
-To determine if BEDTools is in your command-search path, execute
+To determine if BEDTools is in your command-search path, execute at the command line::
 
-.. code-block::
-   
-   bedtools --version
+  bedtools --version
 
 If it prints something like ::
 
@@ -151,7 +142,7 @@ Do note that you may fail at installing pysam as part of MINORg's dependencies w
 Install MINORg
 --------------
 
-Test version available using:
+Test version can be installed from testpypi using:
 
 .. code-block::
 

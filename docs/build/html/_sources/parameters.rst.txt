@@ -263,6 +263,29 @@ Default values for executables may be specified in the config file (see :ref:`Co
 blastn, rpsblast/rpsblast+, MAFFT
 _________________________________
 
+If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. 'blastn' instead of '/usr/bin/blastn'). If not, the **path to the executable** is required.
+
+To determine if blastn and rpsblast (or rpsblast+ depending on your BLAST+ version) in the command-search path, execute at the command line::
+
+  blastn -version
+
+If it prints something like ::
+
+  blastn: 2.6.0+
+   Package: blast 2.6.0, build Jan 15 2017 17:12:27
+
+then 'blastn' IS in your command-search path. Repeat this with 'rpsblast' and/or 'rpsblast+'.
+
+To determine if the mafft is in your command-search path, execute at the command line::
+
+  mafft --version
+
+If it prints something like ::
+
+  v7.427 (2019/Mar/24)
+
+then it IS in your command-search path.
+
 **CLI**: ``--blastn``, ``--rpsblast``, ``--maff``
 
 .. code-block:: bash
@@ -275,21 +298,22 @@ _________________________________
 >>> my_minorg = MINORg()
 >>> my_minorg.blastn = '/usr/bin/blastn' ## tells MINORg where the blastn executable is
 
-If an executable is in the command-search path, specifying these parameters is optional, although you may, if you desire, specify the command itself (e.g. 'blastn' instead of '/usr/bin/blastn'). If not, the **path to the executable** is required.
+BEDTools
+________
 
-To determine if blastn and rpsblast (or rpsblast+ depending on your BLAST+ version) in the command-search path, execute::
+If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the **directory containing the BEDTools executables** is required.
 
-  blastn -version
+To determine if the BEDTools executables are in your command-search path, execute at the command line::
+
+.. code-block::
+   
+   bedtools --version
 
 If it prints something like ::
 
-  blastn: 2.6.0+
-   Package: blast 2.6.0, build Jan 15 2017 17:12:27
+  bedtools v2.26.0
 
-then 'blastn' IS in your command-search path. Repeat this with 'rpsblast' and/or 'rpsblast+'.
-
-BEDTools
-________
+then 'bedtools' is in your command-search path.
 
 **CLI**: ``bedtools``
 
@@ -302,20 +326,6 @@ ________
 >>> from minorg.MINORg import MINORg
 >>> my_minorg = MINORg()
 >>> my_minorg.bedtools = '/path/to/bedtools2/bin/' ## tells MINORg where the BEDTools executables are
-
-If bedtools is in the command-search path, you should NOT use this parameter. If not, the path to the **directory containing the BEDTools executables** is required.
-
-To determine if the BEDTools executables are in your command-search path, execute::
-
-.. code-block::
-   
-   bedtools --version
-
-If it prints something like ::
-
-  bedtools v2.26.0
-
-then 'bedtools' is in your command-search path.
 
 
 Alias lookup
@@ -411,7 +421,7 @@ Reference
 
 **Type**: :ref:`Parameters:Argument`, :ref:`Parameters:2-level lookup`
 
-| **CLI**: ``--reference``
+| **CLI**: ``--reference`` (used with ``--reference-set``)
 | **Python**: set using :meth:`~minorg.MINORg.MINORg.add_reference`, get using ``reference``
 | **Config file**:
 
@@ -419,11 +429,19 @@ Reference
   | set default set: ``reference set`` (section ``[data]``)
   | assign aliases to sets: ``reference sets`` (section ``[lookup]``)
 
+This paramter allows users to specify multiple reference genomes.
 
+Reference (CLI)
++++++++++++++++
 
+See :ref:`Tutorial_cli:Multiple reference genomes` for usage.
 
-TODO: also link to attribute modification section below when describing setting reference for Python
+The primary difference between using ``--reference <alias(es)> --reference-set <reference lookup file>`` and ``--assembly <FASTA> --annotation <GFF3>`` is that you can specify multiple genomes. This is achieved by supplying a reference lookup file (which maps a reference alias to a combination of <FASTA>-<GFF3>-<genetic code>-<GFF3 attribute modification>) using ``--reference-set`` (see :ref:`Configuration:reference` for lookup file format) as well as the alias(es) of refence genome(s) to use using ``--reference``.
 
+Reference (Python)
+++++++++++++++++++
+
+See :ref:`Tutorial_py:Multiple reference genomes` for an example of how to use the dedicated method :meth:`~minorg.MINORg.MINORg.add_reference` to specify reference genomes, and :ref:`Tutorial_py:Non-standard reference` for how to specify genetic code and GFF3 attribute mdifications for non-standard genomes/annotations.
 
 Attribute modification
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -437,13 +455,12 @@ Attribute modification
   | set default: ``gff attribute modification`` (section ``[data]``)
   | assign aliases: ``gff attribute modification presets`` (section ``[lookup]``)
 
-
 This parameter tells MINORg how to map non-standard GFF3 field names to standard GFF3 field names. This feature was originally developed when I tried to retrieve sequences using the IRGSP-1.0 annotation for rice (*Oryza sativa* subsp. Nipponbare) and discovered that it uses 'Locus_id' instead of 'Parent' for mRNA annotations.
 
 See http://gmod.org/wiki/GFF3 for standard attribute field names (see section titled ‘Column 9: “attributes”’).
 
-CLI
-+++
+Attribute modification format (CLI)
++++++++++++++++++++++++++++++++++++
 
 The input given to ``--attr-mod`` should follow this format (with quotes)::
 
@@ -459,8 +476,13 @@ Examples:
   ``--attr-mod 'all:ID=id'``
     'id' is the non-standard field name for the field 'ID' for all feature types.
 
-Python
-++++++
+Attribute modification format (reference lookup file)
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+See :ref:`Parameters:Attribute modification format (CLI)`, except quotes are not required.
+
+Attribute modification format (Python)
+++++++++++++++++++++++++++++++++++++++
 
 The input given to the ``attr_mod`` keyword argument of the :meth:`~minorg.MINORg.MINORg.add_reference` method should be a dictionary following the following format::
 
