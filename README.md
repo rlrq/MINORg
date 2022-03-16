@@ -3,6 +3,8 @@
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 - Available as both command line application and Python package
 
+Preprint: https://www.biorxiv.org/content/10.1101/2022.03.10.481891
+
 ## Availability
 Some dependencies are not available for Windows. Windows users should use a Linux emulator to run MINORg.
 
