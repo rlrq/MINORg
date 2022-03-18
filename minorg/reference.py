@@ -467,7 +467,9 @@ class AnnotatedFeature(Annotation):
                                                                     if (not adj_dir and not self.plus)
                                                                     else "sense"), **kwargs)
             ## flatten seqs
-            seqs = {mk_seqid(isoform = f"{r[0]+1}-{r[1]}", n = n+1): seq
+            seqs = {mk_seqid(isoform = isoform,
+                             range = f"{r[0]+1}-{r[1]}",
+                             n = n+1): seq
                     for isoform, isoform_dat in seqs.items()
                     for n, seq_dat in enumerate(sorted(isoform_dat.items()))
                     for r, seq in [seq_dat]}

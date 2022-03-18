@@ -261,7 +261,6 @@ class PathHandler:
                 directory = os.path.abspath(os.path.join(self.active_directory, directory))
             output.append(directory)
             if not os.path.exists(directory):
-                print(directory)
                 def make_parent(d):
                     if not os.path.exists(os.path.dirname(d)):
                         make_parent(os.path.dirname(d))
@@ -645,7 +644,7 @@ class MINORg (PathHandler):
         self._parse_reference()
         ## annotation format options
         ## seqid template stuff
-        self.ref_seqid_template = "Reference|${source}|${domain}|${feature}|${complete}|${gene}|${isoform}"
+        self.ref_seqid_template = "Reference|${source}|${domain}|${n}|${feature}|${complete}|${gene}|${range}"
         self.ref_seqid_gene_pattern = "(?<=\\|stitched\\||\\|complete\\|).+(?=\\|\d+-\d+)"
         self.ref_seqid_feature_pattern = "(?<=\\|)[^|]+(?=\\|stitched\\||\\|complete\\|)"
         self.ref_seqid_source_pattern = "(?<=^Reference\\|)[^|]+(?=\\|)"
@@ -935,7 +934,6 @@ class MINORg (PathHandler):
         Arguments:
             directory (str): required, path to new output directory
         """
-        print("moving")
         src_dir = self.active_directory
         ## move MINORg contents
         if directory is None: return
@@ -1537,12 +1535,27 @@ class MINORg (PathHandler):
     def generate_ref_gene_cds(self, ref_dir = "ref", quiet = True, domain_name = None):
         """
         Get and store self.genes' gene and CDS sequences, and GFF data for domains.
+        
+        The default sequence ID template is:
+        "Reference|$source|$domain|$n|$feature|$complete|$gene|$range".
+        
+            - $source: reference genome alias
+            - $domain: PSSM ID or domain name ('gene' if not specified)
+            - $n: if multiple domains are present, they will be numbered according to 
+              proximity to 5' of sense strand
+            - $feature: GFF3 feature type
+            - $complete: 'complete' if sequence includes intervening sequences not of feature type $feature.
+              'stitched' if sequence is concatenated from features of feature type $feature.
+            - $gene: gene/isoform ID
+            - $range: range of sequence in gene
+            
         """
         if not all(map(lambda gid: gid in self.subset_gid, self.genes)):
             self.subset_annotation()
         ## instantiate variables
         printi = ((lambda msg: None) if quiet else (print))
-        seqid_template = "Reference|${source}|${domain}|${feature}|${complete}|${gene}|${isoform}"
+        # seqid_template = "Reference|${source}|${domain}|${n}|${feature}|${complete}|${gene}|${isoform}"
+        seqid_template = self.ref_seqid_template
         domain_name = get_val_default(domain_name, self.domain_name)
         make_refname = lambda suf, **kwargs: self.results_fname(ref_dir, f"ref_{domain_name}_{suf}",
                                                                 reserve = True, **kwargs)

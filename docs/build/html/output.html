@@ -180,12 +180,13 @@
 <h3><span class="section-number">7.2.3. </span>XXX_targets.fasta<a class="headerlink" href="#xxx-targets-fasta" title="Permalink to this headline"></a></h3>
 <p>The file ending in ‘_targets.fasta’ contains target sequence(s).</p>
 <p>The names of target sequences follow the following format for reference genes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Reference</span><span class="o">|&lt;</span><span class="n">reference</span> <span class="n">alias</span><span class="o">&gt;|&lt;</span><span class="n">domain</span><span class="o">&gt;|&lt;</span><span class="n">feature</span> <span class="nb">type</span><span class="o">&gt;|&lt;</span><span class="n">stitched</span><span class="o">/</span><span class="n">complete</span><span class="o">&gt;|&lt;</span><span class="n">gene</span> <span class="n">ID</span><span class="o">&gt;|&lt;</span><span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Reference</span><span class="o">|&lt;</span><span class="n">reference</span> <span class="n">alias</span><span class="o">&gt;|&lt;</span><span class="n">domain</span><span class="o">&gt;|&lt;</span><span class="n">n</span><span class="o">&gt;|&lt;</span><span class="n">feature</span> <span class="nb">type</span><span class="o">&gt;|&lt;</span><span class="n">stitched</span><span class="o">/</span><span class="n">complete</span><span class="o">&gt;|&lt;</span><span class="n">gene</span> <span class="n">ID</span><span class="o">&gt;|&lt;</span><span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>Reference alias: Unique alias given to each reference genome</p></li>
-<li><p>Domain: PSSM ID or domain name</p></li>
+<li><p>Domain: PSSM ID or domain name (‘gene’ if not specified’)</p></li>
+<li><p>n: If multiple domains are present, they will be numbered according to proximity to 5’ of sense strand</p></li>
 <li><p>Feature type: GFF3 feature type</p></li>
 <li><p>Stitched/complete: Whether sequences were concatenated</p>
 <ul>

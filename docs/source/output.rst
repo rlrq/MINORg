@@ -103,10 +103,11 @@ The file ending in '_targets.fasta' contains target sequence(s).
 
 The names of target sequences follow the following format for reference genes::
 
-  Reference|<reference alias>|<domain>|<feature type>|<stitched/complete>|<gene ID>|<range(s)>
+  Reference|<reference alias>|<domain>|<n>|<feature type>|<stitched/complete>|<gene ID>|<range(s)>
 
 * Reference alias: Unique alias given to each reference genome
-* Domain: PSSM ID or domain name
+* Domain: PSSM ID or domain name ('gene' if not specified')
+* n: If multiple domains are present, they will be numbered according to proximity to 5' of sense strand
 * Feature type: GFF3 feature type
 * Stitched/complete: Whether sequences were concatenated
   
