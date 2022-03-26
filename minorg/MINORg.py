@@ -1439,7 +1439,7 @@ class MINORg (PathHandler):
                          thread = self.thread, directory = tmp_dir, tmp = True, logger = self.logfile)
         self.add_reference(ext_fasta, ext_gff, alias = "Extended")
         return
-    def _get_reference_seq(self, ids, *features, adj_dir=False, by_gene=False, mktmp=None, ref=None,
+    def _get_reference_seq(self, ids, *features, adj_dir=True, by_gene=False, mktmp=None, ref=None,
                            seqid_template="Reference|$source|$gene|$isoform|$feature|$n",
                            translate=False, isoform_lvl=None, gff_domain=None, fout=None,
                            # apply_template_to_dict=False,
@@ -1461,15 +1461,18 @@ class MINORg (PathHandler):
         import string
         for feature in features:
             fout = fouts.get(feature, None)
-            if fout is None: continue
             feature_seqs = {}
             for ref_alias in ref_aliases:
                 ref = self.reference[ref_alias]
                 ## process each gene separately
                 for feature_id in ids:
                     ## fill in gene and source
-                    ft_seqid_template = string.Template(seqid_template).safe_substitute(gene = feature_id,
-                                                                                        source = ref_alias)
+                    ft_seqid_template = string.Template(seqid_template).safe_substitute(
+                        gene = feature_id,
+                        source = ref_alias,
+                        domain = (self.domain_name if self.domain_name else
+                                  ','.join(map(str, self.pssm_ids)) if self.pssm_ids
+                                  else "gene"))
                     ## get features at isoform_lvl if specified
                     if isoform_lvl:
                         feature_ids = [x.get_attr("ID", fmt=list)[0] for x in
@@ -1489,7 +1492,7 @@ class MINORg (PathHandler):
                 dict_to_fasta(feature_seqs, fout)
             output = {**output, **feature_seqs}
         return output
-    def get_reference_seq(self, *features, adj_dir=False, by_gene=False, ref=None,
+    def get_reference_seq(self, *features, adj_dir=True, by_gene=False, ref=None,
                           seqid_template="Reference|$source|$gene|$isoform|$feature|$n",
                           translate=False, isoform_lvl=None, fout=None,
                           # apply_template_to_dict=False,

@@ -10,6 +10,8 @@ from minorg.functions import (
     non_string_iter
 )
 
+from minorg.display import print_indent
+
 #################
 ##  GFF_MANIP  ##
 ##  (CLASSES)  ##
@@ -390,14 +392,14 @@ class GFF:
         list
             Of int line number of entries if index=True
         """
-        printi = make_local_print(quiet = self._quiet)
+        printi = make_local_print(quiet = self._quiet, printf = print_indent)
         feature_types = set(feature_types) if non_string_iter(feature_types) else {feature_types}
         output_indices = []
         curr_indices = []
         iteration_n = 0
         while True:
-            # iteration_n += 1
-            # printi(f"Executing iteration {iteration_n}")
+            iteration_n += 1
+            printi(f"Subsetting iteration: {iteration_n}", overwrite = True)
             curr_indices = self.get_subfeatures(*feature_ids, index = True)
             feature_ids = set(itertools.chain(*[entry.get_attr("ID")
                                                 for entry in self.get_i(*curr_indices, output_list = True)]))
@@ -411,6 +413,7 @@ class GFF:
             # feature_ids = set(itertools.chain(*[self.get_i(i).get_attr("ID") for i in curr_indices]))
             output_indices.extend(curr_indices)
             if not feature_ids: break
+        printi("", overwrite = True) ## clear printed progress
         if feature_types:
             output_indices = [i for i in output_indices if self.get_i(i).type in feature_types]
         ## prepare output

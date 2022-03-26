@@ -37,7 +37,8 @@ from minorg.annotation import Annotation, GFF# , subset_ann
 from minorg.index import IndexedFasta
 
 from minorg.display import (
-    make_print_preindent
+    make_print_preindent,
+    print_indent
 )
 
 # ## test
@@ -458,7 +459,8 @@ class AnnotatedFeature(Annotation):
                 return Template(seqid_template).substitute(source = self.annotated_fasta.name,
                                                            gene = self.id, feature = feature_type,
                                                            complete = ("complete" if complete else "stitched"),
-                                                           domain = (','.join(pssm_ids) if pssm_id else '.'),
+                                                           domain = (','.join(map(str, pssm_ids))
+                                                                     if pssm_id else '.'),
                                                            strand = ("minus" if (adj_dir and not self.plus)
                                                                      else "plus"),
                                                            sense = ("NA"
@@ -599,7 +601,7 @@ class AnnotatedFeature(Annotation):
         """
         ## some functions
         mktmpfname = ((lambda suf: tempfile.mkstemp()[1]) if mktmp is None
-                      else (lambda suf: mktmp(f"{self.get_attr('ID',fmt=str)}_{suf}")))
+                      else (lambda suf: mktmp(f"{self.get_attr('ID',fmt=str).replace('|', '_')}_{suf}")))
         def printi(msg):
             if not quiet: print(msg)
         ## if rps_hits doesn't alreay exist, execute rps-blast
@@ -722,6 +724,7 @@ class AnnotatedFasta(IndexedFasta):
         
     def parse_gff(self) -> None:
         """Parse GFF3 file stored :attr:`~minorg.reference.AnnotatedFasta.gff`"""
+        print_indent("Reading GFF file", overwrite = True)
         self.annotation = GFF(self.gff, attr_mod = self.attr_mod, memsave = self.memsave)
     
     def subset_annotation(self, *ids, fout = None, memsave = None, preserve_order = True) -> None:
@@ -738,6 +741,10 @@ class AnnotatedFasta(IndexedFasta):
             print("At least 1 feature ID is required for AnnotatedFasta.subset_annotation")
         if fout is None:
             fout = tempfile.mkstemp()[1]
+        ## reset gff
+        if self.gff != self._gff:
+            self.gff = self._gff
+            self.parse_gff()
         subset_annotation = self.annotation.subset(feature_ids = ids, subfeatures = True,
                                                    preserve_order = preserve_order)
         subset_annotation.write(fout = fout)
