@@ -2173,9 +2173,9 @@ class MINORg (PathHandler):
         if not self.alignment:
             self.align_reference_and_targets()
         alignment = fasta_to_dict(self.alignment)
-        genes = {'|'.join(seqid.split('|')[5:-1]):
+        genes = {'|'.join(seqid.split('|')[6:-1]):
                  seqid for seqid in alignment
-                 if (seqid.split('|')[0] == "Reference" and seqid.split('|')[3] == "gene")}
+                 if (seqid.split('|')[0] == "Reference" and seqid.split('|')[4] == "gene")}
         gene_anns = {alias: {gene: ref.annotation.get_id(gene, output_list = False) for gene in self.genes}
                      for alias, ref in self.reference.items()}
         if self.pssm_ids and self.gff_domain:
@@ -2193,6 +2193,8 @@ class MINORg (PathHandler):
                                                       ref.annotation.get_subfeatures_full(gene, feature_types = self.features)]])
                                        for gene in genes}
                               for source, ref in self.reference.items()}
+        print("domain anns:", '\n'.join(x.generate_str() for x in domain_anns))
+        print("feature_ranges:", feature_ranges)
         def adjust_feature_ranges(gene, seqid, **kwargs):
             source = self.get_ref_seqid(seqid, attr = "source")
             gene_ann = gene_anns[source]
@@ -2223,15 +2225,18 @@ class MINORg (PathHandler):
             return re.search(filled_rvs_template, aln_seqid)
         feature_only_ranges = {seqid: adjust_feature_ranges(gene, seqid, subtract_gaps = True)
                                for gene, seqid in genes.items()}
+        print("feature_only_ranges:", feature_only_ranges)
         feature_gaps_ranges = {seqid: ranges_subtract(adjust_feature_ranges(gene, seqid, subtract_gaps = False),
                                                       feature_only_ranges[seqid])
                                for gene, seqid in genes.items()}
+        print("feature_gaps_ranges:", feature_gaps_ranges)
         ## define acceptable ranges in targets
         get_target_feature_ranges = make_target_feature_ranges_function(feature_only_ranges,
                                                                         feature_gaps_ranges,
                                                                         max_insertion = max_insertion)
         targets_feature_ranges = {seqid: get_target_feature_ranges(alignment[seqid], seqid)
                                   for seqid in alignment}
+        print("targets_feature_ranges:", targets_feature_ranges)
         # self.logfile.devsplain(f"{targets_feature_ranges}, {len(self.grna_hits.hits.items())}")
         ## iterate through all gRNAs
         for gRNA_seq, coverage in self.grna_hits.hits.items():
@@ -2472,6 +2477,7 @@ class MINORg (PathHandler):
         with warnings.catch_warnings():
             warnings.filterwarnings("error", message = "No target sequences found.",
                                     category = MINORgWarning)
+            print("query reference:", self.query_reference)
             if not self.args.target:
                 try:
                     self.seq(quiet = False)

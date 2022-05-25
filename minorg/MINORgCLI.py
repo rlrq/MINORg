@@ -1033,8 +1033,8 @@ class MINORgCLI (MINORg):
         ## if -g/-c is provided, check that --ref and --annotation are also provided
         if (self.args.gene is not None or self.args.cluster is not None):
             self.reference_required("'-g <gene(s)>' or '-c <cluster(s)>'")
-            ## set query_reference to True
-            self.query_reference = True
+            # ## set query_reference to True
+            # self.query_reference = True
         ## check that --rpsblast is provided if using --domain
         if self.args.domain is not None and self.args.domain != "gene":
             if self.args.rpsblast is None:
