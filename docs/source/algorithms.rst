@@ -72,7 +72,7 @@ It consist broadly of 3 steps
            
       3. Optional: Hits that do not have a PAM pattern nearby will be considered non-problematic
          
-         * ``--ot-pamless`` (flat): use this flag to turn this option OFF
+         * ``--ot-pamless`` (flag): use this flag to turn this option OFF
    
    * Hits that are not considered non-problematic by AT LEAST ONE of the above test will be considered problematic
    * Output: Problematic BLAST hits
