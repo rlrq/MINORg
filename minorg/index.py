@@ -1,6 +1,11 @@
 import copy
 from Bio.Seq import Seq
-from pyfaidx import Fasta
+from pyfaidx import (
+    Fasta,
+    Faidx,
+    MutableFastaRecord,
+    FastaRecord,
+    OrderedDict)
 
 from typing import Union
 
@@ -111,18 +116,86 @@ class IndexedFile:
         if strip_newline: output = [line.replace('\n', '') for line in output]
         return output if ((not single_i) or (output_fmt is list)) else output[0]
 
+class rFaidx(Faidx):
+    """
+    Faidx object that writes index into a temporary directory if file location is not writable
+    """
+    @property
+    def indexname(self):
+        return self._indexname
+    @indexname.setter
+    def indexname(self, value):
+        if os.access(os.path.dirname(value), os.W_OK):
+            self._indexname = value
+        else:
+            tmpdir = tempfile.mkdtemp()
+            self._tmpdirs.append(tmpdir)
+            self._indexname = os.path.join(tmpdir, os.path.basename(value))
+        return
+    ## remove any tmp files
+    def __del__(self):
+        for tmpdir in self._tmpdirs:
+            shutil.rmtree(tmpdir)
+        return
+    def __init__(self, *args, **kwargs):
+        self._indexname = None
+        self._tmpdirs = []
+        super().__init__(*args, **kwargs)
+        return
+
 ## basically pyfaidx.Fasta class, but returns Bio.Seq.Seq item when sliced and filename for __repr__
 class IndexedFasta(Fasta):
     """
     pyfaidx.Fasta class object wrapped to return Bio.Seq.Seq when sliced.
+    Capable of indexing files in non-writable locations.
     """
-    def __init__(self, fasta, *args, **kwargs):
+    def __init__(self,
+                 fasta,
+                 default_seq=None,
+                 key_function=lambda x: x,
+                 as_raw=False,
+                 strict_bounds=False,
+                 read_ahead=None,
+                 mutable=False,
+                 split_char=None,
+                 filt_function=lambda x: True,
+                 one_based_attributes=True,
+                 read_long_names=False,
+                 duplicate_action="stop",
+                 sequence_always_upper=False,
+                 rebuild=True,
+                 build_index=True):
         if isinstance(fasta, self.__class__):
             self.__dict__ = copy.copy(fasta.__dict__) ## no need for deep copy
-        elif isinstance(fasta, Fasta):
-            super().__init__(fasta.filename, *args, **kwargs)
         else:
-            super().__init__(fasta, *args, **kwargs)
+            if isinstance(fasta, Fasta):
+                filename = fasta.filename
+            else:
+                filename = fasta
+            ## everything below is a reproduction of pyfaidx.Fasta's __init__ method aside from
+            ## the substitution of 'Faidx' class with rFaidx' class
+            self.filename = filename
+            self.mutable = mutable
+            self.faidx = rFaidx( ## rFaidx enables indexing of files in non-writable locations
+                filename,
+                key_function=key_function,
+                as_raw=as_raw,
+                default_seq=default_seq,
+                strict_bounds=strict_bounds,
+                read_ahead=read_ahead,
+                mutable=mutable,
+                split_char=split_char,
+                filt_function=filt_function,
+                one_based_attributes=one_based_attributes,
+                read_long_names=read_long_names,
+                duplicate_action=duplicate_action,
+                sequence_always_upper=sequence_always_upper,
+                rebuild=rebuild,
+                build_index=build_index)        
+            _record_constructor = MutableFastaRecord if self.mutable else FastaRecord
+            self.records = OrderedDict([(rname, _record_constructor(rname, self))
+                                        for rname in self.faidx.index.keys()])
+        return
     def __repr__(self):
         return f"IndexedFasta({self.filename})"
     def __str__(self):
