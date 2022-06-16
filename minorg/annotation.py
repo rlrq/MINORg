@@ -40,6 +40,7 @@ class GFF:
         _fmt (str): GFF3 file format
         _data (list): stores annotation data as list of :class:`minorg.annotation.Annotation` objects.
             Not used if fname is not None but memsave=True.
+        _string (str): stores raw string data if string!=None
         _attr_mod (dict): attribute modification mapping for non-standard attribute field names
         _attr_fields (dict): full attribute field name mapping
         _quiet (bool): print only essential messages
@@ -52,7 +53,7 @@ class GFF:
     
     .. automethod:: __iter__
     """
-    def __init__(self, fname = None, data = [], attr_mod = {}, genetic_code = 1, fmt = None,
+    def __init__(self, fname = None, data = [], string = None, attr_mod = {}, genetic_code = 1, fmt = None,
                  quiet = False, memsave = False, chunk_lines = 1000, **kwargs):
         """
         Create a GFF object.
@@ -60,6 +61,8 @@ class GFF:
         Arguments:
             fname (str): optional, path to GFF3 file or BED file generated using gff2bed
             data (list): optional, list of :class:`minorg.annotation.Annotation` objects
+            string (str): optional, string contents in the format of a GFF3 file or 
+                BED file generated using gff2bed
             attr_mod (dict): optional, dictionary of mapping for non-standard attribute field names
             genetic_code (int or str): NCBI genetic code name or number
             fmt (str): optional, valid values: BED, GFF, GFF3.
@@ -76,6 +79,7 @@ class GFF:
         else:
             self._infer_fmt()
         self._data = data
+        self._string = string
         self._attr_mod = attr_mod
         self._attr_fields = {"all": {"ID": "ID", "Name": "Name", "Alias": "Alias", "Parent": "Parent",
                                      "Target": "Target", "Gap": "Gap", "Derives_from": "Derives_from",
@@ -229,13 +233,17 @@ class GFF:
                 for entry in f:
                     if tuple(entry[:1]) == ('#',) or entry == '\n': continue
                     yield entry
+        elif self._string is not None:
+            for entry in self._string.split('\n'):
+                if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+                yield entry
         return
     
     def parse(self) -> None:
         """
         Read file stored at self._fname to memory.
         """
-        if self._fname is not None:
+        if self._fname is not None or self._string is not None:
             ## start parsing
             self._data = []
             for entry in self:
