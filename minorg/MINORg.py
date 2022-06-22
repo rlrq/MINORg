@@ -341,14 +341,14 @@ class PathHandler:
         """
         If self.tmp, move output files to final output directory.
         """
+        ## remove tmp files
+        self.rm_tmpfiles()
         ## move files to final destination (lol)
         if self.tmp:
             if self.directory:
                 ## create final output directory if doesn't exist
                 if not os.path.exists(self.directory):
                     os.makedirs(self.directory, exist_ok = True)
-                ## remove tmp files
-                self.rm_tmpfiles()
                 ## move logfile
                 self.logfile.move(self.directory, self.prefix)
                 ## copy items (but not the whole directory, just directory minorg created)
@@ -366,6 +366,8 @@ class PathHandler:
                         return
                     elif inpt not in {'Y', 'y'}:
                         print(f"Invalid input: '{inpt}'")
+                    else:
+                        break
             ## remove tmpdir
             shutil.rmtree(self.tmpdir)
             self.active_directory = self.directory
