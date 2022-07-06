@@ -1,5 +1,6 @@
 import copy
 import os
+import tempfile
 from Bio.Seq import Seq
 from pyfaidx import (
     Fasta,

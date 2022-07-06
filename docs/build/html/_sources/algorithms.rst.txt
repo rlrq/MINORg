@@ -65,14 +65,18 @@ It consist broadly of 3 steps
    * Hits are subjected to the following tests in order:
      
       1. Hits fully in masked regions will be considered non-problematic
-      2. Hits that have a minimum number of gaps or mismatches will be considered non-problematic
+      2. Hits that have a minimum number of gaps OR mismatches specified by the user will be considered non-problematic. Users may increase the thresholds for more stringent filtering.
          
-         * ``--ot-gap``: minimum number of gaps
-         * ``--ot-mismatch``: minimum number of mismatches
+         * ``--ot-gap``: minimum number of gaps (default=1; minimum is 1)
+         * ``--ot-mismatch``: minimum number of mismatches (default=1; minimum is 1)
            
-      3. Optional: Hits that do not have a PAM pattern nearby will be considered non-problematic
+      3. Hits where a gRNA is unaligned for a length that is greater than '(``--ot-gap`` - 1) + (``--ot-mismatch`` - 1) - <gaps in hit> - <mismatches in hit>' will be considered non-problematic
          
-         * ``--ot-pamless`` (flat): use this flag to turn this option OFF
+         * If ``--ot-gap 1 --ot-mismatch 1``, then a hit without gaps or mismatches must be perfectly aligned across the full length of a gRNA to be considered problematic
+         * If ``--ot-gap 1 --ot-mismatch 2``, then a hit without gaps or mismatches must be perfectly aligned across at least <gRNA length>-1 bp to be considered problematic
+      4. Optional: Hits that do not have a PAM pattern nearby will be considered non-problematic
+         
+         * ``--ot-pamless`` (flag): use this flag to turn this option OFF
    
    * Hits that are not considered non-problematic by AT LEAST ONE of the above test will be considered problematic
    * Output: Problematic BLAST hits

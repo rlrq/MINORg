@@ -1857,14 +1857,31 @@ class MINORg (PathHandler):
     
     def _is_offtarget_aln(self, hsp, query_result,
                           mismatch_check = True, gap_check = True, fully_aligned_check = True):
+        # ## note: XX_pass --> XX exceeds threshold for non-problematic off-target
+        # qlen = query_result.seq_len
+        # mismatch_excess = (max(1, self.ot_mismatch) - 1) - (qlen - hsp.ident_num)
+        # gap_excess = (max(1, self.ot_gap) - 1) - hsp.gap_num
+        # unaligned = qlen - hsp.query_end + hsp.query_start
+        # mismatch_pass = (mismatch_excess >= 0) if mismatch_check else True
+        # gap_pass = (gap_excess >= 0) if gap_check else True
+        # fully_aligned = unaligned == 0 if fully_aligned_check else True
+        # return fully_aligned and mismatch_pass and gap_pass
+        ## note XX_problematic --> XX meets problematic off-target threshold
         qlen = query_result.seq_len
-        mismatch_excess = (max(1, self.ot_mismatch) - 1) - (qlen - hsp.ident_num)
-        gap_excess = (max(1, self.ot_gap) - 1) - hsp.gap_num
-        unaligned_excess = qlen - hsp.query_end + hsp.query_start
-        mismatch_pass = (mismatch_excess >= 0) if mismatch_check else True
-        gap_pass = (gap_excess >= 0) if gap_check else True
-        fully_aligned = unaligned_excess == 0 if fully_aligned_check else True
-        return fully_aligned and mismatch_pass and gap_pass
+        aligned = max(hsp.query_start, hsp.query_end) - min(hsp.query_start, hsp.query_end)
+        unaligned = qlen - aligned
+        mismatch_excess_problematic_quota = (max(1, self.ot_mismatch) - 1) - (hsp.mismatch_num)
+        gap_excess_problematic_quota = (max(1, self.ot_gap) - 1) - hsp.gap_num
+        mismatch_problematic = (mismatch_excess_problematic_quota >= 0)
+        gap_problematic = (gap_excess_problematic_quota >= 0)
+        align_problematic = (((mismatch_excess_problematic_quota + gap_excess_problematic_quota)
+                              - unaligned) >= 0)
+        ## combine all checks
+        is_problematic = True
+        if gap_check: is_problematic = is_problematic and gap_problematic
+        if mismatch_check: is_problematic = is_problematic and mismatch_problematic
+        if fully_aligned_check: is_problematic = is_problematic and align_problematic
+        return is_problematic
     
     def is_offtarget_aln(self, hsp, query_result, **kwargs):
         """
@@ -2227,18 +2244,18 @@ class MINORg (PathHandler):
             return re.search(filled_rvs_template, aln_seqid)
         feature_only_ranges = {seqid: adjust_feature_ranges(gene, seqid, subtract_gaps = True)
                                for gene, seqid in genes.items()}
-        print("feature_only_ranges:", feature_only_ranges)
+        # print("feature_only_ranges:", feature_only_ranges)
         feature_gaps_ranges = {seqid: ranges_subtract(adjust_feature_ranges(gene, seqid, subtract_gaps = False),
                                                       feature_only_ranges[seqid])
                                for gene, seqid in genes.items()}
-        print("feature_gaps_ranges:", feature_gaps_ranges)
+        # print("feature_gaps_ranges:", feature_gaps_ranges)
         ## define acceptable ranges in targets
         get_target_feature_ranges = make_target_feature_ranges_function(feature_only_ranges,
                                                                         feature_gaps_ranges,
                                                                         max_insertion = max_insertion)
         targets_feature_ranges = {seqid: get_target_feature_ranges(alignment[seqid], seqid)
                                   for seqid in alignment}
-        print("targets_feature_ranges:", targets_feature_ranges)
+        # print("targets_feature_ranges:", targets_feature_ranges)
         # self.logfile.devsplain(f"{targets_feature_ranges}, {len(self.grna_hits.hits.items())}")
         ## iterate through all gRNAs
         for gRNA_seq, coverage in self.grna_hits.hits.items():

@@ -10,6 +10,9 @@ The 4 broad steps of MINORg are as follows:
 * seq: generation of target sequences
 * grna: generation of all potential gRNA from target sequences
 * filter: filtering of potential gRNA by GC, off-target, and/or within-feature
+
+  * IMPT NOTE: In order to minimise dependencies as well as allow flexibility for users, MINORg's filtering steps are not designed to be fully comprehensive. Users may use other on-target or off-target evaluation software and include the pass/fail status for each gRNA-target combination as additional columns in the .map file output by MINORg. Subsequently, this output file may be used as input to the minimumset subcommand for re-generation of sets using the expanded criteria.
+  
 * minimumset: generation of minimum set(s) of gRNA that cover all target sequences
 
 

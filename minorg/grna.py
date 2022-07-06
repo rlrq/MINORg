@@ -504,7 +504,7 @@ class gRNAHits:
         seq_targets = ({} if not targets
                        else {seqid: Target(seq, id = seqid, strand = '+')
                              for seqid, seq in fasta_to_dict(targets).items()})
-        print("parse_from_mapping, seq_targets:", seq_targets)
+        # print("parse_from_mapping, seq_targets:", seq_targets)
         raw_mapping = [line.split('\t') for line in splitlines(fname)]
         header_mapping = raw_mapping[0]
         ## determine version where checks start

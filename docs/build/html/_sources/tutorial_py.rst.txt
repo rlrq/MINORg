@@ -183,7 +183,7 @@ By default, MINORg generates 20 bp gRNA using SpCas9's NGG PAM. You may specify 
 >>> my_minorg.full()
 >>> my_minorg.resolve()
 
-In the example above, MINORg will generate 19 bp gRNA (``my_minorg.length = 19``) using Cas12a's unusual 5' PAM pattern (TTTV<gRNA>) (``my_minorg.pam = pam.Cas12a``). MINORg has several built-in PAMs (see :ref:`Parameters:Preset PAM patterns` for options), and also supports customisable PAM patterns using ambiguous bases and regular expressions (see :ref:`Parameters:PAM` for format). To use preset PAMs, such as in the example above, you will first need to import MINORg's :ref:`minorg.pam:minorg.pam module` module (``from minorg import pam``), then use ``pam.<preset pam alias>`` (such as ``pam.Cas12a``) to refer to the desired PAM pattern.
+In the example above, MINORg will generate 19 bp gRNA (``my_minorg.length = 19``) using Cas12a's unusual 5' PAM pattern (TTTV<gRNA>) (``my_minorg.pam = pam.Cas12a``). MINORg has several built-in PAMs (see :ref:`Parameters:Preset PAM patterns` for options), and also supports customisable PAM patterns using ambiguous bases and regular expressions (see :ref:`Parameters:PAM` for format). To use preset PAMs, such as in the example above, you will first need to import MINORg's :ref:`minorg.pam:minorg.pam module` (``from minorg import pam``), then use ``pam.<preset pam alias>`` (such as ``pam.Cas12a``) to refer to the desired PAM pattern.
 
 Filtering gRNA
 ~~~~~~~~~~~~~~
