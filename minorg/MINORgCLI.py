@@ -1290,6 +1290,15 @@ class MINORgCLI (MINORg):
             self.pam = self.args.pam
         return
     
+    def parse_ot_pattern(self):
+        """
+        Parse off-target pattern.
+        """
+        self.ot_unaligned_as_mismatch = self.args.ot_unaligned_as_mismatch
+        self.ot_unaligned_as_gap = self.args.ot_unaligned_as_gap
+        self.ot_pattern = self.args.ot_pattern
+        return
+    
     #######################
     ##  MASTER ARGPARSE  ##
     #######################
@@ -1385,12 +1394,16 @@ class MINORgCLI (MINORg):
                        "ot_mismatch", "ot_gap", "ot_pamless",
                        "target", "feature", "max_insertion", "min_within_n", "min_within_fraction")
         ## args that require a little more parsing/have different names
+        ## PAM
         self.parse_PAM()
         self.parse_grna_map_from_file(self.args.map)
         if self.args.rename:
             self.rename_grna(str(self.args.rename.resolve()))
         if self.args.reset_checks:
             self.grna_hits.clear_checks()
+        ## off-target pattern
+        self.parse_ot_pattern()
+        ## filenames
         self.grna_fasta = self.args.out_fasta
         self.grna_map = self.args.out_map
         self.pass_fasta = self.args.out_pass
@@ -1444,6 +1457,8 @@ class MINORgCLI (MINORg):
                        # "accept_feature_unknown",
                        "accept_invalid") ## minimum set options
         self.parse_PAM()
+        ## off-target pattern
+        self.parse_ot_pattern()
         return
     
     #######################

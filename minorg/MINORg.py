@@ -78,12 +78,13 @@ from minorg.functions import (
     ranges_subtract,
     imap_progress
 )
-from minorg.blast import blast
+from minorg.blast import blast, BlastHSP
 from minorg.searchio import searchio_parse
 from minorg.generate_grna import find_multi_gRNA
 from minorg.fasta import dict_to_fasta, fasta_to_dict
 from minorg.grna import gRNAHits
 from minorg.pam import PAM
+from minorg.ot_regex import OffTargetExpression
 
 from typing import Optional, Type, Dict
 
@@ -538,14 +539,23 @@ class MINORg (PathHandler):
             [seq: homologue] filter out hits by % identity before merging into potential homologues
 
         length (int): [grna] gRNA length (bp)
-        pam (str): [grna] PAM pattern
+        pam (:class:`~minorg.pam.PAM`): [grna] PAM pattern
 
         screen_reference (bool): [filter: background] include reference genome for screening
         ot_pamless (bool): [filter: background] ignore absence of PAM when assessing off-target gRNA hits
         offtarget (func):
             [filter: background] function that accepts Biopython's HSP and QueryResult objects and determines whether an off-target gRNA hit is problematic.
-            If not set by user, ot_mismatch and ot_gap will be used
+            If not set by user, ot_pattern will be used.
+            If both offtarget and ot_pattern are not set, ot_mismatch and ot_gap will be used.
             ## TODO!!! integrate this somehow?
+        ot_pattern (:class:`~minorg.ot_regex.OffTargetExpression`):
+            [filter: background] pattern specifying maximum number of gap(s) and/or mismatch(es)
+            within given range(s) of a gRNA in off-target regions to disqualify the gRNA
+        ot_unaligned_as_mismatch (bool):
+            [filter: background] treat unaligned positions as mismatches (used with ot_pattern)
+        ot_unaligned_as_gap (bool):
+            [filter: background] treat unaligned positions as gaps
+            (specifically as insertions; used with ot_pattern)
         ot_mismatch (int):
             [filter: background] minimum number of mismatches allowed for off-target gRNA hits
         ot_gap (int): [filter: background] minimum number of gaps allowed for off-target gRNA hits
@@ -682,8 +692,12 @@ class MINORg (PathHandler):
         self.screen_reference = True
         self._offtarget = None ## user-provided function that takes in pam, QueryResult obj, and HSP object and returns whether the off-target hit is acceptable. If not set, defaults to using self.ot_mismatch and self.ot_gap (combined with OR) to set lower limits for acceptable off-target
         self.background = {} ## {<alias>: <fname>}
-        self.ot_mismatch = self.params.ot_mismatch.default
-        self.ot_gap = self.params.ot_gap.default
+        self._ot_function = self._is_offtarget_aln_nopattern
+        self._ot_pattern = None
+        self._ot_unaligned_as_mismatch = True
+        self._ot_unaligned_as_gap = False
+        self.ot_mismatch = self.params.ot_mismatch.default ## ignored if self.ot_pattern != None
+        self.ot_gap = self.params.ot_gap.default ## ignored if self.ot_pattern != None
         self.ot_pamless = self.params.ot_pamless.default
         self.gc_min = self.params.gc_min.default
         self.gc_max = self.params.gc_max.default
@@ -832,6 +846,33 @@ class MINORg (PathHandler):
         if non_string_iter(self._feature): return self._feature
         else: return [self._feature]
     @property
+    def ot_pattern(self):
+        """
+        Off-target mismatch/gap pattern
+        
+        :getter: Returns OffTargetExpression object
+        :type: `:class:~minorg.ot_regex.OffTargetExpression`
+        """
+        return self._ot_pattern
+    @property
+    def ot_unaligned_as_mismatch(self):
+        """
+        Treat unaligned positions as mismatch (used with ot_pattern)
+        
+        :getter: Returns whether to count unaligned positions as mismatch
+        :type: bool
+        """
+        return self._ot_unaligned_as_mismatch
+    @property
+    def ot_unaligned_as_gap(self):
+        """
+        Treat unaligned positions as gaps (specifically insertions; used with ot_pattern)
+        
+        :getter: Returns whether to count unaligned positions as gaps
+        :type: bool
+        """
+        return self._ot_unaligned_as_gap
+    @property
     def passed_grna(self):
         """
         gRNA that have passed background, GC, and feature checks
@@ -906,8 +947,35 @@ class MINORg (PathHandler):
         if non_string_iter(val): self._feature = val
         else: self._feature = [val]
     @check_recip.setter
-    def check_recip(self, val):
+    def check_recip(self, val: bool):
         self._check_recip = val
+    @ot_pattern.setter
+    def ot_pattern(self, val: str):
+        ## sets self._ot_function to self._is_offtarget_aln_pattern if is valid pattern,
+        ## else to self._is_offtarget_aln_nopattern if not valid
+        if val is None: self._ot_function = self._is_offtarget_aln_nopattern
+        elif isinstance(val, OffTargetExpression):
+            self._ot_pattern = val
+            self._ot_function = self._is_offtarget_aln_pattern
+        elif isinstance(val, str):
+            self._ot_pattern = OffTargetExpression(val,
+                                                   unaligned_as_mismatch = self.ot_unaligned_as_mismatch,
+                                                   unaligned_as_gap = self.ot_unaligned_as_gap)
+            self._ot_function = self._is_offtarget_aln_pattern
+    @ot_unaligned_as_mismatch.setter
+    def ot_unaligned_as_mismatch(self, val: bool):
+        self._ot_unaligned_as_mismatch = val
+        if self.ot_pattern is not None:
+            self._ot_pattern = OffTargetExpression(self.ot_patern.pattern,
+                                                   unaligned_as_mismatch = val,
+                                                   unaligned_as_gap = self.ot_unaligned_as_gap)
+    @ot_unaligned_as_gap.setter
+    def ot_unaligned_as_gap(self, val: bool):
+        self._ot_unaligned_as_gap = val
+        if self.ot_pattern is not None:
+            self._ot_pattern = OffTargetExpression(self.ot_patern.pattern,
+                                                   unaligned_as_mismatch = self.ot_unaligned_as_mismatch,
+                                                   unaligned_as_gap = val)
     @prioritise_nr.setter
     def prioritise_nr(self, val):
         if not isinstance(val, bool):
@@ -1855,8 +1923,11 @@ class MINORg (PathHandler):
         """
         return self._is_offtarget_pos(hsp, ifasta)
     
-    def _is_offtarget_aln(self, hsp, query_result,
-                          mismatch_check = True, gap_check = True, fully_aligned_check = True):
+    def _is_offtarget_aln_pattern(self, hsp, query_result, **kwargs):
+        return self.ot_pattern(BlastHSP(hsp, query_result, None))
+    
+    def _is_offtarget_aln_nopattern(self, hsp, query_result,
+                                    mismatch_check = True, gap_check = True, fully_aligned_check = True):
         # ## note: XX_pass --> XX exceeds threshold for non-problematic off-target
         # qlen = query_result.seq_len
         # mismatch_excess = (max(1, self.ot_mismatch) - 1) - (qlen - hsp.ident_num)
@@ -1897,7 +1968,8 @@ class MINORg (PathHandler):
         Returns: 
             bool: whether a HSP hit meets the threshold for problematic off-target gRNA hit
         """
-        return self._is_offtarget_aln(hsp, query_result, **kwargs)
+        # return self._is_offtarget_aln(hsp, query_result, **kwargs)
+        return self._ot_function(hsp, query_result, **kwargs)
     
     def _has_pam(self, hsp, query_result, ifasta):
         pam_pre = self.pam.five_prime()
@@ -1982,7 +2054,7 @@ class MINORg (PathHandler):
         if not keep_output: os.remove(fout)
         return offtarget
     
-    def filter_background(self, *other_mask_fnames, keep_blast_output = False, mask_reference = True):
+    def filter_background(self, *other_mask_fnames, keep_blast_output = None, mask_reference = True):
         """
         Set background filter check for candidate gRNAs.
         
@@ -1994,12 +2066,14 @@ class MINORg (PathHandler):
         
         Arguments:
             *other_mask_fnames (str): optional, paths to other FASTA files not in self.background that are also to be screened for off-target
-            keep_blast_output (bool): retain BLAST output file. Default behaviour deletes it.
+            keep_blast_output (bool): retain BLAST output file. 
+                If not provided, defaults to self.keep_tmp. ``False`` deletes it.
             mask_reference (bool): mask reference genes (default=True)
         """
         if not self.grna_hits:
             raise MINORgError( ("MINORg.filter_background requires gRNA"
                                 " (generated with self.grna())") )
+        if keep_blast_output is None: keep_blast_output = self.keep_tmp
         if self.grna_fasta is None:
             self.write_all_grna_fasta() ## write gRNA to file so we can BLAST it
         if mask_reference and not self.ref_gene and self.genes:

@@ -168,6 +168,24 @@ Python attributes in the table below indicated with an asterisk (*) should be se
 |               |-\-ot-gap                  |ot_gap                     |minimum acceptable gaps  |
 |               |                           |                           |for off-targets          |
 |               +---------------------------+---------------------------+-------------------------+
+|               |-\-:ref:`ot-pattern        |:ref:`ot_pattern           |pattern to define        |
+|               |<parameters:Off-target     |<parameters:Off-target     |combination, number, and |
+|               |pattern>`                  |pattern>`                  |location of gap(s) and/or|
+|               |                           |                           |mismatch(es) for         |
+|               |                           |                           |unacceptable off-target  |
+|               |                           |                           |hits (i.e. gRNA with     |
+|               |                           |                           |off-target hits that     |
+|               |                           |                           |match the defined pattern|
+|               |                           |                           |will be excluded)        |
+|               +---------------------------+---------------------------+-------------------------+
+|               |-\-ot-unaligned-as-mismatch|ot_unaligned_as_mismatch   |treat unaligned positions|
+|               |                           |                           |as mismatches (used with |
+|               |                           |                           |-\-ot-pattern/ot_pattern)|
+|               +---------------------------+---------------------------+-------------------------+
+|               |-\-ot-unaligned-as-gap     |ot_unaligned_as_gap        |treat unaligned positions|
+|               |                           |                           |as gaps (used with       |
+|               |                           |                           |-\-ot-pattern/ot_pattern)|
+|               +---------------------------+---------------------------+-------------------------+
 |               |-\-skip-bg-check           |                           |skip off-target check    |
 +---------------+---------------------------+---------------------------+-------------------------+
 |[filter]       |-\-exclude                 |exclude                    |FASTA file of gRNA       |
@@ -208,7 +226,7 @@ Flag
 
 Flags are parameters that do not take values.
 
-**CLI**: ``--auto``, ``--accept-invalid``, ``--accept-feature-unknown``, ``--prioritise-nr``/\ ``--prioritise-pos``
+**CLI**: ``--auto``, ``--accept-invalid``, ``--accept-feature-unknown``, ``--prioritise-nr``/\ ``--prioritise-pos``, ``--ot-unaligned-as-gap``/\ ``--ot-uag``, ``--ot-unaligned-as-mismatch``/\ ``--ot-uam``
 
 For example:
 
@@ -219,7 +237,7 @@ For example:
 Simply using ``--auto`` tells MINORg to automate set generation.
 
 
-**Python**: ``auto``, ``accept_invalid``, ``accept_feature_unknown``, ``accept_invalid_field``, ``prioritise_nr``/\ ``prioritise_pos``
+**Python**: ``auto``, ``accept_invalid``, ``accept_feature_unknown``, ``accept_invalid_field``, ``prioritise_nr``/\ ``prioritise_pos``, ``unaligned_as_gap``, ``unaligned_as_mismatch``
 
 In Python, flags are raised by setting the value of their attributes to ``True`` or ``False``. For example:
 
@@ -410,6 +428,11 @@ Multi-value dictionary (Python)
 
 **Python**: ``query``, ``background``
 
+Multiple values for a single parameter may be provided to MINORg in a dictionary. For example:
+
+>>> from minorg.MINORg import MINORg
+>>> my_minorg = MINORg()
+>>> my_minorg.query = {'queryA': '/path/to/query_file.fasta', 'queryB': '/path/to/another/query_file.fasta'}
 
 
 
@@ -553,7 +576,7 @@ Under the hood, MINORg uses regex to match PAM sites. Therefore, it is in theory
 
 
 Ambiguous bases and repeats
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++ 
 
 Unlike many gRNA designers, MINORg accepts ambiguous bases (see: https://genome.ucsc.edu/goldenPath/help/iupac.html for IUPAC codes) as well as variable number of repeats.
 
@@ -632,6 +655,115 @@ MINORg comes with several preset PAM patterns for different CRISPR systems.
    +-------------+----------------+--------------------------------------+
 
 
+Off-target pattern
+~~~~~~~~~~~~~~~~~~
+**Type**: :ref:`Parameters:Argument`
+
+| **CLI**: ``--ot-pattern``
+| **Python**: ``ot_pattern``
+
+  | set default: ``off-target pattern`` (section ``[filter]``)
+
+For greater flexibility, MINORg provides a method for defining position-specific tolerances for gaps/mismatches/unaligned positions.
+
+(By default, MINORg uses ``--ot-mismatch``/\ ``ot_mismatch`` and ``--ot-gap``/\ ``ot_gap`` to determine whether an off-target hit disqualifies as gRNA. This default behaviour counts the total number of mismatches and/or gaps and/or unaligned positions in an off-target gRNA hit and discards or retains a gRNA based on the specified threshold values. See :ref:`Algorithms:Total mismatch/gap/unaligned` for this default algorithm. This behaviour will be overridden if ``--ot-pattern``/\ ``ot_pattern`` is specified.)
+
+Basic unit
+++++++++++
+
+The basic unit of an off-target pattern comprises of 3 parts:
+
+* Maximum intolerable count (integer)
+* Type of non-match (whether gap, deletion, insertion, and/or gap)
+  
+  * ``m``: mismatch
+  * ``g``: gap (should not be used with ``i`` and/or ``d``)
+  * ``i``: insertion (base present in gRNA but not in the off-target sequence)
+  * ``d``: deletion (base not present in gRNA but present in the off-target sequence)
+    
+* Range
+  
+  * All examples below will be based on a very short 8 bp gRNA of 5'-ATGCatgc-3' (upper and lowercase for illustration purposes)
+  
+  * Position indices can be positive or negative, but not zero.
+
+    * This allows flexibility regardless of gRNA length and whether PAM is 5' or 3'.
+    * If index > 0: positions are counted from the 5' end (best for 5' PAM)
+      
+      * Index 1 = A
+      * Index 5 = a
+      * Index 7 = g
+        
+    * If index < 0: positions are counted from the 3' end (best for 3' PAM)
+
+      * Index -1 = c
+      * Index -5 = C
+      * Index -7 = T
+
+  * If a single index is provided, the range is assumed to be:
+
+    * <start> to <index>: if index > 0
+      
+      * ``4``: ATGC (positions 1 to 4)
+      * ``6``: ATGCat (positions 1 to 6)
+    
+    * <index> to <end>: if index < 0
+
+      * ``-4``: atgc (positions -4 to -1)
+      * ``-6``: GCatgc (positions -6 to -1)
+
+  * If a single index is provided AND followed by a '-', the range is assumed to be:
+
+    * <index> to <end>: if index > 0
+      
+      * ``4-``: Catgc (positions 4 to 8)
+      * ``6-``: tgc (positions 6 to 8)
+        
+    * <start> to <index>: if index < 0
+
+      * ``-4-``: ATGCa (positions -8 to -4)
+      * ``-6-``: ATG (positions -8 to -6)
+  
+  * Otherwise, a range can be defined using 2 indices separated by '-'. Values must either both be positive or both be negative. For ranges defined by negative indices, the smaller absolute value should come first.
+    
+    * Valid
+      
+      * ``2-5``: TGCa (positions 2 to 5)
+      * ``-2--5``: Catg (positions -5 to -2)
+        
+    * Invalid
+      
+      * ``2--5``: mixed signs
+      * ``-2-5``: mixed signs
+      * ``-5--2``: smaller absolute value should come first
+    
+
+Examples
+________
+
+* ``0mg5``: gRNA hit with any mismatches or gaps (>0) from positions 1 to 5 will be NOT be considered problematic.
+* ``1i-5--20``: gRNA hit with more than 1 (>1) insertions from positions -5 to -20 will NOT be considered problematic.
+
+Operators
++++++++++
+
+Multiple units can be combined using ``,`` (AND) and ``|`` (OR).
+
+Neither operator is prioritised over the other. You may specify order using parentheses ``(`` and ``)``. In the absence of parenthesis, operations are evaluated left to right.
+
+* ``0mg5,1mg6-|0mg6,1m7-`` will be evaluated as ``(((0mg5,1mg6-)|0mg6),1m7-)``
+
+  * To evaluate ``0mg5,1mg6-|0mg6,1m7-`` as '``0mg5,1mg6-`` OR ``0mg6,1m7-``\ ', use ``(0mg5,1mg6-)|(0mg6,1m7-)``
+
+NOTE: You can technically combine basic units with ranges that are negative and positive (e.g ``0mg5,0mg-5`` is valid), but I'm not sure why you'd do that.
+
+Examples
+________
+
+* ``(0mg5,1mg6-)|(0mg6,1m7-)``: gRNA hit with <no gaps/mismatches from positions 1 to 5 and no more than 1 gaps/mismatches from positions 6 to the end> OR <no gaps/mismatches from positions 1 to 6 and no more than 1 mismatch from positions 7 to the end REGARDLESS OF HOW MANY GAPS> will be considered **problematic**.
+
+
+
 Prioritise non-redundancy
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 **Type**: :ref:`Parameters:Flag`
@@ -639,7 +771,7 @@ Prioritise non-redundancy
 | **CLI**: ``--prioritise-nr``/\ ``--prioritize-nr``
 | **Python**: ``prioritise_nr``/\ ``--prioritize-nr``
 
-  | set default: ``prioritise non-redundnacy``
+  | set default: ``prioritise non-redundnacy`` (section ``[filter]``)
 
 By default, gRNA are selected for a set in the following order of priority:
 

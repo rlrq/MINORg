@@ -65,16 +65,8 @@ It consist broadly of 3 steps
    * Hits are subjected to the following tests in order:
      
       1. Hits fully in masked regions will be considered non-problematic
-      2. Hits that have a minimum number of gaps OR mismatches specified by the user will be considered non-problematic. Users may increase the thresholds for more stringent filtering.
-         
-         * ``--ot-gap``: minimum number of gaps (default=1; minimum is 1)
-         * ``--ot-mismatch``: minimum number of mismatches (default=1; minimum is 1)
-           
-      3. Hits where a gRNA is unaligned for a length that is greater than '(``--ot-gap`` - 1) + (``--ot-mismatch`` - 1) - <gaps in hit> - <mismatches in hit>' will be considered non-problematic
-         
-         * If ``--ot-gap 1 --ot-mismatch 1``, then a hit without gaps or mismatches must be perfectly aligned across the full length of a gRNA to be considered problematic
-         * If ``--ot-gap 1 --ot-mismatch 2``, then a hit without gaps or mismatches must be perfectly aligned across at least <gRNA length>-1 bp to be considered problematic
-      4. Optional: Hits that do not have a PAM pattern nearby will be considered non-problematic
+      2. Hits will be assessed for goodness of alignment using one of two algorithms (see :ref:`Algorithms:Off-target hit alignment goodness`)
+      3. Optional: Hits that do not have a PAM pattern nearby will be considered non-problematic
          
          * ``--ot-pamless`` (flag): use this flag to turn this option OFF
    
@@ -83,6 +75,39 @@ It consist broadly of 3 steps
       
 #. gRNA with hits that are problematic are considered to have failed off-target assessment
    
+Off-target hit alignment goodness
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Total mismatch/gap/unaligned
+****************************
+
+By default, MINORg uses this algorithm to define problematic off-target hits. This algorithm checks whether a gRNA has fewer mismatch(es)/gap(s)/unaligned positions across its entire length than a threshold value, and disqualifies any gRNA where it is true for at least one hit.
+
+1. Hits that have a minimum number of gaps OR mismatches specified by the user will be considered non-problematic. Users may increase the thresholds for more stringent filtering.
+         
+   * ``--ot-gap``/ ``ot_gap``: minimum number of gaps (default=1; minimum is 1)
+   * ``--ot-mismatch``/ ``ot_mismatch``: minimum number of mismatches (default=1; minimum is 1)
+           
+2. Hits where a gRNA is unaligned for a length that is greater than '(``--ot-gap`` - 1) + (``--ot-mismatch`` - 1) - <gaps in hit> - <mismatches in hit>' will be considered non-problematic
+         
+   * If ``--ot-gap 1 --ot-mismatch 1``, then a hit without gaps or mismatches must be perfectly aligned across the full length of a gRNA to be considered problematic
+   * If ``--ot-gap 1 --ot-mismatch 2``, then a hit without gaps or mismatches must be perfectly aligned across at least <gRNA length>-1 bp to be considered problematic
+
+
+Position-specific mismatch/gap/unaligned
+****************************************
+
+If ``--ot-pattern``/ ``ot_pattern`` is specified, MINORg will use it to define problematic off-target hits. Unlike :ref:`Algorithms:Total mismatch/gap/unaligned`, this method takes into account WHERE a mismatch/gap/unaligned position occurs. See :ref:`Parameters:Off-target pattern` for how to build a pattern.
+
+1. Hits that do not match the pattern specified by ``--ot-pattern``/ ``ot_pattern`` will be considered non-problematic.
+   
+   * ``--ot-unaligned-as-gap``: count unaligned positions as gaps (specifically as insertions) (default=False)
+   * ``--ot-unaligned-as-mismatch``: count unaligned positions as mismatches (default=True)
+   * WARNING: If both ``--ot-unaligned-as-gap`` and ``--ot-unaligned-as-mismatch`` are raised, unaligned positions will be double-counted as gap(s) AND mismatch(es).
+   * If a deletion is between positions N and N+1 (5' -> 3'), it will be assigned to position:
+     * N: if the range in the pattern uses negative position indices (e.g. 1g-5--10)
+     * N+1: if the range in the pattern uses positive position indices (e.g. 1g5-10)
+
 
 Within-feature inference
 ------------------------

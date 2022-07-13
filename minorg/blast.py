@@ -1,6 +1,19 @@
+import regex as re
+
 from minorg.fasta import fasta_to_dict, dict_to_fasta
 from minorg.functions import prepend_line, parse_get_data, splitlines, write_tsv
 from minorg.searchio import searchio_parse
+from minorg.ot_regex import (
+    CHAR_UNALIGNED,
+    CHAR_DEL,
+    CHAR_INS,
+    CHAR_MISMATCH,
+    CHAR_MATCH,
+    CHAR_GAP,
+    BTOP_GAP
+)
+
+## TODO: test BlastHSP
 
 ########################
 ##  BLAST FORMATTING  ##
@@ -15,16 +28,225 @@ class BlastHSP:
         self.hsp = hsp
         self.query = query
         self.subject = subject
+        self.qlen = None if "seq_len" not in dir(self.query) else self.query.seq_len
+        self.sbtop = None
+        self.tbtop = None
+        self.tbtop_rvs = None
+        self.parse_btop()
+    
+    @property
+    def btop(self):
+        return self.hsp.btop
+    
+    def parse_btop(self):
+        if "btop" in dir(self.hsp):
+            self.sbtop = self.expand_btop_str(include_unaligned = True)
+            self.tbtop = self.expand_btop_tuple(include_unaligned = True)
+            self.tbtop_rvs = self.expand_btop_tuple(include_unaligned = True, rvs_index = True)
+    
+    def expand_btop_str(self, include_unaligned = False):
+        """
+        Expands btop to a string of characters of length equal to alignment, where:
+            '.' is a match,
+            'm' is a mismatch,
+            'i' is an insertion in the query,
+            'd' is a deletion in the query.
 
-class BlastResult(list):
+        Arguments:
+            include unaligned (bool): add space character for each unaligned position at 3' and 5' ends
+
+        Returns
+        -------
+        str
+            Expanded btop pattern
+        """
+        output = ''
+        btop = self.btop
+        ## processed characters are removed from btop until none are left
+        while btop:
+            num = re.search('^\d+', btop)
+            if num: ## if match
+                num = num.group(0)
+                output += CHAR_MATCH*int(num)
+                btop = btop[len(num):]
+            else: ## if gap or mismatch
+                unit = btop[:2]
+                if unit[0] == BTOP_GAP: output += CHAR_DEL ## deletion in query
+                elif unit[1] == BTOP_GAP: output += CHAR_INS ## insertion in query
+                else: output += CHAR_MISMATCH ## mismatch
+                btop = btop[2:]
+        if include_unaligned:
+            output = (CHAR_UNALIGNED*self.hsp.query_start) + \
+                     output + \
+                     (CHAR_UNALIGNED*(self.qlen-self.hsp.query_end))
+        return output
+    
+    def expand_btop_tuple(self, rvs_index = False, include_unaligned = False):
+        """
+        Calls str_expand_btop and groups expanded btop to a tuple of characters
+        of length equal to aligned query, where:
+            '.' is a match,
+            'm' is a mismatch,
+            'i' is an insertion in the query,
+            'd' is a deletion in the query (deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N).
+
+        Arguments:
+            rvs_index (bool): default=False. A deletion between positions N and N+1 will be grouped with:
+                position N+1 if rvs_index=False;
+                position N, if rvs_index=True.
+
+        Returns
+        -------
+        tuple of str
+            Expanded btop pattern
+        """
+        str_expanded = self.expand_btop_str()
+        output = []
+        non_del = {CHAR_MATCH, CHAR_MISMATCH, CHAR_INS}
+        ## processed characters are removed from str_expanded until none are left
+        while str_expanded:
+            c = str_expanded[0]
+            if c in non_del: ## if not deletion
+                output.append(c)
+                str_expanded = str_expanded[1:]
+            elif rvs_index: ## if deletion in reversed index
+                output[-1] = output[-1] + c
+                str_expanded = str_expanded[1:]
+            else: ## if deletion in index counting up
+                output.append(str_expanded[:2])
+                str_expanded = str_expanded[2:]
+        if include_unaligned:
+            output = ([CHAR_UNALIGNED]*self.hsp.query_start) + output + \
+                     ([CHAR_UNALIGNED]*(self.qlen-self.hsp.query_end))
+        return tuple(output)
+    
+    def splice_expanded_btop(self, start = None, end = None, fmt = tuple,
+                             rvs_index = False, include_unaligned = True):
+        """
+        Returns expanded btop spliced to specified range and in specified format
+        
+        Arguments:
+            start (int): optional, start position (default=0)
+            end (int): optional, end position (non-inclusive) (default=<query length (self.qlen))
+            fmt (type): str or tuple; return expanded btop type
+            rvs_index (bool): used when fmt=tuple;
+                deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N
+            include unaligned (bool): add space character for each unaligned position at 3' and 5' ends
+        
+        Returns
+        -------
+        str or tuple
+            Expanded btop spliced to specified range
+        """
+        if start is None: start = 0
+        if end is None: end = self.qlen
+        ## originally: incr (int): default=1; splice increment (use -1 when start < end; use 1 when start > end)
+        incr = 1 if (end >= start) else -1
+        btop = self.tbtop_rvs if rvs_index else self.tbtop
+        btop = btop[start:end:incr]
+        if not include_unaligned:
+            btop = type(btop)(x for x in btop if x != CHAR_UNALIGNED)
+        if fmt == str: return ''.join(btop)
+        else: return btop
+        
+    def _num_char_in_range(self, *char, start = None, end = None, rvs_index = False):
+        """
+        Returns number of times a given set of characters appears within a given range
+        
+        Arguments:
+            *char (str): characters to search for
+            start (int): optional, start position (default=0)
+            end (int): optional, end position (non-inclusive) (default=<query length (self.qlen))
+            rvs_index (bool): used when fmt=tuple;
+                deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N
+        
+        Returns
+        -------
+        int
+            Number of times characters appear within range
+        """
+        sbtop = self.splice_expanded_btop(start, end, fmt = str, rvs_index = rvs_index,
+                                          include_unaligned = True)
+        output = 0
+        for c in char:
+            output += sbtop.count(c)
+        return output
+    
+    def num_insertion(self, start = None, end = None):
+        """
+        Returns number of insertions relative to subject
+        (that is, one or more bases that is/are present in the subject but not in the query).
+        
+        Arguments:
+            start (int): optional, start position (default=0)
+            end (int): optional, end position (non-inclusive) (default=<query length (self.qlen))
+        
+        Returns
+        -------
+        int
+            Number of insertions within range
+        """
+        return self._num_char_in_range(CHAR_INS, start = start, end = end)
+    
+    def num_deletion(self, start = None, end = None, rvs_index = False):
+        """
+        Returns number of deletions relative to subject
+        (that is, one or more bases that is/are present in the query but not in the subject).
+        
+        Arguments:
+            start (int): optional, start position (default=0)
+            end (int): optional, end position (non-inclusive) (default=<query length (self.qlen))
+            rvs_index (bool): used when fmt=tuple;
+                deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N
+        
+        Returns
+        -------
+        int
+            Number of deletions within range
+        """
+        return self._num_char_in_range(CHAR_DEL, start = start, end = end, rvs_index = rvs_index)
+    
+    def num_mismatch(self, start = None, end = None):
+        """
+        Returns number of mismatches.
+        
+        Arguments:
+            start (int): optional, start position (default=0)
+            end (int): optional, end position (non-inclusive) (default=<query length (self.qlen))
+        
+        Returns
+        -------
+        int
+            Number of mismatches within range
+        """
+        return self._num_char_in_range(CHAR_MISMATCH, start = start, end = end)
+    
+    def num_gap(self, start = None, end = None, rvs_index = False):
+        """
+        Returns number of gaps.
+        
+        Arguments:
+            start (int): optional, start position (default=0)
+            end (int): optional, end position (non-inclusive) (default=<query length (self.qlen))
+            rvs_index (bool): used when fmt=tuple;
+                deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N
+        
+        Returns
+        -------
+        int
+            Number of gaps within range
+        """
+        return self._num_char_in_range(CHAR_DEL, CHAR_INS, start = start, end = end, rvs_index = rvs_index)
+    
+class BlastResult:
     """
-    Read blast-tab format and flattens it into a list of BlastHSP,
-    which stores a HSP object with it associated QueryResult and Hit objects 
+    Generator that reads blast-tab format and yields BlastHSP,
+    which stores a HSP object with its associated QueryResult and Hit objects 
     as attributes query and subject respectively.
     """
     def __init__(self, filename, fmt, **kwargs):
         """
-        Create a BlastTab object.
+        Create a BlastResult object.
         
         Arguments:
             filename (str): path to file
@@ -32,11 +254,21 @@ class BlastResult(list):
             **kwargs: additional arguments for SearchIO (notably, fields)
         """
         self.filename = filename
-        super().__init__()
-        for query_result in searchio_parse(filename, fmt, **kwargs):
+        self.fmt = fmt
+        self.kwargs = kwargs
+    def __iter__(self):
+        for query_result in searchio_parse(self.filename, self.fmt, **self.kwargs):
             for hit in query_result:
                 for hsp in hit:
-                    self.append(BlastHSP(hsp, query_result, hit))
+                    yield BlastHSP(hsp, query_result, hit)
+
+# class Test:
+#     def __init__(self):
+#         return
+#     def __iter__(self):
+#         for i in range(3):
+#             for j in range(i):
+#                 yield (i, j)
 
 def blast6multi(blastf, header, fout, subjects,
                 threshold = None, n = None, metric = None, dir = None, **kwargs):

@@ -4,11 +4,13 @@ gRNA set generator for multiple genes in multiple genomes.
 https://rlrq.github.io/MINORg
 """
 
+## TODO: wrapper function that logs error/warning message to file before raising error/warning
+
 import logging
 
 _logging_level = logging.DEBUG
 
-__version__ = "0.2.1.10alpha0"
+__version__ = "0.2.2.0alpha0"
 
 class MINORgWarning(Warning):
     """

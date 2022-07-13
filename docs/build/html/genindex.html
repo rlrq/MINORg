@@ -459,10 +459,10 @@
       </ul></li>
       <li><a href="minorg.blast.html#minorg.blast.blast6">blast6() (in module minorg.blast)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.blast.html#minorg.blast.blast6multi">blast6multi() (in module minorg.blast)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.blast.html#minorg.blast.blast6threshold">blast6threshold() (in module minorg.blast)</a>
 </li>
       <li><a href="minorg.blast.html#minorg.blast.blast6topn">blast6topn() (in module minorg.blast)</a>
@@ -476,6 +476,8 @@
       <li><a href="minorg.blast.html#minorg.blast.BlastNR">BlastNR (class in minorg.blast)</a>
 </li>
       <li><a href="minorg.blast.html#minorg.blast.BlastResult">BlastResult (class in minorg.blast)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.btop">btop (minorg.blast.BlastHSP property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -653,11 +655,15 @@
       </ul></li>
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.exclude">exclude (minorg.MINORg.MINORg attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.blast.html#minorg.blast.BlastNR.expand">expand() (minorg.blast.BlastNR method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.pam.html#minorg.pam.PAM.expand_ambiguous">expand_ambiguous() (minorg.pam.PAM method)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.expand_btop_str">expand_btop_str() (minorg.blast.BlastHSP method)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.expand_btop_tuple">expand_btop_tuple() (minorg.blast.BlastHSP method)</a>
 </li>
       <li><a href="minorg.extend_reference.html#minorg.extend_reference.extend_reference">extend_reference() (in module minorg.extend_reference)</a>
 
@@ -1514,17 +1520,25 @@
 </li>
       <li><a href="minorg.MINORg.html#minorg.MINORg.PathHandler.new_dirs">new_dirs (minorg.MINORg.PathHandler attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.pam.html#minorg.pam.NmeCas9">NmeCas9 (in module minorg.pam)</a>
 </li>
       <li><a href="minorg.pam.html#minorg.pam.nmecas9">nmecas9 (in module minorg.pam)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.console.html#minorg.console.non_negative_callback">non_negative_callback() (in module minorg.console)</a>
 </li>
       <li><a href="minorg.functions.html#minorg.functions.non_string_iter">non_string_iter() (in module minorg.functions)</a>
 </li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.num_deletion">num_deletion() (minorg.blast.BlastHSP method)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.num_gap">num_gap() (minorg.blast.BlastHSP method)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.num_insertion">num_insertion() (minorg.blast.BlastHSP method)</a>
+</li>
       <li><a href="minorg.functions.html#minorg.functions.num_lines">num_lines() (in module minorg.functions)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.num_mismatch">num_mismatch() (minorg.blast.BlastHSP method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1542,16 +1556,34 @@
 </li>
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.GroupLogger.orphan_handler_names">orphan_handler_names (minorg.dynamic_logger.GroupLogger property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.dynamic_logger.html#minorg.dynamic_logger.GroupLogger.orphan_handlers">orphan_handlers (minorg.dynamic_logger.GroupLogger property)</a>
 </li>
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_gap">ot_gap (minorg.MINORg.MINORg attribute)</a>
 </li>
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_mismatch">ot_mismatch (minorg.MINORg.MINORg attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_pamless">ot_pamless (minorg.MINORg.MINORg attribute)</a>
 </li>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_pattern">ot_pattern (minorg.MINORg.MINORg attribute)</a>
+
+      <ul>
+        <li><a href="minorg.MINORg.html#id6">(minorg.MINORg.MINORg property)</a>
+</li>
+      </ul></li>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_unaligned_as_gap">ot_unaligned_as_gap (minorg.MINORg.MINORg attribute)</a>
+
+      <ul>
+        <li><a href="minorg.MINORg.html#id8">(minorg.MINORg.MINORg property)</a>
+</li>
+      </ul></li>
+      <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_unaligned_as_mismatch">ot_unaligned_as_mismatch (minorg.MINORg.MINORg attribute)</a>
+
+      <ul>
+        <li><a href="minorg.MINORg.html#id7">(minorg.MINORg.MINORg property)</a>
+</li>
+      </ul></li>
       <li><a href="minorg.MINORg.html#minorg.MINORg.PathHandler.out_dir">out_dir (minorg.MINORg.PathHandler attribute)</a>
 </li>
   </ul></td>
@@ -1592,6 +1624,8 @@
 </li>
       <li><a href="minorg.parse_config.html#minorg.parse_config.parse_attr_mod_sdict">parse_attr_mod_sdict() (in module minorg.parse_config)</a>
 </li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.parse_btop">parse_btop() (minorg.blast.BlastHSP method)</a>
+</li>
       <li><a href="minorg.MINORgCLI.html#minorg.MINORgCLI.MINORgCLI.parse_cluster">parse_cluster() (minorg.MINORgCLI.MINORgCLI method)</a>
 </li>
       <li><a href="minorg.parse_config.html#minorg.parse_config.Params.parse_domain">parse_domain() (minorg.parse_config.Params method)</a>
@@ -1631,6 +1665,8 @@
       <li><a href="minorg.parse_config.html#minorg.parse_config.parse_multiline_multikey_sdict">parse_multiline_multikey_sdict() (in module minorg.parse_config)</a>
 </li>
       <li><a href="minorg.parse_config.html#minorg.parse_config.parse_multiline_sdict">parse_multiline_sdict() (in module minorg.parse_config)</a>
+</li>
+      <li><a href="minorg.MINORgCLI.html#minorg.MINORgCLI.MINORgCLI.parse_ot_pattern">parse_ot_pattern() (minorg.MINORgCLI.MINORgCLI method)</a>
 </li>
       <li><a href="minorg.MINORgCLI.html#minorg.MINORgCLI.MINORgCLI.parse_PAM">parse_PAM() (minorg.MINORgCLI.MINORgCLI method)</a>
 </li>
@@ -1894,10 +1930,10 @@
 </li>
       <li><a href="minorg.grna.html#minorg.grna.gRNAHits.set_seqs_check_by_function">set_seqs_check_by_function() (minorg.grna.gRNAHits method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.parse_config.html#minorg.parse_config.SetCoverAlgo">SetCoverAlgo (class in minorg.parse_config)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="minorg.MINORg.html#minorg.MINORg.MINORg.sets">sets (minorg.MINORg.MINORg attribute)</a>
 </li>
       <li><a href="minorg.parse_config.html#minorg.parse_config.Param.short">short (minorg.parse_config.Param property)</a>
@@ -1911,6 +1947,8 @@
       <li><a href="minorg.pam.html#minorg.pam.SpCas9">SpCas9 (in module minorg.pam)</a>
 </li>
       <li><a href="minorg.pam.html#minorg.pam.spcas9">spcas9 (in module minorg.pam)</a>
+</li>
+      <li><a href="minorg.blast.html#minorg.blast.BlastHSP.splice_expanded_btop">splice_expanded_btop() (minorg.blast.BlastHSP method)</a>
 </li>
       <li><a href="minorg.functions.html#minorg.functions.split_list">split_list() (in module minorg.functions)</a>
 </li>

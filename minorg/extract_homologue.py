@@ -215,7 +215,7 @@ def merge_hits_and_filter(blast6_fname, fout, fasta, quiet = True, min_cds_len =
     printi = make_local_print(quiet, printf = make_print_preindent(initial_lvl = lvl))
     ## get domain pos
     printi("Merging hits")
-    dat = BlastResult(blast6_fname, "blast-tab")
+    dat = list(BlastResult(blast6_fname, "blast-tab"))
     if len(dat) == 0:
         printi("No domain found, writing empty file.")
         f = open(fout, "w+")
@@ -248,6 +248,7 @@ def merge_hits(data, merge_within_range = 100, min_id = 90, min_len = 100,
     
     Arguments:
         data (:class:`minorg.functions.BlastResult`): BLASTN result
+            (or BlastResult coerced into reusable iterable)
         merge_within_range (int): maximum number of bases between hits to be merged
         min_id (float): minimum hit % identity
         min_len (int): minimum candidate homologue length
@@ -309,7 +310,7 @@ def filter_min_cds_len(blast6cds_fname, merged, min_cds_len = 0,
             entry["cds_overlap"] = "NA"
         return merged
     else:
-        dat_cds = BlastResult(blast6cds_fname, "blast-tab")
+        dat_cds = list(BlastResult(blast6cds_fname, "blast-tab"))
         if len(dat_cds) == 0:
             print("No CDS detected. Returning empty data.")
             return []

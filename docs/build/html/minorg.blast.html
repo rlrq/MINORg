@@ -106,12 +106,17 @@
 <span id="minorg-blast-module"></span><h1>minorg.blast module<a class="headerlink" href="#module-minorg.blast" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.blast.BlastHSP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastHSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L9-L17"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastHSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L22-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class that binds HSP object with QueryResult and Hit as query and subject respectively.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastHSP.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L14-L17"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L27-L35"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.btop">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">btop</span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.btop" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -119,45 +124,209 @@
 <span class="sig-name descname"><span class="pre">copy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;module</span> <span class="pre">'copy'</span> <span class="pre">from</span> <span class="pre">'/usr/lib/python3.6/copy.py'&gt;</span></em><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/../../../../../usr/lib/python3.6/copy.py#L0-L312"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.copy" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.expand_btop_str">
+<span class="sig-name descname"><span class="pre">expand_btop_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_unaligned</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L47-L82"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.expand_btop_str" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Expands btop to a string of characters of length equal to alignment, where:</dt><dd><p>‘.’ is a match,
+‘m’ is a mismatch,
+‘i’ is an insertion in the query,
+‘d’ is a deletion in the query.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unaligned</strong> (<em>include</em>) – add space character for each unaligned position at 3’ and 5’ ends</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expanded btop pattern</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.expand_btop_tuple">
+<span class="sig-name descname"><span class="pre">expand_btop_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvs_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_unaligned</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L84-L121"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.expand_btop_tuple" title="Permalink to this definition"></a></dt>
+<dd><p>Calls str_expand_btop and groups expanded btop to a tuple of characters
+of length equal to aligned query, where:</p>
+<blockquote>
+<div><p>‘.’ is a match,
+‘m’ is a mismatch,
+‘i’ is an insertion in the query,
+‘d’ is a deletion in the query (deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N).</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rvs_index</strong> (<em>bool</em>) – default=False. A deletion between positions N and N+1 will be grouped with:
+position N+1 if rvs_index=False;
+position N, if rvs_index=True.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expanded btop pattern</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.num_deletion">
+<span class="sig-name descname"><span class="pre">num_deletion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rvs_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L191-L207"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.num_deletion" title="Permalink to this definition"></a></dt>
+<dd><p>Returns number of deletions relative to subject
+(that is, one or more bases that is/are present in the query but not in the subject).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em>) – optional, start position (default=0)</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – optional, end position (non-inclusive) (default=&lt;query length (self.qlen))</p></li>
+<li><p><strong>rvs_index</strong> (<em>bool</em>) – used when fmt=tuple;
+deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of deletions within range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.num_gap">
+<span class="sig-name descname"><span class="pre">num_gap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rvs_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L224-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.num_gap" title="Permalink to this definition"></a></dt>
+<dd><p>Returns number of gaps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em>) – optional, start position (default=0)</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – optional, end position (non-inclusive) (default=&lt;query length (self.qlen))</p></li>
+<li><p><strong>rvs_index</strong> (<em>bool</em>) – used when fmt=tuple;
+deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of gaps within range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.num_insertion">
+<span class="sig-name descname"><span class="pre">num_insertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L175-L189"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.num_insertion" title="Permalink to this definition"></a></dt>
+<dd><p>Returns number of insertions relative to subject
+(that is, one or more bases that is/are present in the subject but not in the query).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em>) – optional, start position (default=0)</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – optional, end position (non-inclusive) (default=&lt;query length (self.qlen))</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of insertions within range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.num_mismatch">
+<span class="sig-name descname"><span class="pre">num_mismatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L209-L222"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.num_mismatch" title="Permalink to this definition"></a></dt>
+<dd><p>Returns number of mismatches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em>) – optional, start position (default=0)</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – optional, end position (non-inclusive) (default=&lt;query length (self.qlen))</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of mismatches within range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.parse_btop">
+<span class="sig-name descname"><span class="pre">parse_btop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L41-L45"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.parse_btop" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="minorg.blast.BlastHSP.splice_expanded_btop">
+<span class="sig-name descname"><span class="pre">splice_expanded_btop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt=&lt;class</span> <span class="pre">'tuple'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rvs_index=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_unaligned=True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L123-L150"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastHSP.splice_expanded_btop" title="Permalink to this definition"></a></dt>
+<dd><p>Returns expanded btop spliced to specified range and in specified format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em>) – optional, start position (default=0)</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – optional, end position (non-inclusive) (default=&lt;query length (self.qlen))</p></li>
+<li><p><strong>fmt</strong> (<em>type</em>) – str or tuple; return expanded btop type</p></li>
+<li><p><strong>rvs_index</strong> (<em>bool</em>) – used when fmt=tuple;
+deletion between N and N+1 will be grouped with position N+1 if rvs_index=False else N</p></li>
+<li><p><strong>unaligned</strong> (<em>include</em>) – add space character for each unaligned position at 3’ and 5’ ends</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expanded btop spliced to specified range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str or tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L159-L206"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L391-L438"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L160-L177"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L392-L409"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.blast">
-<span class="sig-name descname"><span class="pre">blast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L192-L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.blast" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">blast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L424-L426"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.blast" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.collapse_query">
-<span class="sig-name descname"><span class="pre">collapse_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout_fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L178-L191"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.collapse_query" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">collapse_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fout_fasta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L410-L423"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.collapse_query" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.expand">
-<span class="sig-name descname"><span class="pre">expand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L195-L206"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.expand" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">expand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L427-L438"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.expand" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.blast.BlastResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L19-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastResult" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
-<p>Read blast-tab format and flattens it into a list of BlastHSP,
-which stores a HSP object with it associated QueryResult and Hit objects
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L241-L263"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastResult" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generator that reads blast-tab format and yields BlastHSP,
+which stores a HSP object with its associated QueryResult and Hit objects
 as attributes query and subject respectively.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastResult.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L25-L39"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastResult.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Create a BlastTab object.</p>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L247-L258"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastResult.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create a BlastResult object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -173,42 +342,42 @@ as attributes query and subject respectively.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.blast">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L55-L80"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L287-L312"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.blast6">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L84-L88"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L316-L320"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.blast6multi">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L41-L53"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6multi" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L273-L285"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6multi" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.blast6threshold">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L99-L102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6threshold" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L331-L334"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6threshold" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.blast6topn">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6topn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L93-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6topn" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">blast6topn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L325-L328"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.blast6topn" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.filter_blast6_threshold">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">filter_blast6_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L129-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.filter_blast6_threshold" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">filter_blast6_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L361-L372"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.filter_blast6_threshold" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.filter_blast6_topn">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">filter_blast6_topn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L105-L126"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.filter_blast6_topn" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">filter_blast6_topn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bitscore'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L337-L358"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.filter_blast6_topn" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.blast.filter_rpsblast_for_domain">
-<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">filter_rpsblast_for_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">pssmids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L143-L157"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.filter_rpsblast_for_domain" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">filter_rpsblast_for_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">pssmids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L375-L389"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.filter_rpsblast_for_domain" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
