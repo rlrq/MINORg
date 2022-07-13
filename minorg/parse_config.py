@@ -488,11 +488,13 @@ class Params():
                                                " gap(s) and/or mismatch(es) in off-target hits"
                                                " that disqualify their gRNA"))
         self.ot_unaligned_as_mismatch = Param(get_filter("unaligned as mismatch", type = bool, default = True),
-                                              "--ot-unaligned-as-mismatch", "--ot-uam",
+                                              "--ot-unaligned-as-mismatch/--ot-unaligned-as-mismatch-unset",
+                                              "--ot-uam/--ot-uam-unset",
                                               description = ("treat unaligned positions as mismatches;"
                                                              " used with --ot-pattern"))
         self.ot_unaligned_as_gap = Param(get_filter("unaligned as gap", type = bool, default = False),
-                                         "--ot-unaligned-as-gap", "--ot-uag",
+                                         "--ot-unaligned-as-gap/--ot-unaligned-as-gap-unset",
+                                         "--ot-uag/--ot-uag-unset",
                                          description = ("treat unaligned positions as gaps"
                                                         " (specifically insertions);"
                                                         " used with --ot-pattern"))
@@ -501,7 +503,7 @@ class Params():
         self.ot_gap = Param(get_filter("minimum off-target gap", type = int, default = 0),
                             "--ot-gap", description = "minimum acceptable off-target gap")
         self.ot_pamless = Param(get_filter("pamless off-target search", type = bool, default = True),
-                                "--ot-pamless", help = ("ignore PAM when searching for off-target"))
+                                "--ot-pamless/--ot-pam", help = ("ignore PAM when searching for off-target"))
         self.ot_indv = Param([get_filter("screen individuals", default = REFERENCED_ALL)],
                              "--ot-indv",
                              # autocompletion = generate_autocompletion("indv",

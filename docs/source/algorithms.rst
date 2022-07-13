@@ -78,6 +78,8 @@ It consist broadly of 3 steps
 Off-target hit alignment goodness
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+MINORg has two different methods of determining whether an off-target alignment is "too good" (i.e. that a gRNA should be considered problematic). :ref:`Algorithms:Total mismatch/gap/unaligned` uses total non-matches for a gRNA hit, while :ref:`Algorithms:Position-specific mismatch/gap/unaligned` allows users to specify different thresholds for different positions along a gRNA.
+
 Total mismatch/gap/unaligned
 ****************************
 
@@ -85,8 +87,8 @@ By default, MINORg uses this algorithm to define problematic off-target hits. Th
 
 1. Hits that have a minimum number of gaps OR mismatches specified by the user will be considered non-problematic. Users may increase the thresholds for more stringent filtering.
          
-   * ``--ot-gap``/ ``ot_gap``: minimum number of gaps (default=1; minimum is 1)
-   * ``--ot-mismatch``/ ``ot_mismatch``: minimum number of mismatches (default=1; minimum is 1)
+   * ``--ot-gap``/\ ``ot_gap``: minimum number of gaps (default=1; minimum is 1)
+   * ``--ot-mismatch``/\ ``ot_mismatch``: minimum number of mismatches (default=1; minimum is 1)
            
 2. Hits where a gRNA is unaligned for a length that is greater than '(``--ot-gap`` - 1) + (``--ot-mismatch`` - 1) - <gaps in hit> - <mismatches in hit>' will be considered non-problematic
          
@@ -97,15 +99,16 @@ By default, MINORg uses this algorithm to define problematic off-target hits. Th
 Position-specific mismatch/gap/unaligned
 ****************************************
 
-If ``--ot-pattern``/ ``ot_pattern`` is specified, MINORg will use it to define problematic off-target hits. Unlike :ref:`Algorithms:Total mismatch/gap/unaligned`, this method takes into account WHERE a mismatch/gap/unaligned position occurs. See :ref:`Parameters:Off-target pattern` for how to build a pattern.
+If ``--ot-pattern``/\ ``ot_pattern`` is specified, MINORg will use it to define problematic off-target hits. Unlike :ref:`Algorithms:Total mismatch/gap/unaligned`, this method takes into account WHERE a mismatch/gap/unaligned position occurs. See :ref:`Parameters:Off-target pattern` for how to build a pattern. However, where :ref:`Algorithms:Total mismatch/gap/unaligned` specifies the **LOWER-bound of NON-problematic** hits, this method specifies **UPPER-bound of PROBLEMATIC** hits.
 
-1. Hits that do not match the pattern specified by ``--ot-pattern``/ ``ot_pattern`` will be considered non-problematic.
+1. Hits that do not match the pattern specified by ``--ot-pattern``/\ ``ot_pattern`` will be considered non-problematic.
    
    * ``--ot-unaligned-as-gap``: count unaligned positions as gaps (specifically as insertions) (default=False)
    * ``--ot-unaligned-as-mismatch``: count unaligned positions as mismatches (default=True)
    * WARNING: If both ``--ot-unaligned-as-gap`` and ``--ot-unaligned-as-mismatch`` are raised, unaligned positions will be double-counted as gap(s) AND mismatch(es).
    * If a deletion is between positions N and N+1 (5' -> 3'), it will be assigned to position:
-     * N: if the range in the pattern uses negative position indices (e.g. 1g-5--10)
+     
+     * N: if the range in the pattern uses negative position indices (e.g. 1g-5-\-10)
      * N+1: if the range in the pattern uses positive position indices (e.g. 1g5-10)
 
 

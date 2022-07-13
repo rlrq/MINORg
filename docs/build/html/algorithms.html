@@ -177,14 +177,15 @@
 </ol>
 <section id="off-target-hit-alignment-goodness">
 <h3><span class="section-number">8.2.1. </span>Off-target hit alignment goodness<a class="headerlink" href="#off-target-hit-alignment-goodness" title="Permalink to this headline"></a></h3>
+<p>MINORg has two different methods of determining whether an off-target alignment is “too good” (i.e. that a gRNA should be considered problematic). <a class="reference internal" href="#total-mismatch-gap-unaligned"><span class="std std-ref">Total mismatch/gap/unaligned</span></a> uses total non-matches for a gRNA hit, while <a class="reference internal" href="#position-specific-mismatch-gap-unaligned"><span class="std std-ref">Position-specific mismatch/gap/unaligned</span></a> allows users to specify different thresholds for different positions along a gRNA.</p>
 <section id="total-mismatch-gap-unaligned">
 <h4><span class="section-number">8.2.1.1. </span>Total mismatch/gap/unaligned<a class="headerlink" href="#total-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
 <p>By default, MINORg uses this algorithm to define problematic off-target hits. This algorithm checks whether a gRNA has fewer mismatch(es)/gap(s)/unaligned positions across its entire length than a threshold value, and disqualifies any gRNA where it is true for at least one hit.</p>
 <ol class="arabic simple">
 <li><p>Hits that have a minimum number of gaps OR mismatches specified by the user will be considered non-problematic. Users may increase the thresholds for more stringent filtering.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code>/ <code class="docutils literal notranslate"><span class="pre">ot_gap</span></code>: minimum number of gaps (default=1; minimum is 1)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code>/ <code class="docutils literal notranslate"><span class="pre">ot_mismatch</span></code>: minimum number of mismatches (default=1; minimum is 1)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code>/<code class="docutils literal notranslate"><span class="pre">ot_gap</span></code>: minimum number of gaps (default=1; minimum is 1)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code>/<code class="docutils literal notranslate"><span class="pre">ot_mismatch</span></code>: minimum number of mismatches (default=1; minimum is 1)</p></li>
 </ul>
 </li>
 <li><p>Hits where a gRNA is unaligned for a length that is greater than ‘(<code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> - 1) + (<code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> - 1) - &lt;gaps in hit&gt; - &lt;mismatches in hit&gt;’ will be considered non-problematic</p>
@@ -197,16 +198,19 @@
 </section>
 <section id="position-specific-mismatch-gap-unaligned">
 <h4><span class="section-number">8.2.1.2. </span>Position-specific mismatch/gap/unaligned<a class="headerlink" href="#position-specific-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
-<p>If <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code>/ <code class="docutils literal notranslate"><span class="pre">ot_pattern</span></code> is specified, MINORg will use it to define problematic off-target hits. Unlike <a class="reference internal" href="#total-mismatch-gap-unaligned"><span class="std std-ref">Total mismatch/gap/unaligned</span></a>, this method takes into account WHERE a mismatch/gap/unaligned position occurs. See <a class="reference internal" href="parameters.html#off-target-pattern"><span class="std std-ref">Off-target pattern</span></a> for how to build a pattern.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code>/<code class="docutils literal notranslate"><span class="pre">ot_pattern</span></code> is specified, MINORg will use it to define problematic off-target hits. Unlike <a class="reference internal" href="#total-mismatch-gap-unaligned"><span class="std std-ref">Total mismatch/gap/unaligned</span></a>, this method takes into account WHERE a mismatch/gap/unaligned position occurs. See <a class="reference internal" href="parameters.html#off-target-pattern"><span class="std std-ref">Off-target pattern</span></a> for how to build a pattern. However, where <a class="reference internal" href="#total-mismatch-gap-unaligned"><span class="std std-ref">Total mismatch/gap/unaligned</span></a> specifies the <strong>LOWER-bound of NON-problematic</strong> hits, this method specifies <strong>UPPER-bound of PROBLEMATIC</strong> hits.</p>
 <ol class="arabic simple">
-<li><p>Hits that do not match the pattern specified by <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code>/ <code class="docutils literal notranslate"><span class="pre">ot_pattern</span></code> will be considered non-problematic.</p>
+<li><p>Hits that do not match the pattern specified by <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code>/<code class="docutils literal notranslate"><span class="pre">ot_pattern</span></code> will be considered non-problematic.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--ot-unaligned-as-gap</span></code>: count unaligned positions as gaps (specifically as insertions) (default=False)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--ot-unaligned-as-mismatch</span></code>: count unaligned positions as mismatches (default=True)</p></li>
 <li><p>WARNING: If both <code class="docutils literal notranslate"><span class="pre">--ot-unaligned-as-gap</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-unaligned-as-mismatch</span></code> are raised, unaligned positions will be double-counted as gap(s) AND mismatch(es).</p></li>
-<li><p>If a deletion is between positions N and N+1 (5’ -&gt; 3’), it will be assigned to position:
-* N: if the range in the pattern uses negative position indices (e.g. 1g-5–10)
-* N+1: if the range in the pattern uses positive position indices (e.g. 1g5-10)</p></li>
+<li><p>If a deletion is between positions N and N+1 (5’ -&gt; 3’), it will be assigned to position:</p>
+<ul>
+<li><p>N: if the range in the pattern uses negative position indices (e.g. 1g-5--10)</p></li>
+<li><p>N+1: if the range in the pattern uses positive position indices (e.g. 1g5-10)</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
