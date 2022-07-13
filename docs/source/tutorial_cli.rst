@@ -347,7 +347,7 @@ The following example is identical to the first in :ref:`Tutorial_py:Using total
             --ot-indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
             --ot-pattern '2mg-5-,0mg4'
 
-In the above example, ``--ot-pattern '0mg-4,2mg-5-'`` means that MINORg will discard any gRNA with at least one hit where:
+In the above example, ``--ot-pattern '0mg-4,2mg-5-'`` means that MINORg will discard any gRNA with at least one off-target hit where:
 
 * There are no mismatches or gaps between positions -4 and -1, and there are no more than 2 mismatches or gaps from position -5 to the 5' end.
 

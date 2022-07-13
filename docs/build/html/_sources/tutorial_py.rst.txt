@@ -283,7 +283,7 @@ The following example is identical to the first in :ref:`Tutorial_py:Using total
 >>> my_minorg.full()
 >>> my_minorg.resolve()
 
-In the above example, ``my_minorg.ot_pattern = "0mg-4,2mg-5-"`` means that MINORg will discard any gRNA with at least one hit where:
+In the above example, ``my_minorg.ot_pattern = "0mg-4,2mg-5-"`` means that MINORg will discard any gRNA with at least one off-target hit where:
 
 * There are no mismatches or gaps between positions -4 and -1, and there are no more than 2 mismatches or gaps from position -5 to the 5' end.
 
