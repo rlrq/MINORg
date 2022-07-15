@@ -2286,13 +2286,13 @@ class MINORg (PathHandler):
                                                       ref.annotation.get_subfeatures_full(gene, feature_types = self.features)]])
                                        for gene in genes}
                               for source, ref in self.reference.items()}
-        print("domain anns:", '\n'.join(x.generate_str() for x in domain_anns))
-        print("feature_ranges:", feature_ranges)
+        # print("domain anns:", '\n'.join(x.generate_str() for x in domain_anns))
+        # print("feature_ranges:", feature_ranges)
         def adjust_feature_ranges(gene, seqid, **kwargs):
             source = self.get_ref_seqid(seqid, attr = "source")
             gene_ann = gene_anns[source]
             gene_feature_ranges = feature_ranges[source]
-            if self.gff_domain:
+            if self.pssm_ids and self.gff_domain:
                 domain_ann = [entry for entry in domain_anns.get_id(gene, output_list = True)
                               if entry.source == source]
                 return adjusted_feature_ranges(alignment[seqid],

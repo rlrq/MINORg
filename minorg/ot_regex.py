@@ -82,12 +82,12 @@ def ot_range(range_pattern):
         start = re.search("^-*\d+", range_pattern).group(0)
         rvs_start = start[0] == '-'
         end_length = len(range_pattern) - len(start)
-        print("range start")
+        # print("range start")
         start = int(start)
         if start == 0:
             print((f"'0' is an invalid position in range '{range_pattern}'."))
             raise MINORgError
-        print("range start:", start)
+        # print("range start:", start)
         if end_length == 0:
             # # end = start-1 if rvs else start+1
             # end = start-1 if rvs_start else start
