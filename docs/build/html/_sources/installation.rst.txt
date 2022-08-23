@@ -1,6 +1,13 @@
 Installation
 ============
 
+Docker
+------
+
+MINORg can be installed on Ubuntu using the docker image available at: https://hub.docker.com/repository/docker/rlrq/minorg
+
+If you do not wish to install via docker, please refer to the rest of this section for how to install MINORg.
+
 Note for Windows users
 ----------------------
 

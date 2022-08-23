@@ -39,16 +39,17 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#note-for-windows-users">1.1. Note for Windows users</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dependencies">1.2. Dependencies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#python-3-6">1.2.1. Python 3.6</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mafft">1.2.2. MAFFT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#blast">1.2.3. BLAST+</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bedtools">1.2.4. BEDTools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pysam-dependencies">1.2.5. pysam dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker">1.1. Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#note-for-windows-users">1.2. Note for Windows users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">1.3. Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-3-6">1.3.1. Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mafft">1.3.2. MAFFT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blast">1.3.3. BLAST+</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bedtools">1.3.4. BEDTools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pysam-dependencies">1.3.5. pysam dependencies</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#install-minorg">1.3. Install MINORg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-minorg">1.4. Install MINORg</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
@@ -90,19 +91,24 @@
              
   <section id="installation">
 <h1><span class="section-number">1. </span>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<section id="docker">
+<h2><span class="section-number">1.1. </span>Docker<a class="headerlink" href="#docker" title="Permalink to this headline"></a></h2>
+<p>MINORg can be installed on Ubuntu using the docker image available at: <a class="reference external" href="https://hub.docker.com/repository/docker/rlrq/minorg">https://hub.docker.com/repository/docker/rlrq/minorg</a></p>
+<p>If you do not wish to install via docker, please refer to the rest of this section for how to install MINORg.</p>
+</section>
 <section id="note-for-windows-users">
-<h2><span class="section-number">1.1. </span>Note for Windows users<a class="headerlink" href="#note-for-windows-users" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.2. </span>Note for Windows users<a class="headerlink" href="#note-for-windows-users" title="Permalink to this headline"></a></h2>
 <p>As one of the dependencies is not available for Windows, it is strongly recommended that Windows users use a Unix emulator such as “Ubuntu on Windows” (available for Windows 10 and up). You may follow the instructions at <a class="reference external" href="https://mafft.cbrc.jp/alignment/software/ubuntu_on_windows.html">https://mafft.cbrc.jp/alignment/software/ubuntu_on_windows.html</a> under ‘Installation of Ubuntu’ here for a succint guide OR <a class="reference external" href="https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview">https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#1-overview</a> for a more thorough walkthrough. After, you may install the following dependencies using guides for ‘Ubuntu’ or ‘Linux’.</p>
 </section>
 <section id="dependencies">
-<h2><span class="section-number">1.2. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.3. </span>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h2>
 <section id="python-3-6">
-<h3><span class="section-number">1.2.1. </span>Python 3.6<a class="headerlink" href="#python-3-6" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">1.3.1. </span>Python 3.6<a class="headerlink" href="#python-3-6" title="Permalink to this headline"></a></h3>
 <p>MINORg is written and tested using Python 3.6.9, and minimally requires Python 3.6.</p>
 <p>You may download and install Python here: <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
 </section>
 <section id="mafft">
-<h3><span class="section-number">1.2.2. </span>MAFFT<a class="headerlink" href="#mafft" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">1.3.2. </span>MAFFT<a class="headerlink" href="#mafft" title="Permalink to this headline"></a></h3>
 <p>MAFFT is a multiple sequence alignment software that is capable of handling large datasets.</p>
 <p>Follow one of the following links most applicable to your setup:</p>
 <ul class="simple">
@@ -123,7 +129,7 @@
 <p>then it IS in your command-search path. If not, do take note of the full path name to the mafft executable as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--mafft</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">mafft&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.mafft</span> <span class="pre">=</span> <span class="pre">'&lt;path</span> <span class="pre">to</span> <span class="pre">mafft&gt;'</span></code> (in Python).</p>
 </section>
 <section id="blast">
-<h3><span class="section-number">1.2.3. </span>BLAST+<a class="headerlink" href="#blast" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">1.3.3. </span>BLAST+<a class="headerlink" href="#blast" title="Permalink to this headline"></a></h3>
 <p>BLAST+ is a suite of command-line tools that allows users to perform BLAST searches locally on their own machines. MINORg requires two of the tools: blastn and rpsblast (or rpsblast+)</p>
 <p>Follow one of the following links most applicable to your setup:</p>
 <ul class="simple">
@@ -163,7 +169,7 @@
 <p>then it IS in your command-search path. If not, do take note of the full path name to the rpsblast (or rpsblast+ depending on version) executables as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--rpsblast</span> <span class="pre">&lt;path</span> <span class="pre">to</span> <span class="pre">rpsblast</span> <span class="pre">or</span> <span class="pre">rpsblast+&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.rpsblast</span> <span class="pre">=</span> <span class="pre">'&lt;path</span> <span class="pre">to</span> <span class="pre">rpsblast</span> <span class="pre">or</span> <span class="pre">rpsblast+&gt;'</span></code> (in Python).</p>
 </section>
 <section id="bedtools">
-<h3><span class="section-number">1.2.4. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">1.3.4. </span>BEDTools<a class="headerlink" href="#bedtools" title="Permalink to this headline"></a></h3>
 <p>BEDTools is a “swiss-army knife of tools for a wide-range of genomic analysis tasks.” It is not available for Windows.</p>
 <p>You may follow the instructions to install it here: <a class="reference external" href="https://bedtools.readthedocs.io/en/latest/content/installation.html">https://bedtools.readthedocs.io/en/latest/content/installation.html</a></p>
 <p>To determine if BEDTools is in your command-search path, execute at the command line:</p>
@@ -177,7 +183,7 @@
 <p>then it IS in your command-search path. If not, do take note of the full path name to the directory containing BEDTools executables as you may need to pass it to MINORg using <code class="docutils literal notranslate"><span class="pre">--bedtools</span> <span class="pre">&lt;path&gt;</span></code> (at command line) or <code class="docutils literal notranslate"><span class="pre">my_minorg.bedtools</span> <span class="pre">=</span> <span class="pre">'&lt;path&gt;'</span></code> (in Python).</p>
 </section>
 <section id="pysam-dependencies">
-<h3><span class="section-number">1.2.5. </span>pysam dependencies<a class="headerlink" href="#pysam-dependencies" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">1.3.5. </span>pysam dependencies<a class="headerlink" href="#pysam-dependencies" title="Permalink to this headline"></a></h3>
 <p>‘pysam’ is part of the ‘pybedtools’ package that MINORg uses. You DO NOT need to install pysam separately as it will be installed together with MINORg, but you MAY need to install some of its dependencies, as there are a handful that are not automatically installed with it. You may install them using your OS’s package manager.</p>
 <p>Some dependencies include (but may not be limited to):</p>
 <ul class="simple">
@@ -211,7 +217,7 @@
 </section>
 </section>
 <section id="install-minorg">
-<h2><span class="section-number">1.3. </span>Install MINORg<a class="headerlink" href="#install-minorg" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.4. </span>Install MINORg<a class="headerlink" href="#install-minorg" title="Permalink to this headline"></a></h2>
 <p>Test version can be installed from testpypi using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="o">--</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">simple</span><span class="o">/</span> <span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">simple</span><span class="o">/</span> <span class="n">minorg</span>
 </pre></div>
