@@ -47,7 +47,7 @@ setuptools.setup(
     install_requires=["biopython==1.79",
                       "pybedtools==0.9.0",
                       "pyfaidx==0.6.4",
-                      "regex==2.5.110",
+                      "regex",
                       "typer==0.4.0",
                       "multiprocess==0.70.12.2"],
     python_requires=">=3.6",
