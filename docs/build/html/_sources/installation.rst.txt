@@ -117,7 +117,7 @@ Some dependencies include (but may not be limited to):
 
 * curses
   
-  * Debian/Ubuntu: libcurses5-dev
+  * Debian/Ubuntu: libncurses5-dev
   * RPM-based linux distributions: ncurses-devel
     
 * zlib
