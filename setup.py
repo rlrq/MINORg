@@ -8,6 +8,9 @@ with open("README.md", 'r', encoding="utf-8") as fh:
 # Here we can't use "import minorg" then "minorg.__version__" as that would
 # tell us the version of MINORg already installed (if any).
 __version__ = "Undefined"
+import os
+# print(os.getcwd())
+# print(os.listdir())
 for line in open("minorg/__init__.py"):
     if line.startswith("__version__"):
         exec(line.strip())
@@ -35,6 +38,17 @@ setuptools.setup(
         "minorg"
     ],
     include_package_data=True,
-    install_requires=["biopython", "pybedtools", "pyfaidx", "regex", "typer", "multiprocess"],
+    # install_requires=["biopython",
+    #                   "pybedtools",
+    #                   "pyfaidx",
+    #                   "regex",
+    #                   "typer",
+    #                   "multiprocess"],
+    install_requires=["biopython==1.79",
+                      "pybedtools==0.9.0",
+                      "pyfaidx==0.6.4",
+                      "regex==2.5.110",
+                      "typer==0.4.0",
+                      "multiprocess==0.70.12.2"],
     python_requires=">=3.6",
 )
