@@ -76,10 +76,26 @@ To export a directory, use:
    docker cp <container ID or name>:/my_minorg/path/to/directory /path/to/destination
 
 
-Removing the container
-~~~~~~~~~~~~~~~~~~~~~~
+Exiting the container
+~~~~~~~~~~~~~~~~~~~~~
 
 When you're done, you may exit the Docker container using ctrl-D or by typing ``exit``.
+
+
+Reusing the container
+~~~~~~~~~~~~~~~~~~~~~
+
+Assuming that you did not remove a the container, you can restart an exited Docker container session using:
+
+.. code-block::
+   
+   docker start -i <container ID or name>
+
+Your files will still be there.
+
+
+Removing the container
+~~~~~~~~~~~~~~~~~~~~~~
 
 If you do not wish to reuse the container, you can delete it using:
 
