@@ -515,8 +515,9 @@ class MINORgCLI (MINORg):
                                                            cli_lookup_arg = "--clusters",
                                                            lookup_fmt = "alias-members",
                                                            param = self.params.cluster_set)
-        self.cluster_set = os.path.abspath(set_fname)
-        self.cluster_aliases = {**self.cluster_aliases, **set_aliases}
+        if set_fname:
+            self.cluster_set = os.path.abspath(set_fname)
+            self.cluster_aliases = {**self.cluster_aliases, **set_aliases}
         return val
     
     def genome_set_callback(self, val: str) -> str:
@@ -1547,7 +1548,8 @@ class MINORgCLI (MINORg):
                                         message = "minorg.MINORgWarning: No target sequences found.",
                                         category = MINORgWarning)
                 try:
-                    super().seq(quiet = False)
+                    if not self.target:
+                        super().seq(quiet = False)
                 except MINORgWarning as e:
                     print(e.message)
                     if self.args.cluster:

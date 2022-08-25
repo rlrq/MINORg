@@ -16,6 +16,7 @@ Module contents
    installation
    overview
    configuration
+   tutorial_docker
    tutorial_cli
    tutorial_py
    parameters

@@ -41,12 +41,13 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">7. Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_docker.html">4. Tutorial (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">6. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">7. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">8. Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">9. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">10. Examples</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="minorg.html">API documentation</a><ul class="current">
@@ -106,7 +107,7 @@
 <span id="minorg-minorgcli-module"></span><h1>minorg.MINORgCLI module<a class="headerlink" href="#module-minorg.MINORgCLI" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.MINORgCLI.</span></span><span class="sig-name descname"><span class="pre">MINORgCLI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_on_crash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L158-L1664"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.MINORgCLI.</span></span><span class="sig-name descname"><span class="pre">MINORgCLI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_on_crash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L158-L1666"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a></p>
 <p>Parses CLI arguments and reformats them for parent MINORg object</p>
 <dl class="py attribute">
@@ -333,7 +334,7 @@ to be acted upon by MINORgCLI parsing functions</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.attr_mod_callback">
-<span class="sig-name descname"><span class="pre">attr_mod_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L710-L745"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.attr_mod_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">attr_mod_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L711-L746"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.attr_mod_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> to parse attribute modifications from string to dictionary.</p>
 <p>Attribute modification string should be in format
 ‘&lt;feature type&gt;:&lt;standard attribute field name&gt;=&lt;nonstandard attribute field name&gt;,&lt;standard attribute field name&gt;=&lt;nonstandard attribute field name&gt;;&lt;feature type&gt;:&lt;standard attribute field name&gt;=&lt;nonstandard attribute field name&gt;’. (e.g. ‘mRNA:Parent=Locus_id’)</p>
@@ -364,7 +365,7 @@ to be acted upon by MINORgCLI parsing functions</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_filter_args">
-<span class="sig-name descname"><span class="pre">check_filter_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1057-L1184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_filter_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_filter_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1058-L1185"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_filter_args" title="Permalink to this definition"></a></dt>
 <dd><p>Check arguments for subcommand ‘filter’ and parse &amp; reformat args for
 parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
 <dl class="field-list simple">
@@ -380,7 +381,7 @@ and not as part of the full programme.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_grna_args">
-<span class="sig-name descname"><span class="pre">check_grna_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1001-L1055"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_grna_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_grna_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1002-L1056"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_grna_args" title="Permalink to this definition"></a></dt>
 <dd><p>Check arguments for subcommand ‘grna’ and parse &amp; reformat args for parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -395,7 +396,7 @@ and not as part of the full programme.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_reference_args">
-<span class="sig-name descname"><span class="pre">check_reference_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">require</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L833-L891"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_reference_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_reference_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">require</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L834-L892"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_reference_args" title="Permalink to this definition"></a></dt>
 <dd><p>Check reference genome arguments and parse &amp; reformat them for parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
 <p>Priority given to <code class="docutils literal notranslate"><span class="pre">--assembly</span> <span class="pre">&lt;FASTA&gt;</span> <span class="pre">--annotation</span> <span class="pre">&lt;GFF3&gt;</span></code> over <code class="docutils literal notranslate"><span class="pre">--reference</span> <span class="pre">&lt;alias&gt;</span></code>.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">--ext-gene</span> <span class="pre">&lt;FASTA&gt;</span> <span class="pre">--ext-cds</span> <span class="pre">&lt;FASTA&gt;</span></code> are provided,
@@ -416,7 +417,7 @@ Raises error if <code class="docutils literal notranslate"><span class="pre">--t
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.check_seq_args">
-<span class="sig-name descname"><span class="pre">check_seq_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L893-L999"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_seq_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_seq_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L894-L1000"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.check_seq_args" title="Permalink to this definition"></a></dt>
 <dd><p>Check arguments for subcommand ‘seq’ and parse &amp; reformat args for parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -437,7 +438,7 @@ and not as part of the full programme.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.cluster_set_callback">
-<span class="sig-name descname"><span class="pre">cluster_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L486-L520"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.cluster_set_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cluster_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L486-L521"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.cluster_set_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--cluster-set</span> <span class="pre">&lt;alias</span> <span class="pre">or</span> <span class="pre">path&gt;</span></code>.</p>
 <p>Sets self.cluster_set and self.cluster_aliases.</p>
 <dl class="field-list simple">
@@ -464,7 +465,7 @@ and not as part of the full programme.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.clusters_callback">
-<span class="sig-name descname"><span class="pre">clusters_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L655-L677"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.clusters_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">clusters_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L656-L678"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.clusters_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for printing cluster-members lookup mapping to terminal.
 Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
 and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
@@ -488,7 +489,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.db_callback">
-<span class="sig-name descname"><span class="pre">db_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L772-L787"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.db_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">db_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L773-L788"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.db_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--db</span></code> to parse RPS-BLAST database alias or path into absolute path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -505,7 +506,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.domain_callback">
-<span class="sig-name descname"><span class="pre">domain_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L747-L770"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.domain_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">domain_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L748-L771"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.domain_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--domain</span></code> to parse domain alias or Pssm-Id into Pssm-Id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -522,7 +523,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.genetic_code_callback">
-<span class="sig-name descname"><span class="pre">genetic_code_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L789-L806"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genetic_code_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">genetic_code_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L790-L807"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genetic_code_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--genetic-code</span></code> to parse genetic code as number or name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -540,7 +541,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.genome_set_callback">
-<span class="sig-name descname"><span class="pre">genome_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L522-L556"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genome_set_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">genome_set_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L523-L557"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.genome_set_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for <code class="docutils literal notranslate"><span class="pre">--genome-set</span> <span class="pre">&lt;alias</span> <span class="pre">or</span> <span class="pre">path&gt;</span></code>.</p>
 <p>Sets self.genome_set and self.genome_aliases.</p>
 <dl class="field-list simple">
@@ -567,7 +568,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.get_cluster_genes">
-<span class="sig-name descname"><span class="pre">get_cluster_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L563-L587"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.get_cluster_genes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_cluster_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L564-L588"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.get_cluster_genes" title="Permalink to this definition"></a></dt>
 <dd><p>Get gene members of a cluster.</p>
 <p>Uses dictionary self.cluster_aliases for lookup.</p>
 <dl class="field-list simple">
@@ -588,7 +589,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.make_genomes_callback">
-<span class="sig-name descname"><span class="pre">make_genomes_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'independent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L618-L653"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.make_genomes_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">make_genomes_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'independent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L619-L654"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.make_genomes_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Function to make callback for printing query genome lookup mapping to terminal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -599,7 +600,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.members_callback">
-<span class="sig-name descname"><span class="pre">members_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L679-L703"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.members_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">members_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L680-L704"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.members_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for printing gene members of a cluster to terminal.
 Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
 and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
@@ -612,13 +613,13 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.minimumset">
-<span class="sig-name descname"><span class="pre">minimumset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1495-L1503"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.minimumset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">minimumset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1496-L1504"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.minimumset" title="Permalink to this definition"></a></dt>
 <dd><p>Wrapper for MINORg.minimumset that excludes checks based on self.XX_check.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_PAM">
-<span class="sig-name descname"><span class="pre">parse_PAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1278-L1291"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_PAM" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_PAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1279-L1292"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_PAM" title="Permalink to this definition"></a></dt>
 <dd><p>Parse PAM by converting aliases of preset PAM patterns to PAM patterns.</p>
 <dl class="simple">
 <dt>To be called after <code class="docutils literal notranslate"><span class="pre">--pam</span></code> and <code class="docutils literal notranslate"><span class="pre">--length</span></code> have passed check_grna_args checks OR</dt><dd><p>after <code class="docutils literal notranslate"><span class="pre">--pam</span></code> has passed check_filter_args (standalone) checks</p>
@@ -628,7 +629,7 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_args">
-<span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subcmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1307-L1340"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subcmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1308-L1341"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_args" title="Permalink to this definition"></a></dt>
 <dd><p>Parse and check arguments pre-parsed by Typer by calling the appropriate parsers based on subcommand.</p>
 <p>After parsing, write parsed args to logfile.</p>
 <dl class="field-list simple">
@@ -644,7 +645,7 @@ Valid subcmd: seq, (homologue, homolog, target,) grna, filter, (check,) minimums
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_cluster">
-<span class="sig-name descname"><span class="pre">parse_cluster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1190-L1202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_cluster" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_cluster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1191-L1203"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_cluster" title="Permalink to this definition"></a></dt>
 <dd><p>Map self.args.cluster aliases to genes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -658,19 +659,19 @@ Valid subcmd: seq, (homologue, homolog, target,) grna, filter, (check,) minimums
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_filter_args">
-<span class="sig-name descname"><span class="pre">parse_filter_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1379-L1410"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_filter_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_filter_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1380-L1411"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_filter_args" title="Permalink to this definition"></a></dt>
 <dd><p>Parse and check arguments for subcommand filter.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_full_args">
-<span class="sig-name descname"><span class="pre">parse_full_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1430-L1462"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_full_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_full_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1431-L1463"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_full_args" title="Permalink to this definition"></a></dt>
 <dd><p>Parse and check arguments for full programme.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_genes">
-<span class="sig-name descname"><span class="pre">parse_genes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1204-L1217"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_genes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_genes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1205-L1218"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_genes" title="Permalink to this definition"></a></dt>
 <dd><p>Set self.gene_sets.</p>
 <p>To be called after <code class="docutils literal notranslate"><span class="pre">--gene</span></code> or <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> have passed check_seq_args checks.
 self.gene_sets = {} if <code class="docutils literal notranslate"><span class="pre">--target</span></code> is used.
@@ -680,7 +681,7 @@ else self.gene_sets = {‘&lt;prefix&gt;’: (‘gene1’, ‘gene2’, ‘gene3
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_genes_for_filter">
-<span class="sig-name descname"><span class="pre">parse_genes_for_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1219-L1276"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_genes_for_filter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_genes_for_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standalone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1220-L1277"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_genes_for_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Set self.mask_gene_sets.</p>
 <p>To be called after <code class="docutils literal notranslate"><span class="pre">--mask</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask</span></code>, <code class="docutils literal notranslate"><span class="pre">--mask-cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--unmask-cluster</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">--gene</span></code> have passed check_filter_args checks.</p>
@@ -689,31 +690,31 @@ and <code class="docutils literal notranslate"><span class="pre">--gene</span></
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_grna_args">
-<span class="sig-name descname"><span class="pre">parse_grna_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1360-L1377"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_grna_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_grna_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1361-L1378"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_grna_args" title="Permalink to this definition"></a></dt>
 <dd><p>Parse and check arguments for subcommand grna.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_minimumset_args">
-<span class="sig-name descname"><span class="pre">parse_minimumset_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1412-L1428"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_minimumset_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_minimumset_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1413-L1429"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_minimumset_args" title="Permalink to this definition"></a></dt>
 <dd><p>Parse and check arguments for subcommand minimumset.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_ot_pattern">
-<span class="sig-name descname"><span class="pre">parse_ot_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1293-L1300"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_ot_pattern" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_ot_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1294-L1301"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_ot_pattern" title="Permalink to this definition"></a></dt>
 <dd><p>Parse off-target pattern.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.parse_seq_args">
-<span class="sig-name descname"><span class="pre">parse_seq_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1342-L1358"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_seq_args" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parse_seq_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1343-L1359"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.parse_seq_args" title="Permalink to this definition"></a></dt>
 <dd><p>Parse and check arguments for subcommand seq.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.reference_required">
-<span class="sig-name descname"><span class="pre">reference_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L813-L831"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reference_required" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reference_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L814-L832"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reference_required" title="Permalink to this definition"></a></dt>
 <dd><p>Check if at least one reference genome has been provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -754,7 +755,7 @@ and <code class="docutils literal notranslate"><span class="pre">--gene</span></
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.references_callback">
-<span class="sig-name descname"><span class="pre">references_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L594-L616"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.references_callback" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">references_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L595-L617"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.references_callback" title="Permalink to this definition"></a></dt>
 <dd><p>Callback for printing reference genome lookup mapping to terminal.
 Immediately after, resolve temporary directory using <a class="reference internal" href="#minorg.MINORgCLI.MINORgCLI.cleanup" title="minorg.MINORgCLI.MINORgCLI.cleanup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MINORgCLI.cleanup()</span></code></a>
 and exit programme using <code class="docutils literal notranslate"><span class="pre">typer.Exit()</span></code>.</p>
@@ -767,12 +768,12 @@ and exit programme using <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.reset_prefix">
-<span class="sig-name descname"><span class="pre">reset_prefix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1488-L1489"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reset_prefix" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset_prefix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1489-L1490"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.reset_prefix" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.set_genes">
-<span class="sig-name descname"><span class="pre">set_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene_set_prefix</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1468-L1482"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.set_genes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_genes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gene_set_prefix</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1469-L1483"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.set_genes" title="Permalink to this definition"></a></dt>
 <dd><p>Specify a gene set to be processed by parent <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.MINORg.MINORg</span></code></a>.</p>
 <p>As <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> only processes genes in <code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code>,
 this method sets <code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code> as the genes mapped to by <code class="docutils literal notranslate"><span class="pre">gene_set_prefix</span></code>
@@ -786,7 +787,7 @@ so that they can be acted.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_filter">
-<span class="sig-name descname"><span class="pre">subcmd_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1566-L1588"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_filter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subcmd_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1568-L1590"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Subcommand filter.</p>
 <p>Executes background, feature, and GC check.
 Writes .map file detailing check statuses of each gRNA-target combination.</p>
@@ -794,13 +795,13 @@ Writes .map file detailing check statuses of each gRNA-target combination.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_full">
-<span class="sig-name descname"><span class="pre">subcmd_full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1601-L1664"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_full" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subcmd_full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1603-L1666"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_full" title="Permalink to this definition"></a></dt>
 <dd><p>Full MINORg programme.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_grna">
-<span class="sig-name descname"><span class="pre">subcmd_grna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1536-L1564"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_grna" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subcmd_grna</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1537-L1566"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_grna" title="Permalink to this definition"></a></dt>
 <dd><p>Subcommand grna.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used, processes each cluster’s set of genes separately.
 Writes all possible gRNA to FASTA file.</p>
@@ -808,7 +809,7 @@ Writes all possible gRNA to FASTA file.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_minimumset">
-<span class="sig-name descname"><span class="pre">subcmd_minimumset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1591-L1599"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_minimumset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subcmd_minimumset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1593-L1601"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_minimumset" title="Permalink to this definition"></a></dt>
 <dd><p>Subcommand minimumset.</p>
 <p>Generates minimumset of gRNA required to cover all targets.
 Writes FASTA file of final set of gRNA and .map file detailing targets of each gRNA.</p>
@@ -816,7 +817,7 @@ Writes FASTA file of final set of gRNA and .map file detailing targets of each g
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.MINORgCLI.MINORgCLI.subcmd_seq">
-<span class="sig-name descname"><span class="pre">subcmd_seq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1509-L1534"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_seq" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subcmd_seq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/MINORgCLI.py#L1510-L1535"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.MINORgCLI.MINORgCLI.subcmd_seq" title="Permalink to this definition"></a></dt>
 <dd><p>Subcommand seq.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> is used, processes each cluster’s set of genes separately.
 Writes target sequences to FASTA file.</p>

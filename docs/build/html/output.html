@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>7. Output &mdash; MINORg 0.1 documentation</title>
+  <title>8. Output &mdash; MINORg 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="8. Algorithms" href="algorithms.html" />
-    <link rel="prev" title="6. Parameters" href="parameters.html" /> 
+    <link rel="next" title="9. Algorithms" href="algorithms.html" />
+    <link rel="prev" title="7. Parameters" href="parameters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,23 +41,24 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Output</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#directory-structure">7.1. Directory structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#output-files">7.2. Output files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#minorg-log">7.2.1. minorg.log</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#xxx-mafft-fasta">7.2.2. XXX_mafft.fasta</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#xxx-targets-fasta">7.2.3. XXX_targets.fasta</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#grna-fasta-files">7.2.4. gRNA FASTA files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#grna-map-files">7.2.5. gRNA .map files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_docker.html">4. Tutorial (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">6. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">7. Parameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. Output</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#directory-structure">8.1. Directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-files">8.2. Output files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#minorg-log">8.2.1. minorg.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xxx-mafft-fasta">8.2.2. XXX_mafft.fasta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xxx-targets-fasta">8.2.3. XXX_targets.fasta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grna-fasta-files">8.2.4. gRNA FASTA files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grna-map-files">8.2.5. gRNA .map files</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">9. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">10. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -77,7 +78,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">7. </span>Output</li>
+      <li><span class="section-number">8. </span>Output</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/output.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,9 +89,9 @@
            <div itemprop="articleBody">
              
   <section id="output">
-<h1><span class="section-number">7. </span>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h1>
+<h1><span class="section-number">8. </span>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h1>
 <section id="directory-structure">
-<h2><span class="section-number">7.1. </span>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">8.1. </span>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this headline"></a></h2>
 <p>As a general rule of thumb, using the default prefix ‘minorg’, MINORg generates the following files with the following directory structure:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">output_directory</span><span class="o">&gt;/</span>
 <span class="o">|--</span> <span class="n">minorg</span><span class="o">.</span><span class="n">log</span>
@@ -147,9 +148,9 @@
 </div>
 </section>
 <section id="output-files">
-<h2><span class="section-number">7.2. </span>Output files<a class="headerlink" href="#output-files" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">8.2. </span>Output files<a class="headerlink" href="#output-files" title="Permalink to this headline"></a></h2>
 <section id="minorg-log">
-<h3><span class="section-number">7.2.1. </span>minorg.log<a class="headerlink" href="#minorg-log" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">8.2.1. </span>minorg.log<a class="headerlink" href="#minorg-log" title="Permalink to this headline"></a></h3>
 <p>This file is currently only generated when the CLI version of MINORg is used.</p>
 <p>The logfile follows the following format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">((</span><span class="n">raw</span> <span class="n">args</span><span class="p">))</span>
@@ -173,11 +174,11 @@
 <p>Warning and/or error messages may be logged after the arguments.</p>
 </section>
 <section id="xxx-mafft-fasta">
-<h3><span class="section-number">7.2.2. </span>XXX_mafft.fasta<a class="headerlink" href="#xxx-mafft-fasta" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">8.2.2. </span>XXX_mafft.fasta<a class="headerlink" href="#xxx-mafft-fasta" title="Permalink to this headline"></a></h3>
 <p>The file ending in ‘_mafft.fasta’ contains a sequence alignment of targets to reference genes generated using MAFFT.</p>
 </section>
 <section id="xxx-targets-fasta">
-<h3><span class="section-number">7.2.3. </span>XXX_targets.fasta<a class="headerlink" href="#xxx-targets-fasta" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">8.2.3. </span>XXX_targets.fasta<a class="headerlink" href="#xxx-targets-fasta" title="Permalink to this headline"></a></h3>
 <p>The file ending in ‘_targets.fasta’ contains target sequence(s).</p>
 <p>The names of target sequences follow the following format for reference genes:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Reference</span><span class="o">|&lt;</span><span class="n">reference</span> <span class="n">alias</span><span class="o">&gt;|&lt;</span><span class="n">domain</span><span class="o">&gt;|&lt;</span><span class="n">n</span><span class="o">&gt;|&lt;</span><span class="n">feature</span> <span class="nb">type</span><span class="o">&gt;|&lt;</span><span class="n">stitched</span><span class="o">/</span><span class="n">complete</span><span class="o">&gt;|&lt;</span><span class="n">gene</span> <span class="n">ID</span><span class="o">&gt;|&lt;</span><span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span>
@@ -218,7 +219,7 @@
 </ul>
 </section>
 <section id="grna-fasta-files">
-<h3><span class="section-number">7.2.4. </span>gRNA FASTA files<a class="headerlink" href="#grna-fasta-files" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">8.2.4. </span>gRNA FASTA files<a class="headerlink" href="#grna-fasta-files" title="Permalink to this headline"></a></h3>
 <p>Names of files containing gRNA sequences follow the following format: &lt;prefix&gt;_gRNA_&lt;category&gt;.fasta</p>
 <p>The categories are:</p>
 <ul class="simple">
@@ -228,7 +229,7 @@
 </ul>
 </section>
 <section id="grna-map-files">
-<h3><span class="section-number">7.2.5. </span>gRNA .map files<a class="headerlink" href="#grna-map-files" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">8.2.5. </span>gRNA .map files<a class="headerlink" href="#grna-map-files" title="Permalink to this headline"></a></h3>
 <p>Names of files containing information for mapping gRNA to targets format: &lt;prefix&gt;_gRNA_&lt;category&gt;.map</p>
 <p>As with gRNA FASTA files, the categories are:</p>
 <ul class="simple">
@@ -286,8 +287,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="parameters.html" class="btn btn-neutral float-left" title="6. Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="algorithms.html" class="btn btn-neutral float-right" title="8. Algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="parameters.html" class="btn btn-neutral float-left" title="7. Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="algorithms.html" class="btn btn-neutral float-right" title="9. Algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

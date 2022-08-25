@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5. Tutorial (Python) &mdash; MINORg 0.1 documentation</title>
+  <title>6. Tutorial (Python) &mdash; MINORg 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="6. Parameters" href="parameters.html" />
-    <link rel="prev" title="4. Tutorial (Command line)" href="tutorial_cli.html" /> 
+    <link rel="next" title="7. Parameters" href="parameters.html" />
+    <link rel="prev" title="5. Tutorial (Command line)" href="tutorial_cli.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,87 +41,88 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Tutorial (Python)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#setting-up-the-tutorial">5.1. Setting up the tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-started">5.2. Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#impt-note-on-executables">5.3. IMPT: Note on executables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#defining-target-sequences">5.4. Defining target sequences</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#user-provided-targets">5.4.1. User-provided targets</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#reference-gene-s-as-targets">5.4.2. Reference gene(s) as targets</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#non-reference-gene-s-as-targets">5.4.3. Non-reference gene(s) as targets</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#extending-the-reference">5.4.3.1. Extending the reference</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#inferring-homologues-in-unannotated-genomes">5.4.3.2. Inferring homologues in unannotated genomes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_docker.html">4. Tutorial (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Tutorial (Python)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-the-tutorial">6.1. Setting up the tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">6.2. Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#impt-note-on-executables">6.3. IMPT: Note on executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-target-sequences">6.4. Defining target sequences</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#user-provided-targets">6.4.1. User-provided targets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-gene-s-as-targets">6.4.2. Reference gene(s) as targets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-reference-gene-s-as-targets">6.4.3. Non-reference gene(s) as targets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#extending-the-reference">6.4.3.1. Extending the reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inferring-homologues-in-unannotated-genomes">6.4.3.2. Inferring homologues in unannotated genomes</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#domain-as-targets">5.4.4. Domain as targets</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#local-database">5.4.4.1. Local database</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#remote-database">5.4.4.2. Remote database</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#defining-grna">5.5. Defining gRNA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#filtering-grna">5.6. Filtering gRNA</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#filter-by-gc-content">5.6.1. Filter by GC content</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#filter-by-off-target">5.6.2. Filter by off-target</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#using-total-mismatch-gap-unaligned">5.6.2.1. Using total mismatch/gap/unaligned</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#using-position-specific-mismatch-gap-unaligned">5.6.2.2. Using position-specific mismatch/gap/unaligned</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pam-less-off-target-check">5.6.2.3. PAM-less off-target check</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#skip-off-target-check">5.6.2.4. Skip off-target check</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#filter-by-feature">5.6.3. Filter by feature</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#generating-minimum-grna-set-s">5.7. Generating minimum gRNA set(s)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#number-of-sets">5.7.1. Number of sets</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#prioritise-non-redundancy">5.7.2. Prioritise non-redundancy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#excluding-grna">5.7.3. Excluding gRNA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#accepting-unknown-checks">5.7.4. Accepting unknown checks</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#manually-approve-grna-sets">5.7.5. Manually approve gRNA sets</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#subcommands">5.8. Subcommands</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subcommand-seq">5.8.1. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subcommand-grna">5.8.2. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">grna()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subcommand-filter">5.8.3. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subcommand-filter-gc">5.8.3.1. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_gc()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#subcommand-filter-background">5.8.3.2. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_background()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#subcommand-filter-feature">5.8.3.3. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_feature()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#subcommand-minimumset">5.8.4. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#regenerating-minimum-sets-after-calling-full">5.8.4.1. Regenerating minimum sets after calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#generating-minimum-sets-from-output-of-another-minorg-run">5.8.4.2. Generating minimum sets from output of another MINORg run</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#chaining-subcommands">5.8.5. Chaining subcommands</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#defining-reference-genomes">5.9. Defining reference genomes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#single-reference-genome">5.9.1. Single reference genome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#multiple-reference-genomes">5.9.2. Multiple reference genomes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#non-standard-reference">5.9.3. Non-standard reference</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#non-standard-genetic-code">5.9.3.1. Non-standard genetic code</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#non-standard-gff3-attribute-field-names">5.9.3.2. Non-standard GFF3 attribute field names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#domain-as-targets">6.4.4. Domain as targets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#local-database">6.4.4.1. Local database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#remote-database">6.4.4.2. Remote database</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#multithreading">5.10. Multithreading</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#differences-between-cli-and-python-versions">5.11. Differences between CLI and Python versions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#to-specify-cluster-genes">5.11.1. To specify cluster genes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#to-specify-query-fasta-files">5.11.2. To specify query FASTA files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#to-specify-reference-genomes">5.11.3. To specify reference genomes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-grna">6.5. Defining gRNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filtering-grna">6.6. Filtering gRNA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#filter-by-gc-content">6.6.1. Filter by GC content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-by-off-target">6.6.2. Filter by off-target</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-total-mismatch-gap-unaligned">6.6.2.1. Using total mismatch/gap/unaligned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-position-specific-mismatch-gap-unaligned">6.6.2.2. Using position-specific mismatch/gap/unaligned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pam-less-off-target-check">6.6.2.3. PAM-less off-target check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skip-off-target-check">6.6.2.4. Skip off-target check</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-by-feature">6.6.3. Filter by feature</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-minimum-grna-set-s">6.7. Generating minimum gRNA set(s)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#number-of-sets">6.7.1. Number of sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prioritise-non-redundancy">6.7.2. Prioritise non-redundancy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#excluding-grna">6.7.3. Excluding gRNA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accepting-unknown-checks">6.7.4. Accepting unknown checks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manually-approve-grna-sets">6.7.5. Manually approve gRNA sets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#subcommands">6.8. Subcommands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subcommand-seq">6.8.1. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subcommand-grna">6.8.2. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">grna()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subcommand-filter">6.8.3. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subcommand-filter-gc">6.8.3.1. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_gc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#subcommand-filter-background">6.8.3.2. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_background()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#subcommand-filter-feature">6.8.3.3. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_feature()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#subcommand-minimumset">6.8.4. Subcommand <code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#regenerating-minimum-sets-after-calling-full">6.8.4.1. Regenerating minimum sets after calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generating-minimum-sets-from-output-of-another-minorg-run">6.8.4.2. Generating minimum sets from output of another MINORg run</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#chaining-subcommands">6.8.5. Chaining subcommands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-reference-genomes">6.9. Defining reference genomes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#single-reference-genome">6.9.1. Single reference genome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-reference-genomes">6.9.2. Multiple reference genomes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-standard-reference">6.9.3. Non-standard reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-genetic-code">6.9.3.1. Non-standard genetic code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-standard-gff3-attribute-field-names">6.9.3.2. Non-standard GFF3 attribute field names</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">7. Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multithreading">6.10. Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#differences-between-cli-and-python-versions">6.11. Differences between CLI and Python versions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#to-specify-cluster-genes">6.11.1. To specify cluster genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#to-specify-query-fasta-files">6.11.2. To specify query FASTA files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#to-specify-reference-genomes">6.11.3. To specify reference genomes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">7. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">8. Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">9. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">10. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -141,7 +142,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">5. </span>Tutorial (Python)</li>
+      <li><span class="section-number">6. </span>Tutorial (Python)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/tutorial_py.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -152,14 +153,14 @@
            <div itemprop="articleBody">
              
   <section id="tutorial-python">
-<h1><span class="section-number">5. </span>Tutorial (Python)<a class="headerlink" href="#tutorial-python" title="Permalink to this headline"></a></h1>
+<h1><span class="section-number">6. </span>Tutorial (Python)<a class="headerlink" href="#tutorial-python" title="Permalink to this headline"></a></h1>
 <p>Please download the files in <a class="reference external" href="https://github.com/rlrq/MINORg/tree/master/examples">https://github.com/rlrq/MINORg/tree/master/examples</a>. In all the examples below, you should replace “/path/to” with the appropriate full path name, which is usually to the directory containing these example files.</p>
 <section id="setting-up-the-tutorial">
-<h2><span class="section-number">5.1. </span>Setting up the tutorial<a class="headerlink" href="#setting-up-the-tutorial" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.1. </span>Setting up the tutorial<a class="headerlink" href="#setting-up-the-tutorial" title="Permalink to this headline"></a></h2>
 <p>To ensure that the examples in this tutorial work, please replace ‘/path/to’ in the files ‘arabidopsis_genomes.txt’, ‘athaliana_genomes.txt’, and ‘subset_genome_mapping.txt’ with the full path to the directory containing the example files.</p>
 </section>
 <section id="getting-started">
-<h2><span class="section-number">5.2. </span>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.2. </span>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h2>
 <p>To begin, import the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> class.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 </pre></div>
@@ -176,7 +177,7 @@
 <p>You may now set your parameters using the attributes of your <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object. For a table listing the equivalent CLI arguments and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> attributes, see <a class="reference internal" href="parameters.html#cli-vs-python"><span class="std std-ref">CLI vs Python</span></a>.</p>
 </section>
 <section id="impt-note-on-executables">
-<h2><span class="section-number">5.3. </span>IMPT: Note on executables<a class="headerlink" href="#impt-note-on-executables" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.3. </span>IMPT: Note on executables<a class="headerlink" href="#impt-note-on-executables" title="Permalink to this headline"></a></h2>
 <p>See: <a class="reference internal" href="parameters.html#executables"><span class="std std-ref">Executables</span></a></p>
 <p>You can specify executables as such:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">blastn</span> <span class="o">=</span> <span class="s1">&#39;/path/to/blastn/executable&#39;</span>
@@ -188,9 +189,9 @@
 <p>Note that BEDTools is unique in that if it is not in your command-search path, you should provide the path <strong>TO THE DIRECTORY CONTAINING ITS EXECUTABLES</strong> (i.e. there will not be a single ‘bedtools’ executable), and if it <strong>IS</strong> in your command-search path you <strong>SHOULD NOT</strong> be using the <code class="xref py py-attr docutils literal notranslate"><span class="pre">bedtools</span></code> attribute. See <a class="reference internal" href="parameters.html#executables"><span class="std std-ref">Executables</span></a> for more on executables.</p>
 </section>
 <section id="defining-target-sequences">
-<h2><span class="section-number">5.4. </span>Defining target sequences<a class="headerlink" href="#defining-target-sequences" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.4. </span>Defining target sequences<a class="headerlink" href="#defining-target-sequences" title="Permalink to this headline"></a></h2>
 <section id="user-provided-targets">
-<h3><span class="section-number">5.4.1. </span>User-provided targets<a class="headerlink" href="#user-provided-targets" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.4.1. </span>User-provided targets<a class="headerlink" href="#user-provided-targets" title="Permalink to this headline"></a></h3>
 <p>Let us begin with the simplest MINORg execution:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_200_target&quot;</span><span class="p">)</span>
@@ -202,7 +203,7 @@
 <p>The above combination of arguments tells MINORg to generate gRNA from targets in a user-provided FASTA file (<code class="docutils literal notranslate"><span class="pre">my_minorg.target</span> <span class="pre">=</span> <span class="pre">'pat/to/sample_CDS.fasta'</span></code>) and to output files into the directory <code class="docutils literal notranslate"><span class="pre">/path/to/output/directory/example_200_target</span></code>. By default, MINORg generates 20 bp gRNA using NGG PAM. The full MINORg programme is executed by calling the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a> method (<code class="docutils literal notranslate"><span class="pre">my_minorg.full()</span></code>). Don’t forget to call <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.resolve" title="minorg.MINORg.MINORg.resolve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">resolve()</span></code></a> to remove any temporary files.</p>
 </section>
 <section id="reference-gene-s-as-targets">
-<h3><span class="section-number">5.4.2. </span>Reference gene(s) as targets<a class="headerlink" href="#reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.4.2. </span>Reference gene(s) as targets<a class="headerlink" href="#reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_201_refgene&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s2">&quot;/path/to/subset_ref_TAIR10.fasta&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/subset_ref_TAIR10.gff&quot;</span><span class="p">,</span> <span class="n">alias</span> <span class="o">=</span> <span class="s2">&quot;TAIR10&quot;</span><span class="p">)</span>
@@ -222,9 +223,9 @@
 <p><code class="docutils literal notranslate"><span class="pre">my_minorg.genes</span> <span class="pre">=</span> <span class="pre">[&quot;AT5G45050&quot;,</span> <span class="pre">&quot;AT5G45060&quot;,</span> <span class="pre">&quot;AT5G45200&quot;,</span> <span class="pre">&quot;AT5G45210&quot;,</span> <span class="pre">&quot;AT5G45220&quot;,</span> <span class="pre">&quot;AT5G45230&quot;,</span> <span class="pre">&quot;AT5G45240&quot;,</span> <span class="pre">&quot;AT5G45250&quot;]</span></code> tells MINORg the target gene(s), and <code class="docutils literal notranslate"><span class="pre">my_minorg.query_reference</span> <span class="pre">=</span> <span class="pre">True</span></code> tells MINORg to generate gRNA for reference gene(s).</p>
 </section>
 <section id="non-reference-gene-s-as-targets">
-<h3><span class="section-number">5.4.3. </span>Non-reference gene(s) as targets<a class="headerlink" href="#non-reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.4.3. </span>Non-reference gene(s) as targets<a class="headerlink" href="#non-reference-gene-s-as-targets" title="Permalink to this headline"></a></h3>
 <section id="extending-the-reference">
-<h4><span class="section-number">5.4.3.1. </span>Extending the reference<a class="headerlink" href="#extending-the-reference" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.4.3.1. </span>Extending the reference<a class="headerlink" href="#extending-the-reference" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#extended-genome"><span class="std std-ref">Extended genome</span></a></p>
 <p>If you have both genomic and CDS-only sequences of your target genes but not a GFF3 annotation file, MINORg can infer coding regions (CDS) for your target genes using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.extend_reference" title="minorg.MINORg.MINORg.extend_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extend_reference()</span></code></a>. See <a class="reference internal" href="parameters.html#extended-genome"><span class="std std-ref">Extended genome</span></a> for how to name your sequences to ensure proper mapping of CDS to genes.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -239,7 +240,7 @@
 <p><a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.extend_reference" title="minorg.MINORg.MINORg.extend_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extend_reference()</span></code></a> effectively adds new genes to the reference genome, so they can be used just like any reference gene. Therefore, they can also be used in combination with <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_query" title="minorg.MINORg.MINORg.add_query"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_query()</span></code></a>.</p>
 </section>
 <section id="inferring-homologues-in-unannotated-genomes">
-<h4><span class="section-number">5.4.3.2. </span>Inferring homologues in unannotated genomes<a class="headerlink" href="#inferring-homologues-in-unannotated-genomes" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.4.3.2. </span>Inferring homologues in unannotated genomes<a class="headerlink" href="#inferring-homologues-in-unannotated-genomes" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="algorithms.html#non-reference-homologue-inference"><span class="std std-ref">Non-reference homologue inference</span></a></p>
 <p>If you would like MINORg to infer homologues genes in non-reference genomes, you can use <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_query" title="minorg.MINORg.MINORg.add_query"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_query()</span></code></a> to specify the FASTA files of those non-reference genomes.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -273,10 +274,10 @@
 </section>
 </section>
 <section id="domain-as-targets">
-<h3><span class="section-number">5.4.4. </span>Domain as targets<a class="headerlink" href="#domain-as-targets" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.4.4. </span>Domain as targets<a class="headerlink" href="#domain-as-targets" title="Permalink to this headline"></a></h3>
 <p>MINORg allows users to specify the identifier of an RPS-BLAST position-specific scoring matrix (PSSM-Id) to further restrict the target sequence to a given domain associated with the PSSM-Id. This could be particularly useful when designing gRNA for genes that do not share conserved domain structures but do share a domain that you wish to knock out.</p>
 <section id="local-database">
-<h4><span class="section-number">5.4.4.1. </span>Local database<a class="headerlink" href="#local-database" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.4.4.1. </span>Local database<a class="headerlink" href="#local-database" title="Permalink to this headline"></a></h4>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_204_domain&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s2">&quot;/path/to/subset_ref_TAIR10.fasta&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/subset_ref_TAIR10.gff&quot;</span><span class="p">,</span> <span class="n">alias</span> <span class="o">=</span> <span class="s2">&quot;TAIR10&quot;</span><span class="p">)</span>
@@ -292,7 +293,7 @@
 <p>In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. If multiple PSSM-Ids are provided, overlapping domains will be combined and output WILL NOT distinguish between one PSSM-Id or another. Unlike other examples, the database (<a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.db" title="minorg.MINORg.MINORg.db"><code class="xref py py-attr docutils literal notranslate"><span class="pre">db</span></code></a>) is not provided as part of the example files. You will have to download it yourself. See <a class="reference internal" href="parameters.html#rps-blast-local-database"><span class="std std-ref">RPS-BLAST local database</span></a> for more information.</p>
 </section>
 <section id="remote-database">
-<h4><span class="section-number">5.4.4.2. </span>Remote database<a class="headerlink" href="#remote-database" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.4.4.2. </span>Remote database<a class="headerlink" href="#remote-database" title="Permalink to this headline"></a></h4>
 <p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.remote_rps" title="minorg.MINORg.MINORg.remote_rps"><code class="xref py py-attr docutils literal notranslate"><span class="pre">remote_rps</span></code></a> instead of <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.db" title="minorg.MINORg.MINORg.db"><code class="xref py py-attr docutils literal notranslate"><span class="pre">db</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_204_domain&quot;</span><span class="p">)</span>
@@ -310,7 +311,7 @@
 </section>
 </section>
 <section id="defining-grna">
-<h2><span class="section-number">5.5. </span>Defining gRNA<a class="headerlink" href="#defining-grna" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.5. </span>Defining gRNA<a class="headerlink" href="#defining-grna" title="Permalink to this headline"></a></h2>
 <p>See also: <a class="reference internal" href="parameters.html#pam"><span class="std std-ref">PAM</span></a></p>
 <p>By default, MINORg generates 20 bp gRNA using SpCas9’s NGG PAM. You may specify other gRNA length using <a class="reference internal" href="minorg.MINORg.html#id3" title="minorg.MINORg.MINORg.length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">length</span></code></a> and other PAM using <a class="reference internal" href="minorg.MINORg.html#id2" title="minorg.MINORg.MINORg.pam"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pam</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -328,10 +329,10 @@
 <p>In the example above, MINORg will generate 19 bp gRNA (<code class="docutils literal notranslate"><span class="pre">my_minorg.length</span> <span class="pre">=</span> <span class="pre">19</span></code>) using Cas12a’s unusual 5’ PAM pattern (TTTV&lt;gRNA&gt;) (<code class="docutils literal notranslate"><span class="pre">my_minorg.pam</span> <span class="pre">=</span> <span class="pre">pam.Cas12a</span></code>). MINORg has several built-in PAMs (see <a class="reference internal" href="parameters.html#preset-pam-patterns"><span class="std std-ref">Preset PAM patterns</span></a> for options), and also supports customisable PAM patterns using ambiguous bases and regular expressions (see <a class="reference internal" href="parameters.html#pam"><span class="std std-ref">PAM</span></a> for format). To use preset PAMs, such as in the example above, you will first need to import MINORg’s <a class="reference internal" href="minorg.pam.html#module-minorg.pam"><span class="std std-ref">minorg.pam module</span></a> (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">minorg</span> <span class="pre">import</span> <span class="pre">pam</span></code>), then use <code class="docutils literal notranslate"><span class="pre">pam.&lt;preset</span> <span class="pre">pam</span> <span class="pre">alias&gt;</span></code> (such as <code class="docutils literal notranslate"><span class="pre">pam.Cas12a</span></code>) to refer to the desired PAM pattern.</p>
 </section>
 <section id="filtering-grna">
-<h2><span class="section-number">5.6. </span>Filtering gRNA<a class="headerlink" href="#filtering-grna" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.6. </span>Filtering gRNA<a class="headerlink" href="#filtering-grna" title="Permalink to this headline"></a></h2>
 <p>MINORg supports 3 different gRNA filtering options, all of which can be used together.</p>
 <section id="filter-by-gc-content">
-<h3><span class="section-number">5.6.1. </span>Filter by GC content<a class="headerlink" href="#filter-by-gc-content" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.6.1. </span>Filter by GC content<a class="headerlink" href="#filter-by-gc-content" title="Permalink to this headline"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_206_gc&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s2">&quot;/path/to/subset_ref_TAIR10.fasta&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/subset_ref_TAIR10.gff&quot;</span><span class="p">,</span> <span class="n">alias</span> <span class="o">=</span> <span class="s2">&quot;TAIR10&quot;</span><span class="p">)</span>
@@ -346,10 +347,10 @@
 <p>In the above example, MINORg will exclude gRNA with less than 20% (<code class="docutils literal notranslate"><span class="pre">my_minorg.gc_min</span> <span class="pre">=</span> <span class="pre">0.2</span></code>) or greater than 80% (<code class="docutils literal notranslate"><span class="pre">my_minorg.gc_min</span> <span class="pre">=</span> <span class="pre">0.8</span></code>) GC content. By default, minimum GC content is 30% and maximum is 70%.</p>
 </section>
 <section id="filter-by-off-target">
-<h3><span class="section-number">5.6.2. </span>Filter by off-target<a class="headerlink" href="#filter-by-off-target" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.6.2. </span>Filter by off-target<a class="headerlink" href="#filter-by-off-target" title="Permalink to this headline"></a></h3>
 <p>See: <a class="reference internal" href="algorithms.html#off-target-assessment"><span class="std std-ref">Off-target assessment</span></a></p>
 <section id="using-total-mismatch-gap-unaligned">
-<h4><span class="section-number">5.6.2.1. </span>Using total mismatch/gap/unaligned<a class="headerlink" href="#using-total-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.6.2.1. </span>Using total mismatch/gap/unaligned<a class="headerlink" href="#using-total-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
 <p>See: <a class="reference internal" href="algorithms.html#total-mismatch-gap-unaligned"><span class="std std-ref">Total mismatch/gap/unaligned</span></a></p>
 <p>Thresholds for total number of mismatches or gaps (and unaligned positions) required for an off-target gRNA hit to be considered non-problematic are controlled by <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_mismatch" title="minorg.MINORg.MINORg.ot_mismatch"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_mismatch</span></code></a> and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_gap" title="minorg.MINORg.MINORg.ot_gap"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_gap</span></code></a> respectively. See <a class="reference internal" href="algorithms.html#total-mismatch-gap-unaligned"><span class="std std-ref">Total mismatch/gap/unaligned</span></a> for more.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -399,7 +400,7 @@
 </div>
 </section>
 <section id="using-position-specific-mismatch-gap-unaligned">
-<h4><span class="section-number">5.6.2.2. </span>Using position-specific mismatch/gap/unaligned<a class="headerlink" href="#using-position-specific-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.6.2.2. </span>Using position-specific mismatch/gap/unaligned<a class="headerlink" href="#using-position-specific-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
 <p>See: <a class="reference internal" href="algorithms.html#position-specific-mismatch-gap-unaligned"><span class="std std-ref">Position-specific mismatch/gap/unaligned</span></a></p>
 <p>Finer control of off-target definition can be achieved using <a class="reference internal" href="minorg.MINORg.html#id6" title="minorg.MINORg.MINORg.ot_pattern"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pattern</span></code></a>, which allows users to provide a pattern that specifies different thresholds for different positions along a gRNA. Unlike <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_mismatch" title="minorg.MINORg.MINORg.ot_mismatch"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_mismatch</span></code></a> and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_gap" title="minorg.MINORg.MINORg.ot_gap"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_gap</span></code></a>, which specify the <strong>LOWER-bound of NON-problematic</strong> hits, <a class="reference internal" href="minorg.MINORg.html#id6" title="minorg.MINORg.MINORg.ot_pattern"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pattern</span></code></a> specifies <strong>UPPER-bound of PROBLEMATIC</strong> hits. By default, unaligned positions will be treated as mismatches, but this behaviour can be altered by setting <a class="reference internal" href="minorg.MINORg.html#id7" title="minorg.MINORg.MINORg.ot_unaligned_as_mismatch"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_unaligned_as_mismatch</span></code></a> to <code class="docutils literal notranslate"><span class="pre">False</span></code>. See <a class="reference internal" href="parameters.html#off-target-pattern"><span class="std std-ref">Off-target pattern</span></a> for how to build an off-target pattern, and <a class="reference internal" href="algorithms.html#position-specific-mismatch-gap-unaligned"><span class="std std-ref">Position-specific mismatch/gap/unaligned</span></a> for more on how unaligned positions can be counted.</p>
 <p>When <a class="reference internal" href="minorg.MINORg.html#id6" title="minorg.MINORg.MINORg.ot_pattern"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pattern</span></code></a> is specified, <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_mismatch" title="minorg.MINORg.MINORg.ot_mismatch"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_mismatch</span></code></a> and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_gap" title="minorg.MINORg.MINORg.ot_gap"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_gap</span></code></a> will be ignored.</p>
@@ -426,7 +427,7 @@
 <p>See <a class="reference internal" href="parameters.html#off-target-pattern"><span class="std std-ref">Off-target pattern</span></a> for how to build and interpret an off-target pattern.</p>
 </section>
 <section id="pam-less-off-target-check">
-<h4><span class="section-number">5.6.2.3. </span>PAM-less off-target check<a class="headerlink" href="#pam-less-off-target-check" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.6.2.3. </span>PAM-less off-target check<a class="headerlink" href="#pam-less-off-target-check" title="Permalink to this headline"></a></h4>
 <p>By default, MINORg does NOT check for the presence of PAM sites next to potential off-target hits. You may override this behaviour by setting <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_pamless" title="minorg.MINORg.MINORg.ot_pamless"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pamless</span></code></a> to <code class="docutils literal notranslate"><span class="pre">True</span></code>. This tells MINORg to mark off-target hits that fail the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_gap" title="minorg.MINORg.MINORg.ot_gap"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_gap</span></code></a> or <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.ot_mismatch" title="minorg.MINORg.MINORg.ot_mismatch"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_mismatch</span></code></a> thresholds (or match <a class="reference internal" href="minorg.MINORg.html#id6" title="minorg.MINORg.MINORg.ot_pattern"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pattern</span></code></a>) as problematic ONLY IF there is a PAM site nearby.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_210_ot_pamless&quot;</span><span class="p">)</span>
@@ -446,7 +447,7 @@
 </div>
 </section>
 <section id="skip-off-target-check">
-<h4><span class="section-number">5.6.2.4. </span>Skip off-target check<a class="headerlink" href="#skip-off-target-check" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.6.2.4. </span>Skip off-target check<a class="headerlink" href="#skip-off-target-check" title="Permalink to this headline"></a></h4>
 <p>To skip off-target check entirely, use <code class="docutils literal notranslate"><span class="pre">background_check</span> <span class="pre">=</span> <span class="pre">False</span></code> when calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_211_skipbgcheck&quot;</span><span class="p">)</span>
@@ -459,7 +460,7 @@
 </section>
 </section>
 <section id="filter-by-feature">
-<h3><span class="section-number">5.6.3. </span>Filter by feature<a class="headerlink" href="#filter-by-feature" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.6.3. </span>Filter by feature<a class="headerlink" href="#filter-by-feature" title="Permalink to this headline"></a></h3>
 <p>See: <a class="reference internal" href="algorithms.html#within-feature-inference"><span class="std std-ref">Within-feature inference</span></a></p>
 <p>By default, when <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.genes" title="minorg.MINORg.MINORg.genes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code></a> is set, MINORg restricts gRNA to coding regions (CDS). For more on how MINORg does this for inferred, unannotated homologues, see <a class="reference internal" href="algorithms.html#within-feature-inference"><span class="std std-ref">Within-feature inference</span></a>. You may change the feature type in which to design gRNA using the attribute <a class="reference internal" href="minorg.MINORg.html#id4" title="minorg.MINORg.MINORg.feature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">feature</span></code></a>. See column 3 of your GFF3 file for valid feature types (see <a class="reference external" href="https://en.wikipedia.org/wiki/General_feature_format">https://en.wikipedia.org/wiki/General_feature_format</a> for more on GFF file format).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -474,9 +475,9 @@
 </section>
 </section>
 <section id="generating-minimum-grna-set-s">
-<h2><span class="section-number">5.7. </span>Generating minimum gRNA set(s)<a class="headerlink" href="#generating-minimum-grna-set-s" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.7. </span>Generating minimum gRNA set(s)<a class="headerlink" href="#generating-minimum-grna-set-s" title="Permalink to this headline"></a></h2>
 <section id="number-of-sets">
-<h3><span class="section-number">5.7.1. </span>Number of sets<a class="headerlink" href="#number-of-sets" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.7.1. </span>Number of sets<a class="headerlink" href="#number-of-sets" title="Permalink to this headline"></a></h3>
 <p>By default, MINORg outputs a single gRNA set covering all targets. You may request more (mutually exclusive) sets using the <code class="xref py py-attr docutils literal notranslate"><span class="pre">set</span></code> attribute.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_213_set&quot;</span><span class="p">)</span>
@@ -490,7 +491,7 @@
 </div>
 </section>
 <section id="prioritise-non-redundancy">
-<h3><span class="section-number">5.7.2. </span>Prioritise non-redundancy<a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.7.2. </span>Prioritise non-redundancy<a class="headerlink" href="#prioritise-non-redundancy" title="Permalink to this headline"></a></h3>
 <p>By default, MINORg selects gRNA for sets using these criteria in decreasing order of priority:</p>
 <ol class="arabic simple">
 <li><p>Coverage (of as yet uncovered targets)</p></li>
@@ -510,7 +511,7 @@
 </div>
 </section>
 <section id="excluding-grna">
-<h3><span class="section-number">5.7.3. </span>Excluding gRNA<a class="headerlink" href="#excluding-grna" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.7.3. </span>Excluding gRNA<a class="headerlink" href="#excluding-grna" title="Permalink to this headline"></a></h3>
 <p>You may specify gRNA sequences to exclude from any final gRNA set by providing the path to a FASTA file containing sequences to exclude to <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.exclude" title="minorg.MINORg.MINORg.exclude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">exclude</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_215_exclude&quot;</span><span class="p">)</span>
@@ -525,7 +526,7 @@
 <p>The gRNA names in the file passed to <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.exclude" title="minorg.MINORg.MINORg.exclude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">exclude</span></code></a> do not matter. Only the sequences are used when determining whether to exclude a gRNA.</p>
 </section>
 <section id="accepting-unknown-checks">
-<h3><span class="section-number">5.7.4. </span>Accepting unknown checks<a class="headerlink" href="#accepting-unknown-checks" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.7.4. </span>Accepting unknown checks<a class="headerlink" href="#accepting-unknown-checks" title="Permalink to this headline"></a></h3>
 <p>Sometimes, not all filtering checks (GC, background, and feature) are set for all sequences. This is not an issue if you use the full programme (i.e. <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a>), but may be relevant if you are re-generating sets using the ‘minimumset’ subcommand (i.e. <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a>) with a modified mapping file OR a mapping file from the ‘filter’ subcommand where not all filters have been applied.</p>
 <p>Let us take a look at ‘sample_custom_check.map’, where we’ve added a custom check called ‘my_custom_check’ in the last column:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gRNA</span> <span class="nb">id</span>       <span class="n">gRNA</span> <span class="n">sequence</span>   <span class="n">target</span> <span class="nb">id</span>       <span class="n">target</span> <span class="n">sense</span>    <span class="n">gRNA</span> <span class="n">strand</span>     <span class="n">start</span>   <span class="n">end</span>     <span class="n">group</span>   <span class="n">background</span>      <span class="n">GC</span>      <span class="n">feature</span> <span class="n">my_custom_check</span>
@@ -551,7 +552,7 @@
 </div>
 </section>
 <section id="manually-approve-grna-sets">
-<h3><span class="section-number">5.7.5. </span>Manually approve gRNA sets<a class="headerlink" href="#manually-approve-grna-sets" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.7.5. </span>Manually approve gRNA sets<a class="headerlink" href="#manually-approve-grna-sets" title="Permalink to this headline"></a></h3>
 <p>You may opt to manually inspect each gRNA set before MINORg write them to file by using <code class="docutils literal notranslate"><span class="pre">manual</span> <span class="pre">=</span> <span class="pre">True</span></code> when executing <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a> or the minimum set subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_217_manual&quot;</span><span class="p">)</span>
@@ -573,7 +574,7 @@
 </section>
 </section>
 <section id="subcommands">
-<h2><span class="section-number">5.8. </span>Subcommands<a class="headerlink" href="#subcommands" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.8. </span>Subcommands<a class="headerlink" href="#subcommands" title="Permalink to this headline"></a></h2>
 <p>MINORg comprises of four main steps:</p>
 <ol class="arabic simple">
 <li><p>Target sequence identification</p></li>
@@ -597,7 +598,7 @@
 <p>The subcommands may be useful if you already have a preferred off-target/on-target assessment software. In this case, you may execute subcommands <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.seq" title="minorg.MINORg.MINORg.seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a> and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.grna" title="minorg.MINORg.MINORg.grna"><code class="xref py py-meth docutils literal notranslate"><span class="pre">grna()</span></code></a>, submit the gRNA output by MINORg for off-target/on-target assessment, update the .map file output by MINORg with the status of each gRNA for that off-target/on-target assessment, and execute <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a> to obtain a desired number of minimum gRNA sets. Note that if you do this, you should re-read the updated .map file into MINORg using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.parse_grna_map_from_file" title="minorg.MINORg.MINORg.parse_grna_map_from_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_grna_map_from_file()</span></code></a> so MINORg can replace the gRNA data stored in memory with your updated gRNA data.</p>
 <p>Each subcommand may require a different combination of attributes.</p>
 <section id="subcommand-seq">
-<h3><span class="section-number">5.8.1. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.seq" title="minorg.MINORg.MINORg.seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a><a class="headerlink" href="#subcommand-seq" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.8.1. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.seq" title="minorg.MINORg.MINORg.seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a><a class="headerlink" href="#subcommand-seq" title="Permalink to this headline"></a></h3>
 <p>The <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.seq" title="minorg.MINORg.MINORg.seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a> subcommand identifies target sequences, whether by extracting them from a reference genome or inferring homologues in unannotated genomes. All parameters introduced in <a class="reference internal" href="#defining-target-sequences"><span class="std std-ref">Defining target sequences</span></a> (except attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code>) and <a class="reference internal" href="#defining-reference-genomes"><span class="std std-ref">Defining reference genomes</span></a> apply. If you already have a FASTA file containing your target sequences, you may set <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code> to the path of that FASTA file and skip this subcommand.</p>
 <p>This step will output target sequences into a file ending with ‘_targets.fasta’. This filename will be stored at attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -613,7 +614,7 @@
 </div>
 </section>
 <section id="subcommand-grna">
-<h3><span class="section-number">5.8.2. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.grna" title="minorg.MINORg.MINORg.grna"><code class="xref py py-meth docutils literal notranslate"><span class="pre">grna()</span></code></a><a class="headerlink" href="#subcommand-grna" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.8.2. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.grna" title="minorg.MINORg.MINORg.grna"><code class="xref py py-meth docutils literal notranslate"><span class="pre">grna()</span></code></a><a class="headerlink" href="#subcommand-grna" title="Permalink to this headline"></a></h3>
 <p>The <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.grna" title="minorg.MINORg.MINORg.grna"><code class="xref py py-meth docutils literal notranslate"><span class="pre">grna()</span></code></a> subcommand generates gRNA within target sequences from a target file. Unlike the command line version, it <strong>DOES NOT</strong> incorporate parts of the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.seq" title="minorg.MINORg.MINORg.seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a> and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter" title="minorg.MINORg.MINORg.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a> subcommands. All parameters introduced in <a class="reference internal" href="#defining-grna"><span class="std std-ref">Defining gRNA</span></a> apply.</p>
 <p>By default, .map and FASTA files of gRNA sequences will be written to files. You may override this behaviour by setting <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.auto_update_files" title="minorg.MINORg.MINORg.auto_update_files"><code class="xref py py-attr docutils literal notranslate"><span class="pre">auto_update_files</span></code></a> to <code class="docutils literal notranslate"><span class="pre">False</span></code> or using <code class="docutils literal notranslate"><span class="pre">auto_update_files</span> <span class="pre">=</span> <span class="pre">False</span></code> when instantiating a <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object (e.g. <code class="docutils literal notranslate"><span class="pre">my_minorg(directory</span> <span class="pre">=</span> <span class="pre">&quot;/path/to/output/dir&quot;,</span> <span class="pre">auto_update_files</span> <span class="pre">=</span> <span class="pre">False)</span></code>). In this case, only the FASTA file will be written. To manually write files, you should use the following methods. If you do not supply an output file path, it will be automatically generated:</p>
 <ul class="simple">
@@ -654,7 +655,7 @@
 <p>gRNA data is stored at the attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">grna_hits</span></code>, and it prints the number of gRNA as a string representation. In the above example, 201 different gRNA are generated from the target sequences in the target file “sample_CDS.fasta”. We then decided we want to generate gRNA for Cas12a instead, which has a 5’ TTTV PAM pattern. This yields us 95 different gRNA. Finally we decided to try a completely made up 5’ ATV PAM pattern, netting us 267 different gRNA in the end. Satisfied, we wrote the sequences of these gRNA to file, and printed the path of the file.</p>
 </section>
 <section id="subcommand-filter">
-<h3><span class="section-number">5.8.3. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter" title="minorg.MINORg.MINORg.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a><a class="headerlink" href="#subcommand-filter" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.8.3. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter" title="minorg.MINORg.MINORg.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a><a class="headerlink" href="#subcommand-filter" title="Permalink to this headline"></a></h3>
 <p>The <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter" title="minorg.MINORg.MINORg.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a> subcommand takes in a compulsory MINORg .map file (which can be read using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.parse_grna_map_from_file" title="minorg.MINORg.MINORg.parse_grna_map_from_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_grna_map_from_file()</span></code></a>) and rewrites some/all checks. You can execute all filters (GC, off-target, and feature) using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter" title="minorg.MINORg.MINORg.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a>, or execute checks separately using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_gc" title="minorg.MINORg.MINORg.filter_gc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_gc()</span></code></a>, <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_background" title="minorg.MINORg.MINORg.filter_background"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_background()</span></code></a>, and <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_feature" title="minorg.MINORg.MINORg.filter_feature"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_feature()</span></code></a>.</p>
 <p>By default, gRNA sequences and map files will be updated automatically whenever any of the filtering methods is called. You may override this behaviour by setting <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.auto_update_files" title="minorg.MINORg.MINORg.auto_update_files"><code class="xref py py-attr docutils literal notranslate"><span class="pre">auto_update_files</span></code></a> to <code class="docutils literal notranslate"><span class="pre">False</span></code> or using <code class="docutils literal notranslate"><span class="pre">auto_update_files</span> <span class="pre">=</span> <span class="pre">False</span></code> when instantiating a <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object (e.g. <code class="docutils literal notranslate"><span class="pre">my_minorg(directory</span> <span class="pre">=</span> <span class="pre">&quot;/path/to/output/dir&quot;,</span> <span class="pre">auto_update_files</span> <span class="pre">=</span> <span class="pre">False)</span></code>). To manually write files, you should use the following methods. If you do not supply an output file path, it will be automatically generated:</p>
 <ul class="simple">
@@ -686,10 +687,10 @@
 </ul>
 <p>In all cases, you may rename the gRNA using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.rename_grna" title="minorg.MINORg.MINORg.rename_grna"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rename_grna()</span></code></a>, which takes in the path of a FASTA file that contains the gRNA sequences you wish to rename with sequence IDs of the names you wish to rename them to. This method should be used before you call any of the above methods to write gRNA to file.</p>
 <section id="subcommand-filter-gc">
-<h4><span class="section-number">5.8.3.1. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_gc" title="minorg.MINORg.MINORg.filter_gc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_gc()</span></code></a><a class="headerlink" href="#subcommand-filter-gc" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.8.3.1. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_gc" title="minorg.MINORg.MINORg.filter_gc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_gc()</span></code></a><a class="headerlink" href="#subcommand-filter-gc" title="Permalink to this headline"></a></h4>
 <p>All parameters introduced in <a class="reference internal" href="#filter-by-gc-content"><span class="std std-ref">Filter by GC content</span></a> apply.</p>
 <section id="filtering-by-gc-content-after-calling-full">
-<h5><span class="section-number">5.8.3.1.1. </span>Filtering by GC content after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#filtering-by-gc-content-after-calling-full" title="Permalink to this headline"></a></h5>
+<h5><span class="section-number">6.8.3.1.1. </span>Filtering by GC content after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#filtering-by-gc-content-after-calling-full" title="Permalink to this headline"></a></h5>
 <p><a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_gc" title="minorg.MINORg.MINORg.filter_gc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_gc()</span></code></a> can be used on an active MINORg object even if you’ve already called <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_220_subcmdfilter_gc&quot;</span><span class="p">)</span>
@@ -706,7 +707,7 @@
 </div>
 </section>
 <section id="filtering-gc-content-on-output-of-another-minorg-run">
-<h5><span class="section-number">5.8.3.1.2. </span>Filtering GC content on output of another MINORg run<a class="headerlink" href="#filtering-gc-content-on-output-of-another-minorg-run" title="Permalink to this headline"></a></h5>
+<h5><span class="section-number">6.8.3.1.2. </span>Filtering GC content on output of another MINORg run<a class="headerlink" href="#filtering-gc-content-on-output-of-another-minorg-run" title="Permalink to this headline"></a></h5>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_220_subcmdfilter_gc_pt2&quot;</span><span class="p">,</span> <span class="n">auto_update_files</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">parse_grna_map_from_file</span><span class="p">(</span><span class="s2">&quot;/path/to/sample_custom_check.map&quot;</span><span class="p">)</span>
@@ -720,10 +721,10 @@
 </section>
 </section>
 <section id="subcommand-filter-background">
-<h4><span class="section-number">5.8.3.2. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_background" title="minorg.MINORg.MINORg.filter_background"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_background()</span></code></a><a class="headerlink" href="#subcommand-filter-background" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.8.3.2. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_background" title="minorg.MINORg.MINORg.filter_background"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_background()</span></code></a><a class="headerlink" href="#subcommand-filter-background" title="Permalink to this headline"></a></h4>
 <p>All parameters introduced in <a class="reference internal" href="#filter-by-off-target"><span class="std std-ref">Filter by off-target</span></a> apply. Additionally, you should supply target sequences to <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code> so that MINORg can mask them (this tells MINORg that any gRNA hits to them is in fact on-target and NOT off-target). Any additional sequences to be masked may be provided to <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.mask" title="minorg.MINORg.MINORg.mask"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mask</span></code></a> as a list of paths to FASTA files. If you have set <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.screen_reference" title="minorg.MINORg.MINORg.screen_reference"><code class="xref py py-attr docutils literal notranslate"><span class="pre">screen_reference</span></code></a> to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include reference genome(s) (see <a class="reference internal" href="#multiple-reference-genomes"><span class="std std-ref">Multiple reference genomes</span></a> for how to specify multiple reference genomes) in the off-target screen, you may specify a FASTA file of sequences of genes to be masked to <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.mask" title="minorg.MINORg.MINORg.mask"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mask</span></code></a> as well. You can generate these sequences using the <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.seq" title="minorg.MINORg.MINORg.seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">seq()</span></code></a> subcommand, but <strong>MAKE SURE TO USE A DIFFERENT MINORg OBJECT AND DIRECTORY TO AVOID OVERWRITING ANY PREVIOUSLY GENERATED FILES</strong>.</p>
 <section id="filtering-background-after-calling-full">
-<h5><span class="section-number">5.8.3.2.1. </span>Filtering background after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#filtering-background-after-calling-full" title="Permalink to this headline"></a></h5>
+<h5><span class="section-number">6.8.3.2.1. </span>Filtering background after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#filtering-background-after-calling-full" title="Permalink to this headline"></a></h5>
 <p>Let us first execute MINORg.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_221_subcmdfilter_bg&quot;</span><span class="p">)</span>
@@ -757,7 +758,7 @@
 </div>
 </section>
 <section id="filtering-background-on-output-of-another-minorg-run">
-<h5><span class="section-number">5.8.3.2.2. </span>Filtering background on output of another MINORg run<a class="headerlink" href="#filtering-background-on-output-of-another-minorg-run" title="Permalink to this headline"></a></h5>
+<h5><span class="section-number">6.8.3.2.2. </span>Filtering background on output of another MINORg run<a class="headerlink" href="#filtering-background-on-output-of-another-minorg-run" title="Permalink to this headline"></a></h5>
 <p>Alternatively, if the orginal <code class="docutils literal notranslate"><span class="pre">my_minorg</span></code> object no longer exists, whether because you’ve closed the IDE session or deleted the object, you can read its .map file into a new <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg" title="minorg.MINORg.MINORg"><code class="xref py py-class docutils literal notranslate"><span class="pre">MINORg</span></code></a> object using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.parse_grna_map_from_file" title="minorg.MINORg.MINORg.parse_grna_map_from_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_grna_map_from_file()</span></code></a> like below. In this case, you can pass the IDs of the additional genes to be masked together with the original genes to <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.genes" title="minorg.MINORg.MINORg.genes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code></a> and don’t need to use <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.get_reference_seq" title="minorg.MINORg.MINORg.get_reference_seq"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_reference_seq()</span></code></a>. Since we’re no longer querying ‘subset_9654.fasta’ and ‘subset_9655.fasta’, we can use <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_background" title="minorg.MINORg.MINORg.add_background"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_background()</span></code></a> to tell MINORg to search for off-target effects in them. And don’t forget to also provide the FASTA file of target sequences to <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code> so MINORg can mask them!:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_221_subcmdfilter_bg_new&quot;</span><span class="p">)</span>
@@ -778,10 +779,10 @@
 </section>
 </section>
 <section id="subcommand-filter-feature">
-<h4><span class="section-number">5.8.3.3. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_feature" title="minorg.MINORg.MINORg.filter_feature"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_feature()</span></code></a><a class="headerlink" href="#subcommand-filter-feature" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.8.3.3. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.filter_feature" title="minorg.MINORg.MINORg.filter_feature"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter_feature()</span></code></a><a class="headerlink" href="#subcommand-filter-feature" title="Permalink to this headline"></a></h4>
 <p>All parameters introduced in <a class="reference internal" href="#filter-by-feature"><span class="std std-ref">Filter by feature</span></a> apply. Additionally, you will need to provide a FASTA file of target sequences (attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code>), reference genome(s) (see <a class="reference internal" href="#defining-reference-genomes"><span class="std std-ref">Defining reference genomes</span></a>), and genes (attribute <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.genes" title="minorg.MINORg.MINORg.genes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">genes</span></code></a>). The specified reference gene(s) will be extracted from the reference genome(s) and aligned with target sequence(s) in order for MINORg to infer feature boundaries in target sequence(s). See <a class="reference internal" href="algorithms.html#within-feature-inference"><span class="std std-ref">Within-feature inference</span></a> for the algorithm of how feature boundaries are inferred.</p>
 <section id="filtering-feature-after-calling-full">
-<h5><span class="section-number">5.8.3.3.1. </span>Filtering feature after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#filtering-feature-after-calling-full" title="Permalink to this headline"></a></h5>
+<h5><span class="section-number">6.8.3.3.1. </span>Filtering feature after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#filtering-feature-after-calling-full" title="Permalink to this headline"></a></h5>
 <p>Let us first execute MINORg.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_221_subcmdfilter_feature&quot;</span><span class="p">)</span>
@@ -801,7 +802,7 @@
 </div>
 </section>
 <section id="filtering-feature-on-output-of-another-minorg-run">
-<h5><span class="section-number">5.8.3.3.2. </span>Filtering feature on output of another MINORg run<a class="headerlink" href="#filtering-feature-on-output-of-another-minorg-run" title="Permalink to this headline"></a></h5>
+<h5><span class="section-number">6.8.3.3.2. </span>Filtering feature on output of another MINORg run<a class="headerlink" href="#filtering-feature-on-output-of-another-minorg-run" title="Permalink to this headline"></a></h5>
 <p>As with <a class="reference internal" href="#filtering-background-on-output-of-another-minorg-run"><span class="std std-ref">Filtering background on output of another MINORg run</span></a>, we can read in the output of a previous MINORg execution and filter that. This requires the .map file ending with ‘_all.map’ (parse using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.parse_grna_map_from_file" title="minorg.MINORg.MINORg.parse_grna_map_from_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_grna_map_from_file()</span></code></a>) as well as a FASTA file of target sequences (specify using <code class="xref py py-attr docutils literal notranslate"><span class="pre">target</span></code>).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_222_subcmdfilter_feature_new&quot;</span><span class="p">)</span>
@@ -819,7 +820,7 @@
 </section>
 </section>
 <section id="subcommand-minimumset">
-<h3><span class="section-number">5.8.4. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a><a class="headerlink" href="#subcommand-minimumset" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.8.4. </span>Subcommand <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a><a class="headerlink" href="#subcommand-minimumset" title="Permalink to this headline"></a></h3>
 <p>The <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a> subcommand generates mutually exclusive minimum set(s) of gRNA, where each set is capable of covering all targets. It requires a MINORg .map file (the one that ends in ‘_gRNA_pass.map’ is sufficient, but ‘_gRNA_all.map’ would allow for filtering by a custom combination of fields). All parameters introduced in <a class="reference internal" href="#generating-minimum-grna-set-s"><span class="std std-ref">Generating minimum gRNA set(s)</span></a> apply.</p>
 <p>This step will write final gRNA sequences into a file ending with ‘_gRNA_final.fasta’. A file ending with ‘_gRNA_final.map’ that maps gRNA to their targets will also be generated. You may optionally specify the location of the FASTA and .map output files using:</p>
 <ul class="simple">
@@ -835,7 +836,7 @@
 </li>
 </ul>
 <section id="regenerating-minimum-sets-after-calling-full">
-<h4><span class="section-number">5.8.4.1. </span>Regenerating minimum sets after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#regenerating-minimum-sets-after-calling-full" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.8.4.1. </span>Regenerating minimum sets after calling <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.full" title="minorg.MINORg.MINORg.full"><code class="xref py py-meth docutils literal notranslate"><span class="pre">full()</span></code></a><a class="headerlink" href="#regenerating-minimum-sets-after-calling-full" title="Permalink to this headline"></a></h4>
 <p><a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.minimumset" title="minorg.MINORg.MINORg.minimumset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">minimumset()</span></code></a> can also be used on an active MINORg object.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_223_subcmdminimumset_pt1&quot;</span><span class="p">)</span>
@@ -849,7 +850,7 @@
 </div>
 </section>
 <section id="generating-minimum-sets-from-output-of-another-minorg-run">
-<h4><span class="section-number">5.8.4.2. </span>Generating minimum sets from output of another MINORg run<a class="headerlink" href="#generating-minimum-sets-from-output-of-another-minorg-run" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.8.4.2. </span>Generating minimum sets from output of another MINORg run<a class="headerlink" href="#generating-minimum-sets-from-output-of-another-minorg-run" title="Permalink to this headline"></a></h4>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_223_subcmdminimumset_pt2&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">parse_grna_map_from_file</span><span class="p">(</span><span class="s2">&quot;/path/to/example_203_query/minorg/minorg_gRNA_all.map&quot;</span><span class="p">)</span>
@@ -864,7 +865,7 @@
 </section>
 </section>
 <section id="chaining-subcommands">
-<h3><span class="section-number">5.8.5. </span>Chaining subcommands<a class="headerlink" href="#chaining-subcommands" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.8.5. </span>Chaining subcommands<a class="headerlink" href="#chaining-subcommands" title="Permalink to this headline"></a></h3>
 <p>You may use subcommands separately if you’d like to inspect the outcome of each step and/or repeat a step with different parameters before proceeding with the next. MINORg tracks the output of previous steps, so you do not need to read them into MINORg before executing the next step.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_224_subcmd&quot;</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">thread</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
@@ -930,13 +931,13 @@
 </section>
 </section>
 <section id="defining-reference-genomes">
-<h2><span class="section-number">5.9. </span>Defining reference genomes<a class="headerlink" href="#defining-reference-genomes" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.9. </span>Defining reference genomes<a class="headerlink" href="#defining-reference-genomes" title="Permalink to this headline"></a></h2>
 <section id="single-reference-genome">
-<h3><span class="section-number">5.9.1. </span>Single reference genome<a class="headerlink" href="#single-reference-genome" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.9.1. </span>Single reference genome<a class="headerlink" href="#single-reference-genome" title="Permalink to this headline"></a></h3>
 <p>See example in <a class="reference internal" href="#reference-gene-s-as-targets"><span class="std std-ref">Reference gene(s) as targets</span></a>.</p>
 </section>
 <section id="multiple-reference-genomes">
-<h3><span class="section-number">5.9.2. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.9.2. </span>Multiple reference genomes<a class="headerlink" href="#multiple-reference-genomes" title="Permalink to this headline"></a></h3>
 <p>See also: <a class="reference internal" href="parameters.html#reference"><span class="std std-ref">Reference</span></a></p>
 <p>You may specify genes from multiple reference genomes so long as those reference genomes have also been added using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -953,9 +954,9 @@
 <p>In the example above, MINORg will design gRNA for 3 highly conserved paralogues in 3 different species. Note that you should be careful that any gene IDs you use should either be unique across all reference genomes OR be shared only among your target genes. Otherwise, MINORg will treat any undesired genes with the same gene IDs as targets as well.</p>
 </section>
 <section id="non-standard-reference">
-<h3><span class="section-number">5.9.3. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.9.3. </span>Non-standard reference<a class="headerlink" href="#non-standard-reference" title="Permalink to this headline"></a></h3>
 <section id="non-standard-genetic-code">
-<h4><span class="section-number">5.9.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.9.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
 <p>When using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.pssm_ids" title="minorg.MINORg.MINORg.pssm_ids"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pssm_ids</span></code></a>, users should ensure that the correct genetic code has been specified for reference genomes using the <code class="docutils literal notranslate"><span class="pre">genetic_code</span></code> keyword argument when adding reference genomes using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a>, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a> for genetic code numbers and names.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span> <span class="o">=</span> <span class="n">MINORg</span><span class="p">(</span><span class="n">directory</span> <span class="o">=</span> <span class="s2">&quot;/path/to/example_226_geneticcode&quot;</span><span class="p">)</span>
@@ -971,7 +972,7 @@
 <p>As a failsafe, MINORg does not terminate translated peptide sequences at the first stop codon. This ensures that any codons after an incorrectly translated premature stop codon will still be translated. Typically, a handful of mistranslated codons can still result in the correct RPS-BLAST domain hits, although hit scores may be slightly lower. Nevertheless, to ensure maximum accuracy, the correct genetic code is preferred.</p>
 </section>
 <section id="non-standard-gff3-attribute-field-names">
-<h4><span class="section-number">5.9.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
+<h4><span class="section-number">6.9.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
 <p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using the <code class="docutils literal notranslate"><span class="pre">attr_mod</span></code> (for ‘attribute modification’) keyword argument when adding reference genomes using <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.add_reference" title="minorg.MINORg.MINORg.add_reference"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_reference()</span></code></a>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -988,7 +989,7 @@
 </section>
 </section>
 <section id="multithreading">
-<h2><span class="section-number">5.10. </span>Multithreading<a class="headerlink" href="#multithreading" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.10. </span>Multithreading<a class="headerlink" href="#multithreading" title="Permalink to this headline"></a></h2>
 <p>MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes, have multiple reference genomes, or multiple background sequences.</p>
 <p>To run MINORg with parallel processing, set <a class="reference internal" href="minorg.MINORg.html#minorg.MINORg.MINORg.thread" title="minorg.MINORg.MINORg.thread"><code class="xref py py-attr docutils literal notranslate"><span class="pre">thread</span></code></a> to the desired number of threads.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minorg.MINORg</span> <span class="kn">import</span> <span class="n">MINORg</span>
@@ -1004,10 +1005,10 @@
 </div>
 </section>
 <section id="differences-between-cli-and-python-versions">
-<h2><span class="section-number">5.11. </span>Differences between CLI and Python versions<a class="headerlink" href="#differences-between-cli-and-python-versions" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">6.11. </span>Differences between CLI and Python versions<a class="headerlink" href="#differences-between-cli-and-python-versions" title="Permalink to this headline"></a></h2>
 <p>Note that, unlike the command line, the Python package does not support aliases even if the config file has been set up appropriately for command line executions. Therefore, there are no true equivalents to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>, <code class="docutils literal notranslate"><span class="pre">--indv</span></code>, or <code class="docutils literal notranslate"><span class="pre">--reference</span></code>.</p>
 <section id="to-specify-cluster-genes">
-<h3><span class="section-number">5.11.1. </span>To specify cluster genes<a class="headerlink" href="#to-specify-cluster-genes" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.11.1. </span>To specify cluster genes<a class="headerlink" href="#to-specify-cluster-genes" title="Permalink to this headline"></a></h3>
 <p>Analogous to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code> and <code class="docutils literal notranslate"><span class="pre">--gene</span></code>.</p>
 <p><strong>Correct:</strong></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AT5G46260&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46270&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46450&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46470&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46490&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46510&#39;</span><span class="p">,</span><span class="s1">&#39;AT5G46520&#39;</span><span class="p">]</span>
@@ -1021,7 +1022,7 @@
 <p>Attributes ‘cluster_set’ and ‘cluster’ do not exist. This does not throw error now but will cause problems later.</p>
 </section>
 <section id="to-specify-query-fasta-files">
-<h3><span class="section-number">5.11.2. </span>To specify query FASTA files<a class="headerlink" href="#to-specify-query-fasta-files" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.11.2. </span>To specify query FASTA files<a class="headerlink" href="#to-specify-query-fasta-files" title="Permalink to this headline"></a></h3>
 <p>Analogous to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> and <code class="docutils literal notranslate"><span class="pre">--query</span></code>.</p>
 <p><strong>Correct:</strong></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_query</span><span class="p">(</span><span class="s1">&#39;/path/to/subset_9654.fasta&#39;</span><span class="p">,</span> <span class="n">alias</span> <span class="o">=</span> <span class="s1">&#39;9654&#39;</span><span class="p">)</span>
@@ -1036,7 +1037,7 @@
 <p>Attributes ‘genome_set’ and ‘indv’ do not exist. This does not throw error now but will cause problems later.</p>
 </section>
 <section id="to-specify-reference-genomes">
-<h3><span class="section-number">5.11.3. </span>To specify reference genomes<a class="headerlink" href="#to-specify-reference-genomes" title="Permalink to this headline"></a></h3>
+<h3><span class="section-number">6.11.3. </span>To specify reference genomes<a class="headerlink" href="#to-specify-reference-genomes" title="Permalink to this headline"></a></h3>
 <p>Analogous to <code class="docutils literal notranslate"><span class="pre">--reference</span></code>, <code class="docutils literal notranslate"><span class="pre">--assembly</span></code>, <code class="docutils literal notranslate"><span class="pre">--annotation</span></code>, <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>, and <code class="docutils literal notranslate"><span class="pre">--genetic-code</span></code>.</p>
 <p><strong>Correct:</strong></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_minorg</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="s1">&#39;/path/to/TAIR10.fasta&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/TARI10.gff3&#39;</span><span class="p">,</span> <span class="n">alias</span> <span class="o">=</span> <span class="s1">&#39;TAIR10&#39;</span><span class="p">,</span> <span class="n">genetic_code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">atr_mod</span> <span class="o">=</span> <span class="p">{})</span>
@@ -1058,8 +1059,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="tutorial_cli.html" class="btn btn-neutral float-left" title="4. Tutorial (Command line)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="parameters.html" class="btn btn-neutral float-right" title="6. Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorial_cli.html" class="btn btn-neutral float-left" title="5. Tutorial (Command line)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parameters.html" class="btn btn-neutral float-right" title="7. Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

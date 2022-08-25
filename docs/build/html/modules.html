@@ -40,12 +40,13 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">7. Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_docker.html">4. Tutorial (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">6. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">7. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">8. Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">9. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">10. Examples</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="minorg.html">API documentation</a></li>
@@ -86,7 +87,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#docker">1.1. Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#running-in-docker">1.1. Running in Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#note-for-windows-users">1.2. Note for Windows users</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">1.3. Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#install-minorg">1.4. Install MINORg</a></li>
@@ -102,52 +103,60 @@
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#alias-lookups">3.2. Alias lookups</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#setting-up-the-tutorial">4.1. Setting up the tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#impt-note-on-executables">4.2. IMPT: Note on executables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#defining-target-sequences">4.3. Defining target sequences</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#defining-grna">4.4. Defining gRNA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#filtering-grna">4.5. Filtering gRNA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#generating-minimum-grna-set-s">4.6. Generating minimum gRNA set(s)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#subcommands">4.7. Subcommands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#defining-reference-genomes">4.8. Defining reference genomes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#multithreading">4.9. Multithreading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_docker.html">4. Tutorial (Docker)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_docker.html#running-minorg-image-as-container">4.1. Running MINORg image as container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_docker.html#importing-files">4.2. Importing files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_docker.html#running-minorg">4.3. Running MINORg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_docker.html#exporting-output-files">4.4. Exporting output files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_docker.html#removing-the-container">4.5. Removing the container</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#setting-up-the-tutorial">5.1. Setting up the tutorial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#getting-started">5.2. Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#impt-note-on-executables">5.3. IMPT: Note on executables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#defining-target-sequences">5.4. Defining target sequences</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#defining-grna">5.5. Defining gRNA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#filtering-grna">5.6. Filtering gRNA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#generating-minimum-grna-set-s">5.7. Generating minimum gRNA set(s)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#subcommands">5.8. Subcommands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#defining-reference-genomes">5.9. Defining reference genomes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#multithreading">5.10. Multithreading</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#differences-between-cli-and-python-versions">5.11. Differences between CLI and Python versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#setting-up-the-tutorial">5.1. Setting up the tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#impt-note-on-executables">5.2. IMPT: Note on executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#defining-target-sequences">5.3. Defining target sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#defining-grna">5.4. Defining gRNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#filtering-grna">5.5. Filtering gRNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#generating-minimum-grna-set-s">5.6. Generating minimum gRNA set(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#subcommands">5.7. Subcommands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#defining-reference-genomes">5.8. Defining reference genomes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_cli.html#multithreading">5.9. Multithreading</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#cli-vs-python">6.1. CLI vs Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#parameter-types">6.2. Parameter types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#parameter-descriptions">6.3. Parameter descriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">6. Tutorial (Python)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#setting-up-the-tutorial">6.1. Setting up the tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#getting-started">6.2. Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#impt-note-on-executables">6.3. IMPT: Note on executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#defining-target-sequences">6.4. Defining target sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#defining-grna">6.5. Defining gRNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#filtering-grna">6.6. Filtering gRNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#generating-minimum-grna-set-s">6.7. Generating minimum gRNA set(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#subcommands">6.8. Subcommands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#defining-reference-genomes">6.9. Defining reference genomes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#multithreading">6.10. Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_py.html#differences-between-cli-and-python-versions">6.11. Differences between CLI and Python versions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">7. Output</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="output.html#directory-structure">7.1. Directory structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html#output-files">7.2. Output files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">7. Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameters.html#cli-vs-python">7.1. CLI vs Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameters.html#parameter-types">7.2. Parameter types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameters.html#parameter-descriptions">7.3. Parameter descriptions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="algorithms.html#non-reference-homologue-inference">8.1. Non-reference homologue inference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="algorithms.html#off-target-assessment">8.2. Off-target assessment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="algorithms.html#within-feature-inference">8.3. Within-feature inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">8. Output</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="output.html#directory-structure">8.1. Directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html#output-files">8.2. Output files</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#example-1">9.1. Example 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#example-2">9.2. Example 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">9. Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html#non-reference-homologue-inference">9.1. Non-reference homologue inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html#off-target-assessment">9.2. Off-target assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html#within-feature-inference">9.3. Within-feature inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">10. Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-1">10.1. Example 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-2">10.2. Example 2</a></li>
 </ul>
 </li>
 </ul>

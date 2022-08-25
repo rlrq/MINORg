@@ -8,30 +8,32 @@ RUN apt-get update && apt-get install -y \
     ncbi-blast+ \
     bedtools
 
-## Install pysam dependencies
+## Install pysam system dependencies
 RUN apt-get update && apt-get install -y \
     libncurses5-dev \
     zlib1g-dev \
     libbz2-dev \
     liblzma-dev
 
-## Compile MINORg wheel
-WORKDIR /mnt/chaelab/rachelle/scripts/minorgpy
-ADD dist/minorg-0.2.2.0a0.tar.gz .
-WORKDIR minorg-0.2.2.0a0
-
-## Install MINORg offline
 ## Install MINORg dependencies
-## numpy needs to be installed before pysam (from pybedtools) but setup.py doesn't control order so we install it separately first
+## numpy & click need to be installed before pysam (from pybedtools) and typer (respectively) but setup.py doesn't control order so we install it separately first
 RUN pip install 'numpy==1.19.5' 'click==8.0.4'
+
+## Compile MINORg wheel
+WORKDIR /minorg_docker
+ADD dist/minorg-0.2.2.0a1.tar.gz .
+WORKDIR minorg-0.2.2.0a1
+
+## Install MINORg
 RUN python setup.py install
 
 ## Install MINORg
-COPY dist/minorg-0.2.2.0a0-py3-none-any.whl minorg.whl
+COPY dist/minorg-0.2.2.0a1-py3-none-any.whl minorg.whl
 RUN pip install --no-cache minorg
 
 ## Run minorg
 RUN python -c 'import os; print(os.getcwd()); print(os.listdir())'
+WORKDIR ..
 ENTRYPOINT ["bash"]
 # ENTRYPOINT ["minorg"]
 # CMD ["python", "./minorg/main.py"]

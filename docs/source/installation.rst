@@ -1,12 +1,18 @@
 Installation
 ============
 
-Docker
-------
+Running in Docker
+-----------------
 
-MINORg can be installed on Ubuntu using the docker image available at: https://hub.docker.com/repository/docker/rlrq/minorg
+A Docker image with MINORg (along with all of its dependencies) pre-installed on an Ubuntu system with Python 3.9 is available at: https://hub.docker.com/r/rlrq/minorg
 
-If you do not wish to install via docker, please refer to the rest of this section for how to install MINORg.
+You may pull the latest version using:
+
+.. code-block::
+   
+   docker pull rlrq/minorg
+
+If do not wish to use Docker or if you wish to install MINORg on your system instead, please refer to the rest of :ref:`Installation` for how to install MINORg.
 
 Note for Windows users
 ----------------------
