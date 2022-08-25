@@ -41,7 +41,7 @@ In the above example, the newly created container's name will be ``my_minorg``.
 Importing files
 ~~~~~~~~~~~~~~~
 
-As a Docker container is isolated from the host system, files need to be imported into the container. To copy a single file, start a new terminal session (not in a Docker container) and execute:
+As a Docker container is isolated from the host system, files need to be imported into the container, which can be achieved using ``docker cp``. To copy a single file, start a new terminal session (not in a Docker container) and execute:
 
 .. code-block::
    
@@ -87,3 +87,8 @@ If you do not wish to reuse the container, you can delete it using:
 
    docker rm <container ID or name>
 
+
+Docker docs
+~~~~~~~~~~~
+
+For more on Docker, you may check out Docker's website: https://docs.docker.com/

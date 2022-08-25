@@ -47,6 +47,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#running-minorg">4.3. Running MINORg</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#exporting-output-files">4.4. Exporting output files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#removing-the-container">4.5. Removing the container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker-docs">4.6. Docker docs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
@@ -115,7 +116,7 @@
 </section>
 <section id="importing-files">
 <h2><span class="section-number">4.2. </span>Importing files<a class="headerlink" href="#importing-files" title="Permalink to this headline"></a></h2>
-<p>As a Docker container is isolated from the host system, files need to be imported into the container. To copy a single file, start a new terminal session (not in a Docker container) and execute:</p>
+<p>As a Docker container is isolated from the host system, files need to be imported into the container, which can be achieved using <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">cp</span></code>. To copy a single file, start a new terminal session (not in a Docker container) and execute:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">cp</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">txt</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">:</span><span class="o">/</span><span class="n">my_minorg</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">destination</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
@@ -146,6 +147,10 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">rm</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span>
 </pre></div>
 </div>
+</section>
+<section id="docker-docs">
+<h2><span class="section-number">4.6. </span>Docker docs<a class="headerlink" href="#docker-docs" title="Permalink to this headline"></a></h2>
+<p>For more on Docker, you may check out Docker’s website: <a class="reference external" href="https://docs.docker.com/">https://docs.docker.com/</a></p>
 </section>
 </section>
 
