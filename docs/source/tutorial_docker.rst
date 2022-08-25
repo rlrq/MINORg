@@ -16,7 +16,7 @@ This starts a bash session in an Ubuntu environment in a directory called '/mino
 
   root@1b2a51c79131:/minorg_docker#
 
-The cryptic alphanumeric string between @ and : is the container ID (in this example, it's `1b2a51c79131`). Docker will also automatically assign a more human-readable name to the container. To find this human-readable name, start a new terminal session (not in a Docker container) and execute:
+The cryptic alphanumeric string between @ and : is the container ID (in this example, it's ``1b2a51c79131``). Docker will also automatically assign a more human-readable name to the container. To find this human-readable name, start a new terminal session (not in a Docker container) and execute:
 
 .. code-block::
 
@@ -35,7 +35,7 @@ Alternatively, you can also give container a name by running the image using:
    
    docker run -ti --name my_minorg minorg
 
-In the above example, the newly created container's name will be `my_minorg`.
+In the above example, the newly created container's name will be ``my_minorg``.
 
 
 Importing files
@@ -63,7 +63,7 @@ At this point, you can either follow command line tutorial starting from :ref:`T
 Exporting output files
 ~~~~~~~~~~~~~~~~~~~~~~
 
-As previously mentioned, the Docker container is isolated from the host system. You may export the files output by MINORg in the container to your system using `docker cp` again. To export a single file, use:
+As previously mentioned, the Docker container is isolated from the host system. You may export the files output by MINORg in the container to your system using ``docker cp`` again. To export a single file, use:
 
 .. code-block::
    
@@ -79,7 +79,7 @@ To export a directory, use:
 Removing the container
 ~~~~~~~~~~~~~~~~~~~~~~
 
-When you're done, you may exit the Docker container using ctrl-D or by typing `exit`.
+When you're done, you may exit the Docker container using ctrl-D or by typing ``exit``.
 
 If you do not wish to reuse the container, you can delete it using:
 
