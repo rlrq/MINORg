@@ -12,7 +12,7 @@ Run the MINORg image as a container using:
    
    docker run -ti minorg
 
-This starts a bash session in an Ubuntu environment in a directory called '/minorg_docker', so you should see a command prompt like this::
+This starts a linux bash session in a directory called '/minorg_docker', so you should see a command prompt like this::
 
   root@1b2a51c79131:/minorg_docker#
 
