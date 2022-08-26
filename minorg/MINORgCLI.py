@@ -1605,6 +1605,7 @@ class MINORgCLI (MINORg):
         Full MINORg programme.
         """
         ## generate sequences to mask
+        self.mask = self.args.mask
         if self.background_check and self.mask_gene_sets["mask"]:
             to_mask = self.reserve_fname("to_mask.fasta", tmp = True)
             self._get_reference_seq(*self.mask_gene_sets["mask"], adj_dir = True, fout = to_mask)

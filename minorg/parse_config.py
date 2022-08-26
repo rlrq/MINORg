@@ -402,9 +402,9 @@ class Params():
                                                                                      x, **kwargs),
                                                                             default = default)
         self.gene = Param(None, "-g", "--gene", "--genes",
-                          description = "comma-separated gene ID(s)")
+                          help = "comma-separated gene ID(s)")
         self.cluster = Param(None, "-c", "--cluster",
-                             description = "comma-separated cluster alias(es)",
+                             help = "comma-separated cluster alias(es)",
                              alias_value_description = "cluster members")
         self.indv = Param([INDV_GENOMES_NONE], "-i", "--indv",
                           # "-a", "--acc",
@@ -413,7 +413,7 @@ class Params():
                           #                                          list(sorted(self.indv_genomes.items())) +
                           #                                          [(INDV_GENOMES_ALL,
                           #                                            "<all genomes except reference>")]),
-                          description = "comma-separated genome alias(es)",
+                          help = "comma-separated genome alias(es)",
                           alias_value_description = "the location of their FASTA files")
         self.target = Param(None, "-t", "--target")
         self.feature = Param(["CDS"], "--feature",
@@ -461,47 +461,47 @@ class Params():
                                                                          default = default)
         self.check_all = Param(False, "--check-all",
                                false_true = ("execute some checks", "execute all checks"),
-                               description = "Filter gRNA by all checks")
+                               help = "Filter gRNA by all checks")
         self.gc_check = Param(False, "--gc-check/--skip-gc-check",
                               false_true = ("skip GC content check", "execute GC content check"),
-                              description = "Filter gRNA by GC content")
+                              help = "Filter gRNA by GC content")
         self.feature_check = Param(False, "--feature-check/--skip-feature-check",
                                    false_true = ("skip within feature check", "execute within feature check"),
-                                   description = "Filter gRNA by gene feature")
+                                   help = "Filter gRNA by gene feature")
         self.background_check = Param(False, "--bg-check/--skip-bg-check",
                                       "--background-check/--skip-background-check",
                                       "--ot-check/--skip-ot-check",
                                       false_true = ("skip off-target check", "execute off-target check"),
-                                       description = "Filter gRNA by off-target")
+                                      help = "Filter gRNA by off-target")
         self.reset_checks = Param(False, "--reset-checks/--update-checks",
                                   false_true = ("update only requested checks while retaining the rest",
                                                 "reset all checks"),
-                                  description = "Reset all checks to NA")
+                                  help = "Reset all checks to NA")
         self.background = Param([], "-b", "--bg", "--background",
-                                description = "path to file(s) to be screened for off-targets",
-                                help = ("if using '--by-indv', each file should only contain sequences"
+                                help = ("path to file(s) to be screened for off-targets;"
+                                        " if using '--by-indv', each file should only contain sequences"
                                         "  from a single individual, and all sequences from a single"
                                         "  individual should be contained in a single file"))
         self.alignment = Param(None, "--alignment") ## fname
         self.ot_pattern = Param(get_filter("off-target pattern", default = None), "--ot-pattern",
-                                description = ("pattern specifying positions of maximum number of"
-                                               " gap(s) and/or mismatch(es) in off-target hits"
-                                               " that disqualify their gRNA"))
+                                help = ("pattern specifying positions of maximum number of"
+                                        " gap(s) and/or mismatch(es) in off-target hits"
+                                        " that disqualify their gRNA"))
         self.ot_unaligned_as_mismatch = Param(get_filter("unaligned as mismatch", type = bool, default = True),
                                               "--ot-unaligned-as-mismatch/--ot-unaligned-as-mismatch-unset",
                                               "--ot-uam/--ot-uam-unset",
-                                              description = ("treat unaligned positions as mismatches;"
-                                                             " used with --ot-pattern"))
+                                              help = ("treat unaligned positions as mismatches;"
+                                                      " used with --ot-pattern"))
         self.ot_unaligned_as_gap = Param(get_filter("unaligned as gap", type = bool, default = False),
                                          "--ot-unaligned-as-gap/--ot-unaligned-as-gap-unset",
                                          "--ot-uag/--ot-uag-unset",
-                                         description = ("treat unaligned positions as gaps"
-                                                        " (specifically insertions);"
-                                                        " used with --ot-pattern"))
+                                         help = ("treat unaligned positions as gaps"
+                                                 " (specifically insertions);"
+                                                 " used with --ot-pattern"))
         self.ot_mismatch = Param(get_filter("minimum off-target mismatch", type = int, default = 1),
-                                 "--ot-mismatch", description = "minimum acceptable off-target mismatch")
+                                 "--ot-mismatch", help = "minimum acceptable off-target mismatch")
         self.ot_gap = Param(get_filter("minimum off-target gap", type = int, default = 0),
-                            "--ot-gap", description = "minimum acceptable off-target gap")
+                            "--ot-gap", help = "minimum acceptable off-target gap")
         self.ot_pamless = Param(get_filter("pamless off-target search", type = bool, default = True),
                                 "--ot-pamless/--ot-pam", help = ("ignore PAM when searching for off-target"))
         self.ot_indv = Param([get_filter("screen individuals", default = REFERENCED_ALL)],
@@ -514,7 +514,7 @@ class Params():
                              #                                                  " valid only with full programme"
                              #                                                  " and when '-i' is used>"))] +
                              #                                          list(sorted(self.indv_genomes.items()))),
-                             description = "comma-separated genome alias(es)",
+                             help = "comma-separated genome alias(es)",
                              alias_value_description = "the location of their FASTA files",
                              help_subcmd = {"full" :( f"Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
                                                       " to indicate all and no (respectively)"
@@ -524,7 +524,7 @@ class Params():
                                                       f" (E.g. '--ot-indv {REFERENCED_NONE},HeLa')")})
         self.ot_indv_filt = Param([],
                              "--ot-indv",
-                             description = "comma-separated genome alias(es)",
+                             help = "comma-separated genome alias(es)",
                              alias_value_description = "the location of their FASTA files")
         self.exclude = Param(None, "-e", "--exclude") ## fname
         self.gc_min = Param(get_filter("GC minimum", type = float, default = 0.3), "--gc-min",
@@ -570,16 +570,18 @@ class Params():
                                 help = "skip masking of genes in reference genome for off-target check")
         self.by_indv = Param(get_filter("screen by individual", type = bool, default = False),
                              "--by-indv",
-                             help = ("if raised, gRNA may have off-target effects in some individuals."
-                                     " For example, a gRNA targeting a gene in individual A will pass the"
-                                     " the background check in individual A but may fail the background check"
-                                     " in individual B. If not raised, all gRNA will pass background checks in"
-                                     " all individuals."))
-        self.mask = Param([], "--mask")
+                             help = "accept gRNA if it has no off-target effects in non-target individuals",
+                             description = ("if raised, gRNA may have off-target effects in some individuals."
+                                            " For example, a gRNA targeting a gene in individual A will pass the"
+                                            " the background check in individual A but may fail the background"
+                                            " check in individual B. If not raised, all gRNA will pass"
+                                            " background checks in all individuals."))
+        self.mask = Param([], "--mask",
+                          help = "path to file(s) with sequence to mask for off-target check")
         self.mask_gene = Param(get_filter("mask", default = '.').split(','), "--mask-gene",
-                               description = "comma-separated gene ID(s)",
-                               help = ("masked genes are hidden from background check so that"
-                                       " gRNA hits to them will not be considered off-target."),
+                               help = "comma-separated gene ID(s)",
+                               description = ("masked genes are hidden from background check so that"
+                                              " gRNA hits to them will not be considered off-target."),
                                help_subcmd = {"full": ( "masked genes are hidden from background check so that"
                                                         " gRNA hits to them will not be considered off-target."
                                                         f" Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
@@ -599,14 +601,16 @@ class Params():
                                          f" (E.g. '--mask {REFERENCED_NONE},BRC1')"
                                          " --unmask will be processed first, followed by --mask."))
         self.mask_cluster = Param(None, "--mask-cluster",
-                                  description = "comma-separated cluster alias(es)",
-                                  help = ("genes in masked clusters are hidden from background check so that"
-                                          " gRNA hits to them will not be considered off-target."),
+                                  help = "comma-separated cluster alias(es)",
+                                  description = ("genes in masked clusters are hidden from background check"
+                                                 " so that gRNA hits to them will not be considered"
+                                                 " off-target."),
                                   alias_value_description = "cluster members")
         self.unmask_cluster = Param(None, "--unmask-cluster",
-                                    description = "comma-separated cluster alias(es)",
-                                    help = ("genes in masked clusters are hidden from background check so that"
-                                            " gRNA hits to them will not be considered off-target."),
+                                    help = "comma-separated cluster alias(es)",
+                                    description = ("genes in masked clusters are hidden from background check"
+                                                   " so that gRNA hits to them will not be considered"
+                                                   " off-target."),
                                     alias_value_description = "cluster members")
         self.mask_homologue = Param(True, "--mask-homologue/--unmask-homologue",
                                     false_true = ("leave user-provided non-reference sequences unmasked",
@@ -623,7 +627,7 @@ class Params():
                              #                                             " valid only with full programme"
                              #                                             " and when '-i' is used>"))] +
                              #                                          list(sorted(self.indv_genomes.items()))),
-                             description = "comma-separated genome alias(es)",
+                             help = "comma-separated genome alias(es)",
                              alias_value_description = "the location of their FASTA files",
                              help_subcmd = {"full" :( f"Use '{REFERENCED_ALL}' and '{REFERENCED_NONE}'"
                                                       " to indicate all and no (respectively)"

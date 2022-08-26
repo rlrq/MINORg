@@ -143,12 +143,7 @@ def seq(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
-        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
-        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
-        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
-        bedtools: str = typer.Option(*params.bedtools(), **params.bedtools.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
-        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
 
         ## target definition options
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -200,6 +195,7 @@ def seq(
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
                                          callback = minor_g.genetic_code_callback),
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
 
         ## user lookups (this is right at the end because we might need the other args)
         ## genomes is not "eager" because we have to wait for --genome-lookup to be processed
@@ -211,7 +207,13 @@ def seq(
         clusters: bool = typer.Option(*params.clusters(), **params.clusters.options,
                                       callback = minor_g.clusters_callback),
         members: str = typer.Option(*params.members(), **params.members.options,
-                                    callback = minor_g.members_callback) ):
+                                    callback = minor_g.members_callback),
+        
+        ## executables
+        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        bedtools: str = typer.Option(*params.bedtools(), **params.bedtools.options)):
     """
     Subcommand seq.
 
@@ -232,9 +234,6 @@ def seq(
 @app_sub.command("grna")
 def generate_grna(
         ## general options
-        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
-        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
-        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
 
         ## output files: option A
@@ -278,6 +277,7 @@ def generate_grna(
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
                                          callback = minor_g.genetic_code_callback),
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
 
         ## basic filtering
         gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
@@ -302,7 +302,11 @@ def generate_grna(
                                         callback = minor_g.cluster_set_callback),
         reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
                                           **oparams.file_valid, is_eager = True,
-                                          callback = minor_g.reference_set_callback)):
+                                          callback = minor_g.reference_set_callback),
+        
+        ## executables
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options)):
 
     """
     Subcommand grna.
@@ -335,14 +339,7 @@ def filter_grna(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
-        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
-        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
-        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
-        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
-        db: str = typer.Option(*params.db(), **params.db.options, callback = minor_g.db_callback),
-        genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
-                                         callback = minor_g.genetic_code_callback),
 
         ## input files
         map: Path = typer.Option(*params.map(), **params.map.options, **oparams.file_valid),
@@ -368,6 +365,12 @@ def filter_grna(
         attr_mod: str = typer.Option(*params.attr_mod(), **params.attr_mod.options,
                                      callback = minor_g.attr_mod_callback),
         sep: str = typer.Option(*params.sep(), **params.sep.options),
+
+        ## domain search options
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
+        db: str = typer.Option(*params.db(), **params.db.options, callback = minor_g.db_callback),
+        genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
+                                         callback = minor_g.genetic_code_callback),
 
         ## GC filter options
         gc_min: float = typer.Option(*params.gc_min(), **params.gc_min.options,
@@ -462,7 +465,12 @@ def filter_grna(
                                        callback = minor_g.genome_set_callback),
         reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
                                           **oparams.file_valid, is_eager = True,
-                                          callback = minor_g.reference_set_callback)):
+                                          callback = minor_g.reference_set_callback),
+        
+        ## executables
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options)):
 
     """
     Subcommand filter.
@@ -584,13 +592,7 @@ def full(
         ## general options
         directory: Path = typer.Option(*params.directory(), **params.directory.options, **oparams.dir_new),
         prefix: str = typer.Option(*params.prefix(), **params.prefix.options),
-        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
-        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
-        # rpsblast: Path = typer.Option(*params.rpsblast(), **params.rpsblast.options, **oparams.file_valid),
-        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
-        bedtools: str = typer.Option(*params.bedtools(), **params.bedtools.options),
         thread: int = typer.Option(*params.thread(), **params.thread.options),
-        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
 
         ## target definition options
         gene: Optional[List[str]] = typer.Option(*params.gene(), **params.gene.options,
@@ -630,7 +632,8 @@ def full(
         sep: str = typer.Option(*params.sep(), **params.sep.options),
         genetic_code: str = typer.Option(*params.genetic_code(), **params.genetic_code.options,
                                          callback = minor_g.genetic_code_callback),
-
+        remote_rps: bool = typer.Option(*params.remote_rps(), **params.remote_rps.options),
+        
         ## gRNA generation options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
         length: int = typer.Option(*params.length(), **params.length.options),
@@ -655,6 +658,7 @@ def full(
         ## filter gRNA options (off-target)
         background: Optional[List[Path]] = typer.Option(*params.background(), **params.background.options,
                                                         **oparams.file_valid),
+        mask: Optional[List[Path]] = typer.Option(*params.mask(), **params.mask.options, **oparams.file_valid),
         screen_reference: bool = typer.Option(*params.screen_reference(), **params.screen_reference.options),
         unmask_ref: bool = typer.Option(*params.unmask_ref(), **params.unmask_ref.options),
         mask_gene: Optional[List[str]] = typer.Option(*params.mask_gene(), **params.mask_gene.options,
@@ -714,7 +718,14 @@ def full(
                                        callback = minor_g.genome_set_callback),
         reference_set: str = typer.Option(*params.reference_set(), **params.reference_set.options,
                                           **oparams.file_valid, is_eager = True,
-                                          callback = minor_g.reference_set_callback)):
+                                          callback = minor_g.reference_set_callback),
+        
+        ## executables
+        blastn: str = typer.Option(*params.blastn(), **params.blastn.options),
+        rpsblast: str = typer.Option(*params.rpsblast(), **params.rpsblast.options),
+        # rpsblast: Path = typer.Option(*params.rpsblast(), **params.rpsblast.options, **oparams.file_valid),
+        mafft: str = typer.Option(*params.mafft(), **params.mafft.options),
+        bedtools: str = typer.Option(*params.bedtools(), **params.bedtools.options)):
     """
     Subcommand full.
 
