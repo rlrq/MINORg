@@ -134,7 +134,10 @@ def mv_dir_overwrite(src_dir, dst_dir, rm_dir = True):
             fdst = os.path.join(out_dir, fname)
             shutil.move(fsrc, fdst)
         for dirname in dirs:
-            os.rmdir(os.path.join(root, dirname))
+            try:
+                os.rmdir(os.path.join(root, dirname))
+            except OSError: ## if new directory is a subdirectory of src, don't remove
+                pass
     return
 
 ## parameters defaults

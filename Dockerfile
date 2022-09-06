@@ -21,14 +21,14 @@ RUN pip install 'numpy==1.19.5' 'click==8.0.4'
 
 ## Compile MINORg wheel
 WORKDIR /minorg_docker
-ADD dist/minorg-0.2.2.0a1.tar.gz .
-WORKDIR minorg-0.2.2.0a1
+ADD dist/minorg-0.2.2.0a2.tar.gz .
+WORKDIR minorg-0.2.2.0a2
 
 ## Install MINORg
 RUN python setup.py install
 
 ## Install MINORg
-COPY dist/minorg-0.2.2.0a1-py3-none-any.whl minorg.whl
+COPY dist/minorg-0.2.2.0a2-py3-none-any.whl minorg.whl
 RUN pip install --no-cache minorg
 
 ## Run minorg
