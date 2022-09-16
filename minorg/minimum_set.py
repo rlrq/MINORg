@@ -35,6 +35,11 @@ def manual_check_prompt(grnas, set_num = None):
     Arguments:
         grnas (list): list of :class:`~minorg.grna.gRNASeq` or :class:`~minorg.minimum_set.gRNA` objects.
             Should already be sorted in printing order.
+    
+    Returns
+    -------
+    str
+        Of user input
     """
     if set_num is not None:
         print(f"\n\tID\tsequence (Set {set_num})")
@@ -60,7 +65,7 @@ class gRNA(Set):
     @property
     def id(self) -> str: return self.gRNASeq.id
     @property
-    def seq(self): return self.gRNASeq.seq
+    def seq(self) -> str: return self.gRNASeq.seq
     @property
     def targets(self) -> list: return self.gRNASeq.targets
     @property
@@ -70,15 +75,25 @@ class gRNA(Set):
     @property
     def relative_5prime_pos(self) -> float:
         """
-        Returns a value ONLY VALID FOR COMPARISON BETWEEN gRNA with the SAME COVERAGE.
+        Returns a value calculated from all hits that is
+        ONLY VALID FOR COMPARISON BETWEEN gRNA with the SAME COVERAGE.
         The smaller the value, the closer to the 5' end.
         """
         return self._relative_5prime_pos(self.hits)
     def _relative_5prime_pos(self, gRNAHit_objs) -> float:
+        """
+        Returns a value calculated from hits in 'gRNAHit_objs' that is
+        ONLY VALID FOR COMPARISON BETWEEN gRNA with the SAME COVERAGE.
+        The smaller the value, the closer to the 5' end.
+        """
         return sum((hit.range[0] if hit.target.sense != '-'
                     else (hit.target_len - hit.range[1]))
                    for hit in gRNAHit_objs)/len(gRNAHit_objs)
-    def subset_hits_by_target(self, target_ids):
+    def subset_hits_by_target(self, target_ids) -> list:
+        """
+        Returns list of :class:`~minorg.grna.gRNAHit` objects where the hit is
+        to a target with the same name as at lest one entry in 'target_ids'.
+        """
         target_ids = set(target_ids)
         return [hit for hit in self.hits if hit.target_id in target_ids]
     def relative_distance_to_5prime(self, other) -> float:
@@ -129,13 +144,36 @@ class CollapsedgRNA(Set):
     def __repr__(self):
         return (f"CollapsedgRNA(name='{self.name}', num_gRNA={len(self.gRNAs)}, coverage={self.weight})")
     def most_5prime(self):
+        """
+        Returns :class:`~minorg.minimum_set.gRNA` object closest to 5'
+        
+        Returns
+        -------
+        :class:`~minorg.minimum_set.gRNA`
+        """
         return min(self.gRNAs, key = lambda grna:grna.relative_5prime_pos)
-    def most_3prime(self):
+    def least_5prime(self):
+        """
+        Returns :class:`~minorg.minimum_set.gRNA` object furthest from 5'
+        (Usually but not necessarily closest to 3')
+
+        Returns
+        -------
+        :class:`~minorg.minimum_set.gRNA`
+        """
         return max(self.gRNAs, key = lambda grna:grna.relative_5prime_pos)
-    def remove(self, gRNA_obj):
+    def remove(self, gRNA_obj) -> None:
+        """
+        Remove a single :class:`~minorg.minimum_set.gRNA` object from self.
+        
+        Arguments:
+            gRNA_obj (:class:`~minorg.minimum_set.gRNA`): gRNA object
+        """
         if gRNA_obj in self.gRNAs:
             self.gRNAs.remove(gRNA_obj)
-    def add(self, gRNA_obj):
+    def add(self, gRNA_obj) -> None:
+        """
+        """
         if set(gRNA_obj) != set(self):
             raise Exception("Error: Cannot add gRNA to CollapsedgRNA. Coverage not identical.")
         self.gRNAs.add(gRNA_obj)
@@ -199,10 +237,8 @@ class SetOfCollapsedgRNA(SetOfSets):
             resort (bool): sort 'collapsed_grna' by descending order of coverage size,
                 tie-breaks by sorted target names
         
-        Returns
-        -------
-        list
-            Of :class:`~minorg.minimum_set.gRNA`, one from each :class:`~minorg.minimum_set.CollapsedgRNA`
+        Returns:
+            list: Of :class:`~minorg.minimum_set.gRNA`, one from each :class:`~minorg.minimum_set.CollapsedgRNA`
         """
         if resort:
             sorted_collapsed_grna = sorted(collapsed_grna, key = lambda cg:(-len(cg), sorted(cg)))
@@ -211,7 +247,7 @@ class SetOfCollapsedgRNA(SetOfSets):
         ## copy the CollapsedgRNA objects so we can modify them without changing the original
         if not all(len(cg.gRNAs) > 0 for cg in sorted_collapsed_grna):
             raise Exception("Error: Unable to make gRNA set. Some CollapsedgRNA do not have associated gRNA.")
-        return [cg.most_5prime() if not prioritise_3prime else cg.most_3prime()
+        return [cg.most_5prime() if not prioritise_3prime else cg.least_5prime()
                 for cg in sorted_collapsed_grna]
     def generate_grna_set(self, prioritise_3prime = False, consume = False):
         """
@@ -773,107 +809,3 @@ def set_cover_greedy(gRNA_coverage, target_ids,
         covered |= coverage_set(subset)
         desired.append(subset)
     return set(desired)
-
-# ## tie breaker functions
-# def all_best_nr_CollapsedgRNA(collapsed_grna_objs, covered):
-#     """
-#     Get all gRNA with equivalent non-redundnacy.
-    
-#     This function prioritises gRNA with fewest target overlap with already covered targets.
-    
-#     Arguments:
-#         potential_coverage (dict): dictionary of {'<gRNA seq>': [<list of gRNAHit obj>]}
-#             where gRNAHits in <list of gRNAHit obj> only contain hits to targets
-#             NOT already covered; AND
-#             where ONLY as yet unchosen gRNASeq obj are included
-#         all_coverage (dict): dictionary of {'<gRNA seq>': [<list of gRNAHit obj>]}
-#             where gRNAHits in <list of gRNAHit obj> only contain hits to all targets
-#             REGARDLESS of whether they've already been covered; AND
-#             where all gRNA's gRNASeq obj are included REGARDLESS of whether they've
-#             already been chosen
-#         covered (set): set of IDs of targets already covered
-    
-#     Returns
-#     -------
-#     list
-#         Of [<list of CollapsedgRNA objecs>] with equivalent non-redundancy
-#     """
-#     covered = set(covered)
-#     ## get redundancy count
-#     potential_redundancy = {collapsed_grna: len(collapsed_grna.intersect(covered))
-#                             for collapsed_grna in collapsed_grna_objs}
-#     best_redundancy = min(potential_redundancy.values())
-#     return [collapsed_grna
-#             for collapsed_grna, redundancy in potential_redundancy
-#             if redndancy == best_redundancy]
-
-# def all_best_pos_CollapsedgRNA(collapsed_grna_objs, covered, prioritise_3prime = False):
-#     """
-#     Get CollapsedgRNA object(s) equivalent closeness to 5'.
-#     gRNA(s) with equivalent closeness to 5' are first selected from each CollapsedgRNA object.
-#     If there are multiple, one is randomly selected to be representative.
-#     A gRNA (let's call this gRNA1_A) is randomly selected to seed comparison with other gRNAs (gRNA_B).
-#     Based on relative positions in shared targets, gRNA_A is retained or replaced by gRNA_B.
-#     All discarded gRNA are stored.
-#     For gRNA with no shared targets, gRNA_B is set aside first while gRNA_A continues being compared.
-#     All gRNA_Bs are then compared against the stored, discarded gRNAs.
-#     If they share any common targets and their relative positions are worse than any discarded gRNAs,
-#     they too are discarded.
-#     Any remaining gRNA will be used recursively as input to the same function until there is only 1 gRNA
-#     as input to each function call.
-#     Mutually exclusive gRNA will be sorted by gRNA.relative_5prime_pos. This is not as reliable as
-#     gRNA.relative_distance_to_5prime(<other gRNA>) the output value varies by the relative ratios of
-#     sense and/or strand, but needs must.
-    
-#     Returns
-#     -------
-#     list
-#         Of CollapsedgRNA objects w/ gRNA w/ best position
-#     """
-#     def better_pos(rel_dist):
-#         return ( (not prioritise_3prime and (rel_dist < 0))
-#                  or (prioritise_3prime and (rel_dist >= 0)) )
-#     ## returns list of gRNA objs
-#     def helper(grnas):
-#         if len(grnas) <= 1: return grnas
-#         discard, same_pos, unknown = [], [], []
-#         grna_a = grnas[0]
-#         for grna_b in grnas[1:]:
-#             ## if no shared targets for comparison
-#             if not grna_a.common_targets(grna_b): unknown.append(grna_b)
-#             ## else use shared targets to compare pos
-#             else:
-#                 rel_dist = grna_a.relative_distance_to_5prime(grna_b)
-#                 ## if grna_a and grna_b have the same position
-#                 if rel_dist == 0: same_pos.append(grna_b)
-#                 ## if grna_b is better in better position than grna_a
-#                 elif not better_pos(rel_dist):
-#                     discard.append(grna_a)
-#                     discard.extend(same_pos)
-#                     grna_a = grna_b
-#         candidate_grna = same_pos + [grna_a]
-#         ## handle gRNA which didn't have overlap when compared with the reigning grna_a
-#         def discard_grna(grna, grnas_for_comparison):
-#             for grna_b in grnas_for_comparison:
-#                 if grna.common_targets(grna_b):
-#                     if not better_pos(grna.relative_distance_to_5prime(grna_b)):
-#                         return True
-#             return False
-#         for grna_u in copy.copy(unknown):
-#             if discard_grna(grna_u, discard) or discard_grna(grna_u, candidate_grna):
-#                 discard.append(grna_u)
-#                 unknown.remove(grna_u)
-#         ## get best gRNA(s) of the unknowns
-#         best_unknown = helper(unknown)
-#         best_pos = max(grna.relative_5prime_pos for grna in (best_unknown + [candidate_grna[0]]))
-#         return [grna for grna in (best_unknown + candidate_grna) if grna.relative_5prime_pos == best_pos]
-#     ## get best gRNA from each CollapsedgRNA object
-#     collapsed_grna_objs = list(collapsed_grna_objs)
-#     if prioritise_3prime:
-#         grnas = [collapsed_grna.most_3prime() for collapsed_grna in collapsed_grna_objs]
-#     else:
-#         grnas = [collapsed_grna.most_5prime() for collapsed_grna in collapsed_grna_objs]
-#     ## find gRNA(s) with best position
-#     best_grnas = helper(grnas)
-#     best_grnas_i = [grnas.index(grna) for grna in best_grnas]
-#     return [collapsed_grna_objs[i] for i in best_grnas_i]
