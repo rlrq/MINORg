@@ -260,10 +260,8 @@ class SetOfCollapsedgRNA(SetOfSets):
                 instead of 5' end (default=False)
             consume (bool): remove output gRNA from self's CollapsedgRNA objects permanently
         
-        Returns
-        -------
-        list
-            Of :class:`~minorg.minimum_set.gRNA` objects
+        Returns:
+            list: Of :class:`~minorg.minimum_set.gRNA` objects
         """
         grnas = self._generate_grna_set(self, resort = True, prioritise_3prime = prioritise_3prime)
         if consume:
