@@ -119,14 +119,12 @@ class gRNA(Set):
         comparing relative positions between shared targets.
         If tie, return True.
         
-        Returns
-        -------
-        bool
+        Returns:
+            bool
         
-        Raises
-        ------
-        Exception
-            If no common targets between the two gRNA objects (cannot compare across different targets)
+        Raises:
+            Exception: If no common targets between the two gRNA objects
+                (cannot compare across different targets)
         """
         return self.relative_distance_to_5prime(other) <= 0
     def common_targets(self, other):
@@ -153,9 +151,8 @@ class CollapsedgRNA(Set):
         Returns :class:`~minorg.minimum_set.gRNA` object furthest from 5'
         (Usually but not necessarily closest to 3')
 
-        Returns
-        -------
-        :class:`~minorg.minimum_set.gRNA`
+        Returns:
+            :class:`~minorg.minimum_set.gRNA`
         """
         return max(self.gRNAs, key = lambda grna:grna.relative_5prime_pos)
     def remove(self, gRNA_obj) -> None:
@@ -169,15 +166,31 @@ class CollapsedgRNA(Set):
             self.gRNAs.remove(gRNA_obj)
     def add(self, gRNA_obj) -> None:
         """
+        Add a single :class:`~minorg.minimum_set.gRNA` object to self.
+        
+        Arguments:
+            gRNA_obj (:class:`~minorg.minimum_set.gRNA`): gRNA object
         """
         if set(gRNA_obj) != set(self):
             raise Exception("Error: Cannot add gRNA to CollapsedgRNA. Coverage not identical.")
         self.gRNAs.add(gRNA_obj)
     def copy(self):
+        """
+        Returns a shallow copy of self. (i.e. retains the same gRNA objects, but stores them in a new set)
+        
+        Returns:
+            :class:`~minorg.minimum_set.CollapsedgRNA`
+        """
         return self.__class__(self.name, list(self.gRNAs))
-    def num_grna(self):
+    def num_grna(self) -> int:
+        """
+        Returns number of gRNA objects stored
+        """
         return len(self.gRNAs)
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """
+        Returns True if no self.num_grna == 0
+        """
         return self.num_grna() == 0
 
 class SetOfCollapsedgRNA(SetOfSets):
@@ -190,8 +203,26 @@ class SetOfCollapsedgRNA(SetOfSets):
     @property
     def min_coverage(self): return len(min(self, key = lambda cg:len(cg)))
     def copy(self):
+        """
+        Returns shallow copy of self. (i.e. retains same CollapsedgRNA objects but stores them in a new set)
+        
+        Returns:
+            :class:`~minorg.minimum_set.SetOfCollapsedgRNA`
+        """
         return self.__class__(*self.sets)
-    def write(self, fout):
+    def write(self, fout) -> None:
+        """
+        Write collapsed gRNAs to file. Fields are:
+        
+            coverage group: unique ID given to each collapsed gRNA group
+            coverage: number of targets covered by coverage group
+            gRNA id: gRNA ID
+            gRNA sequence: gRNA sequence
+            relative pos: relative position to 5' end, only valid for comparison within a coverage group
+        
+        Arguments:
+            fout (str): path to output file
+        """
         with open(fout, 'w+') as f:
             f.write('\t'.join(["coverage group", "coverage", "gRNA id",
                                "gRNA sequence", "relative pos"]) + '\n')
@@ -201,18 +232,44 @@ class SetOfCollapsedgRNA(SetOfSets):
                         [collapsed_grna.name, len(collapsed_grna), grna.id,
                          grna.seq, round(grna.relative_5prime_pos, 2)])) + '\n')
         return
-    def remove_empty(self):
+    def remove_empty(self) -> None:
+        """
+        Remove :class:`~minorg.minimum_set.CollaspedgRNA` from self if the CollapsedgRNA object is empty
+        (i.e. no gRNA in it)
+        """
         self.remove(*self.empty_collapsed_grna())
-    def all_not_empty(self):
+    def all_not_empty(self) -> bool:
+        """
+        Returns:
+            True: If no :class:`~minorg.minimum_set.CollapsedgRNA` in self is empty
+            False: If at least one :class:`~minorg.minimum_set.gRNA` in self is empty
+        """
         return all((not x.is_empty()) for x in self)
     def empty_collapsed_grna(self):
+        """
+        Returns:
+            :class:`~minorg.minimum_set.gRNA`: empty :class:`~minorg.minimum_set.gRNA` objects in self
+        """
         return [x for x in self if x.is_empty()]
-    def remove_grna(self, *gRNAs):
+    def remove_grna(self, *gRNAs) -> None:
+        """
+        Remove :class:`~minorg.minimum_set.gRNA` from any :class:`~minorg.minimum_set.CollapsedgRNA` in self.
+        
+        Arguments:
+            :class:`~minorg.minimum_set.gRNA`: gRNA object
+        """
         for cg in self:
             for grna in gRNAs:
                 cg.remove(grna)
         return
-    def add_grna(self, *gRNAs):
+    def add_grna(self, *gRNAs) -> None:
+        """
+        Add :class:`~minorg.minimum_set.gRNA` to a :class:`~minorg.minimum_set.CollapsedgRNA` in self with
+        same coverage. If no CollapsedgRNA has same coverage as the gRNA to add, the gRNA will be skipped.
+        
+        Arguments:
+            :class:`~minorg.minimum_set.gRNA`
+        """
         added = set()
         for grna in gRNAs:
             for cg in self:
@@ -223,7 +280,7 @@ class SetOfCollapsedgRNA(SetOfSets):
             print(("The following gRNA object(s) was/were not added due to incompatible coverage:"
                    f" {','.join(grna.name for grna in (set(gRNAs) - added))}"))
         return
-    def _generate_grna_set(self, collapsed_grna, prioritise_3prime = False, resort = True):
+    def _generate_grna_set(self, collapsed_grna, prioritise_3prime = False, resort = True) -> list:
         """
         Generates a single gRNA set from list of CollapsedgRNA objects in 'collapsed_grna'.
         
@@ -277,10 +334,8 @@ class SetOfCollapsedgRNA(SetOfSets):
             manual (bool): enable manual screening of each gRNA set for approval at interactive terminal
                 (default=False)
         
-        Returns
-        -------
-        generator
-            Of [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
+        Returns:
+            generator: Of [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
         """
         collapsed_grna = sorted(self, key = lambda cg:(-len(cg), sorted(cg)))
         ## copy the CollapsedgRNA objects so we can modify them without changing the original
@@ -443,7 +498,7 @@ def make_get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), t
     Returns
     -------
     func
-        That returns list of minimum set of gRNA sequences (str)
+        function that takes no arguments and returns list of minimum set of gRNA sequences (str)
     """
     # ## filter by excluded sequences
     if exclude_seqs:
