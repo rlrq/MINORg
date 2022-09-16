@@ -141,9 +141,8 @@ class CollapsedgRNA(Set):
         """
         Returns :class:`~minorg.minimum_set.gRNA` object closest to 5'
         
-        Returns
-        -------
-        :class:`~minorg.minimum_set.gRNA`
+        Returns:
+            :class:`~minorg.minimum_set.gRNA`
         """
         return min(self.gRNAs, key = lambda grna:grna.relative_5prime_pos)
     def least_5prime(self):
@@ -240,9 +239,12 @@ class SetOfCollapsedgRNA(SetOfSets):
         self.remove(*self.empty_collapsed_grna())
     def all_not_empty(self) -> bool:
         """
-        Returns:
-            True: If no :class:`~minorg.minimum_set.CollapsedgRNA` in self is empty
-            False: If at least one :class:`~minorg.minimum_set.gRNA` in self is empty
+        Returns
+        -------
+        True
+            If no :class:`~minorg.minimum_set.CollapsedgRNA` in self is empty
+        False
+            If at least one :class:`~minorg.minimum_set.gRNA` in self is empty
         """
         return all((not x.is_empty()) for x in self)
     def empty_collapsed_grna(self):
@@ -335,7 +337,8 @@ class SetOfCollapsedgRNA(SetOfSets):
                 (default=False)
         
         Returns:
-            generator: Of [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
+            generator: generator that yields a set of gRNA in format 
+                [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
         """
         collapsed_grna = sorted(self, key = lambda cg:(-len(cg), sorted(cg)))
         ## copy the CollapsedgRNA objects so we can modify them without changing the original
@@ -406,10 +409,8 @@ def limited_minweight_SC(collapsed_grnas, num_sets, targets = None,
             and then added to the output of that function. Effectively penalises large sets of many
             small coverage gRNA. This might make the set less redundant, but will likely reduce set size.
     
-    Returns
-    -------
-    list
-        Of set cover solutions (:class:`CollapsedgRNA`)
+    Returns:
+        list: set cover solutions (:class:`CollapsedgRNA`)
     """
     num_iter = max(20, 2*num_sets)
     if targets is None:
@@ -495,10 +496,8 @@ def make_get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), t
         impossible_set_message (str): message to print when gRNA cannot cover all targets
         suppress_warning (bool): suppress printing of warning when gRNA cannot cover all targets
     
-    Returns
-    -------
-    func
-        function that takes no arguments and returns list of minimum set of gRNA sequences (str)
+    Returns:
+        func: function that takes no arguments and returns list of minimum set of gRNA sequences (str)
     """
     # ## filter by excluded sequences
     if exclude_seqs:
@@ -575,10 +574,8 @@ def make_set_cover_nr(gRNA_hits, num_sets = 1, target_ids = [], low_coverage_pen
             small coverage gRNA. This might make the set less redundant, but will likely reduce set size.
         prioritise_3prime (bool): tie-break with proximity to 3' end instead of 5' (default=False)
     
-    Returns
-    -------
-    func
-        That returns list (gRNA panel) of str (gRNA names)
+    Returns:
+        func: function that returns list (gRNA panel) of str (gRNA names)
     """
     collapsed_grnas = collapse_gRNAHits(gRNA_hits)
     if not target_ids:
@@ -642,11 +639,9 @@ def all_best_nr(potential_coverage, all_coverage, covered):
             already been chosen
         covered (set): set of IDs of targets already covered
     
-    Returns
-    -------
-    dict
-        Of {'<gRNA seq>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
-        with equivalent non-redundancy
+    Returns:
+        dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
+            with equivalent non-redundancy
     """
     ## get redundancy count
     potential_redundancy = {grna_seq: len(set(hit.target_id for hit in hits
@@ -676,11 +671,9 @@ def all_best_pos(potential_coverage, all_coverage, covered):
             already been chosen
         covered (set): set of IDs of targets already covered
     
-    Returns
-    -------
-    dict
-        Of {'<gRNA seq>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
-        with equivalent closeness to 5'
+    Returns:
+        dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
+            with equivalent closeness to 5'
     """
     ## get closeness to 5'
     proximity = {grna_seq: sum((hit.target_len - hit.range[1] if
@@ -737,10 +730,8 @@ def make_set_cover_pos(gRNA_hits, num_sets = 1, target_ids = [], algorithm = "LA
             (3) list of IDs of targets covered by already selected gRNA
         suppress_warning (bool): suppress printing of warning when gRNA cannot cover all targets
     
-    Returns
-    -------
-    list
-        Minimum set of gRNA (:class:`gRNA`)
+    Returns:
+        list: minimum set of gRNA (:class:`gRNA`)
     """
     # exclude_seqs = set(str(s).upper() for s in exclude_seqs)
     # gRNA_coverage = {seq: hits for seq, hits in gRNA_hits.hits.items()
@@ -798,10 +789,8 @@ def set_cover_LAR(gRNA_coverage, target_ids,
             (2) unmodified 'gRNA_coverage',
             (3) list of IDs of targets covered by already selected gRNA
     
-    Returns
-    -------
-    set
-        Minimum set of gRNA sequences (str)
+    Returns:
+        set: minimum set of gRNA sequences (str)
     """
     main_sorting_key = lambda k, uncovered_count: len(set(id_key(x) for x in uncovered_count[k]))
     result_cover, covered = {}, set()
@@ -842,10 +831,8 @@ def set_cover_greedy(gRNA_coverage, target_ids,
             (2) unmodified 'gRNA_coverage',
             (3) list of IDs of targets covered by already selected gRNA
     
-    Returns
-    -------
-    set
-        Minimum set of gRNA sequences (str)
+    Returns:
+        set: minimum set of gRNA sequences (str)
     """
     main_sorting_key = lambda k, covered: len(set(id_key(x) for x in gRNA_coverage[k]) - set(covered))
     coverage_set = lambda k: set(id_key(x) for x in gRNA_coverage[k])
