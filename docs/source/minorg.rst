@@ -24,6 +24,7 @@ API documentation
    minorg.main
    minorg.mafftcommandline_add
    minorg.minimum_set
+   minorg.minweight_sc
    minorg.pam
    minorg.parse_config
    minorg.reference

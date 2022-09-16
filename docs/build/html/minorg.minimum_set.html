@@ -112,7 +112,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.CollapsedgRNA.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_objs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L134-L137"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.CollapsedgRNA.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Effectively a set object that tracks name and weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – set name</p></li>
+<li><p><strong>weight</strong> (<em>float</em>) – set weight</p></li>
+<li><p><strong>elements</strong> (<em>iterable</em>) – elements in set</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.CollapsedgRNA.add">
@@ -341,7 +351,7 @@ on number of sets to generate. (default=1)</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.all_best_nr">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">all_best_nr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covered</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L624-L653"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.all_best_nr" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">all_best_nr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covered</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L624-L654"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.all_best_nr" title="Permalink to this definition"></a></dt>
 <dd><p>Get all gRNA with equivalent non-redundnacy.</p>
 <p>This function prioritises gRNA with fewest target overlap with already covered targets.</p>
 <dl class="field-list simple">
@@ -360,7 +370,8 @@ already been chosen</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dictionary of {‘&lt;gRNA seq (str)&gt;’: [&lt;list of gRNAHit obj&gt;]} subset of ‘potential_coverage’ with equivalent non-redundancy</p>
+<dd class="field-even"><p>dictionary of {‘&lt;gRNA seq (str)&gt;’: [&lt;list of gRNAHit obj&gt;]} subset of
+‘potential_coverage’ with equivalent non-redundancy</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -370,7 +381,7 @@ already been chosen</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.all_best_pos">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">all_best_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covered</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L655-L686"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.all_best_pos" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">all_best_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covered</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L656-L687"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.all_best_pos" title="Permalink to this definition"></a></dt>
 <dd><p>Get all gRNA with equivalent closeness to 5’.</p>
 <p>This function prioritises gRNA closest to 5’ end.</p>
 <dl class="field-list simple">
@@ -389,11 +400,8 @@ already been chosen</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>dictionary of {‘&lt;gRNA seq (str)&gt;’: [&lt;list of gRNAHit obj&gt;]} subset of ‘potential_coverage’</dt><dd><p>with equivalent closeness to 5’</p>
-</dd>
-</dl>
-</p>
+<dd class="field-even"><p>dictionary of {‘&lt;gRNA seq (str)&gt;’: [&lt;list of gRNAHit obj&gt;]} subset of ‘potential_coverage’
+with equivalent closeness to 5’</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -414,7 +422,17 @@ already been chosen</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.gRNA.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNASeq_obj</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L55-L59"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.gRNA.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Effectively a set object that tracks name and weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – set name</p></li>
+<li><p><strong>weight</strong> (<em>float</em>) – set weight</p></li>
+<li><p><strong>elements</strong> (<em>iterable</em>) – elements in set</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.gRNA.closer_to_5prime">
@@ -592,7 +610,7 @@ small coverage gRNA. This might make the set less redundant, but will likely red
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.make_set_cover_pos">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">make_set_cover_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sets=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm='LAR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_warning=False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L714-L772"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.make_set_cover_pos" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">make_set_cover_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sets=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm='LAR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_warning=False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L715-L773"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.make_set_cover_pos" title="Permalink to this definition"></a></dt>
 <dd><p>Create function that generates mutually exclusive minimum gRNA sets with position as a priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -639,7 +657,7 @@ Should already be sorted in printing order.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.set_cover_LAR">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_LAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L775-L816"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_LAR" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_LAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L776-L817"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_LAR" title="Permalink to this definition"></a></dt>
 <dd><p>Set cover algorithm LAR.</p>
 <p>Algorithm described in: Yang, Q., Nofsinger, A., Mcpeek, J., Phinney, J. and Knuesel, R. (2015). A Complete Solution to the Set Covering Problem. In International Conference on Scientific Computing (CSC) pp. 36–41</p>
 <dl class="field-list simple">
@@ -665,7 +683,7 @@ Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.set_cover_greedy">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_greedy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L819-L846"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_greedy" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">set_cover_greedy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gRNA_coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_key=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_breaker=&lt;function</span> <span class="pre">tie_break_first&gt;</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L820-L847"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.set_cover_greedy" title="Permalink to this definition"></a></dt>
 <dd><p>Greedy set cover algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -690,7 +708,7 @@ Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.tie_break_first">
-<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">tie_break_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L688-L711"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.tie_break_first" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">tie_break_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_cov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L689-L712"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.tie_break_first" title="Permalink to this definition"></a></dt>
 <dd><p>Arbitrarily returns the first gRNA sequence and its associated gRNAHit objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

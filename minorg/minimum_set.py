@@ -640,7 +640,8 @@ def all_best_nr(potential_coverage, all_coverage, covered):
         covered (set): set of IDs of targets already covered
     
     Returns:
-        dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage' with equivalent non-redundancy
+        dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of
+        'potential_coverage' with equivalent non-redundancy
     """
     ## get redundancy count
     potential_redundancy = {grna_seq: len(set(hit.target_id for hit in hits
@@ -672,7 +673,7 @@ def all_best_pos(potential_coverage, all_coverage, covered):
     
     Returns:
         dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
-            with equivalent closeness to 5'
+        with equivalent closeness to 5'
     """
     ## get closeness to 5'
     proximity = {grna_seq: sum((hit.target_len - hit.range[1] if
