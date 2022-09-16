@@ -198,9 +198,9 @@ class SetOfCollapsedgRNA(SetOfSets):
     def __repr__(self):
         return (f"SetOfCollapsedgRNA(num_CollapsedgRNA={len(self)}, weight={self.w})")
     @property
-    def max_coverage(self): return len(max(self, key = lambda cg:len(cg)))
+    def max_coverage(self) -> int: return len(max(self, key = lambda cg:len(cg)))
     @property
-    def min_coverage(self): return len(min(self, key = lambda cg:len(cg)))
+    def min_coverage(self) -> int: return len(min(self, key = lambda cg:len(cg)))
     def copy(self):
         """
         Returns shallow copy of self. (i.e. retains same CollapsedgRNA objects but stores them in a new set)

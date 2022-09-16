@@ -1,5 +1,5 @@
-minorg.minweigt\_sc module
-==========================
+minorg.minweight\_sc module
+===========================
 
 .. automodule:: minorg.minweight_sc
    :members:

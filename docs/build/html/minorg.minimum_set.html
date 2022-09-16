@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="minorg.pam module" href="minorg.pam.html" />
+    <link rel="next" title="minorg.minweight_sc module" href="minorg.minweight_sc.html" />
     <link rel="prev" title="minorg.mafftcommandline_add module" href="minorg.mafftcommandline_add.html" /> 
 </head>
 
@@ -71,6 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">minorg.minimum_set module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.minweight_sc.html">minorg.minweight_sc module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
@@ -108,7 +109,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minimum_set.CollapsedgRNA">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">CollapsedgRNA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_objs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L133-L193"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.CollapsedgRNA" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.Set</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.Set</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.CollapsedgRNA.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNA_objs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L134-L137"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.CollapsedgRNA.__init__" title="Permalink to this definition"></a></dt>
@@ -197,7 +198,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minimum_set.SetOfCollapsedgRNA">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">SetOfCollapsedgRNA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L195-L371"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.SetOfCollapsedgRNA" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.SetOfSets</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.SetOfSets" title="minorg.minweight_sc.SetOfSets"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.SetOfSets</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.SetOfCollapsedgRNA.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L196-L197"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.SetOfCollapsedgRNA.__init__" title="Permalink to this definition"></a></dt>
@@ -305,12 +306,12 @@ on number of sets to generate. (default=1)</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minorg.minimum_set.SetOfCollapsedgRNA.max_coverage">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_coverage</span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.SetOfCollapsedgRNA.max_coverage" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_coverage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.SetOfCollapsedgRNA.max_coverage" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="minorg.minimum_set.SetOfCollapsedgRNA.min_coverage">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_coverage</span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.SetOfCollapsedgRNA.min_coverage" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_coverage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.SetOfCollapsedgRNA.min_coverage" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -418,7 +419,7 @@ with equivalent closeness to 5’</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minimum_set.gRNA">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">gRNA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNASeq_obj</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L54-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.gRNA" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.Set</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.Set</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minimum_set.gRNA.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gRNASeq_obj</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L55-L59"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.gRNA.__init__" title="Permalink to this definition"></a></dt>
@@ -518,7 +519,7 @@ to a target with the same name as at lest one entry in ‘target_ids’.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minimum_set.limited_minweight_SC">
 <span class="sig-prename descclassname"><span class="pre">minorg.minimum_set.</span></span><span class="sig-name descname"><span class="pre">limited_minweight_SC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collapsed_grnas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_lengths_to_track</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minimum_set.py#L390-L472"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minimum_set.limited_minweight_SC" title="Permalink to this definition"></a></dt>
-<dd><p>Executes <code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code> for a capped number of iterations
+<dd><p>Executes <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a> for a capped number of iterations
 (max(20, 2*num_sets)) while seeding each run with a different CollapsedgRNA, starting with the
 CollapsedgRNA with the highest coverage to the lowest. CollapsedgRNA will be removed from candidate
 list once all CollapsedgRNA with equivalent coverage have been used as seed. Stops when coverage of
@@ -532,7 +533,7 @@ in &lt;num_lengths_to_track&gt;th smallest set cover solution&gt;.</p>
 <li><p><strong>targets</strong> (<em>list</em><em> or </em><em>set</em><em> or </em><em>tuple</em>) – targets IDs (str) of targets to be coverd</p></li>
 <li><p><strong>num_lengths_to_track</strong> (<em>int</em>) – length of &lt;num_lengths_to_track&gt;th smallest set cover solution
 will be used to determine whether to terminate search (see function description)</p></li>
-<li><p><strong>low_coverage_penalty</strong> (<em>float</em>) – multiplier for value calculated by <code class="xref py py-func docutils literal notranslate"><span class="pre">minweight_sc()</span></code>,
+<li><p><strong>low_coverage_penalty</strong> (<em>float</em>) – multiplier for value calculated by <a class="reference internal" href="minorg.minweight_sc.html#module-minorg.minweight_sc" title="minorg.minweight_sc"><code class="xref py py-func docutils literal notranslate"><span class="pre">minweight_sc()</span></code></a>,
 which will then be multiplied by &lt;number of remaining targets that are not covered by gRNA&gt;
 and then added to the output of that function. Effectively penalises large sets of many
 small coverage gRNA. This might make the set less redundant, but will likely reduce set size.</p></li>
@@ -592,7 +593,7 @@ Takes (1) ‘gRNA_coverage’ filtered for unselected gRNA seq,
 <li><p><strong>target_ids</strong> (<em>list</em>) – list of target names/IDs (str) to be covered.
 If not provided, will be inferred from the set of target IDs covered by gRNA hits in ‘gRNA_hits’</p></li>
 <li><p><strong>manual</strong> (<em>bool</em>) – manually approve each gRNA set for inclusion through interactive terminal (default=False)</p></li>
-<li><p><strong>low_coverage_penalty</strong> (<em>float</em>) – multiplier for value calculated by <code class="xref py py-func docutils literal notranslate"><span class="pre">minweight_sc()</span></code>,
+<li><p><strong>low_coverage_penalty</strong> (<em>float</em>) – multiplier for value calculated by <a class="reference internal" href="minorg.minweight_sc.html#module-minorg.minweight_sc" title="minorg.minweight_sc"><code class="xref py py-func docutils literal notranslate"><span class="pre">minweight_sc()</span></code></a>,
 which will then be multiplied by &lt;number of remaining targets that are not covered by gRNA&gt;
 and then added to the output of that function. Effectively penalises large sets of many
 small coverage gRNA. This might make the set less redundant, but will likely reduce set size.</p></li>
@@ -742,7 +743,7 @@ already been chosen</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="minorg.mafftcommandline_add.html" class="btn btn-neutral float-left" title="minorg.mafftcommandline_add module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="minorg.pam.html" class="btn btn-neutral float-right" title="minorg.pam module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="minorg.minweight_sc.html" class="btn btn-neutral float-right" title="minorg.minweight_sc module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

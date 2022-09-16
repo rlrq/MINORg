@@ -1,3 +1,7 @@
+"""
+Implementation of the weight-based set cover algorithm presented in Ajami, Z. and Cohen, S. (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529
+"""
+
 ## based on Ajami and Cohen (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529
 
 import copy
@@ -194,13 +198,13 @@ class SetOfSets(set):
         return self.__class__(*output)
     def remove(self, *Sets) -> None:
         """
-        Remove :class:`~minorg.minweight_sc.Set`s.
+        Remove one or more :class:`~minorg.minweight_sc.Set`.
         """
         self -= set(Sets)
         return
     def add(self, *Sets) -> None:
         """
-        Add :class:`~minorg.minweight_sc.Set`s.
+        Add one or more :class:`~minorg.minweight_sc.Set`.
         """
         self.update(Sets)
         return

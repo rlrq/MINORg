@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>minorg.minweigt_sc module &mdash; MINORg 0.1 documentation</title>
+  <title>minorg.minweight_sc module &mdash; MINORg 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -71,7 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">minorg.minweigt_sc module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">minorg.minweight_sc module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
@@ -94,7 +94,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="modules.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="minorg.html">API documentation</a> &raquo;</li>
-      <li>minorg.minweigt_sc module</li>
+      <li>minorg.minweight_sc module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/minorg.minweight_sc.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,19 +105,20 @@
            <div itemprop="articleBody">
              
   <section id="module-minorg.minweight_sc">
-<span id="minorg-minweigt-sc-module"></span><h1>minorg.minweigt_sc module<a class="headerlink" href="#module-minorg.minweight_sc" title="Permalink to this headline"></a></h1>
+<span id="minorg-minweight-sc-module"></span><h1>minorg.minweight_sc module<a class="headerlink" href="#module-minorg.minweight_sc" title="Permalink to this headline"></a></h1>
+<p>Implementation of the weight-based set cover algorithm presented in Ajami, Z. and Cohen, S. (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Q">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">Q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_sets_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L78-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">Q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_sets_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L82-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Q.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_sets_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L79-L81"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_sets_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L83-L85"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Q.extract_min">
-<span class="sig-name descname"><span class="pre">extract_min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L85-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q.extract_min" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">extract_min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L89-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q.extract_min" title="Permalink to this definition"></a></dt>
 <dd><p>Returns <a class="reference internal" href="#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a> object with lowest weight.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -128,7 +129,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Q.is_empty">
-<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L84-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q.is_empty" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L88-L88"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Q.is_empty" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -140,11 +141,11 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Set">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">Set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L95-L122"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Set" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">Set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L99-L126"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Set" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Set.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L96-L107"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Set.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L100-L111"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Set.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Effectively a set object that tracks name and weight.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -159,7 +160,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.Set.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L116-L122"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Set.copy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L120-L126"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.Set.copy" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a shallow copy of self.</p>
 </dd></dl>
 
@@ -172,11 +173,11 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">SetOfSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L124-L214"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">SetOfSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L128-L218"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L125-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L129-L135"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.__init__" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>Sets</strong> (<em>iter</em>) – iter of Set objects</p>
@@ -186,13 +187,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L201-L206"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.add" title="Permalink to this definition"></a></dt>
-<dd><p>Add :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>~minorg.minweight_sc.Set`s.</p>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L205-L210"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.add" title="Permalink to this definition"></a></dt>
+<dd><p>Add one or more <a class="reference internal" href="#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L207-L214"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.copy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L211-L218"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.copy" title="Permalink to this definition"></a></dt>
 <dd><p>Create a shallow copy of self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -208,8 +209,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L159-L167"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.get" title="Permalink to this definition"></a></dt>
-<dd><p>Get :class:<a href="#id3"><span class="problematic" id="id4">`</span></a>~minorg.minweight_sc.Set`s by set name.</p>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L163-L171"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.get" title="Permalink to this definition"></a></dt>
+<dd><p>Get :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>~minorg.minweight_sc.Set`s by set name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>list of <a class="reference internal" href="#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a></p>
@@ -219,7 +220,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.intersection">
-<span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L177-L185"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.intersection" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L181-L189"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.intersection" title="Permalink to this definition"></a></dt>
 <dd><p>Implements set.intersection method for this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -236,8 +237,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L195-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.remove" title="Permalink to this definition"></a></dt>
-<dd><p>Remove :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>~minorg.minweight_sc.Set`s.</p>
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">Sets</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L199-L204"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.remove" title="Permalink to this definition"></a></dt>
+<dd><p>Remove one or more <a class="reference internal" href="#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -252,7 +253,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.symmetric_difference">
-<span class="sig-name descname"><span class="pre">symmetric_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L186-L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.symmetric_difference" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">symmetric_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L190-L198"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.symmetric_difference" title="Permalink to this definition"></a></dt>
 <dd><p>Impelements set.symmetric_difference method for this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -263,7 +264,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.SetOfSets.union">
-<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L168-L176"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.union" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L172-L180"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.SetOfSets.union" title="Permalink to this definition"></a></dt>
 <dd><p>Implements set.union method for this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -286,7 +287,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minweight_sc.approx_min_SC">
-<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">approx_min_SC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#minorg.minweight_sc.SetOfSets" title="minorg.minweight_sc.SetOfSets"><span class="pre">minorg.minweight_sc.SetOfSets</span></a></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L237-L266"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.approx_min_SC" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">approx_min_SC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#minorg.minweight_sc.SetOfSets" title="minorg.minweight_sc.SetOfSets"><span class="pre">minorg.minweight_sc.SetOfSets</span></a></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L241-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.approx_min_SC" title="Permalink to this definition"></a></dt>
 <dd><p>Approximate minimum set cover algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -308,7 +309,7 @@ containing sets (gRNA coverage) for set cover</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minweight_sc.argmin">
-<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">argmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_sets</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><span class="pre">minorg.minweight_sc.Set</span></a></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L268-L278"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.argmin" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">argmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">set_of_sets</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#minorg.minweight_sc.Set" title="minorg.minweight_sc.Set"><span class="pre">minorg.minweight_sc.Set</span></a></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L272-L282"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.argmin" title="Permalink to this definition"></a></dt>
 <dd><p>Returns Set with smallest weight.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -322,7 +323,7 @@ containing sets (gRNA coverage) for set cover</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiebreaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L28-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiebreaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L32-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e.C">
@@ -341,22 +342,22 @@ containing sets (gRNA coverage) for set cover</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e.So_min">
-<span class="sig-name descname"><span class="pre">So_min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L60-L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.So_min" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">So_min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L64-L66"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.So_min" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiebreaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L30-L34"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tiebreaker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L34-L38"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L48-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.copy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L52-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.copy" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L63-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.remove" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L67-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e.remove" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -368,7 +369,7 @@ containing sets (gRNA coverage) for set cover</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e1">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">e1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L66-L70"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e1" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">e1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L70-L74"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e1" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#minorg.minweight_sc.e" title="minorg.minweight_sc.e"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.e</span></code></a></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e1.Sf">
@@ -377,14 +378,14 @@ containing sets (gRNA coverage) for set cover</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e1.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L67-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e1.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L71-L72"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e1.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e2">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">e2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L72-L76"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e2" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">e2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L76-L80"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e2" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#minorg.minweight_sc.e" title="minorg.minweight_sc.e"><code class="xref py py-class docutils literal notranslate"><span class="pre">minorg.minweight_sc.e</span></code></a></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e2.Sc">
@@ -393,14 +394,14 @@ containing sets (gRNA coverage) for set cover</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.minweight_sc.e2.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L73-L74"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e2.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L77-L78"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.e2.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minweight_sc.enum_approx_order_SC">
-<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">enum_approx_order_SC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L281-L342"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.enum_approx_order_SC" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">enum_approx_order_SC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L285-L346"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.enum_approx_order_SC" title="Permalink to this definition"></a></dt>
 <dd><p>Minimum weight set cover algorithm.</p>
 <p>Algorithm described in: Ajami, Z. and Cohen, S. (2019). Enumerating Minimal Weight Set Covers. In Proceedings - International Conference on Data Engineering, 518-529</p>
 <dl class="field-list simple">
@@ -424,17 +425,17 @@ is a set cover solution</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minweight_sc.make_examples">
-<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">make_examples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L5-L15"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.make_examples" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">make_examples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L9-L19"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.make_examples" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minweight_sc.make_examples_2">
-<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">make_examples_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L17-L26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.make_examples_2" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">make_examples_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L21-L30"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.make_examples_2" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="minorg.minweight_sc.wc_ratio">
-<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">wc_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L216-L235"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.wc_ratio" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">wc_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L220-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.wc_ratio" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates ratio of weight of s1 to number of elements in s2 that can be covered by s1.
 (wc is shorthand for weight-cover, a name I came up with because the authors did not)</p>
 <p>Low coverage penalty was added to allow disincentivisation of ultra large sets full of small,
