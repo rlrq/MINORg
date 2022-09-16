@@ -370,23 +370,6 @@ class SetOfCollapsedgRNA(SetOfSets):
         # return output
         return
 
-def collapse_gRNAHits(gRNAHits):
-    """
-    Create :class:`SetOfCollapsedgRNA` from :class:`~minorg.grna.gRNAHits` object.
-    """
-    grna_seqs = gRNAHits.gRNAseqs.values()
-    equivalents = {}
-    for grna_seq in grna_seqs:
-        gRNA_obj = gRNA(grna_seq.id, grna_seq)
-        cov = tuple(sorted(gRNA_obj))
-        equivalents[cov] = equivalents.get(cov, []) + [gRNA_obj]
-    ## make CollapsedgRNA objects
-    sorted_equivalents = sorted(equivalents.items(), key = lambda x:(-len(x[0]), x[0]))
-    ## name collapsed gRNA according to sorted order
-    max_digits = len(str(len(sorted_equivalents)))
-    return SetOfCollapsedgRNA(*[CollapsedgRNA("cg_"+str(i+1).zfill(max_digits), dat[1])
-                                for i, dat in enumerate(sorted_equivalents)])
-
 def limited_minweight_SC(collapsed_grnas, num_sets, targets = None,
                          num_lengths_to_track = None,
                          low_coverage_penalty = 0):
@@ -577,7 +560,7 @@ def make_set_cover_nr(gRNA_hits, num_sets = 1, target_ids = [], low_coverage_pen
     Returns:
         func: function that returns list (gRNA panel) of str (gRNA names)
     """
-    collapsed_grnas = collapse_gRNAHits(gRNA_hits)
+    collapsed_grnas = gRNA_hits.collapse()
     if not target_ids:
         target_ids = set().union(*[set(cg) for cg in collapsed_grnas])
     else:

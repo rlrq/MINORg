@@ -15,9 +15,11 @@ from minorg.fasta import (
     dict_to_fasta
 )
 
-# from minorg.minimum_set import (
-#     NamedSets
-# )
+from minorg.minimum_set import (
+    gRNA,
+    CollapsedgRNA,
+    SetOfCollapsedgRNA
+)
 
 ####################
 ##  gRNA CLASSES  ##
@@ -315,23 +317,6 @@ class gRNAHits:
         :type: list of str
         """
         return list(set(itertools.chain(*[grna_hit.check_names for grna_hit in self.flatten_hits()])))
-    # def collapsed_grna(self, use_cache = False) -> NamedSets:
-    #     """
-    #     Returns
-    #     -------
-    #     :class:`~minorg.minimum_set.NamedSets`
-    #     """
-    #     # """
-    #     # Returns
-    #     # -------
-    #     # dict
-    #     #     Of {<tuple of target IDs>: :class:`~minorg.minimum_set.CollapsedNamedSet` storing gRNA sequences with equivalent coverage}
-    #     # """
-    #     if use_cache or not self._NamedSets:
-    #         self._NamedSets = NamedSets(d = {grnaseq.seq: grnaseq.targets
-    #                                          for grnaseq in self.gRNAseqs.values()})
-    #     # return self._NamedSets.collapsed_sets(use_cache = False)
-    #     return self._NamedSets
     def update_records(self) -> None: ## update dictionaries to remove any discrepancies
         """
         Remove gRNASeq objects from :attr:`~minorg.grna.gRNAHits._gRNAseqs` 
@@ -898,6 +883,40 @@ class gRNAHits:
             **kwargs: other arguments passed to :meth:`~minorg.grna.gRNAHits.filter_seqs`
         """
         return self.filter_seqs(all_checks = True, **kwargs)
+    
+    ################
+    ##  COLLAPSE  ##
+    ################
+    def collapse(self, ids = [], seqs = []):
+        """
+        Group gRNA by identical coverage and create :class:`SetOfCollapsedgRNA` from self.
+        If neither ``ids`` nor ``seqs`` are provided, SetOfCollapsedgRNA will be generated from all gRNA.
+        
+        Arguments:
+            fout (str): required, path to output file
+            ids (list): list of IDs (str) of gRNA to write
+            seqs (list): list of sequences (str) of gRNA to write, overrides ``ids``
+        
+        Returns:
+            :class:`SetOfCollapsedgRNA`
+        """
+        ## get gRNASeq objects
+        if seqs: grna_seqs = self.get_gRNAseqs_by_seq(*seqs)
+        elif ids: grna_seqs = self.get_gRNAseqs_by_id(*ids)
+        else: grna_seqs = self.gRNAseqs.values()
+        ## group by equivalent coverage
+        equivalents = {}
+        for grna_seq in grna_seqs:
+            gRNA_obj = gRNA(grna_seq.id, grna_seq)
+            cov = tuple(sorted(gRNA_obj))
+            equivalents[cov] = equivalents.get(cov, []) + [gRNA_obj]
+        ## make CollapsedgRNA objects
+        sorted_equivalents = sorted(equivalents.items(), key = lambda x:(-len(x[0]), x[0]))
+        ## name collapsed gRNA according to sorted order
+        max_digits = len(str(len(sorted_equivalents)))
+        return SetOfCollapsedgRNA(*[CollapsedgRNA("cg_"+str(i+1).zfill(max_digits), dat[1])
+                                    for i, dat in enumerate(sorted_equivalents)])
+    
     #############
     ##  WRITE  ##
     #############
@@ -942,7 +961,8 @@ class gRNAHits:
         if sets: sets = sets
         elif write_all: sets = [set(self.seqs)]
         else:
-            print("Either 'sets' OR 'write_all' is required. Writing empty file.")
+            warnings.warn("Either 'sets' OR 'write_all' is required. Writing empty file.",
+                          MINORgWarning)
             open(fout, "w+").write('')
             return
         fasta_inv = {} if not fasta else {str(seq): k for k, seq in fasta_to_dict(fasta).items()}
@@ -1025,7 +1045,8 @@ class gRNAHits:
         elif seqs: gRNA_seqs = self.get_gRNAseqs_by_seq(*seqs)
         elif ids: gRNA_seqs = self.get_gRNAseqs_by_id(*ids)
         else:
-            print("Either 'ids' OR 'seqs' OR 'write_all' is required. Writing empty file.")
+            warnings.warn("Either 'sets' OR 'write_all' is required. Writing empty file.",
+                          MINORgWarning)
             open(fout, "w+").write('')
             return
         ## rename sequences per fasta file (if fasta file provided)
@@ -1037,6 +1058,35 @@ class gRNAHits:
         else:
             open(fout, "w+").write('')
         return
+    def write_equivalents(self, fout, ids = [], seqs = [], write_all = False, fasta = None) -> None:
+        """
+        Group gRNA by equivalent coverage and write groups to file.
+        
+        Arguments:
+            fout (str): required, path to output file
+            ids (list): list of IDs (str) of gRNA to write
+                (if ``fasta`` is provided, the ids here should match those in the ``fasta`` file)
+            seqs (list): list of sequences (str) of gRNA to write, overrides ``ids``
+            write_all (bool): write all gRNA seqences, overrides ``seqs`` and ``ids``
+            fasta (str): optional, path to FASTA file, used for renaming gRNA
+        """
+        if not ids and not seqs and not write_all:
+            warnings.warn("Either 'sets' OR 'write_all' is required. Writing empty file.",
+                          MINORgWarning)
+            open(fout, "w+").write('')
+            return
+        ## get gRNAHits object
+        if fasta:
+            ## rename
+            grna_hits = self.copy()
+            grna_hits.rename_seqs(fasta)
+        else:
+            grna_hits = self
+        grna_hits.assign_seqid(assign_all = False)
+        ## filter and collapse
+        collapsed_grna = grna_hits.collapse(ids = ids, seqs = seqs)
+        ## write
+        collapsed_grna.write(fout)
 
 class gRNAHit(CheckObj):
     """
