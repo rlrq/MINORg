@@ -337,8 +337,8 @@ class SetOfCollapsedgRNA(SetOfSets):
                 (default=False)
         
         Returns:
-            generator: generator that yields a set of gRNA in format 
-                [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
+            generator: generator that yields a set of gRNA in format
+            [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
         """
         collapsed_grna = sorted(self, key = lambda cg:(-len(cg), sorted(cg)))
         ## copy the CollapsedgRNA objects so we can modify them without changing the original
@@ -640,8 +640,7 @@ def all_best_nr(potential_coverage, all_coverage, covered):
         covered (set): set of IDs of targets already covered
     
     Returns:
-        dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
-              with equivalent non-redundancy
+        dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage' with equivalent non-redundancy
     """
     ## get redundancy count
     potential_redundancy = {grna_seq: len(set(hit.target_id for hit in hits
