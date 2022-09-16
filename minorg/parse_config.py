@@ -125,11 +125,15 @@ def parse_attr_mod_sdict(s: str, attr_sep: str = ',', feature_sep: str = ';', fa
 #         return
 #     return complete
 
-def mv_dir_overwrite(src_dir, dst_dir, rm_dir = True):
+# ignore: files/directories to not be copied
+def mv_dir_overwrite(src_dir, dst_dir, rm_dir = True, ignore = []):
+    ignore = set(map(str, ignore))
     for root, dirs, files in list(os.walk(src_dir))[::-1]:
-        out_dir = os.path.join(dst_dir, os.path.relpath(root, src_dir))
-        os.makedirs(out_dir, exist_ok = True)
+        if str(root) not in ignore:
+            out_dir = os.path.join(dst_dir, os.path.relpath(root, src_dir))
+            os.makedirs(out_dir, exist_ok = True)
         for fname in files:
+            if str(os.path.join(root, fname)) in ignore: next
             fsrc = os.path.join(root, fname)
             fdst = os.path.join(out_dir, fname)
             shutil.move(fsrc, fdst)

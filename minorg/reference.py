@@ -321,6 +321,34 @@ class AnnotatedFeature(Annotation):
         if end_incl: ranges = [(start, end - 1) for start, end in ranges]
         return [(start + index, end + index) for start, end in ranges]
     
+    def _get_seq_ranges(self, feature_type=None, ranges=[], complete=False, genomic=False) -> tuple:
+        """
+        Get range(s) of sequence.
+        
+        Arguments:
+            feature_type (str): GFF feature type (e.g. "CDS")
+            ranges (list of tuple): 0-indexed ranges, relative to sense strand of self
+            complete (bool): merge output range(s) together into single range.
+                Output will stll be a list of tuple. (e.g. [(<smallest start>, <largest end>)])
+            genomic (bool): return genomic range instead of range relative to sense strand of self
+        
+        Returns
+        -------
+        tuple of tuples
+            Where each inner tuple is a range
+        """
+        if feature_type is None: feature_type = self.type
+        feature_ranges = self.feature_range(feature_type, union = True, genomic = False)
+        if ranges:
+            output_ranges = sorted(ranges_intersect(feature_ranges, ranges))
+        else:
+            output_ranges = sorted(feature_ranges)
+        if complete:
+            output_ranges = [(min(r[0] for r in output_ranges), max(r[1] for r in output_ranges))]
+        if genomic:
+            return self.range_to_genomic(output_ranges)
+        return output_ranges
+    
     def _get_seq(self, feature_type=None, ranges=[],
                  adj_dir=True, complete=False, translate=False) -> Seq:
         """
@@ -342,14 +370,16 @@ class AnnotatedFeature(Annotation):
         -------
         Bio.Seq.Seq
         """
-        if feature_type is None: feature_type = self.type
-        feature_ranges = self.feature_range(feature_type, union = True, genomic = True)
-        if ranges:
-            output_ranges = sorted(ranges_intersect(feature_ranges, self.range_to_genomic(ranges)))
-        else:
-            output_ranges = sorted(feature_ranges)
-        if complete:
-            output_ranges = [(min(r[0] for r in output_ranges), max(r[1] for r in output_ranges))]
+        # if feature_type is None: feature_type = self.type
+        # feature_ranges = self.feature_range(feature_type, union = True, genomic = True)
+        # if ranges:
+        #     output_ranges = sorted(ranges_intersect(feature_ranges, self.range_to_genomic(ranges)))
+        # else:
+        #     output_ranges = sorted(feature_ranges)
+        # if complete:
+        #     output_ranges = [(min(r[0] for r in output_ranges), max(r[1] for r in output_ranges))]
+        output_ranges = self._get_seq_ranges(feature_type = feature_type, ranges = ranges,
+                                             complete = complete, genomic = True)
         ## start extracting seq
         seq = Seq('')
         for start, end in output_ranges:
@@ -447,10 +477,14 @@ class AnnotatedFeature(Annotation):
                                         db = db, remote_rps = remote_rps, rpsblast = rpsblast,
                                         rps_hits = rps_hits, thread = thread,
                                         fout_gff = fout_gff, mktmp = mktmp, quiet = quiet)
+            seqs = {isoform: {(r,): seq for r, seq in isoform_dat.items()}
+                    for isoform, isoform_dat in seqs.items()}
         else:
             seq = self._get_seq(adj_dir = adj_dir, complete = complete, translate = translate,
                                 feature_type = feature_type, ranges = ranges)
-            seqs = {self.id: {(0, self.length): seq}}
+            ranges = self._get_seq_ranges(complete = complete, feature_type = feature_type,
+                                          ranges = ranges, genomic = False)
+            seqs = {self.id: {tuple(ranges): seq}}
         ## format seqid
         if seqid_template and (fout or apply_template_to_dict):
             ## create function to make seqid
@@ -470,11 +504,11 @@ class AnnotatedFeature(Annotation):
                                                                     else "sense"), **kwargs)
             ## flatten seqs
             seqs = {mk_seqid(isoform = isoform,
-                             range = f"{r[0]+1}-{r[1]}",
+                             range = ','.join([f"{r[0]+1}-{r[1]}" for r in ranges]),
                              n = n+1): seq
                     for isoform, isoform_dat in seqs.items()
                     for n, seq_dat in enumerate(sorted(isoform_dat.items()))
-                    for r, seq in [seq_dat]}
+                    for ranges, seq in [seq_dat]}
         ## output
         if fout:
             seqs = {seqid if isinstance(seqid, str) else '|'.join(seqid): seq

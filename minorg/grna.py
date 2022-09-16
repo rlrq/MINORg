@@ -15,6 +15,10 @@ from minorg.fasta import (
     dict_to_fasta
 )
 
+# from minorg.minimum_set import (
+#     NamedSets
+# )
+
 ####################
 ##  gRNA CLASSES  ##
 ####################
@@ -243,69 +247,6 @@ class Target(CheckObj):
         """
         return ( len(self) > 0 )
 
-class gRNASeq(CheckObj):
-    """
-    gRNA sequence.
-    
-    Tracks checks applicable to gRNA sequence: off-target (check name: background), GC content (check name: GC)
-    
-    Attributes:
-        _seq (str): sequence, in uppercase
-        _id (str): sequence name
-    """
-    ## seqs are stored in uppercase
-    def __init__(self, seq):
-        """
-        Create a gRNASeq object.
-        
-        Arguments:
-            seq (str or Bio.Seq.Seq): sequence
-        """
-        # super().__init__("background", "exclude", "GC")
-        super().__init__("background", "GC")
-        self._seq = str(seq).upper()
-        self._id = None
-    def __str__(self): return self.seq
-    def __repr__(self): return str(self)
-    @property
-    def id(self) -> str: return self._id
-    @property
-    def seq(self) -> str: return self._seq
-    @id.setter
-    def id(self, id) -> None: self._id = id
-    def set_bg_check(self, status) -> None:
-        """
-        Set status for check name 'background' (False if gRNA has off-target effects).
-        
-        Arguments:
-            status (str or bool or None): status of check.
-                Valid values: 'pass', 'fail', 'NA', True, False, None
-        """
-        self.set_check("background", status)
-    def set_exclude_check(self, status) -> None:
-        """
-        Set status for check name 'exclude' (False if user wishes to exclude gRNA with this sequence).
-        
-        Arguments:
-            status (str or bool or None): status of check (valid values: 'pass', 'fail', 'NA', True, False, None)
-        """
-        self.set_check("exclude", status)
-    def set_gc_check(self, status = None, gc_min = 0, gc_max = 1) -> None:
-        """
-        Set status for check name 'GC' (False if gRNA GC content is not within desired range).
-        
-        Arguments:
-            status (str or bool or None): status of check (valid values: 'pass', 'fail', 'NA', True, False, None)
-                If ``status`` is provided, ``gc_min`` and ``gc_max`` will be ignored.
-            gc_min (float): minimum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)
-            gc_max (float): maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)
-        """
-        if status:
-            self.set_check("GC", status)
-        else:
-            self.set_check("GC", gc_min <= gc_content(self.seq) <= gc_max)
-        return
-
 class gRNAHits:
     """
     Tracks multiple gRNASeq and gRNAHit objects.
@@ -313,6 +254,8 @@ class gRNAHits:
     Attributes:
         _gRNAseqs (dict): stores gRNASeq objects by sequence (format: {'<seq>': <gRNASeq object>})
         _hits (dict): stores gRNAHit objects by sequence (format: {'<seq>': [<gRNAHit objects>]})
+        _cached_coverage (dict): stores cached coverage info for all gRNA sequences
+            (format: {'<seq>': {set of target IDs}})
     """
     ## seqs are stored in uppercase
     def __init__(self, d = None, gRNA_seqs = None, gRNA_hits = None):
@@ -325,10 +268,15 @@ class gRNAHits:
             gRNA_seqs (dict): dictionary of gRNASeq objects in same format as :attr:`~minorg.grna.gRNAHits._gRNAseqs`
             gRNA_hits (dict): dictionary of gRNAHit objects in same format as :attr:`~minorg.grna.gRNAHits._hits`
         """
-        self._gRNAseqs = {} if gRNA_seqs is None else gRNA_seqs ## dictionary of {seq: <gRNASeq obj>}
-        self._hits = {} if gRNA_hits is None else gRNA_hits ## dictionary of {seq: [list of <gRNAHit obj>]}
+        ## dictionary of {seq: <gRNASeq obj>}
+        self._gRNAseqs = {} if gRNA_seqs is None else gRNA_seqs
+        ## dictionary of {seq: [list of <gRNAHit obj>]}
+        self._hits = {} if gRNA_hits is None else gRNA_hits
         if d:
             self.parse_from_dict(d)
+        ## cache coverage. :class:`~minorg.minimum_set.NamedSets` object
+        self._NamedSets = None
+        # self._collapsed_grna = {}
     def __repr__(self): return f"gRNAHits(gRNA = {len(self)})"
     def __len__(self): return len(self.seqs)
     @property
@@ -367,6 +315,23 @@ class gRNAHits:
         :type: list of str
         """
         return list(set(itertools.chain(*[grna_hit.check_names for grna_hit in self.flatten_hits()])))
+    # def collapsed_grna(self, use_cache = False) -> NamedSets:
+    #     """
+    #     Returns
+    #     -------
+    #     :class:`~minorg.minimum_set.NamedSets`
+    #     """
+    #     # """
+    #     # Returns
+    #     # -------
+    #     # dict
+    #     #     Of {<tuple of target IDs>: :class:`~minorg.minimum_set.CollapsedNamedSet` storing gRNA sequences with equivalent coverage}
+    #     # """
+    #     if use_cache or not self._NamedSets:
+    #         self._NamedSets = NamedSets(d = {grnaseq.seq: grnaseq.targets
+    #                                          for grnaseq in self.gRNAseqs.values()})
+    #     # return self._NamedSets.collapsed_sets(use_cache = False)
+    #     return self._NamedSets
     def update_records(self) -> None: ## update dictionaries to remove any discrepancies
         """
         Remove gRNASeq objects from :attr:`~minorg.grna.gRNAHits._gRNAseqs` 
@@ -387,6 +352,9 @@ class gRNAHits:
         from copy import deepcopy
         new_obj = gRNAHits()
         new_obj._gRNAseqs = deepcopy(self.gRNAseqs)
+        ## update <gRNAseq>._grnahits with new object
+        for grnaseq in new_obj.grnaseqs.values():
+            grnaseq._grnahits = new_obj
         new_obj._hits = deepcopy(self.hits)
         return new_obj
     ################
@@ -484,7 +452,7 @@ class gRNAHits:
             d (dict): dictionary of gRNAHit objects in same format as :attr:`~minorg.grna.gRNAHits._hits`.
         """
         from copy import deepcopy
-        self._gRNAseqs = {str(seq).upper(): gRNASeq(seq) for seq in d.keys()}
+        self._gRNAseqs = {str(seq).upper(): gRNASeq(seq, self) for seq in d.keys()}
         self._hits = deepcopy(d)
         check_names = set()
         for hit in self.flatten_hits():
@@ -595,7 +563,7 @@ class gRNAHits:
         Arguments:
             seq (str or Bio.Seq.Seq): gRNA sequence
         """
-        if not str(seq) in self.gRNAseqs: self._gRNAseqs[str(seq)] = gRNASeq(seq)
+        if not str(seq) in self.gRNAseqs: self._gRNAseqs[str(seq)] = gRNASeq(seq, self)
         if not str(seq) in self.hits: self._hits[str(seq)] = []
     def remove_seqs(self, *seqs) -> None:
         """
@@ -1173,3 +1141,79 @@ class gRNAHit(CheckObj):
         target_seq = self.target if self.strand == '+' else self.target.reverse_complement()
         start, end  = self.adj_range(mode = "target")
         return target_seq[start - length: start], target_seq[end: end + length]
+
+
+class gRNASeq(CheckObj):
+    """
+    gRNA sequence.
+    
+    Tracks checks applicable to gRNA sequence: off-target (check name: background), GC content (check name: GC)
+    
+    Attributes:
+        _seq (str): sequence, in uppercase
+        _id (str): sequence name
+        _grnahits (gRNAHits): parent :class:`~minorg.grna.gRNAHits` object
+    """
+    ## seqs are stored in uppercase
+    def __init__(self, seq, grnahits = None):
+        """
+        Create a gRNASeq object.
+        
+        Arguments:
+            seq (str or Bio.Seq.Seq): sequence
+        """
+        # super().__init__("background", "exclude", "GC")
+        super().__init__("background", "GC")
+        self._seq = str(seq).upper()
+        self._id = None
+        self._grnahits = grnahits
+    def __str__(self): return self.seq
+    def __repr__(self): return str(self)
+    @property
+    def id(self) -> str: return self._id
+    @property
+    def seq(self) -> str: return self._seq
+    @id.setter
+    def id(self, id) -> None: self._id = id
+    @property
+    def grnahits(self) -> gRNAHits: return self._grnahits
+    @property
+    def hits(self) -> list: return [] if not self._grnahits else self._grnahits.get_hits(self.seq)
+    @property
+    def coverage(self) -> set: return set(hit.target_id for hit in self.hits)
+    @property
+    def targets(self) -> set: return set(hit.target_id for hit in self.hits)
+    @property
+    def sorted_coverage(self) -> list: return list(sorted(self.coverage))
+    def set_bg_check(self, status) -> None:
+        """
+        Set status for check name 'background' (False if gRNA has off-target effects).
+        
+        Arguments:
+            status (str or bool or None): status of check.
+                Valid values: 'pass', 'fail', 'NA', True, False, None
+        """
+        self.set_check("background", status)
+    def set_exclude_check(self, status) -> None:
+        """
+        Set status for check name 'exclude' (False if user wishes to exclude gRNA with this sequence).
+        
+        Arguments:
+            status (str or bool or None): status of check (valid values: 'pass', 'fail', 'NA', True, False, None)
+        """
+        self.set_check("exclude", status)
+    def set_gc_check(self, status = None, gc_min = 0, gc_max = 1) -> None:
+        """
+        Set status for check name 'GC' (False if gRNA GC content is not within desired range).
+        
+        Arguments:
+            status (str or bool or None): status of check (valid values: 'pass', 'fail', 'NA', True, False, None)
+                If ``status`` is provided, ``gc_min`` and ``gc_max`` will be ignored.
+            gc_min (float): minimum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)
+            gc_max (float): maximum GC content (betweew 0 and 1, where 0 is no GC content and 1 is all GC)
+        """
+        if status:
+            self.set_check("GC", status)
+        else:
+            self.set_check("GC", gc_min <= gc_content(self.seq) <= gc_max)
+        return

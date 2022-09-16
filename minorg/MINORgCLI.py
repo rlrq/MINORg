@@ -1,3 +1,6 @@
+## TODO: fix this empty _to_mask.fasta file. and also make it so that genes will be masked
+## using sequence in complete feature range.
+
 ## imports
 import os
 import copy
@@ -1355,7 +1358,7 @@ class MINORgCLI (MINORg):
         ## args handled by check_target_args: query, indv, target --> self.query/self.target
         self.copy_args("blastn", "mafft", "rpsblast", "db", "remote_rps", "thread",
                        "target", "feature", "check_recip", "relax_recip",
-                       "minid", "mincdslen", "check_id_before_merge", "merge_within")
+                       "minid", "minlen", "mincdslen", "check_id_before_merge", "merge_within")
         return
     
     def parse_grna_args(self):
@@ -1449,7 +1452,7 @@ class MINORgCLI (MINORg):
                        "db", "remote_rps", ## database
                        "thread",
                        "target", "feature", "check_recip", "relax_recip", ## target definition
-                       "minid", "mincdslen", "check_id_before_merge", "merge_within",
+                       "minid", "minlen", "mincdslen", "check_id_before_merge", "merge_within",
                        "target", "length", ## gRNA generation
                        "gc_min", "gc_max", ## filtering options
                        "ot_mismatch", "ot_gap", "ot_pamless",
@@ -1606,9 +1609,13 @@ class MINORgCLI (MINORg):
         """
         ## generate sequences to mask
         self.mask = self.args.mask
+        ## TODO: fix this empty file. and also make it so that genes will be masked
+        ## using sequence in complete feature range.
         if self.background_check and self.mask_gene_sets["mask"]:
+            print("mask_gene_sets['mask']:", self.mask_gene_sets["mask"])
             to_mask = self.reserve_fname("to_mask.fasta", tmp = True)
-            self._get_reference_seq(*self.mask_gene_sets["mask"], adj_dir = True, fout = to_mask)
+            self._get_reference_seq(*self.mask_gene_sets["mask"], *self.features,
+                                    adj_dir = True, fout = to_mask)
             self.mask.append(to_mask)
         ## execute MINORg
         for prefix in self.gene_sets:

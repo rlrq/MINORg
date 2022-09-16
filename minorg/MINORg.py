@@ -39,7 +39,7 @@ from minorg.filter_grna import (
 from minorg.minimum_set import (
     all_best_nr,
     all_best_pos,
-    get_minimum_set
+    make_get_minimum_set
 )
 
 from minorg.index import IndexedFasta
@@ -354,7 +354,8 @@ class PathHandler:
                 self.logfile.move(self.directory, self.prefix)
                 ## copy items (but not the whole directory, just directory minorg created)
                 mv_dir_overwrite(self.mkfname(self.tmpdir, self.prefix),
-                                 self.mkfname(self.directory, self.prefix))
+                                 self.mkfname(self.directory, self.prefix),
+                                 ignore = [self.directory])
                 ## update file locations
                 self.new_dirs = [re.sub('^' + re.escape(self.active_directory), self.directory, dirname)
                                  for dirname in self.new_dirs]
@@ -843,7 +844,7 @@ class MINORg (PathHandler):
         :getter: Returns list of target feature(s)
         :type: list
         """
-        if non_string_iter(self._feature): return self._feature
+        if non_string_iter(self._feature): return list(self._feature)
         else: return [self._feature]
     @property
     def ot_pattern(self):
@@ -1019,7 +1020,7 @@ class MINORg (PathHandler):
             if os.path.exists(minorg_dir):
                 out_dir = self.mkfname(directory, self.prefix, prefix = False)
                 os.makedirs(out_dir, exist_ok = True)
-                mv_dir_overwrite(minorg_dir, out_dir)
+                mv_dir_overwrite(minorg_dir, out_dir, ignore = [out_dir])
             ## update some file paths
             self.tmp_files = set(re.sub('^' + re.escape(self.active_directory), directory, fname)
                                  for fname in self.tmp_files)
@@ -1510,8 +1511,8 @@ class MINORg (PathHandler):
         self.add_reference(ext_fasta, ext_gff, alias = "Extended")
         return
     def _get_reference_seq(self, ids, *features, adj_dir=True, by_gene=False, mktmp=None, ref=None,
-                           seqid_template="Reference|$source|$gene|$isoform|$feature|$n",
-                           translate=False, isoform_lvl=None, gff_domain=None, fout=None,
+                           seqid_template="Reference|$source|$gene|$isoform|$feature|$n|$complete",
+                           translate=False, isoform_lvl=None, gff_domain=None, fout=None, complete=False,
                            # apply_template_to_dict=False,
                            **fouts):
         '''
@@ -1551,7 +1552,7 @@ class MINORg (PathHandler):
                     else:
                         feature_ids = [feature_id]
                     seqs = ref.get_feature_seq(*feature_ids, fout = None, feature_type = feature,
-                                               fout_gff = gff_domain, adj_dir = adj_dir,
+                                               fout_gff = gff_domain, adj_dir = adj_dir, complete = complete,
                                                translate = translate, by_gene = by_gene, mktmp = mktmp,
                                                db = self.db, rpsblast = self.rpsblast, pssm_id = self.pssm_ids,
                                                seqid_template = ft_seqid_template,
@@ -1563,8 +1564,8 @@ class MINORg (PathHandler):
             output = {**output, **feature_seqs}
         return output
     def get_reference_seq(self, *features, adj_dir=True, by_gene=False, ref=None,
-                          seqid_template="Reference|$source|$gene|$isoform|$feature|$n",
-                          translate=False, isoform_lvl=None, fout=None,
+                          seqid_template="Reference|$source|$gene|$isoform|$feature|$n|$complete",
+                          translate=False, isoform_lvl=None, fout=None, complete=False,
                           # apply_template_to_dict=False,
                           **fouts):
         """
@@ -1579,7 +1580,7 @@ class MINORg (PathHandler):
                 If not specified, all reference genomes will be searched for genes.
             seqid_template (str): optional, template for output sequence name.
                 Template will be parsed by strings.Template.
-                The default template is "Reference|$source|$gene|$isoform|$feature|$n".
+                The default template is "Reference|$source|$gene|$isoform|$feature|$n|$complete".
                 
                     - $source: reference genome alias
                     - $gene: gene/isoform ID
@@ -1587,9 +1588,14 @@ class MINORg (PathHandler):
                     - $feature: GFF3 feature type
                     - $n: if multiple domains are present, they will be numbered according to 
                       proximity to 5' of sense strand
+                    - $complete: 'complete' if ``complete=True`` else 'stitched'
             
             adj_dir (bool): output sense strand
             by_gene (bool): merge sequences from all isoforms of a gene
+            isoform_lvl (bool): if GFF features 'mRNA' or 'protein' specified, 
+                sequences will be separated by mRNA/protein isoforms
+            complete (bool): merge output range(s) together into single range.
+                Output will stll be a list of tuple. (e.g. [(<smallest start>, <largest end>)])
             translate (bool): translate sequence. Should be used with adj_dir.
             fout (str): optional, path to output file if features is not specified.
             **fouts (str): optional, path to output files for each feature if features is specified.
@@ -1600,7 +1606,7 @@ class MINORg (PathHandler):
                   Format: {<feature>: {<seqid>: <seq>}}
         """
         return self._get_reference_seq(self.genes, *features, adj_dir = adj_dir,
-                                       by_gene = by_gene, ref = ref,
+                                       by_gene = by_gene, ref = ref, complete = complete,
                                        seqid_template = seqid_template, fout = fout,
                                        translate = translate, isoform_lvl = isoform_lvl,
                                        # apply_template_to_dict=False,
@@ -1673,12 +1679,14 @@ class MINORg (PathHandler):
             **for_merge_hits_and_filter: additional arguments for 
                 :func:`~minorg.extract_homologue.for_merge_hits_and_filter`
         """
+        tmp_pref = os.path.basename(fout)
         ## execute BLASTN of reference genes against query
         ## note: directory must be valid path
-        tsv_blast_ref = self.reserve_fname(self.results_fname("homologue",
-                                                              f"{os.path.basename(fout)}_tmp_blastn_ref.tsv"))
-        tsv_blast_cds = self.reserve_fname(self.results_fname("homologue",
-                                                              f"{os.path.basename(fout)}_tmp_blastn_cds.tsv"))
+        tmp_dir = self.results_fname(f"homologue_{tmp_pref}", prefix = False, tmp = True)
+        tsv_blast_ref = self.reserve_fname(self.mkfname(tmp_dir,
+                                                        f"{tmp_pref}_tmp_blastn_ref.tsv"))
+        tsv_blast_cds = self.reserve_fname(self.mkfname(tmp_dir,
+                                                        f"{tmp_pref}_tmp_blastn_cds.tsv"))
         from Bio.Blast.Applications import NcbiblastnCommandline
         blast(blastf = NcbiblastnCommandline, cmd = self.blastn,
               header = None, ## default fields
@@ -1706,12 +1714,11 @@ class MINORg (PathHandler):
                                  gff = self.annotations, fasta_ref = self.assemblies,
                                  attribute_mod = self.attr_mods,
                                  relax = get_val_default(check_recip, self.relax_recip),
-                                 directory = self.results_fname("homologue", prefix = False),
+                                 directory = tmp_dir,
                                  keep_tmp = self.keep_tmp, lvl = lvl, quiet = quiet)
         ## remove tmp files
         if not self.keep_tmp:
-            os.remove(tsv_blast_ref)
-            os.remove(tsv_blast_cds)
+            self.rm_tmpfiles(tsv_blast_ref, tsv_blast_cds, tmp_dir)
         return
 
     def _homologue(self, fout, ref_dir = "ref", quiet = True, domain_name = None,
@@ -2361,7 +2368,7 @@ class MINORg (PathHandler):
     
     def filter_exclude(self):
         """
-        Set exclude check for candidate gRNAs.
+        Set exclude check for candidate gRNAs. Overwrites existing exclude check using self.exclude.
         
         If self.exclude is set, gRNA which sequences appear in the file at self.exclude will fail this check.
         """
@@ -2369,11 +2376,11 @@ class MINORg (PathHandler):
             to_exclude = set(str(x).upper() for x in fasta_to_dict(self.exclude).values())
             self.grna_hits.set_all_seqs_check_by_function("exclude",
                                                           lambda grna_seq: str(grna_seq) not in to_exclude)
-        ## update .map and FASTA files
-        if self.auto_update_files:
-            self.write_all_grna_map()
-            self.write_pass_grna_map()
-            self.write_pass_grna_fasta()
+            ## update .map and FASTA files
+            if self.auto_update_files:
+                self.write_all_grna_map()
+                self.write_pass_grna_map()
+                self.write_pass_grna_fasta()
         return
     
     def filter(self, background_check = True, feature_check = True, gc_check = True):
@@ -2511,25 +2518,27 @@ class MINORg (PathHandler):
         ## start generating sets
         grna_sets = []
         grna_hits_for_setcover = copy.deepcopy(grna_hits)
-        ## for tie breaker functions:
+        ## for tie breaker functions (only actually used when !self.prioritise_nr):
         ## - cov: dictionary of {'<gRNA seq>': [<gRNAHit items>]} for unselected gRNA
         ## - all_cov: dictionary of {'<gRNA seq>': [<gRNAHit items>]} for all gRNA
         ## - covered: set of {<IDs of targets covered by already chosen gRNA>}
-        if self.prioritise_nr: ## tie break with non-redundancy in coverage
-            tie_breaker = lambda cov, all_cov, covered: tuple(all_best_pos(all_best_nr(cov, all_cov, covered),
-                                                                           all_cov, covered).items())[0]
-        else: ## tie break with pos (favour 5')
+        if not self.prioritise_nr: ## tie break with pos (favour 5')
             tie_breaker = lambda cov, all_cov, covered: tuple(all_best_nr(all_best_pos(cov, all_cov, covered),
                                                                           all_cov, covered).items())[0]
+        else: ## tie break with non-redundancy in coverage
+            # tie_breaker = lambda cov, all_cov, covered: tuple(all_best_pos(all_best_nr(cov, all_cov, covered),
+            #                                                                all_cov, covered).items())[0]
+            tie_breaker = lambda *args: tuple()
+        get_minimum_set = make_get_minimum_set(
+            grna_hits_for_setcover, prioritise_nr = self.prioritise_nr,
+            manual_check = (manual if manual is not None else not self.auto),
+            targets = targets, tie_breaker = tie_breaker, suppress_warning = True)
         while len(grna_sets) < sets:
             ## get a (minimum) set of gRNA sequences
-            seq_set = get_minimum_set(grna_hits_for_setcover, set_num = len(grna_sets) + 1,
-                                      manual_check = (manual if manual is not None else not self.auto),
-                                      targets = targets, tie_breaker = tie_breaker, suppress_warning = True)
+            seq_set = get_minimum_set()
             ## if valid set returned
             if seq_set:
                 grna_sets.append(seq_set) ## add to existing list of sets
-                grna_hits_for_setcover.remove_seqs(seq_set) ## remove seqs in seq_set so they're not repeated
             else:
                 # warnings.warn(f"The gRNA sequences cannot cover all target sequences the desired number of times ({sets}). (Failed at set {len(grna_sets) + 1} of {sets})\n")
                 self.logfile.warning(f"The gRNA sequences cannot cover all target sequences the desired number of times ({sets}). (Failed at set {len(grna_sets) + 1} of {sets})\n")
