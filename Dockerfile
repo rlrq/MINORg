@@ -19,16 +19,19 @@ RUN apt-get update && apt-get install -y \
 ## numpy & click need to be installed before pysam (from pybedtools) and typer (respectively) but setup.py doesn't control order so we install it separately first
 RUN pip install 'numpy==1.19.5' 'click==8.0.4'
 
+## install the rest here. setup.py gets modified whenever I update the version number, and if we leave the installation of these packages there pybedtools especially will take forever
+RUN pip install 'biopython==1.79' 'pybedtools==0.9.0' 'pyfaidx==0.6.4' 'regex' 'typer==0.4.0' 'multiprocess==0.70.12.2'
+
 ## Compile MINORg wheel
 WORKDIR /minorg_docker
-ADD dist/minorg-0.2.2.0a2.tar.gz .
-WORKDIR minorg-0.2.2.0a2
+ADD dist/minorg-0.2.2.1a2.tar.gz .
+WORKDIR minorg-0.2.2.1a2
 
 ## Install MINORg
 RUN python setup.py install
 
 ## Install MINORg
-COPY dist/minorg-0.2.2.0a2-py3-none-any.whl minorg.whl
+COPY dist/minorg-0.2.2.1a2-py3-none-any.whl minorg.whl
 RUN pip install --no-cache minorg
 
 ## Run minorg

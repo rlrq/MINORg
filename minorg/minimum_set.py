@@ -33,7 +33,7 @@ def manual_check_prompt(grnas, set_num = None):
     Prints prompt for manual check.
     
     Arguments:
-        grnas (list): list of :class:`~minorg.grna.gRNASeq` or :class:`~minorg.minimum_set_v2.gRNA` objects.
+        grnas (list): list of :class:`~minorg.grna.gRNASeq` or :class:`~minorg.minimum_set.gRNA` objects.
             Should already be sorted in printing order.
     """
     if set_num is not None:
@@ -194,7 +194,7 @@ class SetOfCollapsedgRNA(SetOfSets):
         Generates a single gRNA set from list of CollapsedgRNA objects in 'collapsed_grna'.
         
         Arguments:
-            collapsed_grna (iter): of :class:`~minorg.minimum_set_v2.CollapsedgRNA` objects
+            collapsed_grna (iter): of :class:`~minorg.minimum_set.CollapsedgRNA` objects
             prioritise_3prime (bool): tie-break with proximity to 3' end instead of 5' (default=False)
             resort (bool): sort 'collapsed_grna' by descending order of coverage size,
                 tie-breaks by sorted target names
@@ -202,7 +202,7 @@ class SetOfCollapsedgRNA(SetOfSets):
         Returns
         -------
         list
-            Of :class:`~minorg.minimum_set_v2.gRNA`, one from each :class:`~minorg.minimum_set_v2.CollapsedgRNA`
+            Of :class:`~minorg.minimum_set.gRNA`, one from each :class:`~minorg.minimum_set.CollapsedgRNA`
         """
         if resort:
             sorted_collapsed_grna = sorted(collapsed_grna, key = lambda cg:(-len(cg), sorted(cg)))
@@ -227,7 +227,7 @@ class SetOfCollapsedgRNA(SetOfSets):
         Returns
         -------
         list
-            Of :class:`~minorg.minimum_set_v2.gRNA` objects
+            Of :class:`~minorg.minimum_set.gRNA` objects
         """
         grnas = self._generate_grna_set(self, resort = True, prioritise_3prime = prioritise_3prime)
         if consume:
@@ -250,7 +250,7 @@ class SetOfCollapsedgRNA(SetOfSets):
         Returns
         -------
         generator
-            Of [<1 :class:`~minorg.minimum_set_v2.gRNA` object from each CollapsedgRNA in self>]
+            Of [<1 :class:`~minorg.minimum_set.gRNA` object from each CollapsedgRNA in self>]
         """
         collapsed_grna = sorted(self, key = lambda cg:(-len(cg), sorted(cg)))
         ## copy the CollapsedgRNA objects so we can modify them without changing the original
