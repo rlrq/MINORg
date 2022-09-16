@@ -213,11 +213,11 @@ class SetOfCollapsedgRNA(SetOfSets):
         """
         Write collapsed gRNAs to file. Fields are:
         
-            coverage group: unique ID given to each collapsed gRNA group
-            coverage: number of targets covered by coverage group
-            gRNA id: gRNA ID
-            gRNA sequence: gRNA sequence
-            relative pos: relative position to 5' end, only valid for comparison within a coverage group
+            - coverage group: unique ID given to each collapsed gRNA group
+            - coverage: number of targets covered by coverage group
+            - gRNA id: gRNA ID
+            - gRNA sequence: gRNA sequence
+            - relative pos: relative position to 5' end, only valid for comparison within a coverage group
         
         Arguments:
             fout (str): path to output file
