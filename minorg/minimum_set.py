@@ -36,10 +36,8 @@ def manual_check_prompt(grnas, set_num = None):
         grnas (list): list of :class:`~minorg.grna.gRNASeq` or :class:`~minorg.minimum_set.gRNA` objects.
             Should already be sorted in printing order.
     
-    Returns
-    -------
-    str
-        Of user input
+    Returns:
+        str: user input
     """
     if set_num is not None:
         print(f"\n\tID\tsequence (Set {set_num})")
@@ -101,14 +99,12 @@ class gRNA(Set):
         Takes another gRNA object and returns self._relative_5prime_pos(<hits in shared targets>) - other._relative_5prime_pos(<hits in shared targets>).
         If self, is closer to the 5' end, the value returned will be negative.
         
-        Returns
-        -------
-        float
+        Returns:
+            float
         
-        Raises
-        ------
-        Exception
-            If no common targets between the two gRNA objects (cannot compare across different targets)
+        Raises:
+            Exception: If no common targets between the two gRNA objects
+                (cannot compare across different targets)
         """
         common_targets = self.common_targets(other)
         if not common_targets:
@@ -261,7 +257,7 @@ class SetOfCollapsedgRNA(SetOfSets):
             consume (bool): remove output gRNA from self's CollapsedgRNA objects permanently
         
         Returns:
-            list: Of :class:`~minorg.minimum_set.gRNA` objects
+            list: list of :class:`~minorg.minimum_set.gRNA` objects
         """
         grnas = self._generate_grna_set(self, resort = True, prioritise_3prime = prioritise_3prime)
         if consume:
