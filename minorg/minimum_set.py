@@ -244,7 +244,7 @@ class SetOfCollapsedgRNA(SetOfSets):
         True
             If no :class:`~minorg.minimum_set.CollapsedgRNA` in self is empty
         False
-            If at least one :class:`~minorg.minimum_set.gRNA` in self is empty
+            If at least one :class:`~minorg.minimum_set.CollapsedgRNA` in self is empty
         """
         return all((not x.is_empty()) for x in self)
     def empty_collapsed_grna(self):
@@ -641,7 +641,7 @@ def all_best_nr(potential_coverage, all_coverage, covered):
     
     Returns:
         dict: dictionary of {'<gRNA seq (str)>': [<list of gRNAHit obj>]} subset of 'potential_coverage'
-            with equivalent non-redundancy
+              with equivalent non-redundancy
     """
     ## get redundancy count
     potential_redundancy = {grna_seq: len(set(hit.target_id for hit in hits
