@@ -438,8 +438,8 @@ is a set cover solution</p>
 <span class="sig-prename descclassname"><span class="pre">minorg.minweight_sc.</span></span><span class="sig-name descname"><span class="pre">wc_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_coverage_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/minweight_sc.py#L220-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.minweight_sc.wc_ratio" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates ratio of weight of s1 to number of elements in s2 that can be covered by s1.
 (wc is shorthand for weight-cover, a name I came up with because the authors did not)</p>
-<p>Low coverage penalty was added to allow disincentivisation of ultra large sets full of small,
-non-overlapping, ultra low coverage sets.</p>
+<p>Low coverage penalty was added to allow disincentivisation of ultra large set covers
+full of small, non-overlapping, ultra low coverage sets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -1,3 +1,4 @@
+
 import os
 import re
 import sys
@@ -15,16 +16,27 @@ from minorg.minweight_sc import (
 
 # # ## test
 # import minorg
-# from minorg import grna, minimum_set_v2, minweight_sc
+# from minorg import grna, minimum_set, minweight_sc
 # x = grna.gRNAHits()
 # x.parse_from_mapping("/mnt/chaelab/rachelle/zzOtherzz/Jinge/nrg_adr/nrg1ab_vdw_minlen1500/nrg1ab_vdw/nrg1ab_vdw/nrg1ab_vdw_gRNA_all.map")
 # x2 = x.filter_hits(all_checks = True)
 # x2 = x2.filter_seqs(all_checks = True)
-# y2 = minorg.minimum_set_v2.collapse_gRNAHits(x2)
-# z2 = minorg.minimum_set_v2.limited_minweight_SC(y2, 10)
+# y2 = minorg.minimum_set.collapse_gRNAHits(x2)
+# z2 = minorg.minimum_set.limited_minweight_SC(y2, 10)
 # z2_2 = [x for x in z2 if len(x) == 2] ## get set cover solutions w/ 2 sets
 # [[a for a in sos] for sos in z2_2] ## show CollapsedgRNA
 # z2_2[1].get('015')[0].most_5prime().relative_distance_to_5prime(z2_2[0].get('008')[0].most_5prime()) ## compare
+
+# import minorg
+# from minorg import grna, minimum_set, minweight_sc
+# x = grna.gRNAHits()
+# x.parse_from_mapping("/mnt/chaelab/rachelle/scripts/minorgpy/test/pangenome/TN3_vdw_nbs_cas12a_23nt/TN3_vdw_gRNA_all.wo1925_2.map", targets = "/mnt/chaelab/rachelle/scripts/minorgpy/test/pangenome/TN3_vdw_nbs_cas12a_23nt/TN3_vdw/TN3_vdw_NB-ARC_targets.fasta")
+# x2 = x.filter_hits(all_checks = True)
+# x2 = x2.filter_seqs(all_checks = True)
+# y2 = x2.collapse()
+# z2 = [a for a in y2 if len(a) == 30] ## if you look at the latest MINORg TN3 nr plot, the position of the first blue gRNA (062) (group 3) contains 2 other gRNA, which would be able to make a set of 3 closer to 5' but somehow the group's other 2 gRNA are further from 5'. the 2 other grna in pos 250 are 008 (coverage 30) and 077 (coverage 7). 008 has equivalent coverage to one of the grna at the 5' most pam (001), so if we're prioritising nr then we should pick that, and then 077 and 062. i think it's got to do with how the algorithm, after seeding with 001, tries to populate the set with the next highest coverage grna w/ no overlap, which is the other high coverage grna from the same pam, but then gets stuck trying to find a third grna for the remaining without overlap but isn't able to, likely resulting in a set w/ some redundancy or a set w/ 4 grna. i think maybe we should just splurge computational power on finding global best nr solutions instead of approximating (or allow users to set a depth for recursive search for best solution--i.e. seed, remove covered targets, apply limited minweight sc and penalise grna that cover the removed targets (which will seed another grna, apply limited minweight sc (which will seed YET ANOTHER gRNA etc etc and repeat until depth reached))).
+
+## CHECK PLOTTING script. I can't seem to figure out where gRNA_23, with a whopping 32 coverage, is in the TN3 bar plot
 
 impossible_set_message_default = "If you used the full programme, consider adjusting --minlen, --minid, and --merge-within, and/or raising --check-reciprocal to restrict candidate target sequences to true biological replicates. Also consider using --domain to restrict the search."
 
@@ -370,6 +382,90 @@ class SetOfCollapsedgRNA(SetOfSets):
         # return output
         return
 
+def limited_greedy_SC(U, S, size = 1, redundancy = 1):
+    """
+    Attempts to find set cover solutions by brute force with a capped maximum set size.
+    
+    Arguments:
+        U (set): set of elements (targets) to cover
+        S (:class:`~minorg.minweight_sc.SetOfSets`): SetOfSets (or child class) object 
+            containing sets (gRNA coverage) for set cover
+        size (int): maximum set cover solution size for greedy search
+        redundancy (float): maximum allowable redundancy as fraction of total number of elements
+            to be covered (`U`)
+    
+    Returns:
+        list: Of :class:`~minorg.minweight_sc.SetOfSets`; set cover solutions
+    """
+    S_length = len(S)
+    S_class = S.__class__
+    S = sorted(S, key = len, reverse = True)
+    max_redundancy = redundancy * len(U)
+    print(S_length, max_redundancy)
+    def recur(C, iS, d):
+        """
+        C (SetOfSets): (partial) set cover solution
+        iS (int): index of set in S from which to start adding (to avoid repeating combinations)
+        d (int): current depth of recursion; if exceeds 'size', terminates.
+            I'm hoping using a var is quicker than using len(C).
+        """
+        C_elements = C.elements
+        ## if max depth reached or set cover not possible, exit
+        if ((d >= size)
+            or (len(U - (C_elements.union(*S[iS:]))) != 0)):
+            return []
+        else:
+            output = []
+            ## set minimum set size to be <uncovered>/<remaining set cover size allowance>
+            min_set_size = int((len(U - C_elements) / (size - d)) + 1)
+            for i in range(iS, S_length):
+                s = S[i]
+                ## if set size is too small, stop searching
+                ## (S is sorted by largest to shortest so lengths of all sets after
+                ##  will be <= len(s))
+                if len(s) < min_set_size:
+                    break
+                ## if s is not a subset of current partial cover solution, add it
+                if not s < C_elements:
+                    C_branch = C.copy()
+                    C_branch.add(s)
+                    ## if exceeds redundancy threshold, skip
+                    if C_branch.redundancy > max_redundancy:
+                        continue
+                    else:
+                        ## if set cover, add to solutions
+                        if C_branch.elements == U:
+                            output.append(C_branch)
+                        else:
+                            output.extend(recur(C_branch, i+1, d+1))
+            return output
+    return recur(S_class(), 0, 0)
+
+# def limited_exact_SC(collapsed_grnas, depth = 5, targets = None):
+#     """
+#     Attempts to find completely non-redundant gRNA sets solutions with a capped maximum set size.
+    
+#     Arguments:
+#         collapsed_grnas (CollapsedgRNA): :class:`CollapsedgRNA`CollapsedgRNA object
+#         targets (list or set or tuple): targets IDs (str) of targets to be coverd
+    
+#     Returns:
+#         list: set cover solutions (:class:`CollapsedgRNA`)
+#     """
+#     if targets is None:
+#         targets = collapsed_grnas.elements
+#     else:
+#         targets = set(targets)
+#     ## sort CollapsedgRNA with identical coverage size
+#     cov_grna = sorted(collapsed_grnas, key = lambda )
+#     cov_grna = {}
+#     for collapsed_grna in collapsed_grnas:
+#         cov = len(collapsed_grna)
+#         cov_grna[cov] = cov_grna.get(cov, []) + [collapsed_grna]
+#     ## start finding solutions i guess
+#     sc_solutions = []
+#     def recur()
+
 def limited_minweight_SC(collapsed_grnas, num_sets, targets = None,
                          num_lengths_to_track = None,
                          low_coverage_penalty = 0):
@@ -405,7 +501,7 @@ def limited_minweight_SC(collapsed_grnas, num_sets, targets = None,
         num_lengths_to_track = max(10, 2*num_sets)
     sc_solutions = []
     min_lens = [num_targets]
-    ## group gRNA with identical coverage
+    ## group CollapsedgRNA with identical coverage size
     cov_grna = {}
     for collapsed_grna in collapsed_grnas:
         cov = len(collapsed_grna)
@@ -540,7 +636,7 @@ def make_get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), t
     return get_minimum_set
 
 def make_set_cover_nr(gRNA_hits, num_sets = 1, target_ids = [], low_coverage_penalty = 0,
-                      num_lengths_to_track = None, prioritise_3prime = False,
+                      num_lengths_to_track = None, prioritise_3prime = False, greedy_depth = 5,
                       suppress_warning = False):
     """
     Create function that generates mutually exclusive gRNA sets with non-redundancy as a priority.
@@ -566,11 +662,26 @@ def make_set_cover_nr(gRNA_hits, num_sets = 1, target_ids = [], low_coverage_pen
     else:
         target_ids = set(target_ids)
     ## function to regenerate set cover solutions from collapsed_grna object
+    collapsed_grnas_original = collapsed_grnas.copy()
     def generate_sc_solutions():
         ## sort in order of smallest set cover size, smallest redundancy, and size of largest set in set cover
-        return sorted(limited_minweight_SC(collapsed_grnas, num_sets, targets = target_ids,
-                                           low_coverage_penalty = low_coverage_penalty,
-                                           num_lengths_to_track = num_lengths_to_track),
+        minweight_sc = limited_minweight_SC(collapsed_grnas, num_sets, targets = target_ids,
+                                            low_coverage_penalty = low_coverage_penalty,
+                                            num_lengths_to_track = num_lengths_to_track)
+        ## greedy solutions
+        max_depth = min(greedy_depth, max(map(len, minweight_sc)))
+        max_redundancy = max(map(lambda C:C.redundancy, minweight_sc))/len(target_ids)
+        print(max_depth, max_redundancy)
+        greedy_sc = limited_greedy_SC(target_ids, collapsed_grnas_original,
+                                      size = max_depth, redundancy = max_redundancy)
+        print("num unfiltered greedy sc:", len(greedy_sc))
+        ## remove duplicates
+        greedy_sc = [C for C in greedy_sc
+                     if all(map(lambda minweight_C:(len(C) != minweight_C
+                                                    and C != minweight_C),
+                                minweight_sc))]
+        print("num filtered greedy sc:", len(greedy_sc))
+        return sorted(minweight_sc + greedy_sc,
                       key = lambda C:(len(C), C.redundancy, -C.max_coverage))
     sc_solutions = []
     sc_solutions.extend(generate_sc_solutions())

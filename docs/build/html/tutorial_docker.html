@@ -93,7 +93,7 @@
 <section id="running-minorg-image-as-container">
 <h2><span class="section-number">4.1. </span>Running MINORg image as container<a class="headerlink" href="#running-minorg-image-as-container" title="Permalink to this headline"></a></h2>
 <p>Run the MINORg image as a container using:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">ti</span> <span class="n">minorg</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">ti</span> <span class="n">rlrq</span><span class="o">/</span><span class="n">minorg</span>
 </pre></div>
 </div>
 <p>This starts a linux bash session in a directory called ‘/minorg_docker’, so you should see a command prompt like this:</p>
@@ -129,7 +129,7 @@
 </section>
 <section id="running-minorg">
 <h2><span class="section-number">4.3. </span>Running MINORg<a class="headerlink" href="#running-minorg" title="Permalink to this headline"></a></h2>
-<p>At this point, you can either follow command line tutorial starting from <a class="reference internal" href="tutorial_cli.html#setting-up-the-tutorial"><span class="std std-ref">Setting up the tutorial</span></a> to run MINORg in the command line of the container, or start an interactive Python session (Python 3.9 is installed in the container) and follow the Python tutorial starting from <a class="reference internal" href="tutorial_py.html#setting-up-the-tutorial"><span class="std std-ref">Setting up the tutorial</span></a> to run MINORg in Python.</p>
+<p>At this point, you can either follow the command line tutorial starting from <a class="reference internal" href="tutorial_cli.html#setting-up-the-tutorial"><span class="std std-ref">Setting up the tutorial</span></a> to run MINORg in the command line of the container, or start an interactive Python session (Python 3.9 is installed in the container) and follow the Python tutorial starting from <a class="reference internal" href="tutorial_py.html#setting-up-the-tutorial"><span class="std std-ref">Setting up the tutorial</span></a> to run MINORg in Python.</p>
 </section>
 <section id="exporting-output-files">
 <h2><span class="section-number">4.4. </span>Exporting output files<a class="headerlink" href="#exporting-output-files" title="Permalink to this headline"></a></h2>
@@ -148,7 +148,7 @@
 </section>
 <section id="reusing-the-container">
 <h2><span class="section-number">4.6. </span>Reusing the container<a class="headerlink" href="#reusing-the-container" title="Permalink to this headline"></a></h2>
-<p>Assuming that you did not remove a the container, you can restart an exited Docker container session using:</p>
+<p>Assuming that you did not remove the container, you can restart an exited Docker container session using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">start</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span>
 </pre></div>
 </div>

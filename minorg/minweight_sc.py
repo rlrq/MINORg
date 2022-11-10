@@ -222,8 +222,8 @@ def wc_ratio(s1, s2, low_coverage_penalty = 0) -> float:
     Calculates ratio of weight of s1 to number of elements in s2 that can be covered by s1.
     (wc is shorthand for weight-cover, a name I came up with because the authors did not)
     
-    Low coverage penalty was added to allow disincentivisation of ultra large sets full of small,
-    non-overlapping, ultra low coverage sets.
+    Low coverage penalty was added to allow disincentivisation of ultra large set covers
+    full of small, non-overlapping, ultra low coverage sets.
     
     Arguments:
         s1 (set): first set

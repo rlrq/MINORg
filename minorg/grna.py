@@ -462,9 +462,10 @@ class gRNAHits:
         header_mapping = raw_mapping[0]
         ## determine version where checks start
         version = (1 if "exclusive" in header_mapping[5] else \
-                   3 if "target length" in header_mapping else \
+                   3 if ("target length" in header_mapping and "group" in header_mapping) else \
+                   5 if ("target length" in header_mapping and "set" in header_mapping) else \
                    2 if "group" in header_mapping else 4)
-        group_set_colname = "set" if version == 4 else "group"
+        group_set_colname = "set" if (version in {4, 5}) else "group"
         check_col = header_mapping.index(group_set_colname) + 1 ## group is last column before any checks
         header_checks = header_mapping[check_col:]
         dat_mapping = raw_mapping[1:]
@@ -482,14 +483,15 @@ class gRNAHits:
                 gRNA_start = int(gRNA_start) - 1 ## convert to 0-indexed, start-inclusive
                 gRNA_end = int(gRNA_end) ## "convert" to 0-indexed, end-exclusive
                 target_len = 0
-            elif version == 3:
+            elif version == 3 or version == 5:
                 ## start, end are 1-indexed, start-inclusive and end-inclusive in v2
                 gRNA_id, gRNA_seq, target_id, target_len, sense, strand, gRNA_start, gRNA_end, group = entry[:check_col]
                 gRNA_start = int(gRNA_start) - 1 ## convert to 0-indexed, start-inclusive
                 gRNA_end = int(gRNA_end) ## "convert" to 0-indexed, end-exclusive
             try:
                 ## note: dummy target sequence is used if targets file not provided; target strand assumed '+'
-                target = seq_targets.get(target_id, Target('N' * int(target_len), id = target_id, strand = '+'))
+                target = seq_targets.get(target_id, Target('N' * int(target_len),
+                                                           id = target_id, strand = '+'))
             except Exception as e:
                 print(version, i, header_mapping, entry)
                 raise e
@@ -922,17 +924,18 @@ class gRNAHits:
     #############
     def write_mapping(self, fout, sets = [], write_all = False,
                       write_checks = False, checks = ["background", "GC", "feature"],
-                      index = 1, start_incl = True, end_incl = True, version = 4,
+                      index = 1, start_incl = True, end_incl = True, version = 5,
                       fasta = None ) -> None: ## if fasta is provided, it will override default naming behaviour
         """
         Write MINORg .map file for gRNA mapping.
         
         A MINORg .map file is tab-delimited and includes a header line.
-        In version 4, columns are:
+        In version 5, columns are:
         
             - gRNA id: gRNA sequence ID
             - gRNA sequence: gRNA sequence
             - target id: sequence ID of gRNA target
+            - target length: length (bp) of gRNA target
             - target sense: sense of gRNA target ('sense' or 'antisense')
             - gRNA strand: strand of gRNA (relative to target) ('+' or '-')
             - start: position of start of gRNA in target
@@ -973,11 +976,15 @@ class gRNAHits:
             mapping_header = ["gRNA id", "gRNA sequence", "target id", "target sense",
                               "gRNA strand", "start", "end", "group"] + checks
         elif version == 3:
-            mapping_header = ["gRNA id", "gRNA sequence", "target id", "target length", "target sense",
-                              "gRNA strand", "start", "end", "group"] + checks
-        else:
+            mapping_header = ["gRNA id", "gRNA sequence", "target id", "target length",
+                              "target sense", "gRNA strand", "start", "end", "group"] + checks
+        elif version == 4:
             mapping_header = ["gRNA id", "gRNA sequence", "target id", "target sense",
                               "gRNA strand", "start", "end", "set"] + checks
+        else:
+            ## version 5
+            mapping_header = ["gRNA id", "gRNA sequence", "target id", "target length",
+                              "target sense", "gRNA strand", "start", "end", "set"] + checks
         mapping_dat = []
         seq_check_names = {"GC", "background"}
         for group, seqs in enumerate(sets):
@@ -987,46 +994,68 @@ class gRNAHits:
                 for gRNA_hit in gRNA_hits:
                     ## put together all required fields
                     if version == 1:
-                        mapping_dat.append([fasta_inv.get(seq, gRNA_seq.id), ## override id if fasta provided
-                                            gRNA_seq.seq, gRNA_hit.target_id,
-                                            gRNA_hit.parent_sense(mode = "str"), gRNA_hit.strand,
-                                            "[{}, {})".format(*gRNA_hit.range), group + 1] +
-                                           [(gRNA_seq.check(check_name, mode = "str")
-                                             if check_name in seq_check_names else
-                                             gRNA_hit.check(check_name, mode = "str"))
-                                            for check_name in checks])
+                        mapping_dat.append(
+                            [fasta_inv.get(seq, gRNA_seq.id), ## override id if fasta provided
+                             gRNA_seq.seq,
+                             gRNA_hit.target_id,
+                             gRNA_hit.parent_sense(mode = "str"),
+                             gRNA_hit.strand,
+                             "[{}, {})".format(*gRNA_hit.range),
+                             group + 1] +
+                            [(gRNA_seq.check(check_name, mode = "str")
+                              if check_name in seq_check_names else
+                              gRNA_hit.check(check_name, mode = "str"))
+                             for check_name in checks])
+                    ## versions 2 and 4 differ only by one column's name (group/set)
                     elif version == 2 or version == 4:
                         ## figure out start and end
                         start, end = map(lambda n: n + index, gRNA_hit.range)
                         if not start_incl: start -= 1
                         if end_incl: end -= 1
-                        mapping_dat.append([fasta_inv.get(seq, gRNA_seq.id), ## override id if fasta provided
-                                            gRNA_seq.seq, gRNA_hit.target_id,
-                                            gRNA_hit.parent_sense(mode = "str"), gRNA_hit.strand,
-                                            start, end, group + 1] +
-                                           [(gRNA_seq.check(check_name, mode = "str")
-                                             if check_name in seq_check_names else
-                                             gRNA_hit.check(check_name, mode = "str"))
-                                            for check_name in checks])
+                        mapping_dat.append(
+                            [fasta_inv.get(seq, gRNA_seq.id), ## override id if fasta provided
+                             gRNA_seq.seq,
+                             gRNA_hit.target_id,
+                             gRNA_hit.parent_sense(mode = "str"),
+                             gRNA_hit.strand,
+                             start,
+                             end,
+                             group + 1] +
+                            [(gRNA_seq.check(check_name, mode = "str")
+                              if check_name in seq_check_names else
+                              gRNA_hit.check(check_name, mode = "str"))
+                             for check_name in checks])
+                    ## versions 3 and 5
                     else:
                         ## figure out start and end
                         start, end = map(lambda n: n + index, gRNA_hit.range)
                         if not start_incl: start -= 1
                         if end_incl: end -= 1
-                        mapping_dat.append([fasta_inv.get(seq, gRNA_seq.id), ## override id if fasta provided
-                                            gRNA_seq.seq, gRNA_hit.target_id, gRNA_hit.target_len,
-                                            gRNA_hit.parent_sense(mode = "str"), gRNA_hit.strand,
-                                            start, end, group + 1] +
-                                           [(gRNA_seq.check(check_name, mode = "str")
-                                             if check_name in seq_check_names else
-                                             gRNA_hit.check(check_name, mode = "str"))
-                                            for check_name in checks])
-        mapping_dat.sort(key = lambda entry: int(entry[mapping_header.index("start")])) ## sort by start
-        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("target id")]) ## sort by target id
-        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("gRNA id")]) ## sort by gRNA id
-        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("set" if version == 4
+                        mapping_dat.append(
+                            [fasta_inv.get(seq, gRNA_seq.id), ## override id if fasta provided
+                             gRNA_seq.seq,
+                             gRNA_hit.target_id,
+                             gRNA_hit.target_len,
+                             gRNA_hit.parent_sense(mode = "str"),
+                             gRNA_hit.strand,
+                             start,
+                             end,
+                             group + 1] +
+                            [(gRNA_seq.check(check_name, mode = "str")
+                              if check_name in seq_check_names else
+                              gRNA_hit.check(check_name, mode = "str"))
+                             for check_name in checks])
+        ## sort by start
+        mapping_dat.sort(key = lambda entry: int(entry[mapping_header.index("start")]))
+        ## sort by target id
+        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("target id")])
+        ## sort by gRNA id
+        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("gRNA id")])
+        ## sort by group/set
+        mapping_dat.sort(key = lambda entry: entry[mapping_header.index("set" if version in {4, 5}
                                                                         else "group")])
-        to_write = '\n'.join(['\t'.join(map(str, entry)) for entry in ([mapping_header] + mapping_dat)]) + '\n'
+        to_write = '\n'.join(['\t'.join(map(str, entry))
+                              for entry in ([mapping_header] + mapping_dat)]) + '\n'
         open(fout, "w+").write(to_write)
         return
     def write_fasta(self, fout, ids = [], seqs = [], write_all = False, fasta = None) -> None:

@@ -3,7 +3,7 @@
 import itertools
 from typing import Union, Generator, Callable
 
-from minorg.index import IndexedFile
+from minorg.index import IndexedFile, IndexedFasta
 
 from minorg.functions import (
     assign_alias, make_local_print,
@@ -53,7 +53,7 @@ class GFF:
     
     .. automethod:: __iter__
     """
-    def __init__(self, fname = None, data = [], string = None, attr_mod = {}, genetic_code = 1, fmt = None,
+    def __init__(self, fname = None, data = None, string = None, attr_mod = None, genetic_code = 1, fmt = None,
                  quiet = False, memsave = False, chunk_lines = 1000, **kwargs):
         """
         Create a GFF object.
@@ -73,14 +73,15 @@ class GFF:
             **kwargs: additional arguments when parsing GFF3 entries 
                 to :class:`minorg.annotation.Annotation` objects
         """
+        self._tmpfiles = []
         self._fname = fname
         if fmt or not fname:
             self._fmt = (fmt if fmt else None)
         else:
             self._infer_fmt()
-        self._data = data
+        self._data = [] if data is None else data
         self._string = string
-        self._attr_mod = attr_mod
+        self._attr_mod = {} if attr_mod is None else attr_mod
         self._attr_fields = {"all": {"ID": "ID", "Name": "Name", "Alias": "Alias", "Parent": "Parent",
                                      "Target": "Target", "Gap": "Gap", "Derives_from": "Derives_from",
                                      "Note": "Note", "Dbxref": "Dbxref", "Ontology_term": "Ontology_term",
@@ -94,11 +95,22 @@ class GFF:
         self._chunk_lines = chunk_lines
         self._indexed_file = None
         self._memsave = memsave
+        self._fasta = None ## temporary file for storing sequence data in GFF file
+        self.fasta = None ## IndexedFasta object
         self.update_attr_fields()
         if not self._memsave:
             self.parse()
         elif self.has_file():
             self.index()
+        ## parse fasta sequences too
+        self.parse_fasta()
+    
+    def __del__(self):
+        """
+        Removes temporary FASTA files
+        """
+        self.remove_tmp()
+        return
     
     def __iter__(self):
         """
@@ -128,6 +140,13 @@ class GFF:
         Infer file format from file name and store format at self._fmt.
         """
         self._fmt = ("BED" if self._fname.split('.')[-1].upper() == "BED" else "GFF3")
+    
+    def remove_tmp(self) -> None:
+        import os
+        for fname in self._tmpfiles:
+            if os.path.exists(fname):
+                os.remove(fname)
+        return
     
     def empty_copy(self, other = None) -> Union['GFF', None]:
         """
@@ -221,22 +240,75 @@ class GFF:
                 return Annotation(entry, self, **self._kwargs)
         return mk_annotation
     
-    def iter_raw(self) -> Generator[str, None, None]:
+    def iter_raw(self, include_fasta = False) -> Generator[str, None, None]:
         """
         Yields raw string read from file.
         """
+        ## generate entries as iterable
         if self._indexed_file is not None:
-            for entry in self._indexed_file:
-                yield entry
+            entries = self._indexed_file
         elif self._fname is not None:
-            with open(self._fname, 'r') as f:
-                for entry in f:
-                    if tuple(entry[:1]) == ('#',) or entry == '\n': continue
-                    yield entry
+            def helper():
+                with open(self._fname, 'r') as f:
+                    for entry in f:
+                        yield entry
+            entries = helper()
         elif self._string is not None:
-            for entry in self._string.split('\n'):
+            entries = self._string.split('\n')
+        else:
+            entries = []
+        ## yield
+        if not include_fasta:            
+            for entry in entries:
+                if entry[:7] == "##FASTA": break
                 if tuple(entry[:1]) == ('#',) or entry == '\n': continue
                 yield entry
+        else:
+            for entry in entries:
+                if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+                yield entry
+        # if not include_fasta:
+        #     if self._indexed_file is not None:
+        #         for entry in self._indexed_file:
+        #             if entry[:7] == "##FASTA": break
+        #             yield entry
+        #     elif self._fname is not None:
+        #         with open(self._fname, 'r') as f:
+        #             for entry in f:
+        #                 if entry[:7] == "##FASTA": break
+        #                 if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+        #                 yield entry
+        #     elif self._string is not None:
+        #         for entry in self._string.split('\n'):
+        #             if entry[:7] == "##FASTA": break
+        #             if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+        #             yield entry
+        # ## also read FASTA section
+        # else:
+        #     if self._indexed_file is not None:
+        #         for entry in self._indexed_file:
+        #             yield entry
+        #     elif self._fname is not None:
+        #         with open(self._fname, 'r') as f:
+        #             for entry in f:
+        #                 if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+        #                 yield entry
+        #     elif self._string is not None:
+        #         for entry in self._string.split('\n'):
+        #             if tuple(entry[:1]) == ('#',) or entry == '\n': continue
+        #             yield entry
+        return
+    
+    def iter_fasta_raw(self) -> Generator[str, None, None]:
+        """
+        Yields FASTA entries (excludes '##FASTA' header)
+        """
+        is_fasta = False
+        for entry in self.iter_raw(include_fasta = True):
+            if is_fasta:
+                yield entry
+            elif entry[:7] == "##FASTA":
+                is_fasta = True
         return
     
     def parse(self) -> None:
@@ -250,16 +322,38 @@ class GFF:
                 self.add_entry(entry)
             self.index_seqids()
     
-    def read_file(self, fname) -> None:
+    def parse_fasta(self) -> None:
+        """
+        Read the FASTA section of the file stored at self._fname,
+        and write sequence entries to temporary file at self._fasta.
+        If self._fasta already exists, it will be deleted and replaced.
+        """
+        self.remove_tmp()
+        import tempfile
+        self._fasta = tempfile.mkstemp()[1]
+        self._tmpfiles.append(self._fasta)
+        has_fasta = False
+        with open(self._fasta, 'w+') as f:
+            for line in self.iter_fasta_raw():
+                has_fasta = True
+                f.write(line)
+        if has_fasta:
+            self.fasta = IndexedFasta(self._fasta)
+    
+    def read_file(self, fname, fasta = False) -> None:
         """
         Read file to memory.
         
         Arguments:
             fname (str): path to GFF3 file
+            fasta (bool): parse FASTA section, if it exists, into IndexedFasta object 
+                stored at self.fasta
         """
         self._fname = fname
         self._infer_fmt()
         self.parse()
+        if fasta:
+            self.parse_fasta()
     
     def index_seqids(self) -> None:
         """
@@ -588,7 +682,50 @@ class GFF:
         else:
             return self
     
-    def write(self, fout = None, entries = None, **kwargs):
+    # def expand_hierarchy(self, fout):
+    #     '''
+    #     If multiple entires of different feature types share the same ID,
+    #     rename their IDs and add 'Parent' to attributes field according to:
+    #     gene -> mRNA -> everything else
+        
+    #     Returns
+    #     -------
+    #     GFF
+    #     '''
+    #     new_gff = GFF()
+    #     processed_i = [0]
+    #     # parent_features = {"mRNA", "gene", "protein"}
+    #     parent_features = {"gene"}
+    #     for i, entry in enumerate(self):
+    #         ## skip if already processed or not an mRNA or gene or protein type feature
+    #         if (i < processed_i[0]
+    #             or i in processed_ids
+    #             or self.get_i(i, output_list = False).type not in parent_features):
+    #             continue
+    #         feature_ids = sorted(entry.get_attr("ID"))
+    #         processing_i = []
+    #         ## get all possible feature ids
+    #         for feature_id in feature_ids:
+    #             entries_i = self.get_features_and_subfeatures(*feature_id, index = True)
+    #             entries = self.get_i(*entries_i)
+    #             new_entries = []
+    #             processing_i.append(entries_i)
+    #             entry_types = {}
+    #             for entry in enumerate(entries):
+    #                 entry_types[entry.type] = entry_types.get(entry.type, []) + [entry]
+    #             # ## there should only be 1. if multiple, something is wrong w/ the gff file
+    #             # new_entries.append(entry_type["gene"][0])
+    #             # if "mRNA" in entry_types:
+    #             #     for i, entry in enumerate(entry_types["mRNA"]):
+    #             #         if feature_id in entry.get_attr("ID"):
+    #             #             new_id = f"{feature_id}.{i}"
+    #             #             new_entry = copy.copy(entry)
+    #             #             new_entry.attributes._data[new_entry.map_field_name("ID")] = new_id
+    #             #             new_entry.attributes._data[new_entry.map_field_name("Parent")] = feature_id
+                            
+            
+    def write(self, fout = None, entries = None, seqs = {},
+              include_fasta = False, fasta_line_length = 60, **kwargs):
         '''
         Writes entries to file
         '''
@@ -597,7 +734,28 @@ class GFF:
         if not entries:
             entries = self
         with open(fout, "w+") as f:
-            f.write('\n'.join([entry.generate_str(**kwargs) for entry in entries]) + '\n')
+            f.write("##gff-version 3\n")
+            for entry in entries:
+                f.write(entry.generate_str(**kwargs) + '\n')
+            ## write FASTA section (optional)
+            ## priority given to 'seqs'
+            if seqs or include_fasta:
+                f.write("##FASTA\n")
+                def write_entry(seqid, seq):
+                    f.write('>' + str(seqid) + '\n')
+                    for i in range(0, len(seq), fasta_line_length):
+                        seq_part = seq[i:i+fasta_line_length]
+                        if str(seq_part) != '*':
+                            f.write(str(seq_part) + '\n')
+                ## seqs should be a dictionary of {<seqid>: <seq (to which 'str' can be applied)>}
+                if seqs:
+                    for seqid, seq in seqs.items():
+                        write_entry(seqid, seq)
+                ## check if self.fasta is not None exists (if not, just ignore)
+                elif self.fasta is not None:
+                    for seq in self.fasta:
+                        write_entry(seq.name, seq)
+        return
     
     def write_i(self, fout, indices, **kwargs):
         '''
@@ -707,7 +865,7 @@ class Attributes:
                                        re.search(f'^.+?(?=[{self._sep_intra}{self._sep_inter}]?$)',
                                                  attribute[1]).group(0).split(self._sep_intra)
         return attributes
-    def get(self, a, fmt = list):
+    def map_field_name(self, a):
         feature = self._entry.feature
         attr_fields = self._gff._attr_fields
         if feature in attr_fields and a in attr_fields[feature]:
@@ -716,7 +874,18 @@ class Attributes:
             mapped_field = attr_fields["all"][a]
         else:
             mapped_field = a
-        iterable = self._data.get(mapped_field, [])
+        return mapped_field
+    def get(self, a, fmt = list):
+        # feature = self._entry.feature
+        # attr_fields = self._gff._attr_fields
+        # if feature in attr_fields and a in attr_fields[feature]:
+        #     mapped_field = attr_fields[feature][a]
+        # elif a in attr_fields["all"]:
+        #     mapped_field = attr_fields["all"][a]
+        # else:
+        #     mapped_field = a
+        # iterable = self._data.get(mapped_field, [])
+        iterable = self._data.get(self.map_field_name(a), [])
         ## format return
         if fmt is str and iterable: return self._sep_intra.join(iterable)
         elif fmt is str and not iterable: return '.'

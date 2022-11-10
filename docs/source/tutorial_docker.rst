@@ -10,7 +10,7 @@ Run the MINORg image as a container using:
 
 .. code-block::
    
-   docker run -ti minorg
+   docker run -ti rlrq/minorg
 
 This starts a linux bash session in a directory called '/minorg_docker', so you should see a command prompt like this::
 
@@ -57,7 +57,7 @@ To copy a directory, use:
 Running MINORg
 ~~~~~~~~~~~~~~
 
-At this point, you can either follow command line tutorial starting from :ref:`Tutorial_cli:Setting up the tutorial` to run MINORg in the command line of the container, or start an interactive Python session (Python 3.9 is installed in the container) and follow the Python tutorial starting from :ref:`Tutorial_py:Setting up the tutorial` to run MINORg in Python.
+At this point, you can either follow the command line tutorial starting from :ref:`Tutorial_cli:Setting up the tutorial` to run MINORg in the command line of the container, or start an interactive Python session (Python 3.9 is installed in the container) and follow the Python tutorial starting from :ref:`Tutorial_py:Setting up the tutorial` to run MINORg in Python.
 
 
 Exporting output files
@@ -85,7 +85,7 @@ When you're done, you may exit the Docker container using ctrl-D or by typing ``
 Reusing the container
 ~~~~~~~~~~~~~~~~~~~~~
 
-Assuming that you did not remove a the container, you can restart an exited Docker container session using:
+Assuming that you did not remove the container, you can restart an exited Docker container session using:
 
 .. code-block::
    

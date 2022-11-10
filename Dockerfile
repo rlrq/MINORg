@@ -24,14 +24,14 @@ RUN pip install 'biopython==1.79' 'pybedtools==0.9.0' 'pyfaidx==0.6.4' 'regex' '
 
 ## Compile MINORg wheel
 WORKDIR /minorg_docker
-ADD dist/minorg-0.2.2.1a3.tar.gz .
-WORKDIR minorg-0.2.2.1a3
+ADD dist/minorg-0.2.3.0a1.tar.gz .
+WORKDIR minorg-0.2.3.0a1
 
 ## Install MINORg
 RUN python setup.py install
 
 ## Install MINORg
-COPY dist/minorg-0.2.2.1a3-py3-none-any.whl minorg.whl
+COPY dist/minorg-0.2.3.0a1-py3-none-any.whl minorg.whl
 RUN pip install --no-cache minorg
 
 ## Run minorg

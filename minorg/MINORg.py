@@ -1338,7 +1338,8 @@ class MINORg (PathHandler):
         if fout is None: fout = get_val_default(self.grna_map, self.results_fname("gRNA_all.map"))
         self.reserve_fname(fout)
         self.grna_map = fout
-        self.grna_hits.write_mapping(fout, version = 4, write_all = True, write_checks = write_checks)
+        self.grna_hits.write_mapping(fout, version = 5, write_all = True,
+                                     write_checks = write_checks)
     
     def write_all_grna_eqv(self, fout = None):
         """
@@ -1377,7 +1378,7 @@ class MINORg (PathHandler):
         if fout is None: fout = get_val_default(self.pass_map, self.results_fname("gRNA_pass.map"))
         self.reserve_fname(fout)
         self.pass_map = fout
-        self.valid_grna().write_mapping(fout, version = 4, write_all = True, write_checks = False)
+        self.valid_grna().write_mapping(fout, version = 5, write_all = True, write_checks = False)
     
     def write_pass_grna_eqv(self, fout = None):
         """
@@ -2591,7 +2592,7 @@ class MINORg (PathHandler):
             print("\nFinal gRNA sequence(s) have been written to"
                   f" {fout_fasta if report_full_path else os.path.basename(fout_fasta)}")
             self.final_fasta = fout_fasta
-            grna_hits.write_mapping(fout_map, sets = grna_sets, fasta = fasta, version = 4)
+            grna_hits.write_mapping(fout_map, sets = grna_sets, fasta = fasta, version = 5)
             print("Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to"
                   f" {fout_map if report_full_path else os.path.basename(fout_map)}")
             self.final_map = fout_map

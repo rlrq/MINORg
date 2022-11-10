@@ -1,7 +1,7 @@
 """Classes that integrate FASTA and GFF3 files for retrieval of feature sequences"""
 
 import sys
-sys.path.append("/mnt/chaelab/rachelle/scripts/minorgpy")
+# sys.path.append("/mnt/chaelab/rachelle/scripts/minorgpy")
 
 import copy
 import tempfile
@@ -79,7 +79,7 @@ class AnnotatedFeature(Annotation):
         annotated_fasta (:class:`AnnotatedFasta`): parent :class:`AnnotatedFasta` object
         annotation (:class:`minorg.annotation.GFF`): 
     """
-    def __init__(self, id, annotated_fasta, gff = None, rps_hits = None):
+    def __init__(self, id, annotated_fasta, gff = None, rps_hits = None, feature_type = None):
         """
         Create an AnnotatedFeature object.
         
@@ -107,7 +107,19 @@ class AnnotatedFeature(Annotation):
         self.annotation._data = data
         ## generate Annotation obj attributes
         try:
-            super().__init__(entry = self.annotation.get_id(self.id, output_list=False).generate_gff(),
+            entries = self.annotation.get_id(self.id, output_list=True)
+            # if feature_type is not None:
+            #     entries = [e for e in entries if e.type == feature_type]
+            #     if not entries:
+            #         raise InvalidFeatureID(f"{id} of feature type {feature_type}")
+            # elif len(entries) > 1:
+            #     ## get highest level feature (in order of gene -> mRNA -> protein)
+            #     feature_sort_order = lambda feature: (0 if feature == "gene"
+            #                                           else 1 if feature == "mRNA"
+            #                                           else 2 if feature == "protein"
+            #                                           else 3)
+            #     entries = sorted(entries, lambda e: feature_sort_order(e.type))
+            super().__init__(entry = entries[0].generate_gff(),
                              gff = self.annotation)
         except Exception as e:
             print(self.id, self.annotation.get_id(self.id, output_list = True))
@@ -723,7 +735,7 @@ class AnnotatedFasta(IndexedFasta):
         _annotated_features (dict): stores recently retrieved AnnotatedFeature objects
     """
     
-    def __init__(self, fasta, gff, name = "reference", attr_mod = {}, genetic_code = 1,
+    def __init__(self, fasta, gff, name = "reference", attr_mod = None, genetic_code = 1,
                  memsave = True):
         """
         Create an AnnotatedFasta object.
@@ -746,7 +758,7 @@ class AnnotatedFasta(IndexedFasta):
         self._gff = gff
         self.gff = gff
         self.genetic_code = genetic_code if genetic_code else 1
-        self.attr_mod = attr_mod if attr_mod else {}
+        self.attr_mod = {} if attr_mod is None else attr_mod
         self.memsave = memsave
         self.assembly = self
         self.annotation = None
@@ -827,7 +839,7 @@ class AnnotatedFasta(IndexedFasta):
         """
         return ranges_to_pos([self.feature_range(feature_id)])
     
-    def annotated_feature(self, feature_id) -> Annotation:
+    def annotated_feature(self, feature_id, feature_type = None) -> Annotation:
         """
         Retrieve annotated feature.
         
@@ -842,7 +854,8 @@ class AnnotatedFasta(IndexedFasta):
         """
         annotated_feature = self._annotated_features.get(feature_id, None)
         if annotated_feature is None:
-            annotated_feature = AnnotatedFeature(id = feature_id, annotated_fasta = self)
+            annotated_feature = AnnotatedFeature(id = feature_id, annotated_fasta = self,
+                                                 feature_type = feature_type)
             self._annotated_features[feature_id] = annotated_feature
         return annotated_feature
     

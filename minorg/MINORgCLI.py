@@ -1419,7 +1419,7 @@ class MINORgCLI (MINORg):
         """
         if ( self.args.out_map is None or self.args.out_fasta is None ):
             typer.echo(f"Output files will be generated in '{self.directory}' with the prefix '{self.prefix}'.")
-        self.copy_args("sets", "auto", "prioritise_nr", "exclude",
+        self.copy_args("sets", "auto", "prioritise_nr", "exclude", "target",
                        # "accept_feature_unknown",
                        "accept_invalid")
         ## args that require a little more parsing/have different names
