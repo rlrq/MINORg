@@ -33,7 +33,7 @@ Alternatively, you can also give container a name by running the image using:
 
 .. code-block::
    
-   docker run -ti --name my_minorg minorg
+   docker run -ti --name my_minorg rlrq/minorg
 
 In the above example, the newly created container's name will be ``my_minorg``.
 
