@@ -826,7 +826,7 @@ class MINORgCLI (MINORg):
         """
         if val is not None:
             parsed_db = os.path.abspath(parse_lookup(val, self.params.rps_db_aliases, return_first = True))
-            if os.path.exists(parsed_db):
+            if os.path.exists(parsed_db + '.psi'):
                 self.db = parsed_db
                 return parsed_db
             else:

@@ -24,6 +24,9 @@ RUN pip install 'biopython==1.79' 'pybedtools==0.9.0' 'pyfaidx==0.6.4' 'regex' '
 
 ## Copy files
 WORKDIR /minorg_docker
+RUN mkdir db
+ADD db/Cdd.v3.18.zip db
+ADD db/cdd.versions db
 ADD examples/examples.zip .
 ADD dist/minorg-0.2.3.3a0.tar.gz .
 WORKDIR minorg-0.2.3.3a0

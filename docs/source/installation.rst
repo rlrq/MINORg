@@ -12,6 +12,12 @@ You may pull the latest version using:
    
    docker pull rlrq/minorg
 
+This image comes bundled with the Cdd v3.18 database for domain search, which when unzipped will take up 4.8G. A Cdd database is required for domain search, but domain search is fully optional. You can pull a Docker image without the Cdd database using:
+
+.. code-block::
+   
+   docker pull rlrq/minorg-lite
+
 Note that some multithreading processes are incompatible with Docker and so are disabled in the Docker image, meaning that MINORg may take longer to run. If do not wish to use Docker or if you wish to install MINORg on your system instead, please refer to the rest of the Installation section for how to install MINORg.
 
 Note for Windows users

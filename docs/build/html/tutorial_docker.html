@@ -43,13 +43,14 @@
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Tutorial (Docker)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#running-minorg-image-as-container">4.1. Running MINORg image as container</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#importing-files">4.2. Importing files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-minorg">4.3. Running MINORg</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#exporting-output-files">4.4. Exporting output files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#exiting-the-container">4.5. Exiting the container</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reusing-the-container">4.6. Reusing the container</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#removing-the-container">4.7. Removing the container</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#docker-docs">4.8. Docker docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-files">4.2. Preparing files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-files">4.3. Importing files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-minorg">4.4. Running MINORg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exporting-output-files">4.5. Exporting output files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exiting-the-container">4.6. Exiting the container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reusing-the-container">4.7. Reusing the container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#removing-the-container">4.8. Removing the container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker-docs">4.9. Docker docs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
@@ -92,8 +93,12 @@
 <p>Please download the files in <a class="reference external" href="https://github.com/rlrq/MINORg/tree/master/examples">https://github.com/rlrq/MINORg/tree/master/examples</a>. In all the examples below, you should replace “/path/to” with the appropriate full path name, which is usually to the directory containing these example files.</p>
 <section id="running-minorg-image-as-container">
 <h2><span class="section-number">4.1. </span>Running MINORg image as container<a class="headerlink" href="#running-minorg-image-as-container" title="Permalink to this headline"></a></h2>
-<p>Run the MINORg image as a container using:</p>
+<p>If you pulled rlrq/minorg, run the MINORg image as a container using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">ti</span> <span class="n">rlrq</span><span class="o">/</span><span class="n">minorg</span>
+</pre></div>
+</div>
+<p>Otherwise, if you pulled rlrq/minorg-lite, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">ti</span> <span class="n">rlrq</span><span class="o">/</span><span class="n">minorg</span><span class="o">-</span><span class="n">lite</span>
 </pre></div>
 </div>
 <p>This starts a linux bash session in a directory called ‘/minorg_docker’, so you should see a command prompt like this:</p>
@@ -116,8 +121,22 @@
 </div>
 <p>In the above example, the newly created container’s name will be <code class="docutils literal notranslate"><span class="pre">my_minorg</span></code>.</p>
 </section>
+<section id="preparing-files">
+<h2><span class="section-number">4.2. </span>Preparing files<a class="headerlink" href="#preparing-files" title="Permalink to this headline"></a></h2>
+<p>Within the container, unzip the example files using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="o">@</span><span class="mi">1</span><span class="n">b2a51c79131</span><span class="p">:</span><span class="o">/</span><span class="n">minorg_docker</span><span class="c1"># unzip examples.zip</span>
+</pre></div>
+</div>
+<p>If you pulled rlrq/minorg, unzip the Cdd database and return to the starting directory using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">root</span><span class="o">@</span><span class="mi">1</span><span class="n">b2a51c79131</span><span class="p">:</span><span class="o">/</span><span class="n">minorg_docker</span><span class="c1"># cd db</span>
+<span class="n">root</span><span class="o">@</span><span class="mi">1</span><span class="n">b2a51c79131</span><span class="p">:</span><span class="o">/</span><span class="n">minorg_docker</span><span class="o">/</span><span class="n">db</span><span class="c1"># unzip Cdd.v3.18.zip</span>
+<span class="n">root</span><span class="o">@</span><span class="mi">1</span><span class="n">b2a51c79131</span><span class="p">:</span><span class="o">/</span><span class="n">minorg_docker</span><span class="o">/</span><span class="n">db</span><span class="c1"># cd ..</span>
+</pre></div>
+</div>
+<p>Note that the path to the Cdd database is: <code class="docutils literal notranslate"><span class="pre">/minorg_docker/db/Cdd.v3.18/Cdd</span></code></p>
+</section>
 <section id="importing-files">
-<h2><span class="section-number">4.2. </span>Importing files<a class="headerlink" href="#importing-files" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.3. </span>Importing files<a class="headerlink" href="#importing-files" title="Permalink to this headline"></a></h2>
 <p>As a Docker container is isolated from the host system, files need to be imported into the container, which can be achieved using <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">cp</span></code>. To copy a single file, start a new terminal session (not in a Docker container) and execute:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">cp</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">txt</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">:</span><span class="o">/</span><span class="n">minorg_docker</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">destination</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
@@ -128,11 +147,11 @@
 </div>
 </section>
 <section id="running-minorg">
-<h2><span class="section-number">4.3. </span>Running MINORg<a class="headerlink" href="#running-minorg" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.4. </span>Running MINORg<a class="headerlink" href="#running-minorg" title="Permalink to this headline"></a></h2>
 <p>At this point, you can either follow the command line tutorial starting from <a class="reference internal" href="tutorial_cli.html#setting-up-the-tutorial"><span class="std std-ref">Setting up the tutorial</span></a> to run MINORg in the command line of the container, or start an interactive Python session (Python 3.9 is installed in the container) and follow the Python tutorial starting from <a class="reference internal" href="tutorial_py.html#setting-up-the-tutorial"><span class="std std-ref">Setting up the tutorial</span></a> to run MINORg in Python.</p>
 </section>
 <section id="exporting-output-files">
-<h2><span class="section-number">4.4. </span>Exporting output files<a class="headerlink" href="#exporting-output-files" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.5. </span>Exporting output files<a class="headerlink" href="#exporting-output-files" title="Permalink to this headline"></a></h2>
 <p>As previously mentioned, the Docker container is isolated from the host system. You may export the files output by MINORg in the container to your system using <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">cp</span></code> again. To export a single file, use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">cp</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">:</span><span class="o">/</span><span class="n">minorg_docker</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">txt</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">destination</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
@@ -143,11 +162,11 @@
 </div>
 </section>
 <section id="exiting-the-container">
-<h2><span class="section-number">4.5. </span>Exiting the container<a class="headerlink" href="#exiting-the-container" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.6. </span>Exiting the container<a class="headerlink" href="#exiting-the-container" title="Permalink to this headline"></a></h2>
 <p>When you’re done, you may exit the Docker container using ctrl-D or by typing <code class="docutils literal notranslate"><span class="pre">exit</span></code>.</p>
 </section>
 <section id="reusing-the-container">
-<h2><span class="section-number">4.6. </span>Reusing the container<a class="headerlink" href="#reusing-the-container" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.7. </span>Reusing the container<a class="headerlink" href="#reusing-the-container" title="Permalink to this headline"></a></h2>
 <p>Assuming that you did not remove the container, you can restart an exited Docker container session using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">start</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span>
 </pre></div>
@@ -155,14 +174,14 @@
 <p>Your files will still be there.</p>
 </section>
 <section id="removing-the-container">
-<h2><span class="section-number">4.7. </span>Removing the container<a class="headerlink" href="#removing-the-container" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.8. </span>Removing the container<a class="headerlink" href="#removing-the-container" title="Permalink to this headline"></a></h2>
 <p>If you do not wish to reuse the container, you can delete it using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">rm</span> <span class="o">&lt;</span><span class="n">container</span> <span class="n">ID</span> <span class="ow">or</span> <span class="n">name</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </section>
 <section id="docker-docs">
-<h2><span class="section-number">4.8. </span>Docker docs<a class="headerlink" href="#docker-docs" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">4.9. </span>Docker docs<a class="headerlink" href="#docker-docs" title="Permalink to this headline"></a></h2>
 <p>For more on Docker, you may check out Docker’s website: <a class="reference external" href="https://docs.docker.com/">https://docs.docker.com/</a></p>
 </section>
 </section>

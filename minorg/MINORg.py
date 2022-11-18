@@ -956,7 +956,7 @@ class MINORg (PathHandler):
     def genes(self, val):
         if val != self.genes:
             self._genes_updated_since_alignment = True
-        self.genes = val
+        self._genes = val
     @domain_name.setter
     def domain_name(self, val):
         self._domain_name = val

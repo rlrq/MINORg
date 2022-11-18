@@ -6,11 +6,17 @@ Please download the files in https://github.com/rlrq/MINORg/tree/master/examples
 Running MINORg image as container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Run the MINORg image as a container using:
+If you pulled rlrq/minorg, run the MINORg image as a container using:
 
 .. code-block::
    
    docker run -ti rlrq/minorg
+
+Otherwise, if you pulled rlrq/minorg-lite, use:
+
+.. code-block::
+   
+   docker run -ti rlrq/minorg-lite
 
 This starts a linux bash session in a directory called '/minorg_docker', so you should see a command prompt like this::
 
@@ -36,6 +42,26 @@ Alternatively, you can also give container a name by running the image using:
    docker run -ti --name my_minorg rlrq/minorg
 
 In the above example, the newly created container's name will be ``my_minorg``.
+
+
+Preparing files
+~~~~~~~~~~~~~~~
+
+Within the container, unzip the example files using:
+
+.. code-block::
+   
+   root@1b2a51c79131:/minorg_docker# unzip examples.zip
+
+If you pulled rlrq/minorg, unzip the Cdd database and return to the starting directory using:
+
+.. code-block::
+   
+   root@1b2a51c79131:/minorg_docker# cd db
+   root@1b2a51c79131:/minorg_docker/db# unzip Cdd.v3.18.zip
+   root@1b2a51c79131:/minorg_docker/db# cd ..
+
+Note that the path to the Cdd database is: ``/minorg_docker/db/Cdd.v3.18/Cdd``
 
 
 Importing files
