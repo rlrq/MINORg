@@ -727,6 +727,7 @@ When using ``--domain``, users should ensure that the correct genetic code is sp
    $ minorg --directory ./example_129_geneticcode \
             --indv ref --gene gene-Q0275 \
             --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
+            --rpsblast /path/to/rpsblast/executable --db /path/to/rpsblast/db \
             --domain 366140 --genetic-code 3
 
 In the above example, the gene 'gene-Q0275' is a yeast mitochondrial gene, and ``--domain 366140`` specifies the PSSM-Id for the COX3 domain in the Cdd v3.18 RPS-BLAST database. The genetic code number for yeast mitochondrial code is '3'.

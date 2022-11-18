@@ -873,6 +873,8 @@ When using :attr:`~minorg.MINORg.MINORg.pssm_ids`, users should ensure that the 
 >>> my_minorg.add_reference("/path/to/subset_ref_yeast_mt.fasta", "/path/to/subset_ref_yeast_mt.gff", alias = "yeast_mt", genetic_code = 3) ## specify genetic code here
 >>> my_minorg.genes = ["gene-Q0275"]
 >>> my_minorg.query_reference = True
+>>> my_minorg.rpsblast = "/path/to/rpsblast/executable"
+>>> my_minorg.db = "/path/to/rpsblast/db"
 >>> my_minorg.pssm_ids = ["366140"]
 >>> my_minorg.full()
 >>> my_minorg.resolve()
