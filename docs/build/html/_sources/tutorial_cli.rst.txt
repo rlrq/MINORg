@@ -70,7 +70,6 @@ Single gene
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
    Extracting reference sequences
    Finding homologues
-   Max acceptable insertion length: 15
    Final gRNA sequence(s) have been written to minorg_gRNA_final.fasta
    Final gRNA sequence ID(s), gRNA sequence(s), and target(s) have been written to minorg_gRNA_final.map
 
@@ -124,7 +123,7 @@ Like ``--gene``, multiple combinations of genes can be specified to ``--cluster`
 
 .. code-block:: bash
                 
-   $ minorg --directory ./example_103_cluster \
+   $ minorg --directory ./example_103_multicluster \
             --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 
@@ -223,14 +222,14 @@ In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815
 Remote database
 ^^^^^^^^^^^^^^^
 
-While it is in theory possible to use the remote CDD database & servers instead of local ones, the ``--remote`` option for the 'rpsblast'/'rpsblast+' command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use ``--remote-rps`` instead of ``--db /path/to/rpsblast/db``.
+While it is in theory possible to use the remote CDD database & servers instead of local ones, the ``--remote`` option for the 'rpsblast'/'rpsblast+' command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use ``--remote-rps --db <database name>`` instead of ``--db /path/to/rpsblast/db``.
 
 .. code-block:: bash
 
    $ minorg --directory ./example_107_domain \
             --indv ref --gene AT5G45050 \
             --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
-            --rpsblast /path/to/rpsblast/executable --remote-rps \
+            --rpsblast /path/to/rpsblast/executable --remote-rps --rps-db Cdd \
             --domain 214815
 ..
    Feature as targets
@@ -315,7 +314,7 @@ In the above example, MINORg will screen gRNA for off-targets in:
 
 ``--ot-gap`` and ``--ot-mismatch`` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
 
-In the case above, ``--screen-reference`` is actually redundant as the genome from which targets are obtained (which, because of ``--indv ref``, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from **non-reference genomes**, the reference genome is not automatically included for off-target assessment and thus ``--screen-reference`` is NOT redundant. Additionally, do note that the genes passed to ``--gene`` are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.
+In the case above, ``--screen-reference`` is actually redundant as the genome(s) from which targets are obtained (which, because of ``--indv ref``, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from **non-reference genomes**, the reference genome is not automatically included for off-target assessment and thus ``--screen-reference`` is NOT redundant. Additionally, do note that the genes passed to ``--gene`` are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.
 
 .. code-block:: bash
 
@@ -335,7 +334,7 @@ Finer control of off-target definition can be achieved using :attr:`~minorg.MINO
 
 When ``--ot-pattern`` is specified, ``--ot-mismatch`` and ``--ot-gap`` will be ignored.
 
-The following example is identical to the first in :ref:`Tutorial_py:Using total mismatch/gap/unaligned`, except ``--ot-mismatch`` and ``--ot-gap`` are replaced with ``--ot-pattern``.
+The following example is identical to the first in :ref:`Tutorial_py:Using total mismatch/gap/unaligned`, except ``--ot-mismatch`` and ``--ot-gap`` are replaced with ``--ot-pattern``, and the off-target thresholds are different.
 
 .. code-block:: bash
 
@@ -345,11 +344,11 @@ The following example is identical to the first in :ref:`Tutorial_py:Using total
             --screen-reference \
             --background ./subset_ref_Araly2.fasta --background ./subset_ref_Araha1.fasta \
             --ot-indv 9654,9655 --genome-set ./subset_genome_mapping.txt \
-            --ot-pattern '2mg-5-,0mg4'
+            --ot-pattern '0mg-10,1mg-11-'
 
-In the above example, ``--ot-pattern '0mg-4,2mg-5-'`` means that MINORg will discard any gRNA with at least one off-target hit where:
+In the above example, ``--ot-pattern '0mg-10,1mg-11-'`` means that MINORg will discard any gRNA with at least one off-target hit where:
 
-* There are no mismatches or gaps between positions -4 and -1, and there are no more than 2 mismatches or gaps from position -5 to the 5' end.
+* There are no mismatches or gaps between positions -10 and -1, and there are no more than 1 mismatch or gap from position -11 to the 5' end.
 
 PAM-less off-target check
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -419,7 +418,7 @@ By default, MINORg selects gRNA for sets using these criteria in decreasing orde
 #. Proximity to 5' end
 #. Non-redundancy
 
-Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may flip the priority of proximity and non-redundancy using ``--prioritise-nr`` if you prefer to minimise multiple edits in a single target when using a single set of gRNA. (The priority of coverage is NOT modifiable.)
+Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may instead prioritise non-redundancy over proximity by raising the ``--prioritise-nr`` flag. MINORg will use a combination of approximate and greedy set cover algorithms to output small non-redundant sets. However, do note that the sets will in general be larger than when ``--prioritise-nr`` is not raised.
 
 .. code-block:: bash
 
@@ -478,7 +477,7 @@ You may opt to manually inspect each gRNA set before MINORg write them to file u
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_120_manual --target ./sample_CDS.fasta
+   $ minorg --directory ./example_120_manual --target ./sample_CDS.fasta \
             --manual
    	ID	sequence (Set 1)
    	gRNA_001	GGAATACAAGAGATTATCGA
@@ -545,7 +544,7 @@ To use this subcommand, simply replace the command ``minorg`` with ``minorg grna
    $ minorg grna --directory ./example_122_subcmdgrna \
                  --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
                  --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
-                 --length 19 --pam Cas12a \
+                 --length 23 --pam Cas12a \
                  --feature three_prime_UTR \
                  --gc-min 0.2 --gc-max 0.8 \
                  --out-map ./example_120.map
@@ -596,9 +595,9 @@ In the code above, we skipped off-target check by raising the ``--skip-bg-check`
 .. code-block:: bash
 
    $ minorg filter --directory ./example_124_subcmdfilter_bg_pt2 \
-                   --map ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map \
+                   --map ./example_124_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map \
                    --background-check \
-                   --target ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta \
+                   --target ./example_124_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --screen-ref \
                    --mask-cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
@@ -627,9 +626,9 @@ By default, MINORg sets the desired feature to 'CDS'. You can re-assess and over
 .. code-block:: bash
 
    $ minorg filter --directory ./example_125_subcmdfilter_feature_pt2 \
-                   --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+                   --map ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
                    --feature-check \
-                   --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
+                   --target ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
                    --gene AT5G45050 \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --feature three_prime_UTR
@@ -644,11 +643,11 @@ To use some combination of checks, simply raise the relevant flags (``--gc-check
 .. code-block:: bash
 
    $ minorg filter --directory ./example_126_subcmdfilter_gcfeature \
-                   --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+                   --map ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
                    --gc-check \
                    --gc-min 0.2 --gc-max 0.8 \
                    --feature-check \
-                   --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
+                   --target ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
                    --gene AT5G45050 \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --feature three_prime_UTR
@@ -658,10 +657,10 @@ To execute all checks, use ``--check-all``. In the example below, we filter the 
 .. code-block:: bash
 
    $ minorg filter --directory ./example_127_subcmdfilter_all \
-                   --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
+                   --map ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map \
                    --check-all \
-                   --gc-min 0.2 --gc-max 0.8 \ ## GC
-                   --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \ ## feature
+                   --gc-min 0.2 --gc-max 0.8 \
+                   --target ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta \
                    --gene AT5G45050 \
                    --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff \
                    --feature three_prime_UTR \
@@ -683,7 +682,7 @@ To use this subcommand, simply replace the command ``minorg`` with ``minorg grna
 
 .. code-block:: bash
 
-   $ minorg minimumset --directory ./example_128_subcmdminimumset
+   $ minorg minimumset --directory ./example_128_subcmdminimumset \
                        --map ./example_105_query/minorg/minorg_gRNA_all.map \
                        --target ./example_105_query/minorg/minorg_gene_targets.fasta \
                        --set 5 --manual --prioritise-nr
@@ -725,10 +724,10 @@ When using ``--domain``, users should ensure that the correct genetic code is sp
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example_129_geneticcode \
-              --indv ref --gene gene-Q0275 \
-              --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
-              --domain 366140 --genetic-code 3
+   $ minorg --directory ./example_129_geneticcode \
+            --indv ref --gene gene-Q0275 \
+            --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
+            --domain 366140 --genetic-code 3
 
 In the above example, the gene 'gene-Q0275' is a yeast mitochondrial gene, and ``--domain 366140`` specifies the PSSM-Id for the COX3 domain in the Cdd v3.18 RPS-BLAST database. The genetic code number for yeast mitochondrial code is '3'.
 
@@ -744,10 +743,10 @@ MINORg requires standard attribute field names in GFF3 files in order to properl
 
 .. code-block:: bash
 
-   $ minorgpy --directory ./example_130_attrmod \
-              --indv ref --gene Os01t0100100 \
-              --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
-              --attr-mod 'mRNA:Parent=Locus_id'
+   $ minorg --directory ./example_130_attrmod \
+            --indv ref --gene Os01g0100100 \
+            --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
+            --attr-mod 'mRNA:Parent=Locus_id'
 
 The IRGSP 1.0 reference genome for rice (*Oryza sativa* subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of 'Parent', which is the standard name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation use 'Locus_id'. See :ref:`Parameters:Attribute modification` for more details on how to format the input to ``--attr-mod``.
 
@@ -755,6 +754,8 @@ Multithreading
 ~~~~~~~~~~~~~~
 
 MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using ``--query`` or ``--indv``), have multiple reference genomes (``--reference``), or multiple background sequences (``--background``).
+
+**NOTE for Docker users**: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for the Docker distribution due to incompatibilities.
 
 To run MINORg with parallel processing, use ``--thread <number of threads>``.
 

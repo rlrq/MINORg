@@ -1,5 +1,6 @@
 import copy
 import os
+import shutil
 import tempfile
 from Bio.Seq import Seq
 from pyfaidx import (

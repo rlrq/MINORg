@@ -12,7 +12,7 @@ You may pull the latest version using:
    
    docker pull rlrq/minorg
 
-If do not wish to use Docker or if you wish to install MINORg on your system instead, please refer to the rest of the Installation section for how to install MINORg.
+Note that some multithreading processes are incompatible with Docker and so are disabled in the Docker image, meaning that MINORg may take longer to run. If do not wish to use Docker or if you wish to install MINORg on your system instead, please refer to the rest of the Installation section for how to install MINORg.
 
 Note for Windows users
 ----------------------

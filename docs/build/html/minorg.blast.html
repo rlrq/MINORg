@@ -41,12 +41,13 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">2. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">3. Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">4. Tutorial (Command line)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">5. Tutorial (Python)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">6. Parameters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">7. Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithms.html">8. Algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">9. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_docker.html">4. Tutorial (Docker)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_cli.html">5. Tutorial (Command line)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_py.html">6. Tutorial (Python)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">7. Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">8. Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">9. Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">10. Examples</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="minorg.html">API documentation</a><ul class="current">
@@ -70,6 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="minorg.main.html">minorg.main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.mafftcommandline_add.html">minorg.mafftcommandline_add module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.minimum_set.html">minorg.minimum_set module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minorg.minweight_sc.html">minorg.minweight_sc module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.pam.html">minorg.pam module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.parse_config.html">minorg.parse_config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minorg.reference.html">minorg.reference module</a></li>
@@ -292,7 +294,7 @@ deletion between N and N+1 will be grouped with position N+1 if rvs_index=False 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L391-L438"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minorg.blast.</span></span><span class="sig-name descname"><span class="pre">BlastNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blastf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_tmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L391-L445"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.__init__">
@@ -301,7 +303,7 @@ deletion between N and N+1 will be grouped with position N+1 if rvs_index=False 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.blast">
-<span class="sig-name descname"><span class="pre">blast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L424-L426"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.blast" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">blast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L424-L433"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.blast" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -311,7 +313,7 @@ deletion between N and N+1 will be grouped with position N+1 if rvs_index=False 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="minorg.blast.BlastNR.expand">
-<span class="sig-name descname"><span class="pre">expand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L427-L438"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.expand" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">expand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rlrq/MINORg/blob/master/minorg/blast.py#L434-L445"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minorg.blast.BlastNR.expand" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

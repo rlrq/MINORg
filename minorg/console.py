@@ -869,7 +869,7 @@ def app():
 
         ## try-except to handle cleanup of tmpdir upon crash etc.
         try:
-            minor_g.raw_args = sys.argv
+            minor_g.cmd_args = sys.argv
             app_main()
         except SystemExit as e:
             minor_g.cleanup()

@@ -206,6 +206,8 @@ class MINORgCLI (MINORg):
         self.tracebacklimit = (None if LOGGING_LEVEL <= logging.DEBUG else 0)
         self.keep_on_crash = keep_on_crash
         self._raw_args = Namespace() ## hidden from user. Stores raw args for posterity/logging
+        self._cmd_args = None ## hidden from user. Stores raw command used to run MINORg
+        self._cmd_params = None ## hidden from user. Stores params (cmd units that start with '-') that users
         self._args = Namespace()
         # self.minorg = MINORg(verbose = verbose, config = config, keep_tmp = keep_tmp,
         #                      keep_on_crash = keep_on_crash) ## will not have prefix, directory, and thread
@@ -243,6 +245,22 @@ class MINORgCLI (MINORg):
         self._raw_args = copy.deepcopy(args)
         self._args = args
     
+    @property
+    def cmd_args(self):
+        """
+        MINORg CLI raw command string.
+        
+        :getter: Returns raw command used to execute MINORg.
+        :setter: Stores a copy of args at self._cmd_args and sets self._cmd_params 
+                 to track which parameters were set by user and which were by default
+        :type: list
+        """
+        return self._cmd_args
+    @cmd_args.setter
+    def cmd_args(self, args):
+        self._cmd_args = args
+        self._cmd_params = set(x for x in args if x[0] == '-')
+    
     def copy_args(self, *argnames):
         """
         Copy args values to self as attributes.
@@ -253,6 +271,27 @@ class MINORgCLI (MINORg):
         for argname in argnames:
             setattr(self, argname, getattr(self.args, argname))
         return
+    
+    def is_user_set(self, *params, a = False):
+        """
+        Checks if parameters was set by user or by defaule (i.e. by parse_config.py or config file)
+        
+        Arguments:
+            *params (:class:`minorg.parse_config.Param`): parameters to check
+            a (bool): whether to return True only if ALL params are set by user (default=False)
+        
+        Returns:
+            bool: whether at least one param (a=False) or all params (a=True) is/are set by user
+                at command line
+        """
+        def check_param(param):
+            names = tuple(itertools.chain(*[name.split('/') for name in param.names]))
+            output = any(name in self._cmd_params for name in names)
+            # print(self._cmd_params, names, output)
+            return output
+        op = all if a else any
+        output = op(check_param(param) for param in params)
+        return output
     
     ####################
     ##  HOUSEKEEPING  ##
@@ -787,8 +826,13 @@ class MINORgCLI (MINORg):
         """
         if val is not None:
             parsed_db = os.path.abspath(parse_lookup(val, self.params.rps_db_aliases, return_first = True))
-            self.db = parsed_db
-            return parsed_db
+            if os.path.exists(parsed_db):
+                self.db = parsed_db
+                return parsed_db
+            else:
+                print("Parsing database as remote database")
+                self.db = val
+                return val
     
     def genetic_code_callback(self, val) -> Union[str, int]:
         """
@@ -826,11 +870,13 @@ class MINORgCLI (MINORg):
         click.UsageError
             If no reference genomes are provided
         """
-        if self.args.reference is None and (self.args.assembly is None or self.args.annotation is None):
+        if (self.args.reference is None
+            and (self.args.assembly is None or self.args.annotation is None)
+            and (not self.args.ext_gene and not self.args.ext_cds)):
             raise click.UsageError( ("'-r <reference genome alias>' OR"
                                      " '--assembly <reference assembly alias or path to FASTA file>"
                                      " --annotation <reference annotation alias or GFF3 file or"
-                                     " BED file converted from GFF3 using gff2bed>'OR"
+                                     " BED file converted from GFF3 using gff2bed>' OR"
                                      " '--ext-gene <FASTA file of gene(s)> --ext-cds <FASTA file of CDS>'"
                                      f" is required if using {msg}.") )
     
@@ -918,10 +964,12 @@ class MINORgCLI (MINORg):
             raise click.UsageError("'-g <gene(s)>' and '-c <cluster(s)>' are mutually exclusive.")
         ## if checking args for function 'target' and not 'full', then -q/-t are not compatible with -g/-c/-i
         if ( standalone and
-             ( ( self.args.query or self.args.target is not None) and
-               ( self.args.gene is not None or self.args.cluster is not None or indv_provided ) ) ):
-            raise click.UsageError( ( "'-q <FASTA file>', '-t <FASTA file>', and"
-                                      " '[ -g <gene(s)> or -c <cluster(s)> ] -i <individual(s)>'"
+             ( ( self.args.target is not None) and
+               ( (self.args.gene is not None or self.args.cluster is not None)
+                 or (self.args.query or indv_provided) ) ) ):
+            raise click.UsageError( ( "'-t <FASTA file>' and"
+                                      " '[ -g <gene(s)> or -c <cluster(s)> ]"
+                                      " ['-q <FASTA file>' or -i <individual(s)>]'"
                                       " are mutually exclusive.") )
         ## REQUIRED ARGS
         ## check that one of -q, -t, -a|-i is provided
@@ -950,10 +998,9 @@ class MINORgCLI (MINORg):
             if self.args.rpsblast is None:
                 raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
                                          " is required if using '--domain <domain alias or PSSM-Id>'") )
-            if self.args.db is None and not self.args.remote_rps:
+            if self.args.db is None:
                 raise click.UsageError( ("'--db <alias of or path to local RPS-BLAST database"
-                                         " OR name of remote RPS-BLAST database>' OR"
-                                         " '--remote-rps'"
+                                         " OR name of remote RPS-BLAST database>'"
                                          " is required if using '--domain <domain alias or PSSM-Id>'") )
         ## VALID ALIASES (check -r, --annotation, --rps-db, --indv & -c & --attr-mod)
         ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
@@ -1044,10 +1091,9 @@ class MINORgCLI (MINORg):
             if self.args.rpsblast is None:
                 raise click.UsageError( ("'--rpsblast <path to rpsblast or rpsblast+ executable>'"
                                          " is required if using '--domain <domain alias or PSSM-Id>'") )
-            if self.args.db is None and not self.args.remote_rps:
+            if self.args.db is None:
                 raise click.UsageError( ("'--db <alias of or path to local RPS-BLAST database"
-                                         " OR name of remote RPS-BLAST database>' OR"
-                                         " '--remote-rps'"
+                                         " OR name of remote RPS-BLAST database>'"
                                          " is required if using '--domain <domain alias or PSSM-Id>'") )
         ## VALID ALIASES (check -r, --annotation, --db, -c)
         ## not a callback because it requires config.cluster_aliases generated by cluster_set_callback
@@ -1139,12 +1185,15 @@ class MINORgCLI (MINORg):
                                            " and not excluded using '--ot-indv'. When 'ref' is provided"
                                            " to '-i', the reference genome(s) will be treated the same as"
                                            " any other genomes passed to '-i'.") )
-            if self.args.screen_reference:
+            if self.args.screen_reference and self.is_user_set(self.params.screen_reference):
                 if not (self.args.reference or (self.args.assembly and self.args.annotation)):
                     raise click.UsageError("'--reference <reference genome alias>' OR"
                                            " '--assembly <path to FASTA> --annotation <path to GFF3>'"
                                            " is required if using '--screen-reference'.")
-            if not self.args.annotation:
+            if (not self.args.annotation
+                and self.is_user_set(self.params.unmask_gene,
+                                     self.params.mask_cluster,
+                                     self.params.unmask_cluster)):
                 self.reference_required("'--unmask-gene', '--mask-cluster', or '--unmask-cluster'")
             if self.args.ot_mismatch is None: self.args.ot_mismatch = 1
             if self.args.ot_gap is None: self.args.ot_mismatch = 0
@@ -1435,6 +1484,11 @@ class MINORgCLI (MINORg):
         """
         Parse and check arguments for full programme.
         """
+        # print(dir(self._raw_args))
+        # self.is_user_set(self.params.target)
+        # self.is_user_set(self.params.feature)
+        # self.is_user_set(self.params.target, self.params.feature, a = False)
+        # self.is_user_set(self.params.target, self.params.feature, a = True)
         self.copy_args("screen_reference") ## may be modified by check_filter_args based on --ot-indv
         self.check_reference_args()
         self.check_seq_args(standalone = False)
@@ -1477,6 +1531,9 @@ class MINORgCLI (MINORg):
         this method sets :attr:`~minorg.MINORg.genes` as the genes mapped to by ``gene_set_prefix`` 
         so that they can be acted.
         
+        Also sets self._genes_updated_since_alignment=True so that MINORg knows to update
+        alignments with new genes.
+        
         Arguments:
            gene_set_prefix (str): required, gene set alias (valid aliases: self.gene_sets.keys())
         """
@@ -1484,6 +1541,7 @@ class MINORgCLI (MINORg):
             print(f"{gene_set_prefix} not in gene_sets ({', '.join(self.gene_sets.keys())}).")
         self.genes = self.gene_sets[gene_set_prefix]
         self.prefix = gene_set_prefix
+        self._genes_updated_since_alignment = True
     
     ######################
     ##  PREFIX MATTERS  ##
@@ -1612,9 +1670,9 @@ class MINORgCLI (MINORg):
         ## TODO: fix this empty file. and also make it so that genes will be masked
         ## using sequence in complete feature range.
         if self.background_check and self.mask_gene_sets["mask"]:
-            print("mask_gene_sets['mask']:", self.mask_gene_sets["mask"])
+            # print("mask_gene_sets['mask']:", self.mask_gene_sets["mask"])
             to_mask = self.reserve_fname("to_mask.fasta", tmp = True)
-            self._get_reference_seq(*self.mask_gene_sets["mask"], *self.features,
+            self._get_reference_seq(self.mask_gene_sets["mask"], *self.features,
                                     adj_dir = True, fout = to_mask)
             self.mask.append(to_mask)
         ## execute MINORg

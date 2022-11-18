@@ -45,13 +45,13 @@ As a Docker container is isolated from the host system, files need to be importe
 
 .. code-block::
    
-   docker cp /path/to/file.txt <container ID or name>:/my_minorg/path/to/destination.txt
+   docker cp /path/to/file.txt <container ID or name>:/minorg_docker/path/to/destination.txt
 
 To copy a directory, use:
 
 .. code-block::
    
-   docker cp /path/to/directory <container ID or name>:/my_minorg/path/to/destination
+   docker cp /path/to/directory <container ID or name>:/minorg_docker/path/to/destination
 
 
 Running MINORg
@@ -67,13 +67,13 @@ As previously mentioned, the Docker container is isolated from the host system. 
 
 .. code-block::
    
-   docker cp <container ID or name>:/my_minorg/path/to/file.txt /path/to/destination.txt
+   docker cp <container ID or name>:/minorg_docker/path/to/file.txt /path/to/destination.txt
 
 To export a directory, use:
 
 .. code-block::
    
-   docker cp <container ID or name>:/my_minorg/path/to/directory /path/to/destination
+   docker cp <container ID or name>:/minorg_docker/path/to/directory /path/to/destination
 
 
 Exiting the container

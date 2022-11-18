@@ -423,7 +423,14 @@ class BlastNR:
         return
     def blast(self):
         header = self.header if "qseqid" in self.header.split(',') else f"qseqid,{header}"
-        blast6(blastf = self.blastf, header = header, fout = self.fout, query = self.query_nr, **self.kwargs)
+        if self.kwargs.get("remote", False):
+            incompatible = {"num_threads"}
+            kwargs = {k: v for k, v in self.kwargs.items() if k not in incompatible}
+        else:
+            kwargs = self.kwargs
+        print("blast kwargs:", kwargs)
+        blast6(blastf = self.blastf, header = header, fout = self.fout,
+               query = self.query_nr, **kwargs)
     def expand(self, write = True):
         get, dat = parse_get_data(self.fout, delim = '\t')
         repr_map = [x.split('\t') for x in splitlines(self.query_nr_map)]

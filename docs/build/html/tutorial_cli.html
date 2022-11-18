@@ -200,7 +200,6 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 Extracting reference sequences
 Finding homologues
-Max acceptable insertion length: <span class="m">15</span>
 Final gRNA sequence<span class="o">(</span>s<span class="o">)</span> have been written to minorg_gRNA_final.fasta
 Final gRNA sequence ID<span class="o">(</span>s<span class="o">)</span>, gRNA sequence<span class="o">(</span>s<span class="o">)</span>, and target<span class="o">(</span>s<span class="o">)</span> have been written to minorg_gRNA_final.map
 
@@ -240,7 +239,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </div>
 <p>The above code snippet is effectively identical to the examples in <a class="reference internal" href="#multiple-genes"><span class="std std-ref">Multiple genes</span></a>.</p>
 <p>Like <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, multiple combinations of genes can be specified to <code class="docutils literal notranslate"><span class="pre">--cluster</span></code>. However, unlike <code class="docutils literal notranslate"><span class="pre">--gene</span></code>, each combination will be processed separately (i.e. minimum sets will be separately generated for each combination).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_103_cluster <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_103_multicluster <span class="se">\</span>
          --indv ref --cluster RPS6,TTR1 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff
 </pre></div>
@@ -316,11 +315,11 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </section>
 <section id="remote-database">
 <h4><span class="section-number">5.3.4.2. </span>Remote database<a class="headerlink" href="#remote-database" title="Permalink to this headline"></a></h4>
-<p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <code class="docutils literal notranslate"><span class="pre">--remote-rps</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--db</span> <span class="pre">/path/to/rpsblast/db</span></code>.</p>
+<p>While it is in theory possible to use the remote CDD database &amp; servers instead of local ones, the <code class="docutils literal notranslate"><span class="pre">--remote</span></code> option for the ‘rpsblast’/’rpsblast+’ command from the BLAST+ package has never worked for me. In any case, if your version of local rpsblast is able to access the remote database, you can use <code class="docutils literal notranslate"><span class="pre">--remote-rps</span> <span class="pre">--db</span> <span class="pre">&lt;database</span> <span class="pre">name&gt;</span></code> instead of <code class="docutils literal notranslate"><span class="pre">--db</span> <span class="pre">/path/to/rpsblast/db</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_107_domain <span class="se">\</span>
          --indv ref --gene AT5G45050 <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
-         --rpsblast /path/to/rpsblast/executable --remote-rps <span class="se">\</span>
+         --rpsblast /path/to/rpsblast/executable --remote-rps --rps-db Cdd <span class="se">\</span>
          --domain <span class="m">214815</span>
 </pre></div>
 </div>
@@ -381,7 +380,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See <a class="reference internal" href="algorithms.html#off-target-assessment"><span class="std std-ref">Off-target assessment</span></a> for more on the off-target assessment algorithm.</p>
-<p>In the case above, <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is actually redundant as the genome from which targets are obtained (which, because of <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ref</span></code>, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from <strong>non-reference genomes</strong>, the reference genome is not automatically included for off-target assessment and thus <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is NOT redundant. Additionally, do note that the genes passed to <code class="docutils literal notranslate"><span class="pre">--gene</span></code> are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.</p>
+<p>In the case above, <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is actually redundant as the genome(s) from which targets are obtained (which, because of <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">ref</span></code>, is the reference genome) are automatically included for background check. However, in the example below, when the targets are from <strong>non-reference genomes</strong>, the reference genome is not automatically included for off-target assessment and thus <code class="docutils literal notranslate"><span class="pre">--screen-reference</span></code> is NOT redundant. Additionally, do note that the genes passed to <code class="docutils literal notranslate"><span class="pre">--gene</span></code> are masked in the reference genome, such that any gRNA hits to them are NOT considered off-target and will NOT be excluded.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_111_ot_nonref <span class="se">\</span>
          --indv <span class="m">9654</span> --genome-set ./subset_genome_mapping.txt <span class="se">\</span>
          --gene AT5G45050 <span class="se">\</span>
@@ -395,21 +394,21 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="using-position-specific-mismatch-gap-unaligned">
 <h4><span class="section-number">5.5.2.2. </span>Using position-specific mismatch/gap/unaligned<a class="headerlink" href="#using-position-specific-mismatch-gap-unaligned" title="Permalink to this headline"></a></h4>
 <p>See: <a class="reference internal" href="algorithms.html#position-specific-mismatch-gap-unaligned"><span class="std std-ref">Position-specific mismatch/gap/unaligned</span></a></p>
-<p>Finer control of off-target definition can be achieved using <a class="reference internal" href="minorg.MINORg.html#id6" title="minorg.MINORg.MINORg.ot_pattern"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pattern</span></code></a>, which allows users to provide a pattern that specifies different thresholds for different positions along a gRNA. Unlike <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code>, which specify the <strong>LOWER-bound of NON-problematic</strong> hits, <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code> specifies <strong>UPPER-bound of PROBLEMATIC</strong> hits. By default, unaligned positions will be treated as mismatches, but this behaviour can be altered by raising <code class="docutils literal notranslate"><span class="pre">--ot-unaligned-as-mismatch-unset</span></code>. See <a class="reference internal" href="parameters.html#off-target-pattern"><span class="std std-ref">Off-target pattern</span></a> for how to build an off-target pattern, and <a class="reference internal" href="algorithms.html#position-specific-mismatch-gap-unaligned"><span class="std std-ref">Position-specific mismatch/gap/unaligned</span></a> for more on how unaligned positions can be counted.</p>
+<p>Finer control of off-target definition can be achieved using <a class="reference internal" href="minorg.MINORg.html#id7" title="minorg.MINORg.MINORg.ot_pattern"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ot_pattern</span></code></a>, which allows users to provide a pattern that specifies different thresholds for different positions along a gRNA. Unlike <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code>, which specify the <strong>LOWER-bound of NON-problematic</strong> hits, <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code> specifies <strong>UPPER-bound of PROBLEMATIC</strong> hits. By default, unaligned positions will be treated as mismatches, but this behaviour can be altered by raising <code class="docutils literal notranslate"><span class="pre">--ot-unaligned-as-mismatch-unset</span></code>. See <a class="reference internal" href="parameters.html#off-target-pattern"><span class="std std-ref">Off-target pattern</span></a> for how to build an off-target pattern, and <a class="reference internal" href="algorithms.html#position-specific-mismatch-gap-unaligned"><span class="std std-ref">Position-specific mismatch/gap/unaligned</span></a> for more on how unaligned positions can be counted.</p>
 <p>When <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code> is specified, <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> will be ignored.</p>
-<p>The following example is identical to the first in <a class="reference internal" href="tutorial_py.html#using-total-mismatch-gap-unaligned"><span class="std std-ref">Using total mismatch/gap/unaligned</span></a>, except <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> are replaced with <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code>.</p>
+<p>The following example is identical to the first in <a class="reference internal" href="tutorial_py.html#using-total-mismatch-gap-unaligned"><span class="std std-ref">Using total mismatch/gap/unaligned</span></a>, except <code class="docutils literal notranslate"><span class="pre">--ot-mismatch</span></code> and <code class="docutils literal notranslate"><span class="pre">--ot-gap</span></code> are replaced with <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span></code>, and the off-target thresholds are different.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_112_ot_ref_pattern <span class="se">\</span>
          --indv ref --gene AT5G45050 <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
          --screen-reference <span class="se">\</span>
          --background ./subset_ref_Araly2.fasta --background ./subset_ref_Araha1.fasta <span class="se">\</span>
          --ot-indv <span class="m">9654</span>,9655 --genome-set ./subset_genome_mapping.txt <span class="se">\</span>
-         --ot-pattern <span class="s1">&#39;2mg-5-,0mg4&#39;</span>
+         --ot-pattern <span class="s1">&#39;0mg-10,1mg-11-&#39;</span>
 </pre></div>
 </div>
-<p>In the above example, <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span> <span class="pre">'0mg-4,2mg-5-'</span></code> means that MINORg will discard any gRNA with at least one off-target hit where:</p>
+<p>In the above example, <code class="docutils literal notranslate"><span class="pre">--ot-pattern</span> <span class="pre">'0mg-10,1mg-11-'</span></code> means that MINORg will discard any gRNA with at least one off-target hit where:</p>
 <ul class="simple">
-<li><p>There are no mismatches or gaps between positions -4 and -1, and there are no more than 2 mismatches or gaps from position -5 to the 5’ end.</p></li>
+<li><p>There are no mismatches or gaps between positions -10 and -1, and there are no more than 1 mismatch or gap from position -11 to the 5’ end.</p></li>
 </ul>
 </section>
 <section id="pam-less-off-target-check">
@@ -469,7 +468,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <li><p>Proximity to 5’ end</p></li>
 <li><p>Non-redundancy</p></li>
 </ol>
-<p>Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may flip the priority of proximity and non-redundancy using <code class="docutils literal notranslate"><span class="pre">--prioritise-nr</span></code> if you prefer to minimise multiple edits in a single target when using a single set of gRNA. (The priority of coverage is NOT modifiable.)</p>
+<p>Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may instead prioritise non-redundancy over proximity by raising the <code class="docutils literal notranslate"><span class="pre">--prioritise-nr</span></code> flag. MINORg will use a combination of approximate and greedy set cover algorithms to output small non-redundant sets. However, do note that the sets will in general be larger than when <code class="docutils literal notranslate"><span class="pre">--prioritise-nr</span></code> is not raised.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_117_nr <span class="se">\</span>
          --indv ref --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
          --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
@@ -515,7 +514,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="manually-approve-grna-sets">
 <h3><span class="section-number">5.6.5. </span>Manually approve gRNA sets<a class="headerlink" href="#manually-approve-grna-sets" title="Permalink to this headline"></a></h3>
 <p>You may opt to manually inspect each gRNA set before MINORg write them to file using the <code class="docutils literal notranslate"><span class="pre">--manual</span></code> flag.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_120_manual --target ./sample_CDS.fasta
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_120_manual --target ./sample_CDS.fasta <span class="se">\</span>
          --manual
      ID      sequence <span class="o">(</span>Set <span class="m">1</span><span class="o">)</span>
      gRNA_001        GGAATACAAGAGATTATCGA
@@ -572,7 +571,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg grna --directory ./example_122_subcmdgrna <span class="se">\</span>
               --cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
               --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
-              --length <span class="m">19</span> --pam Cas12a <span class="se">\</span>
+              --length <span class="m">23</span> --pam Cas12a <span class="se">\</span>
               --feature three_prime_UTR <span class="se">\</span>
               --gc-min <span class="m">0</span>.2 --gc-max <span class="m">0</span>.8 <span class="se">\</span>
               --out-map ./example_120.map
@@ -612,9 +611,9 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </div>
 <p>In the code above, we skipped off-target check by raising the <code class="docutils literal notranslate"><span class="pre">--skip-bg-check</span></code> flag. But we’ve changed out mind and would like to screen the reference genome and the non-reference genomes that these targets are from AND we don’t want our gRNA to be able to target any genes in ‘subset_9944.fasta’ and ‘subset_9947’. We can do that using the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg filter --directory ./example_124_subcmdfilter_bg_pt2 <span class="se">\</span>
-                --map ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map <span class="se">\</span>
+                --map ./example_124_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gRNA_all.map <span class="se">\</span>
                 --background-check <span class="se">\</span>
-                --target ./example_123_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta <span class="se">\</span>
+                --target ./example_124_subcmdfilter_bg_pt1/minorg_RPS6/minorg_RPS6_gene_targets.fasta <span class="se">\</span>
                 --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
                 --screen-ref <span class="se">\</span>
                 --mask-cluster RPS6 --cluster-set ./subset_cluster_mapping.txt <span class="se">\</span>
@@ -636,9 +635,9 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </div>
 <p>By default, MINORg sets the desired feature to ‘CDS’. You can re-assess and overwrite the ‘feature’ check in the .map file to only allow gRNA in the 3’ UTR using <code class="docutils literal notranslate"><span class="pre">minorg</span> <span class="pre">filter</span></code> with the <code class="docutils literal notranslate"><span class="pre">--feature-check</span></code> flag raised.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg filter --directory ./example_125_subcmdfilter_feature_pt2 <span class="se">\</span>
-                --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map <span class="se">\</span>
+                --map ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map <span class="se">\</span>
                 --feature-check <span class="se">\</span>
-                --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta <span class="se">\</span>
+                --target ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta <span class="se">\</span>
                 --gene AT5G45050 <span class="se">\</span>
                 --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
                 --feature three_prime_UTR
@@ -650,11 +649,11 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>You can execute all checks (or some combination of them) in a single <code class="docutils literal notranslate"><span class="pre">minorg</span> <span class="pre">filter</span></code> command as well, if you wish. Just make sure that you raise the appropriate flag(s).</p>
 <p>To use some combination of checks, simply raise the relevant flags (<code class="docutils literal notranslate"><span class="pre">--gc-check</span></code>, <code class="docutils literal notranslate"><span class="pre">--background-check</span></code>, and/or <code class="docutils literal notranslate"><span class="pre">--feature-check</span></code>). In the example below, we filter the gRNA generated by full MINORg execution in <a class="reference internal" href="#feature-check"><span class="std std-ref">Feature check</span></a> by both GC content (<code class="docutils literal notranslate"><span class="pre">--gc-check</span></code>) as well as gene feature (<code class="docutils literal notranslate"><span class="pre">--feature-check</span></code>).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg filter --directory ./example_126_subcmdfilter_gcfeature <span class="se">\</span>
-                --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map <span class="se">\</span>
+                --map ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map <span class="se">\</span>
                 --gc-check <span class="se">\</span>
                 --gc-min <span class="m">0</span>.2 --gc-max <span class="m">0</span>.8 <span class="se">\</span>
                 --feature-check <span class="se">\</span>
-                --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta <span class="se">\</span>
+                --target ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta <span class="se">\</span>
                 --gene AT5G45050 <span class="se">\</span>
                 --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
                 --feature three_prime_UTR
@@ -662,10 +661,10 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </div>
 <p>To execute all checks, use <code class="docutils literal notranslate"><span class="pre">--check-all</span></code>. In the example below, we filter the gRNA generated by full MINORg execution in <a class="reference internal" href="#feature-check"><span class="std std-ref">Feature check</span></a> by all checks.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg filter --directory ./example_127_subcmdfilter_all <span class="se">\</span>
-                --map ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map <span class="se">\</span>
+                --map ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gRNA_all.map <span class="se">\</span>
                 --check-all <span class="se">\</span>
-                --gc-min <span class="m">0</span>.2 --gc-max <span class="m">0</span>.8 <span class="se">\ </span><span class="c1">## GC</span>
-                --target ./example_124_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta <span class="se">\ </span><span class="c1">## feature</span>
+                --gc-min <span class="m">0</span>.2 --gc-max <span class="m">0</span>.8 <span class="se">\</span>
+                --target ./example_125_subcmdfilter_feature_pt1/minorg/minorg_gene_targets.fasta <span class="se">\</span>
                 --gene AT5G45050 <span class="se">\</span>
                 --assembly ./subset_ref_TAIR10.fasta --annotation ./subset_ref_TAIR10.gff <span class="se">\</span>
                 --feature three_prime_UTR <span class="se">\</span>
@@ -684,7 +683,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </ul>
 <p><strong>NOTE:</strong> Unlike subcommands <code class="docutils literal notranslate"><span class="pre">grna</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code>, <code class="docutils literal notranslate"><span class="pre">--out-fasta</span></code> and <code class="docutils literal notranslate"><span class="pre">--out-map</span></code> are used to specify output files for <strong>FINAL</strong> gRNA sets, not all candidate gRNA.</p>
 <p>To use this subcommand, simply replace the command <code class="docutils literal notranslate"><span class="pre">minorg</span></code> with <code class="docutils literal notranslate"><span class="pre">minorg</span> <span class="pre">grna</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg minimumset --directory ./example_128_subcmdminimumset
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg minimumset --directory ./example_128_subcmdminimumset <span class="se">\</span>
                     --map ./example_105_query/minorg/minorg_gRNA_all.map <span class="se">\</span>
                     --target ./example_105_query/minorg/minorg_gene_targets.fasta <span class="se">\</span>
                     --set <span class="m">5</span> --manual --prioritise-nr
@@ -716,10 +715,10 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="non-standard-genetic-code">
 <h4><span class="section-number">5.8.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
 <p>When using <code class="docutils literal notranslate"><span class="pre">--domain</span></code>, users should ensure that the correct genetic code is specified, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a> for genetic code numbers and names.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_129_geneticcode <span class="se">\</span>
-           --indv ref --gene gene-Q0275 <span class="se">\</span>
-           --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff <span class="se">\</span>
-           --domain <span class="m">366140</span> --genetic-code <span class="m">3</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_129_geneticcode <span class="se">\</span>
+         --indv ref --gene gene-Q0275 <span class="se">\</span>
+         --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff <span class="se">\</span>
+         --domain <span class="m">366140</span> --genetic-code <span class="m">3</span>
 </pre></div>
 </div>
 <p>In the above example, the gene ‘gene-Q0275’ is a yeast mitochondrial gene, and <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">366140</span></code> specifies the PSSM-Id for the COX3 domain in the Cdd v3.18 RPS-BLAST database. The genetic code number for yeast mitochondrial code is ‘3’.</p>
@@ -729,10 +728,10 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <h4><span class="section-number">5.8.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
 <p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorgpy --directory ./example_130_attrmod <span class="se">\</span>
-           --indv ref --gene Os01t0100100 <span class="se">\</span>
-           --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff <span class="se">\</span>
-           --attr-mod <span class="s1">&#39;mRNA:Parent=Locus_id&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_130_attrmod <span class="se">\</span>
+         --indv ref --gene Os01g0100100 <span class="se">\</span>
+         --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff <span class="se">\</span>
+         --attr-mod <span class="s1">&#39;mRNA:Parent=Locus_id&#39;</span>
 </pre></div>
 </div>
 <p>The IRGSP 1.0 reference genome for rice (<em>Oryza sativa</em> subsp. Nipponbare) uses a non-standard attribute field name for mRNA entries in their GFF3 file. Instead of ‘Parent’, which is the standard name of the field used to map a feature to its parent feature, mRNA entries in the IRGSP 1.0 annotation use ‘Locus_id’. See <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a> for more details on how to format the input to <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code>.</p>
@@ -742,6 +741,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="multithreading">
 <h2><span class="section-number">5.9. </span>Multithreading<a class="headerlink" href="#multithreading" title="Permalink to this headline"></a></h2>
 <p>MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using <code class="docutils literal notranslate"><span class="pre">--query</span></code> or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>), have multiple reference genomes (<code class="docutils literal notranslate"><span class="pre">--reference</span></code>), or multiple background sequences (<code class="docutils literal notranslate"><span class="pre">--background</span></code>).</p>
+<p><strong>NOTE for Docker users</strong>: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for the Docker distribution due to incompatibilities.</p>
 <p>To run MINORg with parallel processing, use <code class="docutils literal notranslate"><span class="pre">--thread</span> <span class="pre">&lt;number</span> <span class="pre">of</span> <span class="pre">threads&gt;</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_131_thread <span class="se">\</span>
          --query ./subset_9654.fasta --query ./subset_9655.fasta <span class="se">\</span>

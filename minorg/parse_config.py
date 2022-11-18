@@ -317,10 +317,10 @@ class Params():
                                 help = ( "GFF3 file of reference genome annotation or BED file"
                                          " converted from GFF3 format using bedtools' gff2bed" ))
         self.db = Param(get_val_none(get_data("rps database"), self.rps_db_aliases),
-                        "--rps-db",
+                        "--db", "--rps-db",
                         help = "local or remote RPS-BLAST database")
         self.remote_rps = Param(get_data("remote rps", type = bool, default = False), "--remote-rps",
-                            help = "Raise --remote flag when executing RPS-BLAST")
+                                help = "Raise --remote flag when executing RPS-BLAST")
         self.reference_set = Param(get_val_none(get_data("reference set"), self.reference_sets),
                                    "--reference-set",
                                    help = ( "File containing reference alias-filename mapping or"
@@ -573,7 +573,7 @@ class Params():
                                       "--screen-ref", "--screen-reference", show_any_default = False,
                                       help = "screen for off-targets in reference genome")
         self.unmask_ref = Param(get_filter("unmask gene(s) in reference", type = bool, default = False),
-                                "--unmask-ref", show_any_default = False,
+                                "--unmask-ref/--mask-ref", show_any_default = True,
                                 help = "skip masking of genes in reference genome for off-target check")
         self.by_indv = Param(get_filter("screen by individual", type = bool, default = False),
                              "--by-indv",

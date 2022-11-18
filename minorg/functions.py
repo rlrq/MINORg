@@ -77,7 +77,6 @@ def imap_progress(f, args, threads = 1,
                   overwrite = True, overwrite_last = True, return_output = True,
                   msg = lambda curr, last: f"{curr}/{last} done.", lvl = 0, quiet = False):
     printi = make_local_print(quiet = False, printf = make_print_preindent(lvl + 1))
-    pool = Pool(threads)
     total = len(args)
     output = []
     def print_update(curr):
@@ -86,10 +85,18 @@ def imap_progress(f, args, threads = 1,
         else:
             printi(msg(curr, total), overwrite = False)
     print_update(0)
-    for i, result in enumerate(pool.imap_unordered(f, args), 1):
-        output.append(result)
-        print_update(i)
-    pool.close()
+    ## don't use multiprocessing Pool if in docker environment. It simply does not work.
+    ## environment variable MINORG_IN_DOCKER is defined as 'Yes' in Dockerfile
+    if os.environ.get("MINORG_IN_DOCKER", False) == "Yes":
+        for i, arg in enumerate(args):
+            output.append(f(arg))
+            print_update(i)
+    else:
+        pool = Pool(threads)
+        for i, result in enumerate(pool.imap_unordered(f, args), 1):
+            output.append(result)
+            print_update(i)
+        pool.close()
     return output if return_output else None
 
 ##################

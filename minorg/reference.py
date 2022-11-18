@@ -335,7 +335,8 @@ class AnnotatedFeature(Annotation):
     
     def _get_seq_ranges(self, feature_type=None, ranges=[], complete=False, genomic=False) -> tuple:
         """
-        Get range(s) of sequence.
+        Get range(s) of sequence. Output ranges are sorted first by starting position and then 
+        tie-broken by ending position.
         
         Arguments:
             feature_type (str): GFF feature type (e.g. "CDS")
@@ -358,7 +359,7 @@ class AnnotatedFeature(Annotation):
         if complete:
             output_ranges = [(min(r[0] for r in output_ranges), max(r[1] for r in output_ranges))]
         if genomic:
-            return self.range_to_genomic(output_ranges)
+            return sorted(self.range_to_genomic(output_ranges))
         return output_ranges
     
     def _get_seq(self, feature_type=None, ranges=[],
