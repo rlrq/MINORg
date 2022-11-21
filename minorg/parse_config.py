@@ -459,8 +459,8 @@ class Params():
                                                                        default = default)
         self.pam = Param(get_grna("pam", default = ".NGG"), "-p", "--pam")
         self.length = Param(get_grna("length", type = int, default = 20), "-l", "--len", "--length")
-        self.span_junction = Param(get_grna("span junction", type = bool, default = False),
-                                   "--span-junction", help = "allow gRNA to span intron-exon boundary")
+        # self.span_junction = Param(get_grna("span junction", type = bool, default = False),
+        #                            "--span-junction", help = "allow gRNA to span intron-exon boundary")
         
         ## filter
         section_filter = "filter"

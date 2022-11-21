@@ -1594,9 +1594,15 @@ class MINORg (PathHandler):
             fouts[None] = fout
             features = features + (None,)
         import string
+        all_features = {}
         for feature in features:
             fout = fouts.get(feature, None)
             feature_seqs = {}
+            ## if no valid feature types left (None is always last)
+            if feature is None:
+                dict_to_fasta(all_features, fout)
+                continue
+            ## else if valid feature type, find feature in annotations
             for ref_alias in ref_aliases:
                 ref = self.reference[ref_alias]
                 ## process each gene separately
@@ -1623,7 +1629,10 @@ class MINORg (PathHandler):
                                                seqid_template = ft_seqid_template,
                                                apply_template_to_dict = True)
                     feature_seqs = {**feature_seqs,
-                                    **dict(itertools.chain(*map(lambda x: x.items(), seqs.values())))}
+                                    **dict(itertools.chain(
+                                        *map(lambda x: [(k, v) for k, v in x.items()
+                                                        if len(v) != 0], seqs.values())))}
+            all_features = {**all_features, **feature_seqs}
             if fout:
                 dict_to_fasta(feature_seqs, fout)
             output = {**output, **feature_seqs}

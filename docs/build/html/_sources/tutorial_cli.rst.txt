@@ -724,7 +724,7 @@ When using ``--domain``, users should ensure that the correct genetic code is sp
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_129_geneticcode \
+   $ minorg --directory ./example_130_geneticcode \
             --indv ref --gene gene-Q0275 \
             --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff \
             --rpsblast /path/to/rpsblast/executable --db /path/to/rpsblast/db \
@@ -744,7 +744,7 @@ MINORg requires standard attribute field names in GFF3 files in order to properl
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_130_attrmod \
+   $ minorg --directory ./example_131_attrmod \
             --indv ref --gene Os01g0100100 \
             --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff \
             --attr-mod 'mRNA:Parent=Locus_id'
@@ -762,7 +762,7 @@ To run MINORg with parallel processing, use ``--thread <number of threads>``.
 
 .. code-block:: bash
 
-   $ minorg --directory ./example_131_thread \
+   $ minorg --directory ./example_132_thread \
             --query ./subset_9654.fasta --query ./subset_9655.fasta \
             --gene AT1G10920 \
             --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta \

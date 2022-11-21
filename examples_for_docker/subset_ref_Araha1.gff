@@ -1,0 +1,9 @@
+chromA	phytozomev10	gene	9	2819	.	+	.	ID=Araha.3012s0003.v1.1;Name=Araha.3012s0003
+chromA	phytozomev10	mRNA	9	2819	.	+	.	ID=Araha.3012s0003.1.v1.1;Name=Araha.3012s0003.1;pacid=28855388;longest=1;Parent=Araha.3012s0003.v1.1
+chromA	phytozomev10	five_prime_UTR	9	40	.	+	.	ID=Araha.3012s0003.1.v1.1.five_prime_UTR.1;Parent=Araha.3012s0003.1.v1.1;pacid=28855388
+chromA	phytozomev10	CDS	41	683	.	+	0	ID=Araha.3012s0003.1.v1.1.CDS.1;Parent=Araha.3012s0003.1.v1.1;pacid=28855388
+chromA	phytozomev10	CDS	759	1093	.	+	2	ID=Araha.3012s0003.1.v1.1.CDS.2;Parent=Araha.3012s0003.1.v1.1;pacid=28855388
+chromA	phytozomev10	CDS	1169	1524	.	+	0	ID=Araha.3012s0003.1.v1.1.CDS.3;Parent=Araha.3012s0003.1.v1.1;pacid=28855388
+chromA	phytozomev10	CDS	1604	1809	.	+	1	ID=Araha.3012s0003.1.v1.1.CDS.4;Parent=Araha.3012s0003.1.v1.1;pacid=28855388
+chromA	phytozomev10	CDS	1888	2714	.	+	2	ID=Araha.3012s0003.1.v1.1.CDS.5;Parent=Araha.3012s0003.1.v1.1;pacid=28855388
+chromA	phytozomev10	three_prime_UTR	2715	2819	.	+	.	ID=Araha.3012s0003.1.v1.1.three_prime_UTR.1;Parent=Araha.3012s0003.1.v1.1;pacid=28855388

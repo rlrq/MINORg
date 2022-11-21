@@ -428,7 +428,7 @@ class BlastNR:
             kwargs = {k: v for k, v in self.kwargs.items() if k not in incompatible}
         else:
             kwargs = self.kwargs
-        print("blast kwargs:", kwargs)
+        # print("blast kwargs:", kwargs)
         blast6(blastf = self.blastf, header = header, fout = self.fout,
                query = self.query_nr, **kwargs)
     def expand(self, write = True):

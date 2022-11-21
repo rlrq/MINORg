@@ -1,0 +1,4 @@
+tair10;TAIR10	/minorg_docker/subset_ref_Araport11.fasta	/minorg_docker/subset_ref_Araport11.gff
+araport11	/minorg_docker/subset_ref_TAIR10.fasta	/minorg_docker/subset_ref_TAIR10.gff
+araly2;alyrata2	/minorg_docker/subset_ref_Araly2.fasta	/minorg_docker/subset_ref_Araly2.gff
+araha1;ahalleri1	/minorg_docker/subset_ref_Araha1.fasta	/minorg_docker/subset_ref_Araha1.gff

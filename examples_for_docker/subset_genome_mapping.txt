@@ -1,0 +1,4 @@
+9654	/minorg_docker/subset_9654.fasta
+9655	/minorg_docker/subset_9655.fasta
+9944	/minorg_docker/subset_9944.fasta
+9947	/minorg_docker/subset_9947.fasta

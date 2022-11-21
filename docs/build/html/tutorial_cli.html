@@ -715,7 +715,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="non-standard-genetic-code">
 <h4><span class="section-number">5.8.3.1. </span>Non-standard genetic code<a class="headerlink" href="#non-standard-genetic-code" title="Permalink to this headline"></a></h4>
 <p>When using <code class="docutils literal notranslate"><span class="pre">--domain</span></code>, users should ensure that the correct genetic code is specified, as MINORg has to first translate CDS into peptides for domain search using RPS-BLAST. The default genetic code is the Standard Code. Please refer to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a> for genetic code numbers and names.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_129_geneticcode <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_130_geneticcode <span class="se">\</span>
          --indv ref --gene gene-Q0275 <span class="se">\</span>
          --assembly ./subset_ref_yeast_mt.fasta --annotation ./subset_ref_yeast_mt.gff <span class="se">\</span>
          --rpsblast /path/to/rpsblast/executable --db /path/to/rpsblast/db <span class="se">\</span>
@@ -729,7 +729,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <h4><span class="section-number">5.8.3.2. </span>Non-standard GFF3 attribute field names<a class="headerlink" href="#non-standard-gff3-attribute-field-names" title="Permalink to this headline"></a></h4>
 <p>See also: <a class="reference internal" href="parameters.html#attribute-modification"><span class="std std-ref">Attribute modification</span></a></p>
 <p>MINORg requires standard attribute field names in GFF3 files in order to properly map subfeatures to their parent features (e.g. map CDS to mRNA, and mRNA to gene). Non-standard field names should be mapped to standard ones using <code class="docutils literal notranslate"><span class="pre">--attr-mod</span></code> (for ‘attribute modification’).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_130_attrmod <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_131_attrmod <span class="se">\</span>
          --indv ref --gene Os01g0100100 <span class="se">\</span>
          --assembly ./subset_ref_irgsp.fasta --annotation ./subset_ref_irgsp.gff <span class="se">\</span>
          --attr-mod <span class="s1">&#39;mRNA:Parent=Locus_id&#39;</span>
@@ -744,7 +744,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <p>MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using <code class="docutils literal notranslate"><span class="pre">--query</span></code> or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>), have multiple reference genomes (<code class="docutils literal notranslate"><span class="pre">--reference</span></code>), or multiple background sequences (<code class="docutils literal notranslate"><span class="pre">--background</span></code>).</p>
 <p><strong>NOTE for Docker users</strong>: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for the Docker distribution due to incompatibilities.</p>
 <p>To run MINORg with parallel processing, use <code class="docutils literal notranslate"><span class="pre">--thread</span> <span class="pre">&lt;number</span> <span class="pre">of</span> <span class="pre">threads&gt;</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_131_thread <span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_132_thread <span class="se">\</span>
          --query ./subset_9654.fasta --query ./subset_9655.fasta <span class="se">\</span>
          --gene AT1G10920 <span class="se">\</span>
          --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta <span class="se">\</span>

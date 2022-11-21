@@ -248,7 +248,7 @@ def generate_grna(
         ## gRNA options
         pam: str = typer.Option(*params.pam(), **params.pam.options),
         length: int = typer.Option(*params.length(), **params.length.options),
-        span_junction: bool = typer.Option(*params.span_junction(), **params.span_junction.options),
+        # span_junction: bool = typer.Option(*params.span_junction(), **params.span_junction.options),
 
         ## target definition options
         target: Path = typer.Option(*params.target(), **params.target.options,
