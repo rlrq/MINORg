@@ -139,3 +139,97 @@ An alignment of an unannotated target sequence with 2 homologous reference genes
     * gRNA are required to fall entirely within ALL genes' effective feature (CDS in this case) ranges
     * Only gRNA 2 passes
     * If parts of your genes are freqently pseudogenised, you may wish to set this value fairly high in order to ensure that most, if not all, gRNA are in conserved coding regions
+
+
+Minimum set generation
+----------------------
+
+gRNA with equivalent set coverage (that is, that cover the exact same combination of targets) are collapsed to reduce computational redundancy.
+
+WITHOUT prioritising non-redundancy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Algorithm described in: Yang, Q., Nofsinger, A., Mcpeek, J., Phinney, J. and Knuesel, R. (2015). A Complete Solution to the Set Covering Problem. In International Conference on Scientific Computing (CSC) pp. 36–41
+
+This algorithm prioritises coverage first, then proximity to 5' end of the sense strand. Non-redundancy is used as a tie-breaker. After every successful set, gRNA are removed from their respective collapsed groups. Collapsed groups with no remaining gRNA are removed, and the process is repeated with the remaining collapsed groups until either 1) the requested number of sets have been generated or 2) it is no longer possible to generate a set cover solution with the remaining gRNA.
+
+Prioritising non-redundancy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A combination of adapted approxiamate and optimal minimal weight cover algorithms are used when non-redundancy is prioritised. The approximate minimal weight set cover algorithm (henceforth abbreviated as minweight_SC) is described in: Ajami and Cohen (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529
+
+The original implementation of minweight_SC starts with an empty set cover solution that the algorithm then proceeds to populate with potential sets for a solution. It proceeds to enumerate set cover solutions in approximate order of increasing redundancy. For MINORg, minweight_SC was adapted to begin with a seeded set (which, in the case of MINORg, is a collapsed gRNA group) that is required to be included in all set cover solutions output by minweight_SC. This modified version shall be referred to as seeded_minweight_SC.
+
+In brief, seeded_minweight_SC is seeded with higher coverage collapsed gRNA groups and executed to enumerate a limited number of set cover solutions (max(20, 2*<num sets>)) for each seeded group. The set cover solution sizes and redundancy from seeded_minweight_SC are used to set thresholds for the search for more exhaustive optimal non-redundant set cover solutions.
+
+#. seeded_minweight_SC is executed for max(20, 2*<num sets>) enumerations using collapsed gRNA groups
+   
+   * Seeding begins with the collapsed gRNA group with the highest coverage and proceeds in order of decreasing coverage
+   * The length of the max(10, 2*<num sets>) smallest solutions are tracked (size_threshold) and updated after every enumeration
+   * Solutions that have size equal to or are smaller than the size_threshold are stored (candidate_approx_solutions)
+     
+     * If size_threshold decreases, candidate_approx_solutions that do not meet the new threshold are removed
+   
+   * If the next collapsed gRNA group for seeding has a smaller coverage size than the current seeded collapsed gRNA group, the current collapsed gRNA group and all collapsed groups with equivalent coverage size will be removed from the pool of candidate collapsed gRNA groups after seeded_minweight_SC has been executed for the determined number of enumerations for the current seed and will not be used in set cover solutions for subsequent seeded_minweight_SC executions
+   * Seeding terminates when the coverage of the next collapsed gRNA group to be seeded has a coverage size that is less than <total targets>/<size_threshold>
+
+#. Two threshold values are obtained from solutions from the previous step to inform the more exhaustive search for optimal, low redundancy set cover solutions in the next step
+
+   * Maximum set cover size: Size of largest set cover solution among candidate_approx_solutions
+   * Maximum redundancy: Maximum redundancy among candidate_approx_solutions
+
+     * Redundany is calculated as: sum(<coverage size> for all sets in set cover solution)/<number of targets>
+
+       * Where a "set" in a set cover solution is a collapsed gRNA group, and <coverage size> refers to the number of targets covered by the collapsed gRNA group
+
+#. Brute force search for optimal, low redundancy set cover solutions using thresholds from the above step
+
+   * Sort collapsed gRNA groups in decreasing order of coverage size (sorted_groups)
+   * Let candidate_optimal_solutions be a variable that stores set cover solutions
+   * Let optimal_SC(C, i) be a function for recursively building a set cover solution
+
+     * Parameters:
+
+       * C is a (partial) set cover solution
+       * i is an index within sorted_groups
+
+     * Algorithm:
+
+       * Abort if C >= <maximum set cover size> AND <number of targets covered by C> < <number of targets>
+       * Else for j in range(i, <length of sorted_groups>, 1):
+
+         * Break out of loop if <length of the j-th collapsed gRNA group> < (<number of targets> - <number of targets covered by C>)
+         * Else skip to j+1 if targets covered by j-th collapsed gRNA group is a subset of targets covered by C
+         * Else add the j-th collapsed gRNA group to C to generate a new (partial) set cover solution (C_new)
+
+           * Skip to j+1 if <redundancy of C_new> > <maximum redundancy>
+           * Else add C_new to candidate_optimal_solutions if C_new covers all targets
+           * Else execute optimal(C_new, j+1)
+             
+   * Execute optimal_SC(<empty set cover solution>, 0) (assuming 0-indexing)
+
+#. Sort candidate_optimal_solutions in increasing order of set cover solution size (number of collapsed gRNA groups in a solution set)
+
+   * While <number of sets output> < <number of sets requested>:
+
+     * If candidate_optimal_solutions is empty:
+
+       * If no candidate gRNA are left, abort
+       * If some candidate gRNA are left, regenerate candidate_optimal_solutions using the reduced pool of candidate gRNA (i.e. repeat steps 1 to 3)
+
+     * [a] Select the first set cover solution in sorted candidate_optimal_solutions
+
+       * If the set cover solution contains one or more empty collapsed gRNA groups, remove it from sorted candidate_optimal_solutions and repeat step [a] onward
+       * [b] For each collapsed gRNA group in the set cover solution, select the gRNA that is on average closest to the 5' end of the sense strand for all targets covered
+       * Create a proposed gRNA set from the selected gRNA
+
+         * If MANUAL mode and user chooses to discard a gRNA in the proposed set:
+
+           * Remove discarded gRNA from its collapsed gRNA group
+
+             * If no gRNA are left in the collapsed group, remove this set cover solution from sorted candidate_optimal_solutions and repeat the above steps from [a] onward
+             * Else repeat the above steps from [b] onward
+               
+         * Else output the proposed set and remove gRNA in the set from their collapsed gRNA groups
+
+   * Note that removing a gRNA from a collapsed gRNA group will also remove it from all equivalent collapsed gRNA groups in all set cover solutions to ensure that gRNA are not repeated

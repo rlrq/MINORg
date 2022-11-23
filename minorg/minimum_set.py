@@ -382,15 +382,16 @@ class SetOfCollapsedgRNA(SetOfSets):
         # return output
         return
 
-def limited_greedy_SC(U, S, size = 1, redundancy = 1):
+def limited_optimal_SC(U, S, size = 1, redundancy = 1):
     """
-    Attempts to find set cover solutions by brute force with a capped maximum set size.
+    Attempts to find set cover solutions by brute force with a capped maximum set size
+    and redundancy.
     
     Arguments:
         U (set): set of elements (targets) to cover
         S (:class:`~minorg.minweight_sc.SetOfSets`): SetOfSets (or child class) object 
             containing sets (gRNA coverage) for set cover
-        size (int): maximum set cover solution size for greedy search
+        size (int): maximum set cover solution size for optimal search
         redundancy (float): maximum allowable redundancy as fraction of total number of elements
             to be covered (`U`)
     
@@ -636,7 +637,7 @@ def make_get_minimum_set(gRNA_hits, manual_check = True, exclude_seqs = set(), t
     return get_minimum_set
 
 def make_set_cover_nr(gRNA_hits, num_sets = 1, target_ids = [], low_coverage_penalty = 0,
-                      num_lengths_to_track = None, prioritise_3prime = False, greedy_depth = 5,
+                      num_lengths_to_track = None, prioritise_3prime = False, optimal_depth = 5,
                       suppress_warning = False):
     """
     Create function that generates mutually exclusive gRNA sets with non-redundancy as a priority.
@@ -668,20 +669,20 @@ def make_set_cover_nr(gRNA_hits, num_sets = 1, target_ids = [], low_coverage_pen
         minweight_sc = limited_minweight_SC(collapsed_grnas, num_sets, targets = target_ids,
                                             low_coverage_penalty = low_coverage_penalty,
                                             num_lengths_to_track = num_lengths_to_track)
-        ## greedy solutions
-        max_depth = min(greedy_depth, max(map(len, minweight_sc)))
+        ## optimal solutions
+        max_depth = min(optimal_depth, max(map(len, minweight_sc)))
         max_redundancy = max(map(lambda C:C.redundancy, minweight_sc))/len(target_ids)
         print(max_depth, max_redundancy)
-        greedy_sc = limited_greedy_SC(target_ids, collapsed_grnas_original,
+        optimal_sc = limited_optimal_SC(target_ids, collapsed_grnas_original,
                                       size = max_depth, redundancy = max_redundancy)
-        print("num unfiltered greedy sc:", len(greedy_sc))
+        print("num unfiltered optimal sc:", len(optimal_sc))
         ## remove duplicates
-        greedy_sc = [C for C in greedy_sc
+        optimal_sc = [C for C in optimal_sc
                      if all(map(lambda minweight_C:(len(C) != minweight_C
                                                     and C != minweight_C),
                                 minweight_sc))]
-        print("num filtered greedy sc:", len(greedy_sc))
-        return sorted(minweight_sc + greedy_sc,
+        print("num filtered optimal sc:", len(optimal_sc))
+        return sorted(minweight_sc + optimal_sc,
                       key = lambda C:(len(C), C.redundancy, -C.max_coverage))
     sc_solutions = []
     sc_solutions.extend(generate_sc_solutions())

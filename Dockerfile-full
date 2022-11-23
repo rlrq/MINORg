@@ -27,7 +27,7 @@ WORKDIR /minorg_docker
 RUN mkdir db
 ADD db/Cdd.v3.18.zip db
 ADD db/cdd.versions db
-ADD examples/examples.zip .
+ADD examples_for_docker/examples.zip .
 ADD dist/minorg-0.2.3.3a0.tar.gz .
 WORKDIR minorg-0.2.3.3a0
 

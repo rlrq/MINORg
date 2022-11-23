@@ -155,8 +155,8 @@ Do note that, because of the nature of these lookups, you cannot simply provide 
 |             |**using aliases**   |**not using aliases**                                    |
 +-------------+--------------------+---------------------------------------------------------+
 |**reference**|-\-reference        |-\-assembly <path to FASTA> -\-annotation <path to GFF3> |
-|             |<alias(es)>         |-\-genetic-code <number or name> -\-attr-mod <attrinute  |
-|             |                    |modiication>*                                            |
+|             |<alias(es)>         |-\-genetic-code <number or name> -\-attr-mod <attribute  |
+|             |                    |modification>*                                           |
 +-------------+--------------------+---------------------------------------------------------+
 |**cluster**  |-\-cluster          |-\-gene <comma-separated gene IDs>**                     |
 |             |<alias(es)>         |                                                         |

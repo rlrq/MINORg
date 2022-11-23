@@ -24,7 +24,7 @@ RUN pip install 'biopython==1.79' 'pybedtools==0.9.0' 'pyfaidx==0.6.4' 'regex' '
 
 ## Copy files
 WORKDIR /minorg_docker
-ADD examples/examples.zip .
+ADD examples_for_docker/examples.zip .
 ADD dist/minorg-0.2.3.3a0.tar.gz .
 WORKDIR minorg-0.2.3.3a0
 
