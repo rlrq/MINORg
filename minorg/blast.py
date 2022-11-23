@@ -51,10 +51,10 @@ class BlastHSP:
             'm' is a mismatch,
             'i' is an insertion in the query,
             'd' is a deletion in the query.
-
+        
         Arguments:
-            include unaligned (bool): add space character for each unaligned position at 3' and 5' ends
-
+            include_unaligned (bool): add space character for each unaligned position at 3' and 5' ends
+        
         Returns
         -------
         str
