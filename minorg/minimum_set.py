@@ -479,7 +479,7 @@ def limited_minweight_SC(collapsed_grnas, num_sets, targets = None,
     in <num_lengths_to_track>th smallest set cover solution>.
     
     Arguments:
-        collapsed_grnas (CollapsedgRNA): :class:`CollapsedgRNA`CollapsedgRNA object
+        collapsed_grnas (CollapsedgRNA): :class:`CollapsedgRNA` object
         num_sets (int): desired number of sets. Used to inform maximum number of iterations.
         targets (list or set or tuple): targets IDs (str) of targets to be coverd
         num_lengths_to_track (int): length of <num_lengths_to_track>th smallest set cover solution

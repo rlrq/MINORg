@@ -162,7 +162,7 @@ class SetOfSets(set):
         return sum(len(s) for s in self.sets) - len(self.elements)
     def get(self, *names) -> list:
         """
-        Get :class:`~minorg.minweight_sc.Set`s by set name.
+        Get :class:`~minorg.minweight_sc.Set` (s) by set name.
         
         Returns:
             list of :class:`~minorg.minweight_sc.Set`
@@ -246,7 +246,7 @@ def approx_min_SC(U, S, seed = None, low_coverage_penalty = 0) -> SetOfSets:
         U (set): set of elements (targets) to cover
         S (:class:`~minorg.minweight_sc.SetOfSets`): SetOfSets (or child class) object 
             containing sets (gRNA coverage) for set cover
-        seed (:class:`~minorg.minweight_sc.SetOfSets`): Set (or child class) object to add first
+        seed (:class:`~minorg.minweight_sc.Set`): Set (or child class) object to add first (optional)
     
     Returns:
         :class:`~minorg.minweight_sc.SetOfSets`: Set cover solution. May also be child class of SetOfSets.
@@ -284,7 +284,7 @@ def argmin(set_of_sets) -> Set:
 # output = []
 def enum_approx_order_SC(U, S, num_iter = 100, seed = None, low_coverage_penalty = 0) -> list:
     """
-    Minimum weight set cover algorithm.
+    Minimum weight set cover algorithm, adapted to allow seeding and setting of enumeration limit.
     
     Algorithm described in: Ajami, Z. and Cohen, S. (2019). Enumerating Minimal Weight Set Covers. In Proceedings - International Conference on Data Engineering, 518-529
     
@@ -292,7 +292,8 @@ def enum_approx_order_SC(U, S, num_iter = 100, seed = None, low_coverage_penalty
         U (set): set of elements (targets) to cover
         S (:class:`~minorg.minweight_sc.SetOfSets`): SetOfSets (or child class) object 
             containing sets (gRNA coverage) for set cover
-        num_iter (int): maximum number of iterations (default=100)
+        num_iter (int): maximum number of iterations/enumerations (default=100)
+        seed (:class:`~minorg.minweight_sc.Set`): Set (or child class) object to add first (optional)
     
     Returns:
         list of :class:`~minorg.minweight_sc.SetOfSets`: list of SetOfSets object where each 
