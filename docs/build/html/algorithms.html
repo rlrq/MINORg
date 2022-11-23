@@ -265,17 +265,17 @@
 </section>
 <section id="prioritising-non-redundancy">
 <h3><span class="section-number">9.4.2. </span>Prioritising non-redundancy<a class="headerlink" href="#prioritising-non-redundancy" title="Permalink to this headline"></a></h3>
-<p>A combination of adapted approxiamate and optimal minimal weight cover algorithms are used when non-redundancy is prioritised. The approximate minimal weight set cover algorithm (henceforth abbreviated as minweight_SC) is described in: Ajami and Cohen (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529</p>
-<p>The original implementation of minweight_SC starts with an empty set cover solution that the algorithm then proceeds to populate with potential sets for a solution. It proceeds to enumerate set cover solutions in approximate order of increasing redundancy. For MINORg, minweight_SC was adapted to begin with a seeded set (which, in the case of MINORg, is a collapsed gRNA group) that is required to be included in all set cover solutions output by minweight_SC. This modified version shall be referred to as seeded_minweight_SC.</p>
-<p>In brief, seeded_minweight_SC is seeded with higher coverage collapsed gRNA groups and executed to enumerate a limited number of set cover solutions (max(20, 2*&lt;num sets&gt;)) for each seeded group. The set cover solution sizes and redundancy from seeded_minweight_SC are used to set thresholds for the search for more exhaustive optimal non-redundant set cover solutions.</p>
+<p>A combination of adapted approxiamate and optimal minimal weight cover algorithms are used when non-redundancy is prioritised. The approximate minimal weight set cover algorithm (implemented as <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a>) is as described in: Ajami and Cohen (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529</p>
+<p><a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a> starts with an empty set cover solution that the algorithm then proceeds to populate with potential sets for a solution. It proceeds to enumerate set cover solutions in approximate order of increasing redundancy. For MINORg, <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a> was adapted to allow starting with a set cover solution that has been seeded with a single set (which, in the case of MINORg, is a collapsed gRNA group) that is required to be included in all set cover solutions output by <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a>. <a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_minweight_SC" title="minorg.minimum_set.limited_minweight_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_minweight_SC()</span></code></a> was further adapted to set a limit on the number of enumerated set cover solutions to return. That is, the function will terminate upon reaching the enumeration limit regardless of whether it is still possible to generate more set cover solutions and return whatever solutions have already been enumerated.</p>
+<p><a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a> is then wrapped in another function (<a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_minweight_SC" title="minorg.minimum_set.limited_minweight_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_minweight_SC()</span></code></a>) that seeds it with different collapsed gRNA groups. In brief, <a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_minweight_SC" title="minorg.minimum_set.limited_minweight_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_minweight_SC()</span></code></a> seeds <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a> with higher coverage collapsed gRNA groups first and executes <a class="reference internal" href="minorg.minweight_sc.html#minorg.minweight_sc.enum_approx_order_SC" title="minorg.minweight_sc.enum_approx_order_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">enum_approx_order_SC()</span></code></a> to enumerate a limited number (max(20, 2*&lt;num sets&gt;)) of set cover solutions for each seeded group. The set cover solution sizes and redundancy generated by <a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_minweight_SC" title="minorg.minimum_set.limited_minweight_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_minweight_SC()</span></code></a> are used to set thresholds for a more exhaustive search for optimal non-redundant set cover solutions (implemented as <a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_optimal_SC" title="minorg.minimum_set.limited_optimal_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_optimal_SC()</span></code></a>).</p>
 <ol class="arabic simple">
-<li><p>seeded_minweight_SC is executed for max(20, 2*&lt;num sets&gt;) enumerations using collapsed gRNA groups</p>
+<li><p><a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_minweight_SC" title="minorg.minimum_set.limited_minweight_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_minweight_SC()</span></code></a> is executed with an enumeration limit of max(20, 2*&lt;num sets&gt;) using collapsed gRNA groups</p>
 <ul class="simple">
 <li><p>Seeding begins with the collapsed gRNA group with the highest coverage and proceeds in order of decreasing coverage</p></li>
 <li><p>The length of the max(10, 2*&lt;num sets&gt;) smallest solutions are tracked (size_threshold) and updated after every enumeration</p></li>
-<li><p>Solutions that have size equal to or are smaller than the size_threshold are stored (candidate_approx_solutions)</p>
+<li><p>Solutions that have size equal to or smaller than size_threshold are stored (candidate_approx_solutions)</p>
 <ul>
-<li><p>If size_threshold decreases, candidate_approx_solutions that do not meet the new threshold are removed</p></li>
+<li><p>If size_threshold decreases, set cover solution sin candidate_approx_solutions that do not meet the new threshold are removed</p></li>
 </ul>
 </li>
 <li><p>If the next collapsed gRNA group for seeding has a smaller coverage size than the current seeded collapsed gRNA group, the current collapsed gRNA group and all collapsed groups with equivalent coverage size will be removed from the pool of candidate collapsed gRNA groups after seeded_minweight_SC has been executed for the determined number of enumerations for the current seed and will not be used in set cover solutions for subsequent seeded_minweight_SC executions</p></li>
@@ -287,7 +287,7 @@
 <li><p>Maximum set cover size: Size of largest set cover solution among candidate_approx_solutions</p></li>
 <li><p>Maximum redundancy: Maximum redundancy among candidate_approx_solutions</p>
 <ul>
-<li><p>Redundany is calculated as: sum(&lt;coverage size&gt; for all sets in set cover solution)/&lt;number of targets&gt;</p>
+<li><p>Redundancy is calculated as: (sum(&lt;coverage size&gt; for all sets in set cover solution) - &lt;number of targets&gt;)/&lt;number of targets&gt;</p>
 <ul>
 <li><p>Where a “set” in a set cover solution is a collapsed gRNA group, and &lt;coverage size&gt; refers to the number of targets covered by the collapsed gRNA group</p></li>
 </ul>
@@ -296,11 +296,11 @@
 </li>
 </ul>
 </li>
-<li><p>Brute force search for optimal, low redundancy set cover solutions using thresholds from the above step</p>
+<li><p><a class="reference internal" href="minorg.minimum_set.html#minorg.minimum_set.limited_optimal_SC" title="minorg.minimum_set.limited_optimal_SC"><code class="xref py py-func docutils literal notranslate"><span class="pre">limited_optimal_SC()</span></code></a>, a brute force search for optimal, low redundancy set cover solutions, is executed using thresholds from the above step</p>
 <ul class="simple">
 <li><p>Sort collapsed gRNA groups in decreasing order of coverage size (sorted_groups)</p></li>
 <li><p>Let candidate_optimal_solutions be a variable that stores set cover solutions</p></li>
-<li><p>Let optimal_SC(C, i) be a function for recursively building a set cover solution</p>
+<li><p>Let optimal_SC(C, i) be an internal function for recursively building a set cover solution</p>
 <ul>
 <li><p>Parameters:</p>
 <ul>
@@ -319,7 +319,7 @@
 <ul>
 <li><p>Skip to j+1 if &lt;redundancy of C_new&gt; &gt; &lt;maximum redundancy&gt;</p></li>
 <li><p>Else add C_new to candidate_optimal_solutions if C_new covers all targets</p></li>
-<li><p>Else execute optimal(C_new, j+1)</p></li>
+<li><p>Else execute optimal_SC(C_new, j+1)</p></li>
 </ul>
 </li>
 </ul>
@@ -335,10 +335,10 @@
 <ul class="simple">
 <li><p>While &lt;number of sets output&gt; &lt; &lt;number of sets requested&gt;:</p>
 <ul>
-<li><p>If candidate_optimal_solutions is empty:</p>
+<li><p>If candidate_optimal_solutions is empty (such as when user has manually discarded some gRNA):</p>
 <ul>
 <li><p>If no candidate gRNA are left, abort</p></li>
-<li><p>If some candidate gRNA are left, regenerate candidate_optimal_solutions using the reduced pool of candidate gRNA (i.e. repeat steps 1 to 3)</p></li>
+<li><p>If some candidate gRNA are left, regenerate candidate_optimal_solutions using the reduced pool of candidate gRNA (i.e. repeat steps 1 to 3 with the reduced pool of candidate gRNA)</p></li>
 </ul>
 </li>
 <li><p>[a] Select the first set cover solution in sorted candidate_optimal_solutions</p>
@@ -347,7 +347,7 @@
 <li><p>[b] For each collapsed gRNA group in the set cover solution, select the gRNA that is on average closest to the 5’ end of the sense strand for all targets covered</p></li>
 <li><p>Create a proposed gRNA set from the selected gRNA</p>
 <ul>
-<li><p>If MANUAL mode and user chooses to discard a gRNA in the proposed set:</p>
+<li><p>If using <code class="docutils literal notranslate"><span class="pre">--manual</span></code>/<code class="docutils literal notranslate"><span class="pre">MINORg.manual=True</span></code> and user chooses to discard a gRNA in the proposed set:</p>
 <ul>
 <li><p>Remove discarded gRNA from its collapsed gRNA group</p>
 <ul>
