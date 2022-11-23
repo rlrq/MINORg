@@ -23,7 +23,6 @@ class BlastHSP:
     """
     Class that binds HSP object with QueryResult and Hit as query and subject respectively.
     """
-    import copy
     def __init__(self, hsp, query, subject):
         self.hsp = hsp
         self.query = query
