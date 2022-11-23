@@ -149,12 +149,16 @@ gRNA with equivalent set coverage (that is, that cover the exact same combinatio
 WITHOUT prioritising non-redundancy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+If ``--prioritise-pos``/ ``--prioritize-pos``/ ``MINORg.prioritise_nr = False``/ ``MINORg.prioritise_nr = False``.
+
 Algorithm described in: Yang, Q., Nofsinger, A., Mcpeek, J., Phinney, J. and Knuesel, R. (2015). A Complete Solution to the Set Covering Problem. In International Conference on Scientific Computing (CSC) pp. 36–41
 
 This algorithm prioritises coverage first, then proximity to 5' end of the sense strand. Non-redundancy is used as a tie-breaker. After every successful set, gRNA are removed from their respective collapsed groups. Collapsed groups with no remaining gRNA are removed, and the process is repeated with the remaining collapsed groups until either 1) the requested number of sets have been generated or 2) it is no longer possible to generate a set cover solution with the remaining gRNA.
 
 Prioritising non-redundancy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If ``--prioritise-nr``/ ``--prioritize-nr``/ ``MINORg.prioritise_nr = True``/ ``MINORg.prioritise_nr = True``. Note that generation of sets when non-redundancy is prioritised is more computationally demanding (however, if there are few gRNA, the difference may not be noticeable) and may result in larger gRNA set sizes.
 
 A combination of adapted approxiamate and optimal minimal weight cover algorithms are used when non-redundancy is prioritised. The approximate minimal weight set cover algorithm (implemented as :func:`~minorg.minweight_sc.enum_approx_order_SC`) is as described in: Ajami and Cohen (2019) Enumerating Minimal Weight Set Covers. Proceedings - International Conference on Data Engineering, 518-529
 
@@ -208,7 +212,7 @@ A combination of adapted approxiamate and optimal minimal weight cover algorithm
              
    * Execute optimal_SC(<empty set cover solution>, 0) (assuming 0-indexing)
 
-#. Sort candidate_optimal_solutions in increasing order of set cover solution size (number of collapsed gRNA groups in a solution set)
+#. Sort candidate_optimal_solutions in increasing order of set cover solution size (number of collapsed gRNA groups in a solution set) followed by increasing order of redundancy
 
    * While <number of sets output> < <number of sets requested>:
 
