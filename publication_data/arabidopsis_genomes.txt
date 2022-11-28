@@ -1,0 +1,3 @@
+TAIR10	/path/to/TAIR10_chr_all.fas	/path/to/TAIR10_GFF3_genes.gff	1	
+araly2	/path/to/Alyrata_384_v1.fasta	/path/to/Alyrata_384_v2.1.gene.gff3	1	
+araha1	/path/to/Ahalleri_264_v1.fasta	/path/to/Ahalleri_264_v1.1.gene.gff3	1	
