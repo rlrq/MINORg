@@ -371,7 +371,7 @@ By default, MINORg selects gRNA for sets using these criteria in decreasing orde
 #. Proximity to 5' end
 #. Non-redundancy
 
-Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may instead prioritise non-redundancy over proximity by setting :attr:`~minorg.MINORg.MINORg.prioritise_nr` to ``True``. MINORg will use a combination of approximate and greedy set cover algorithms to output small non-redundant sets. However, do note that the sets will in general be larger than when :attr:`~minorg.MINORg.MINORg.prioritise_nr` is ``False``.
+Proximity is only assessed when there is a tie for coverage, and non-redundancy when there is a tie for both coverage and proximity. You may instead prioritise non-redundancy over proximity by setting :attr:`~minorg.MINORg.MINORg.prioritise_nr` to ``True``. MINORg will use a combination of approximate and optimal weighted set cover algorithms to output small sets with low redundancy. However, do note that the sets will in general be larger than when :attr:`~minorg.MINORg.MINORg.prioritise_nr` is ``False``.
 
 >>> from minorg.MINORg import MINORg
 >>> my_minorg = MINORg(directory = "/path/to/example_214_nr")
