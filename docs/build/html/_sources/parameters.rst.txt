@@ -658,6 +658,7 @@ Off-target pattern
 
 | **CLI**: ``--ot-pattern``
 | **Python**: ``ot_pattern``
+| **Config file**:
 
   | set default: ``off-target pattern`` (section ``[filter]``)
 
@@ -721,7 +722,7 @@ The basic unit of an off-target pattern comprises of 3 parts:
       * ``-4-``: ATGCa (positions -8 to -4)
       * ``-6-``: ATG (positions -8 to -6)
   
-  * Otherwise, a range can be defined using 2 indices separated by '-'. Values must either both be positive or both be negative. For ranges defined by negative indices, the smaller absolute value should come first.
+  * Otherwise, a range can be defined using 2 indices separated by '-'. Values must either both be positive or both be negative. For ranges defined by negative indices, the index with the smaller absolute value should come first.
     
     * Valid
       
@@ -732,7 +733,7 @@ The basic unit of an off-target pattern comprises of 3 parts:
       
       * ``2--5``: mixed signs
       * ``-2-5``: mixed signs
-      * ``-5--2``: smaller absolute value should come first
+      * ``-5--2``: index with smaller absolute value should come first
     
 
 Examples
@@ -767,6 +768,7 @@ Prioritise non-redundancy
 
 | **CLI**: ``--prioritise-nr``/\ ``--prioritize-nr``
 | **Python**: ``prioritise_nr``/\ ``--prioritize-nr``
+| **Config file**:
 
   | set default: ``prioritise non-redundnacy`` (section ``[filter]``)
 
@@ -790,6 +792,7 @@ RPS-BLAST local database
 
 | **CLI**: ``--db``
 | **Python**: ``db``
+| **Config file**:
 
   | set default: ``rps database`` (section ``[data]``)
   | assign aliases: ``rps database alias`` (section ``[lookup]``)
@@ -821,6 +824,7 @@ RPS-BLAST remote database
 
 | **CLI**: ``--remote-rps``
 | **Python**: ``remote_rps``
+| **Config file**:
 
   | set default: ``remote rps`` (section ``[data]``)
 
