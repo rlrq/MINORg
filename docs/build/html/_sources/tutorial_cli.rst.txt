@@ -170,7 +170,7 @@ Using ``--query``
 
 See also: :ref:`Algorithms:Non-reference homologue inference`, :ref:`Parameters:Multi-argument (CLI)`
 
-If you would like MINORg to infer homologues genes in non-reference genomes, you can use ``--query`` to specify the FASTA files of those non-reference genomes. You may provide multiple non-reference genomes by using ``--query`` multiple times.
+If you would like MINORg to infer homologues in non-reference genomes, you can use ``--query`` to specify the FASTA files of those non-reference genomes. You may provide multiple non-reference genomes by using ``--query`` multiple times.
 
 .. code-block:: bash
 
@@ -217,7 +217,7 @@ Local database
             --rpsblast /path/to/rpsblast/executable --db /path/to/rpsblast/db \
             --domain 214815
 
-In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. Unlike other examples, the database (``--db``) is not provided as part of the example files. You will have to download it yourself. See :ref:`Parameters:RPS-BLAST local database` for more information.
+In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. Unlike other examples, the database (``--db``) is not provided as part of the example files. If you are using the full Docker image pulled from rlrq/minorg, the database is bundled with the image. Otherwise, you will have to download it yourself. See :ref:`Parameters:RPS-BLAST local database` for more information.
 
 Remote database
 ^^^^^^^^^^^^^^^
@@ -308,9 +308,10 @@ In the above example, MINORg will screen gRNA for off-targets in:
 * Two different FASTA files (``--background ./subset_Araly2.fasta --background ./subset_Araha1.fasta``)
 * Two non-reference genomes (``--ot-indv 9654,9655 --genome-set ./subset_genome_mapping.txt``)
   
-  * ``--ot-indv`` functions similarly to ``--indv`` in that it requires ``--genome-set``, except that ``--ot-indv`` specifies non-refernece genomes for off-target assessment
+  * ``--ot-indv`` functions similarly to ``--indv`` in that it requires ``--genome-set``, except that ``--ot-indv`` specifies non-reference genomes for off-target assessment
   * Note that any AT5G45050 homologues in these two genomes will NOT be masked. This means that only gRNA that do not target any AT5G45050 homologues in these two non-reference genomes will pass this off-target check.
-    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``--mask <FASTA>``. You may use subcommand ``seq`` (see :ref:`Tutorial_cli:Subcommand \`\`seq\`\``) to identify these homologues.
+    
+    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``--mask <FASTA>``. You may use subcommand ``seq`` (see :ref:`Tutorial_cli:Subcommand \`\`seq\`\``) to identify these homologues and retrieve their sequences.
 
 ``--ot-gap`` and ``--ot-mismatch`` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
 
@@ -547,7 +548,7 @@ To use this subcommand, simply replace the command ``minorg`` with ``minorg grna
                  --length 23 --pam Cas12a \
                  --feature three_prime_UTR \
                  --gc-min 0.2 --gc-max 0.8 \
-                 --out-map ./example_120.map
+                 --out-map ./example_122.map
 
 Subcommand ``filter``
 +++++++++++++++++++++
@@ -603,7 +604,7 @@ In the code above, we skipped off-target check by raising the ``--skip-bg-check`
                    --mask-cluster RPS6 --cluster-set ./subset_cluster_mapping.txt \
                    --ot-indv 9654,9655,9944,9947 --genome-set ./subset_genome_mapping.txt
 
-The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the ``filter`` subcommand on files that have already been generated. You should then use the ``minimumset`` subcommand (see :ref:`Tutorial_cli:Subcommand \`\`minimumset\`\``) to regenerate minimum sets using your update .map file.
+The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the ``filter`` subcommand on files that have already been generated. You should then use the ``minimumset`` subcommand (see :ref:`Tutorial_cli:Subcommand \`\`minimumset\`\``) to regenerate minimum sets using your updated .map file.
 
 Feature check
 ^^^^^^^^^^^^^
@@ -756,7 +757,7 @@ Multithreading
 
 MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using ``--query`` or ``--indv``), have multiple reference genomes (``--reference``), or multiple background sequences (``--background``).
 
-**NOTE for Docker users**: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for the Docker distribution due to incompatibilities.
+**NOTE for Docker users**: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for Docker distributions due to incompatibilities.
 
 To run MINORg with parallel processing, use ``--thread <number of threads>``.
 

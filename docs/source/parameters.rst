@@ -323,9 +323,7 @@ If bedtools is in the command-search path, you should NOT use this parameter. If
 
 To determine if the BEDTools executables are in your command-search path, execute at the command line::
 
-.. code-block::
-   
-   bedtools --version
+  bedtools --version
 
 If it prints something like ::
 

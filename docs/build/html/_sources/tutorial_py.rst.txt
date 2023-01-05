@@ -103,7 +103,7 @@ Inferring homologues in unannotated genomes
 
 See also: :ref:`Algorithms:Non-reference homologue inference`
 
-If you would like MINORg to infer homologues genes in non-reference genomes, you can use :meth:`~minorg.MINORg.MINORg.add_query` to specify the FASTA files of those non-reference genomes.
+If you would like MINORg to infer homologues in non-reference genomes, you can use :meth:`~minorg.MINORg.MINORg.add_query` to specify the FASTA files of those non-reference genomes.
 
 >>> from minorg.MINORg import MINORg
 >>> my_minorg = MINORg(directory = "/path/to/example_203_query")
@@ -147,7 +147,7 @@ Local database
 >>> my_minorg.full()
 >>> my_minorg.resolve()
 
-In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. If multiple PSSM-Ids are provided, overlapping domains will be combined and output WILL NOT distinguish between one PSSM-Id or another. Unlike other examples, the database (:attr:`~minorg.MINORg.MINORg.db`) is not provided as part of the example files. You will have to download it yourself. See :ref:`Parameters:RPS-BLAST local database` for more information.
+In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. If multiple PSSM-Ids are provided, overlapping domains will be combined and output WILL NOT distinguish between one PSSM-Id or another. Unlike other examples, the database (:attr:`~minorg.MINORg.MINORg.db`) is not provided as part of the example files. If you are using the full Docker image pulled from rlrq/minorg, the database is bundled with the image. Otherwise, you will have to download it yourself. See :ref:`Parameters:RPS-BLAST local database` for more information.
 
 Remote database
 ^^^^^^^^^^^^^^^
@@ -238,7 +238,8 @@ In the above example, MINORg will screen gRNA for off-targets in:
   
   * The alias keyword argument is optional. If not provided, MINORg will generate a unique alias.
   * Note that any AT5G45050 homologues in these four FASTA files will NOT be masked. This means that only gRNA that do not target any AT5G45050 homologues in these four genomes will pass this off-target check.
-    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``my_minorg.mask = ["/path/to/to_mask_1.fasta", "/path/to/to_mask_2.fasta"]``. You may use subcommand :meth:`~minorg.MINORg.MINORg.seq` (see :ref:`Tutorial_py:Subcommands`) to identify these homologues.
+    
+    * To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using ``my_minorg.mask = ["/path/to/to_mask_1.fasta", "/path/to/to_mask_2.fasta"]``. You may use subcommand :meth:`~minorg.MINORg.MINORg.seq` (see :ref:`Tutorial_py:Subcommands`) to identify these homologues and retrieve their sequences.
 
 :attr:`~minorg.MINORg.MINORg.ot_gap` and :attr:`~minorg.MINORg.MINORg.ot_mismatch` control the minimum number of gaps or mismatches off-target gRNA hits must have to be considered non-problematic; any gRNA with at least one problematic gRNA hit will be excluded. By default, both values are set to '1'. See :ref:`Algorithms:Off-target assessment` for more on the off-target assessment algorithm.
 
@@ -906,7 +907,7 @@ Multithreading
 
 MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes, have multiple reference genomes, or multiple background sequences.
 
-**NOTE for Docker users**: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for the Docker distribution due to incompatibilities.
+**NOTE for Docker users**: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for Docker distributions due to incompatibilities.
 
 To run MINORg with parallel processing, set :attr:`~minorg.MINORg.MINORg.thread` to the desired number of threads.
 

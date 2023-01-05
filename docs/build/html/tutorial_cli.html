@@ -275,7 +275,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="using-query">
 <h5><span class="section-number">5.3.3.2.2. </span>Using <code class="docutils literal notranslate"><span class="pre">--query</span></code><a class="headerlink" href="#using-query" title="Permalink to this headline"></a></h5>
 <p>See also: <a class="reference internal" href="algorithms.html#non-reference-homologue-inference"><span class="std std-ref">Non-reference homologue inference</span></a>, <a class="reference internal" href="parameters.html#multi-argument-cli"><span class="std std-ref">Multi-argument (CLI)</span></a></p>
-<p>If you would like MINORg to infer homologues genes in non-reference genomes, you can use <code class="docutils literal notranslate"><span class="pre">--query</span></code> to specify the FASTA files of those non-reference genomes. You may provide multiple non-reference genomes by using <code class="docutils literal notranslate"><span class="pre">--query</span></code> multiple times.</p>
+<p>If you would like MINORg to infer homologues in non-reference genomes, you can use <code class="docutils literal notranslate"><span class="pre">--query</span></code> to specify the FASTA files of those non-reference genomes. You may provide multiple non-reference genomes by using <code class="docutils literal notranslate"><span class="pre">--query</span></code> multiple times.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_105_query <span class="se">\</span>
          --query ./subset_9654.fasta --query ./subset_9655.fasta <span class="se">\</span>
          --gene AT1G10920 <span class="se">\</span>
@@ -311,7 +311,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
          --domain <span class="m">214815</span>
 </pre></div>
 </div>
-<p>In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. Unlike other examples, the database (<code class="docutils literal notranslate"><span class="pre">--db</span></code>) is not provided as part of the example files. You will have to download it yourself. See <a class="reference internal" href="parameters.html#rps-blast-local-database"><span class="std std-ref">RPS-BLAST local database</span></a> for more information.</p>
+<p>In the above example, gRNA will be generated for the WRKY domain (PSSM-Id 214815 as of CDD database v3.18) of the gene AT5G45050. Users are responsible for providing the PSSM-Id of a domain that exists in the gene. Unlike other examples, the database (<code class="docutils literal notranslate"><span class="pre">--db</span></code>) is not provided as part of the example files. If you are using the full Docker image pulled from rlrq/minorg, the database is bundled with the image. Otherwise, you will have to download it yourself. See <a class="reference internal" href="parameters.html#rps-blast-local-database"><span class="std std-ref">RPS-BLAST local database</span></a> for more information.</p>
 </section>
 <section id="remote-database">
 <h4><span class="section-number">5.3.4.2. </span>Remote database<a class="headerlink" href="#remote-database" title="Permalink to this headline"></a></h4>
@@ -373,9 +373,12 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <li><p>Two different FASTA files (<code class="docutils literal notranslate"><span class="pre">--background</span> <span class="pre">./subset_Araly2.fasta</span> <span class="pre">--background</span> <span class="pre">./subset_Araha1.fasta</span></code>)</p></li>
 <li><p>Two non-reference genomes (<code class="docutils literal notranslate"><span class="pre">--ot-indv</span> <span class="pre">9654,9655</span> <span class="pre">--genome-set</span> <span class="pre">./subset_genome_mapping.txt</span></code>)</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> functions similarly to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> in that it requires <code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>, except that <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> specifies non-refernece genomes for off-target assessment</p></li>
-<li><p>Note that any AT5G45050 homologues in these two genomes will NOT be masked. This means that only gRNA that do not target any AT5G45050 homologues in these two non-reference genomes will pass this off-target check.
-* To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using <code class="docutils literal notranslate"><span class="pre">--mask</span> <span class="pre">&lt;FASTA&gt;</span></code>. You may use subcommand <code class="docutils literal notranslate"><span class="pre">seq</span></code> (see <a class="reference internal" href="#subcommand-seq"><span class="std std-ref">Subcommand seq</span></a>) to identify these homologues.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> functions similarly to <code class="docutils literal notranslate"><span class="pre">--indv</span></code> in that it requires <code class="docutils literal notranslate"><span class="pre">--genome-set</span></code>, except that <code class="docutils literal notranslate"><span class="pre">--ot-indv</span></code> specifies non-reference genomes for off-target assessment</p></li>
+<li><p>Note that any AT5G45050 homologues in these two genomes will NOT be masked. This means that only gRNA that do not target any AT5G45050 homologues in these two non-reference genomes will pass this off-target check.</p>
+<ul>
+<li><p>To mask homologues in these genomes, you will need to provide a FASTA file containing the sequences of their homologues using <code class="docutils literal notranslate"><span class="pre">--mask</span> <span class="pre">&lt;FASTA&gt;</span></code>. You may use subcommand <code class="docutils literal notranslate"><span class="pre">seq</span></code> (see <a class="reference internal" href="#subcommand-seq"><span class="std std-ref">Subcommand seq</span></a>) to identify these homologues and retrieve their sequences.</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -574,7 +577,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
               --length <span class="m">23</span> --pam Cas12a <span class="se">\</span>
               --feature three_prime_UTR <span class="se">\</span>
               --gc-min <span class="m">0</span>.2 --gc-max <span class="m">0</span>.8 <span class="se">\</span>
-              --out-map ./example_120.map
+              --out-map ./example_122.map
 </pre></div>
 </div>
 </section>
@@ -620,7 +623,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
                 --ot-indv <span class="m">9654</span>,9655,9944,9947 --genome-set ./subset_genome_mapping.txt
 </pre></div>
 </div>
-<p>The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand on files that have already been generated. You should then use the <code class="docutils literal notranslate"><span class="pre">minimumset</span></code> subcommand (see <a class="reference internal" href="#subcommand-minimumset"><span class="std std-ref">Subcommand minimumset</span></a>) to regenerate minimum sets using your update .map file.</p>
+<p>The above code may be a little unwieldy. However, if the target identification step of MINORg takes a while to run (for example when the genome files are large and take forever to process), you may prefer not to re-run the full MINORg programme with updated parameters and instead use the <code class="docutils literal notranslate"><span class="pre">filter</span></code> subcommand on files that have already been generated. You should then use the <code class="docutils literal notranslate"><span class="pre">minimumset</span></code> subcommand (see <a class="reference internal" href="#subcommand-minimumset"><span class="std std-ref">Subcommand minimumset</span></a>) to regenerate minimum sets using your updated .map file.</p>
 </section>
 <section id="feature-check">
 <h4><span class="section-number">5.7.3.3. </span>Feature check<a class="headerlink" href="#feature-check" title="Permalink to this headline"></a></h4>
@@ -742,7 +745,7 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 <section id="multithreading">
 <h2><span class="section-number">5.9. </span>Multithreading<a class="headerlink" href="#multithreading" title="Permalink to this headline"></a></h2>
 <p>MINORg supports multi-threading in order to process files in parallel. Any excess threads may also be used for BLAST. This is most useful when you are querying multiple genomes (whether using <code class="docutils literal notranslate"><span class="pre">--query</span></code> or <code class="docutils literal notranslate"><span class="pre">--indv</span></code>), have multiple reference genomes (<code class="docutils literal notranslate"><span class="pre">--reference</span></code>), or multiple background sequences (<code class="docutils literal notranslate"><span class="pre">--background</span></code>).</p>
-<p><strong>NOTE for Docker users</strong>: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for the Docker distribution due to incompatibilities.</p>
+<p><strong>NOTE for Docker users</strong>: Multithreading for parallel querying of multiple genomes and backgrounds is DISABLED for Docker distributions due to incompatibilities.</p>
 <p>To run MINORg with parallel processing, use <code class="docutils literal notranslate"><span class="pre">--thread</span> <span class="pre">&lt;number</span> <span class="pre">of</span> <span class="pre">threads&gt;</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_132_thread <span class="se">\</span>
          --query ./subset_9654.fasta --query ./subset_9655.fasta <span class="se">\</span>

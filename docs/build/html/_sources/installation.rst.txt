@@ -51,7 +51,7 @@ Follow one of the following links most applicable to your setup:
 
 In all cases, do take note of the full path name to the MAFFT executable if the programme is not in your command-search path.
 
-To determine if the **mafft** is in your command-search path, execute
+To determine if **mafft** is in your command-search path, execute
 
 .. code-block::
    
@@ -76,7 +76,7 @@ Follow one of the following links most applicable to your setup:
 * From source: https://www.ncbi.nlm.nih.gov/books/NBK569861/#_intro_Installation_Source_tarball_
 
 
-To determine if the **blastn** is in your command-search path, execute at the command line::
+To determine if **blastn** is in your command-search path, execute at the command line::
 
   blastn -version
 
