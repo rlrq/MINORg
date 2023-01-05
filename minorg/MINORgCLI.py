@@ -1422,12 +1422,11 @@ class MINORgCLI (MINORg):
         ## args handled by callbacks: domain
         ## args handled by check_reference_args: ext_gene, ext_cds, attr_mod
         ## args handled separately by parser: cluster, gene --> self.gene_sets
-        self.copy_args("rpsblast", "db", "remote_rps", "thread", "target", "length")
+        self.copy_args("rpsblast", "db", "remote_rps", "thread", "target", "length", "feature")
         self.parse_PAM()
         self.grna_map = self.args.out_map
         self.grna_fasta = self.args.out_fasta
         self.pass_fasta = self.args.out_pass
-        print("cluster:", self.args.cluster, ", genes:", self.args.gene)
         self.query_reference = (self.args.cluster or self.args.gene)
         return
     
@@ -1626,6 +1625,8 @@ class MINORgCLI (MINORg):
                                        f" {','.join(self.genes)}"),
                                       MINORgWarning)
             super().grna()
+            super().filter_feature()
+            super().filter_gc()
             self.write_all_grna_map()
             self.write_pass_grna_fasta()
         self.reset_prefix()
