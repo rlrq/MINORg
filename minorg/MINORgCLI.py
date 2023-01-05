@@ -1427,6 +1427,8 @@ class MINORgCLI (MINORg):
         self.grna_map = self.args.out_map
         self.grna_fasta = self.args.out_fasta
         self.pass_fasta = self.args.out_pass
+        print("cluster:", self.args.cluster, ", genes:", self.args.gene)
+        self.query_reference = (self.args.cluster or self.args.gene)
         return
     
     def parse_filter_args(self):
@@ -1531,17 +1533,20 @@ class MINORgCLI (MINORg):
         this method sets :attr:`~minorg.MINORg.genes` as the genes mapped to by ``gene_set_prefix`` 
         so that they can be acted.
         
-        Also sets self._genes_updated_since_alignment=True so that MINORg knows to update
-        alignments with new genes.
+        Setting self.genes automatically sets self._genes_updated_since_alignment=True if 
+        the new gene set is different so that MINORg knows to update alignments with new genes.
         
         Arguments:
            gene_set_prefix (str): required, gene set alias (valid aliases: self.gene_sets.keys())
         """
         if gene_set_prefix not in self.gene_sets:
             print(f"{gene_set_prefix} not in gene_sets ({', '.join(self.gene_sets.keys())}).")
-        self.genes = self.gene_sets[gene_set_prefix]
         self.prefix = gene_set_prefix
-        self._genes_updated_since_alignment = True
+        self.genes = self.gene_sets[gene_set_prefix]
+        # self._genes_updated_since_alignment = True
+        # if (set(self.genes) != set(self.gene_sets[gene_set_prefix])):
+        #     self.genes = self.gene_sets[gene_set_prefix]
+        #     self._genes_updated_since_alignment = True
     
     ######################
     ##  PREFIX MATTERS  ##

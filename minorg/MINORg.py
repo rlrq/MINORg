@@ -954,7 +954,7 @@ class MINORg (PathHandler):
     ## setters
     @genes.setter
     def genes(self, val):
-        if val != self.genes:
+        if set(val) != set(self.genes):
             self._genes_updated_since_alignment = True
         self._genes = val
     @domain_name.setter
@@ -1824,8 +1824,9 @@ class MINORg (PathHandler):
                                  merge_within_range = get_val_default(merge_within, self.merge_within))
             return fout
         ## get homologues
-        printi("Finding homologues")
         if self.query:
+            printi("Finding homologues")
+            print("self.query:", self.query)
             self.logfile.devsplain(f"chkpt1: {[x[0] for x in self.query_map]}")
             tmp_fouts = imap_progress(f, args, threads = self.thread)
             cat_files(tmp_fouts, fout, remove = True)
