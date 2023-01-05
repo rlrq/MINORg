@@ -954,9 +954,12 @@ class MINORg (PathHandler):
     ## setters
     @genes.setter
     def genes(self, val):
+        if isinstance(val, str):
+            warnings.warn(f"String '{val}' will be parsed as list ['{val}']", MINORgWarning)
+            val = [val]
         if set(val) != set(self.genes):
             self._genes_updated_since_alignment = True
-        self._genes = val
+        self._genes = list(val)
     @domain_name.setter
     def domain_name(self, val):
         self._domain_name = val
