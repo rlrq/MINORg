@@ -210,7 +210,7 @@ A combination of adapted approximate and optimal minimal weight cover algorithms
            * Else add C_new to candidate_optimal_solutions if C_new covers all targets
            * Else execute optimal_SC(C_new, j+1)
              
-   * Execute ``optimal_SC(<empty set cover solution>, 0, size = <maximum set cover size>, redundancy = <maximum redundancy>)`` (assuming 0-indexing)
+   * Execute ``optimal_SC(<empty set cover solution>, 0)`` (assuming 0-indexing)
 
 #. Sort candidate_optimal_solutions in increasing order of set cover solution size (number of collapsed gRNA groups in a solution set) followed by increasing order of redundancy
 
