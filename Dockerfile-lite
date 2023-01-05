@@ -25,14 +25,14 @@ RUN pip install 'biopython==1.79' 'pybedtools==0.9.0' 'pyfaidx==0.6.4' 'regex' '
 ## Copy files
 WORKDIR /minorg_docker
 ADD examples_for_docker/examples.zip .
-ADD dist/minorg-0.2.3.3a0.tar.gz .
-WORKDIR minorg-0.2.3.3a0
+ADD dist/minorg-0.2.3.4a0.tar.gz .
+WORKDIR minorg-0.2.3.4a0
 
 ## Install MINORg dependencies
 RUN python setup.py install
 
 ## Install MINORg
-COPY dist/minorg-0.2.3.3a0-py3-none-any.whl minorg.whl
+COPY dist/minorg-0.2.3.4a0-py3-none-any.whl minorg.whl
 RUN pip install --no-cache minorg
 
 ## Run minorg

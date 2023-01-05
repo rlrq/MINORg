@@ -161,9 +161,20 @@ Do note that you may fail at installing pysam as part of MINORg's dependencies w
 Install MINORg
 --------------
 
-Test version can be installed from testpypi using:
+You may need to install several dependencies for installing/building Python packages. For Ubuntu, the packages are: python3-pip, python3.x-dev, python3.x-distutils, python-apt/python3-apt.
+
+MINORg can be installed from pypi using pip:
 
 .. code-block::
 
-   python3 -m pip install --upgrade --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ minorg
+   python3 -m pip install --upgrade minorg
 
+
+If you encounter the following message during installation::
+
+    WARNING: The script minorg is installed in '/home/<usrname>/.local/bin' which is not on PATH.
+    Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+you should add the directory to PATH in order to use the command line version of MINORg. Otherwise, MINORg can only be used as a module within Python.
+
+If python-apt/python3-apt is installed but running MINORg throws ``ModuleNotFoundError: No module named 'apt_pkg'``, try the solution described here: https://stackoverflow.com/a/57147858

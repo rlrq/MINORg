@@ -66,7 +66,10 @@ echo "--wheel is: ${whl_basename}"
 if [[ ${PUSH_PYTHON} == 1 ]]; then
     echo "[3] Uploading wheel and source to (test)pypi"
     distr_prefix=${whl_basename%*-py3-*.whl}
-    python3 -m twine upload --repository testpypi dist/${distr_prefix}*
+    # ## testpypi
+    # python3 -m twine upload --repository testpypi dist/${distr_prefix}*
+    ## pypi
+    python3 -m twine upload dist/${distr_prefix}*
 fi
 
 ## update Dockerfile with name of latest wheel
