@@ -295,6 +295,13 @@ Output files have been generated <span class="k">in</span> /path/to/current/dire
 </pre></div>
 </div>
 <p>The above code snippet is effectively identical to the example in <a class="reference internal" href="#using-query"><span class="std std-ref">Using --query</span></a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ minorg --directory ./example_106_indvall <span class="se">\</span>
+         --indv all --genome-set ./subset_genome_mapping.txt <span class="se">\</span>
+         --gene AT1G10920 <span class="se">\</span>
+         --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
+</pre></div>
+</div>
+<p>In the above code, <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">all</span></code> tells MINORg to query all individuals in <code class="docutils literal notranslate"><span class="pre">./subset_genome_mapping.txt</span></code> (which contains paths to the genomes of individuals with the aliases 9654, 9655, 9944, and 9947), and will be expanded by MINORg to <code class="docutils literal notranslate"><span class="pre">--indv</span> <span class="pre">9654,9655,9944,9947</span></code>. This shorthand is useful if you wish to query a large number of individuals but do not want to type all of their aliases.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--indv</span></code> can be used in combination with <code class="docutils literal notranslate"><span class="pre">--query</span></code>. For inference parameters, see <a class="reference internal" href="algorithms.html#non-reference-homologue-inference"><span class="std std-ref">Non-reference homologue inference</span></a>.</p>
 </section>
 </section>

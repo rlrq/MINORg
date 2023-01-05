@@ -400,12 +400,11 @@ Comma-separated multiple value arguments accept multiple values for a single arg
 Multi-argument (CLI)
 ++++++++++++++++++++
 
-**CLI**: ``--reference``, ``--cluster``, ``--gene``, ``--indv``, ``--query``, ``--feature``, ``--ext-gene``, ``--ext-cds``, ``--mask-gene``, ``--unmask-gene``, ``--mask-cluster``, ``--unmask-cluster``
-.. , ``--ot-indv`` (not implemented)
+**CLI**: ``--reference``, ``--cluster``, ``--gene``, ``--indv``, ``--query``, ``--feature``, ``--ext-gene``, ``--ext-cds``, ``--mask-gene``, ``--unmask-gene``, ``--mask-cluster``, ``--unmask-cluster``, ``--ot-indv``
 
 Multi-argument parameters accept multiple values by re-using a parameter. For example, multiple genes can be specified using ``--gene geneA --gene geneB --gene geneC``.
 
-(Note that some parameters can be both comma-separated AND multi-argument, and that these features can be combined. For example, ``--gene geneA --gene geneB,geneC`` is also valid.)
+(Note that some parameters can be both comma-separated AND multi-argument, and that these features can be combined. For example, ``--gene geneA --gene geneB,geneC`` is valid.)
 
 
 Multi-value list (Python)
@@ -462,7 +461,7 @@ The primary difference between using ``--reference <alias(es)> --reference-set <
 Reference (Python)
 ++++++++++++++++++
 
-See :ref:`Tutorial_py:Multiple reference genomes` for an example of how to use the dedicated method :meth:`~minorg.MINORg.MINORg.add_reference` to specify reference genomes, and :ref:`Tutorial_py:Non-standard reference` for how to specify genetic code and GFF3 attribute mdifications for non-standard genomes/annotations.
+See :ref:`Tutorial_py:Multiple reference genomes` for an example of how to use the dedicated method :meth:`~minorg.MINORg.MINORg.add_reference` to specify reference genomes, and :ref:`Tutorial_py:Non-standard reference` for how to specify genetic code and GFF3 attribute modifications for non-standard genomes/annotations.
 
 Attribute modification
 ~~~~~~~~~~~~~~~~~~~~~~

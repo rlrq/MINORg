@@ -198,6 +198,15 @@ You can also use ``--indv`` to ask MINORg to infer homologues genes in non-refer
 
 The above code snippet is effectively identical to the example in :ref:`Tutorial_cli:Using \`\`--query\`\``.
 
+.. code-block:: bash
+
+   $ minorg --directory ./example_106_indvall \
+            --indv all --genome-set ./subset_genome_mapping.txt \
+            --gene AT1G10920 \
+            --extend-gene ./sample_gene.fasta --extend-cds ./sample_CDS.fasta
+
+In the above code, ``--indv all`` tells MINORg to query all individuals in ``./subset_genome_mapping.txt`` (which contains paths to the genomes of individuals with the aliases 9654, 9655, 9944, and 9947), and will be expanded by MINORg to ``--indv 9654,9655,9944,9947``. This shorthand is useful if you wish to query a large number of individuals but do not want to type all of their aliases.
+
 ``--indv`` can be used in combination with ``--query``. For inference parameters, see :ref:`Algorithms:Non-reference homologue inference`.
 
 
