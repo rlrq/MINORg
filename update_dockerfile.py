@@ -3,7 +3,7 @@
 import os
 import sys
 
-from data_manip import splitlines
+# from data_manip import splitlines
 
 def splitlines(fname, ignore_empty_lines = True):
     data = open(fname, 'r').read().split('\n')
