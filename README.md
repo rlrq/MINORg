@@ -4,12 +4,13 @@
 - Available as both command line application and Python package
 
 Preprint: https://www.biorxiv.org/content/10.1101/2022.03.10.481891
+Zenodo: https://doi.org/10.5281/zenodo.7644871
 
 ## Availability
 Some dependencies are not available for Windows. Windows users should use a Linux emulator to run MINORg.
 
 ## Installation
-A version of MINORg is available at test.pypi.org. You may follow this [guide](https://rlrq.github.io/MINORg/build/html/installation.html) to install MINORg and its dependencies.
+A version of MINORg is available at pypi.org (minorg) as well as Docker (rlrq/minorg OR rlrq/minorg-lite). You may follow this [guide](https://rlrq.github.io/MINORg/build/html/installation.html) to install MINORg and its dependencies.
 
 ## Requirements
 - [Python 3](https://www.python.org/)
@@ -61,15 +62,15 @@ Please refer to slides/PDF in the 'Links' section for execution details for the 
 ## Inputs
 - Step 1
    - Data:
-      - Reference genome (--ref xxx.fasta)
-      - Reference GFF3 annotation (--gff xxx.gff)
-      - Non-reference sequences/genome (--nonref xxx.fasta)
+      - Reference genome (--assembly xxx.fasta; used with --annotation)
+      - Reference GFF3 annotation (--annotation xxx.gff3; used with --assembly)
+      - Non-reference sequences/genome (--query xxx.fasta)
+      - Target sequences (--target xxx.fasta)
    - Parameters:
       - Gene IDs (--gene)
          - Used with:
-            - Accession/individual (-i) OR
-            - Query fasta file (-q xxx.fasta)
-      - Target sequences (--target xxx.fasta)
+            - Reference genome (--assembly xxx.fasta --annotation xxx.gff3)
+            - Query fasta file (--query xxx.fasta)
    - Optional parameters:
       - Minimum hit % identity (--minid 85 (%))
       - Minimum candidate target length (--minlen 0 (bp))
@@ -84,6 +85,7 @@ Please refer to slides/PDF in the 'Links' section for execution details for the 
    - Optional parameters:
       - Minimum off-target gaps (--ot-gap 0)
       - Minimum off-target mismatch (--ot-mismatch 1 (bp))
+      - Position-dependent off-target thresholds (--ot-pattern <pattern>; overrides --ot-gap and --ot-mismatch)
    - Optional data:
       - Background sequences (--background xxx.fasta)
 - Step 4
