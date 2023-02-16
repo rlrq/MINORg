@@ -4,6 +4,7 @@
 - Available as both command line application and Python package
 
 Preprint: https://www.biorxiv.org/content/10.1101/2022.03.10.481891
+
 Zenodo: https://doi.org/10.5281/zenodo.7644871
 
 ## Availability
