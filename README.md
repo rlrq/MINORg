@@ -5,6 +5,8 @@
 
 Preprint: https://www.biorxiv.org/content/10.1101/2022.03.10.481891
 
+In print (Nucleic Acids Research): https://doi.org/10.1093/nar/gkad142
+
 Zenodo: https://doi.org/10.5281/zenodo.7644871
 
 ## Availability
