@@ -3,9 +3,7 @@
 - Finds the minimum gRNA set required to target multiple alignable genes in multiple non-reference genomes
 - Available as both command line application and Python package
 
-Preprint: https://www.biorxiv.org/content/10.1101/2022.03.10.481891
-
-Publication (Nucleic Acids Research): https://doi.org/10.1093/nar/gkad142
+Publication: https://doi.org/10.1093/nar/gkad142
 
 Zenodo: https://doi.org/10.5281/zenodo.7644871
 
