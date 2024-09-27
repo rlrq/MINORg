@@ -8,9 +8,9 @@ https://rlrq.github.io/MINORg
 
 import logging
 
-_logging_level = logging.DEBUG
+_logging_level = logging.INFO
 
-__version__ = "0.2.3.4alpha0"
+__version__ = "0.2.3.4alpha1"
 
 class MINORgWarning(Warning):
     """

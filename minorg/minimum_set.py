@@ -518,7 +518,7 @@ def limited_minweight_SC(collapsed_grnas, num_sets, targets = None,
         ml = min_len()
         candidates = [len(C) for C in Cs if len(C) <= ml]
         output = sorted(min_lens + candidates)[:num_lengths_to_track]
-        sample = set() if not Cs else Cs[0]
+        # sample = set() if not Cs else Cs[0]
         # print(ml, type(sample), len(sample), [C for C in Cs if len(C) == 1][:2],
         #       len(candidates), len(min_lens), output)
         return output
